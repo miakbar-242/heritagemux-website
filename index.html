@@ -4,54 +4,413 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Heritage Montessori and School</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; background: #ffffff; color: #003366; }
-        header { background: linear-gradient(to right, #003366, #0059b3); color: white; padding: 40px; text-align: center; }
-        nav { background: #ffcc00; padding: 15px; display: flex; justify-content: center; gap: 20px; }
-        nav a { color: #007366; text-decoration: none; font-weight: bold; padding: 10px 20px; border-radius: 5px; }
-        nav a:hover { background: #3ac7b2; color: white; }
-        .hero { padding: 70px 20px; background: #0059b3; color: white; text-align: center; font-size: 24px; }
-        .container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; padding: 40px; }
-        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
-        footer { background: #003366; color: white; text-align: center; padding: 15px; }
-        .button { background: #ffcc00; color: #003366; padding: 12px 22px; text-decoration: none; border-radius: 6px; font-weight: bold; }
-        .button:hover { background: #e6b800; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f8; color: #2d3748; }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #4a7c96, #6ba3be);
+            color: white;
+            padding: 36px 20px;
+            text-align: center;
+        }
+        header h1 { font-size: 2rem; font-weight: 700; letter-spacing: 0.5px; }
+        header p { margin-top: 6px; font-size: 1rem; opacity: 0.9; }
+
+        /* Navigation */
+        nav {
+            background: #ffffff;
+            padding: 14px 20px;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        nav a {
+            color: #4a7c96;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            transition: all 0.25s ease;
+        }
+        nav a:hover {
+            background: #e8f4f8;
+            color: #2c5f75;
+        }
+
+        /* Hero */
+        .hero {
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #5a8fa8, #7bb8a4);
+            color: white;
+            text-align: center;
+            font-size: 1.5rem;
+            line-height: 1.6;
+        }
+        .hero i { font-size: 2.2rem; display: block; margin-bottom: 14px; }
+        .hero p { max-width: 600px; margin: 0 auto; }
+
+        /* Cards grid */
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            padding: 40px 24px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .card {
+            background: #ffffff;
+            padding: 28px 24px;
+            border-radius: 14px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        }
+        .card h2 {
+            color: #4a7c96;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card h2 i { font-size: 1.1rem; color: #7bb8a4; }
+        .card p { line-height: 1.6; color: #4a5568; margin-bottom: 10px; }
+        .card ul { list-style: none; padding: 0; margin: 8px 0; }
+        .card ul li {
+            padding: 5px 0;
+            color: #4a5568;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .card ul li i { color: #7bb8a4; font-size: 0.85rem; }
+
+        /* Button */
+        .button {
+            display: inline-block;
+            background: linear-gradient(135deg, #5a8fa8, #7bb8a4);
+            color: white;
+            padding: 11px 24px;
+            text-decoration: none;
+            border-radius: 24px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: opacity 0.25s ease;
+            margin-top: 8px;
+        }
+        .button:hover { opacity: 0.88; }
+
+        /* Admission Form Section */
+        .form-section {
+            background: #ffffff;
+            max-width: 620px;
+            margin: 0 auto 40px;
+            padding: 36px 32px;
+            border-radius: 14px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+        }
+        .form-section h2 {
+            color: #4a7c96;
+            font-size: 1.4rem;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .form-section h2 i { color: #7bb8a4; font-size: 1.15rem; }
+        .form-section .form-subtitle {
+            color: #718096;
+            margin-bottom: 22px;
+            font-size: 0.95rem;
+        }
+        .form-group { margin-bottom: 16px; }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #4a5568;
+            font-size: 0.9rem;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1.5px solid #d2dce6;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            color: #2d3748;
+            background: #f7fafc;
+            transition: border-color 0.2s ease;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #7bb8a4;
+            background: #fff;
+        }
+        .form-group textarea { resize: vertical; min-height: 80px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .submit-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #5a8fa8, #7bb8a4);
+            color: white;
+            padding: 12px 28px;
+            border: none;
+            border-radius: 24px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            font-family: inherit;
+            transition: opacity 0.25s ease;
+            margin-top: 4px;
+        }
+        .submit-btn:hover { opacity: 0.88; }
+        .form-success {
+            display: none;
+            background: #e6f7ef;
+            color: #276749;
+            padding: 14px 18px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+        }
+        .form-success i { margin-right: 6px; }
+
+        /* Footer */
+        footer {
+            background: #3a6b80;
+            color: #dce8ed;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
+        }
+        footer a { color: #a8d8c8; text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+
+        /* WhatsApp floating button */
+        .whatsapp-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 58px;
+            height: 58px;
+            background: #25d366;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 14px rgba(37, 211, 102, 0.4);
+            z-index: 999;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            text-decoration: none;
+        }
+        .whatsapp-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5);
+        }
+        .whatsapp-btn i { color: white; font-size: 1.7rem; }
+        .whatsapp-tooltip {
+            position: fixed;
+            bottom: 88px;
+            right: 24px;
+            background: white;
+            color: #2d3748;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+            z-index: 998;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        .whatsapp-btn:hover + .whatsapp-tooltip { opacity: 1; }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.5rem; }
+            .hero { font-size: 1.2rem; padding: 40px 18px; }
+            .form-row { grid-template-columns: 1fr; }
+            .form-section { margin: 0 12px 32px; padding: 24px 18px; }
+            .container { padding: 24px 12px; }
+            nav { gap: 4px; }
+            nav a { padding: 7px 12px; font-size: 0.85rem; }
+        }
     </style>
 </head>
 <body>
+
 <header>
-    <h1>Heritage Montessori and School</h1>
-    <p>Established 2007 | Nurturing Young Minds</p>
+    <h1><i class="fas fa-graduation-cap"></i> Heritage Montessori and School</h1>
+    <p><i class="far fa-calendar-alt"></i> Established 2007 &nbsp;|&nbsp; Nurturing Young Minds</p>
 </header>
+
 <nav>
-    <a href="#about">About Us</a>
-    <a href="#admission">Admissions</a>
-    <a href="#events">Events</a>
-    <a href="#contact">Contact</a>
+    <a href="#about"><i class="fas fa-school"></i> About Us</a>
+    <a href="#programs"><i class="fas fa-book-open"></i> Programs</a>
+    <a href="#admission"><i class="fas fa-user-plus"></i> Admissions</a>
+    <a href="#events"><i class="fas fa-calendar-check"></i> Events</a>
+    <a href="#contact"><i class="fas fa-envelope"></i> Contact</a>
 </nav>
-<div class="hero">Shaping the Future of Young Minds with Quality Education</div>
+
+<div class="hero">
+    <i class="fas fa-seedling"></i>
+    <p>Shaping the Future of Young Minds with Quality Education</p>
+</div>
+
 <div class="container">
     <div class="card" id="about">
-        <h2>About Us</h2>
-        <p>Heritage Montessori and School has proudly served the community for 18 years, offering preschool and primary education (Classes 1–5).</p>
+        <h2><i class="fas fa-heart"></i> About Us</h2>
+        <p>Heritage Montessori and School has proudly served the community for 18 years, offering preschool and primary education (Classes 1–5). We believe in creating a safe, supportive, and joyful learning environment for every child.</p>
+        <ul>
+            <li><i class="fas fa-check-circle"></i> 18+ years of educational excellence</li>
+            <li><i class="fas fa-check-circle"></i> Montessori-based early learning</li>
+            <li><i class="fas fa-check-circle"></i> Experienced and caring faculty</li>
+        </ul>
     </div>
-    <div class="card" id="admission">
-        <h2>Admissions</h2>
-        <p>We welcome young learners into a nurturing and engaging environment.</p>
-        <a class="button" href="#">Apply Now</a>
+
+    <div class="card" id="programs">
+        <h2><i class="fas fa-puzzle-piece"></i> Our Programs</h2>
+        <p>Tailored programs designed for every stage of early development.</p>
+        <ul>
+            <li><i class="fas fa-star"></i> Playgroup &amp; Nursery</li>
+            <li><i class="fas fa-star"></i> Kindergarten (KG-I &amp; KG-II)</li>
+            <li><i class="fas fa-star"></i> Primary Classes (1–5)</li>
+        </ul>
     </div>
+
     <div class="card" id="events">
-        <h2>Events</h2>
-        <p>Upcoming school events will be posted here.</p>
+        <h2><i class="fas fa-calendar-day"></i> Events</h2>
+        <p>Stay tuned for upcoming school events, annual days, and parent-teacher meetings.</p>
+        <ul>
+            <li><i class="fas fa-bullhorn"></i> Annual Day celebrations</li>
+            <li><i class="fas fa-bullhorn"></i> Parent-teacher meetings</li>
+            <li><i class="fas fa-bullhorn"></i> Sports &amp; activity days</li>
+        </ul>
     </div>
+
     <div class="card" id="contact">
-        <h2>Contact</h2>
-        <p>Email: contact@heritagemux.com</p>
-        <p>Phone: +92 321 6309939</p>
+        <h2><i class="fas fa-phone-alt"></i> Contact Us</h2>
+        <p><i class="fas fa-envelope" style="color:#7bb8a4;margin-right:6px;"></i> contact@heritagemux.com</p>
+        <p><i class="fas fa-mobile-alt" style="color:#7bb8a4;margin-right:6px;"></i> +92 336 1515260</p>
+        <p style="margin-top:10px;">
+            <a class="button" href="mailto:contact@heritagemux.com"><i class="fas fa-paper-plane"></i> Email Us</a>
+        </p>
     </div>
 </div>
+
+<!-- Admission Enquiry Form -->
+<div class="form-section" id="admission">
+    <h2><i class="fas fa-clipboard-list"></i> Admission Enquiry</h2>
+    <p class="form-subtitle">Fill in the details below and we'll get back to you shortly.</p>
+
+    <form id="admissionForm" name="admission" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+        <input type="hidden" name="form-name" value="admission">
+        <p style="display:none"><label>Don't fill this out: <input name="bot-field"></label></p>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="parentName"><i class="fas fa-user"></i> Parent / Guardian Name</label>
+                <input type="text" id="parentName" name="parentName" required placeholder="Full name">
+            </div>
+            <div class="form-group">
+                <label for="phone"><i class="fas fa-phone"></i> Phone Number</label>
+                <input type="tel" id="phone" name="phone" required placeholder="e.g. +92 300 1234567">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="email"><i class="fas fa-envelope"></i> Email Address</label>
+            <input type="email" id="email" name="email" placeholder="email@example.com">
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="childName"><i class="fas fa-child"></i> Child's Name</label>
+                <input type="text" id="childName" name="childName" required placeholder="Child's full name">
+            </div>
+            <div class="form-group">
+                <label for="childAge"><i class="fas fa-birthday-cake"></i> Child's Age</label>
+                <input type="text" id="childAge" name="childAge" required placeholder="e.g. 4 years">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="classApplied"><i class="fas fa-chalkboard"></i> Class Applied For</label>
+            <select id="classApplied" name="classApplied" required>
+                <option value="" disabled selected>Select a class</option>
+                <option value="Mont 1">Mont 1</option>
+                <option value="Mont 2">Mont 2</option>
+                <option value="Mont 3">Mont 3</option>
+                <option value="Class 1">Class 1</option>
+                <option value="Class 2">Class 2</option>
+                <option value="Class 3">Class 3</option>
+                <option value="Class 4">Class 4</option>
+                <option value="Class 5">Class 5</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="message"><i class="fas fa-comment-dots"></i> Additional Message (optional)</label>
+            <textarea id="message" name="message" placeholder="Any questions or special requirements..."></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Submit Enquiry</button>
+    </form>
+
+    <div class="form-success" id="formSuccess">
+        <i class="fas fa-check-circle"></i> Thank you! Your enquiry has been submitted. We'll contact you soon.
+    </div>
+</div>
+
 <footer>
-    © 2025 Heritage Montessori and School
+    <p><i class="fas fa-graduation-cap"></i> &copy; 2025 Heritage Montessori and School &nbsp;|&nbsp; <a href="mailto:contact@heritagemux.com">contact@heritagemux.com</a></p>
 </footer>
+
+<!-- WhatsApp Floating Button -->
+<a class="whatsapp-btn" href="https://wa.me/923361515260" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+</a>
+<div class="whatsapp-tooltip"><i class="fab fa-whatsapp" style="color:#25d366;margin-right:4px;"></i> Chat with us</div>
+
+<script>
+    // Handle form submission
+    document.getElementById('admissionForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        var form = e.target;
+        var formData = new FormData(form);
+
+        fetch('/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams(formData).toString()
+        }).then(function() {
+            form.style.display = 'none';
+            document.getElementById('formSuccess').style.display = 'block';
+        }).catch(function() {
+            alert('Something went wrong. Please try again or contact us directly.');
+        });
+    });
+</script>
+
 </body>
 </html>
