@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heritage Montessori and School</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cream: #f9f7f4;
+            --warm-white: #ffffff;
+            --sand: #e8e3dc;
+            --teal: #2b2d35;
+            --teal-light: #3d4050;
+            --teal-pale: #f2eeeb;
+            --rust: #e06b50;
+            --text-dark: #1a1c22;
+            --text-mid: #3d404d;
+            --text-light: #737680;
+            --border: #d8d3cb;
+            --shadow: rgba(43, 45, 53, 0.13);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--cream);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+        header {
+            background: var(--teal);
+            color: white;
+            padding: 0 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+        header::before {
+            content: '';
+            position: absolute;
+            right: -60px;
+            top: -60px;
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            border: 40px solid rgba(255,255,255,0.06);
+        }
+        header::after {
+            content: '';
+            position: absolute;
+            right: 80px;
+            bottom: -80px;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 30px solid rgba(255,255,255,0.05);
+        }
+        .header-left { display: flex; align-items: center; gap: 16px; z-index: 1; }
+        .header-icon {
+            width: 52px; height: 52px;
+            background: rgba(255,255,255,0.12);
+            border: 1.5px solid rgba(255,255,255,0.25);
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem;
+            flex-shrink: 0;
+        }
+        header h1 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.55rem;
+            font-weight: 400;
+            letter-spacing: 0.2px;
+            line-height: 1.25;
+        }
+        header h1 span {
+            display: block;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 400;
+            opacity: 0.7;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+        .header-badge {
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.9);
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            z-index: 1;
+            white-space: nowrap;
+        }
+        nav {
+            background: var(--warm-white);
+            border-bottom: 1.5px solid var(--border);
+            padding: 0 24px;
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        nav a {
+            color: var(--text-mid);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.875rem;
+            padding: 16px 16px;
+            border-bottom: 2.5px solid transparent;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            letter-spacing: 0.2px;
+        }
+        nav a i { font-size: 0.8rem; }
+        nav a:hover {
+            color: var(--rust);
+            border-bottom-color: var(--rust);
+        }
+        .hero {
+            background: var(--warm-white);
+            border-bottom: 1.5px solid var(--border);
+            padding: 72px 24px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-bg-pattern {
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(circle at 20% 50%, rgba(43,45,53,0.04) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(224,107,80,0.07) 0%, transparent 50%);
+        }
+        .hero-content { position: relative; z-index: 1; }
+        .hero-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #fdeee9;
+            color: var(--rust);
+            border: 1px solid rgba(224,107,80,0.25);
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 22px;
+        }
+        .hero h2 {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 400;
+            color: var(--text-dark);
+            max-width: 640px;
+            margin: 0 auto 16px;
+            line-height: 1.25;
+        }
+        .hero h2 em {
+            font-style: italic;
+            color: var(--rust);
+        }
+        .hero p {
+            color: var(--text-light);
+            font-size: 1.05rem;
+            max-width: 480px;
+            margin: 0 auto 28px;
+            font-weight: 300;
+        }
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--teal);
+            color: white;
+            padding: 13px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: background 0.2s ease, transform 0.15s ease;
+        }
+        .hero-cta:hover { background: var(--teal-light); transform: translateY(-1px); }
+        .stats-bar {
+            background: var(--teal);
+            color: white;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0;
+        }
+        .stat-item {
+            padding: 20px 36px;
+            text-align: center;
+            border-right: 1px solid rgba(255,255,255,0.15);
+            flex: 1;
+            min-width: 140px;
+        }
+        .stat-item:last-child { border-right: none; }
+        .stat-num {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.8rem;
+            font-weight: 400;
+            display: block;
+        }
+        .stat-label {
+            font-size: 0.75rem;
+            opacity: 0.75;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 48px 28px;
+            max-width: 1120px;
+            margin: 0 auto;
+        }
+        .card {
+            background: var(--warm-white);
+            border: 1.5px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--rust), #e8896f);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        .card:hover {
+            border-color: var(--rust);
+            box-shadow: 0 8px 32px var(--shadow);
+            transform: translateY(-3px);
+        }
+        .card:hover::before { opacity: 1; }
+        .card-icon {
+            width: 44px; height: 44px;
+            background: #fdeee9;
+            border: 1.5px solid rgba(224,107,80,0.25);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 18px;
+            color: var(--rust);
+            font-size: 1rem;
+        }
+        .card h2 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.25rem;
+            font-weight: 400;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+        .card p { color: var(--text-light); font-size: 0.92rem; margin-bottom: 12px; font-weight: 300; }
+        .card ul { list-style: none; margin: 12px 0 0; }
+        .card ul li {
+            padding: 7px 0;
+            color: var(--text-mid);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--sand);
+        }
+        .card ul li:last-child { border-bottom: none; }
+        .card ul li i { color: var(--rust); font-size: 0.8rem; flex-shrink: 0; }
+        .button {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: var(--teal);
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: background 0.2s ease;
+            margin-top: 10px;
+        }
+        .button:hover { background: var(--teal-light); }
+        .contact-detail {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 12px;
+            background: var(--cream);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: var(--text-mid);
+        }
+        .contact-detail i { color: var(--rust); width: 16px; text-align: center; }
+        .form-wrapper {
+            background: var(--warm-white);
+            border-top: 1.5px solid var(--border);
+            padding: 56px 24px;
+        }
+        .form-inner { max-width: 640px; margin: 0 auto; }
+        .form-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        .form-header-icon {
+            width: 52px; height: 52px;
+            background: var(--teal);
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--rust);
+            font-size: 1.15rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .form-header h2 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.65rem;
+            font-weight: 400;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+        .form-header p { color: var(--text-light); font-size: 0.9rem; font-weight: 300; }
+        .form-group { margin-bottom: 18px; }
+        .form-group label {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-mid);
+            font-size: 0.85rem;
+            letter-spacing: 0.2px;
+        }
+        .form-group label i { color: var(--rust); font-size: 0.8rem; }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            font-size: 0.92rem;
+            font-family: inherit;
+            color: var(--text-dark);
+            background: var(--cream);
+            transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+            -webkit-appearance: none;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--rust);
+            background: var(--warm-white);
+            box-shadow: 0 0 0 3px rgba(224,107,80,0.15);
+        }
+        .form-group input::placeholder,
+        .form-group textarea::placeholder { color: #b0b4bc; }
+        .form-group textarea { resize: vertical; min-height: 90px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .submit-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            background: var(--teal);
+            color: white;
+            padding: 14px 32px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 0.2s ease, transform 0.15s ease;
+            margin-top: 8px;
+        }
+        .submit-btn:hover { background: var(--teal-light); transform: translateY(-1px); }
+        .form-success {
+            display: none;
+            background: #fdeee9;
+            color: #b84830;
+            border: 1.5px solid rgba(224,107,80,0.3);
+            padding: 20px 24px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 600;
+        }
+        .form-success i { margin-right: 8px; }
+        footer {
+            background: var(--text-dark);
+            color: rgba(255,255,255,0.6);
+            text-align: center;
+            padding: 24px 20px;
+            font-size: 0.85rem;
+        }
+        footer a { color: rgba(255,255,255,0.85); text-decoration: none; }
+        footer a:hover { color: white; text-decoration: underline; }
+        .footer-logo {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.05rem;
+            color: white;
+            margin-bottom: 6px;
+        }
+        .whatsapp-btn {
+            position: fixed;
+            bottom: 24px; right: 24px;
+            width: 56px; height: 56px;
+            background: #25d366;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 18px rgba(37,211,102,0.35);
+            z-index: 999;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            text-decoration: none;
+        }
+        .whatsapp-btn:hover {
+            transform: scale(1.06) translateY(-2px);
+            box-shadow: 0 8px 24px rgba(37,211,102,0.45);
+        }
+        .whatsapp-btn i { color: white; font-size: 1.6rem; }
+        .whatsapp-tooltip {
+            position: fixed;
+            bottom: 90px; right: 24px;
+            background: var(--warm-white);
+            color: var(--text-dark);
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            font-size: 0.82rem;
+            font-weight: 600;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+            z-index: 998;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        .whatsapp-btn:hover + .whatsapp-tooltip { opacity: 1; }
+        @media (max-width: 640px) {
+            header { flex-direction: column; align-items: flex-start; gap: 12px; padding: 20px; }
+            .header-badge { align-self: flex-start; }
+            .hero { padding: 48px 20px; }
+            .hero h2 { font-size: 1.8rem; }
+            .form-row { grid-template-columns: 1fr; }
+            .form-inner { padding: 0; }
+            .stat-item { min-width: 120px; padding: 16px 20px; }
+            .container { padding: 28px 16px; }
+            nav a { font-size: 0.8rem; padding: 12px 10px; }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="header-left">
+        <div class="header-icon"><i class="fas fa-graduation-cap"></i></div>
+        <h1>
+            Heritage Montessori
+            <span>Established 2007 &nbsp;·&nbsp; Nurturing Young Minds</span>
+        </h1>
+    </div>
+    <div class="header-badge"><i class="fas fa-award"></i>&nbsp; Est. 2007</div>
+</header>
+<nav>
+    <a href="#about"><i class="fas fa-school"></i> About Us</a>
+    <a href="#programs"><i class="fas fa-book-open"></i> Programs</a>
+    <a href="#admission"><i class="fas fa-user-plus"></i> Admissions</a>
+    <a href="#events"><i class="fas fa-calendar-check"></i> Events</a>
+    <a href="#contact"><i class="fas fa-envelope"></i> Contact</a>
+</nav>
+<div class="hero">
+    <div class="hero-bg-pattern"></div>
+    <div class="hero-content">
+        <div class="hero-tag"><i class="fas fa-seedling"></i> Montessori Section &amp; Junior Section</div>
+        <h2>Shaping the Future of <em>Young Minds</em></h2>
+        <p>A safe, joyful, and nurturing learning environment where every child is empowered to grow.</p>
+        <a href="#admission" class="hero-cta"><i class="fas fa-clipboard-list"></i> Enquire About Admission</a>
+    </div>
+</div>
+<div class="stats-bar">
+    <div class="stat-item">
+        <span class="stat-num">18+</span>
+        <span class="stat-label">Years of Excellence</span>
+    </div>
+    <div class="stat-item">
+        <span class="stat-num">8</span>
+        <span class="stat-label">Classes Offered</span>
+    </div>
+    <div class="stat-item">
+        <span class="stat-num">2</span>
+        <span class="stat-label">Sections</span>
+    </div>
+    <div class="stat-item">
+        <span class="stat-num">100%</span>
+        <span class="stat-label">Dedicated Faculty</span>
+    </div>
+</div>
+<div class="container">
+    <div class="card" id="about">
+        <div class="card-icon"><i class="fas fa-heart"></i></div>
+        <h2>About Us</h2>
+        <p>Heritage Montessori has proudly served the community for 18 years, offering preschool and primary education. We believe in creating a safe, supportive, and joyful learning environment for every child.</p>
+        <ul>
+            <li><i class="fas fa-check-circle"></i> 18+ years of educational excellence</li>
+            <li><i class="fas fa-check-circle"></i> Montessori-based early learning</li>
+            <li><i class="fas fa-check-circle"></i> Experienced and caring faculty</li>
+        </ul>
+    </div>
+    <div class="card" id="programs">
+        <div class="card-icon"><i class="fas fa-puzzle-piece"></i></div>
+        <h2>Our Programs</h2>
+        <p>Tailored programs designed for every stage of early childhood development — 8 classes across two sections.</p>
+        <p style="font-size:0.8rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#e06b50;margin:14px 0 4px;">Montessori Section</p>
+        <ul>
+            <li><i class="fas fa-star"></i> Mont 1</li>
+            <li><i class="fas fa-star"></i> Mont 2</li>
+            <li><i class="fas fa-star"></i> Mont 3</li>
+        </ul>
+        <p style="font-size:0.8rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#e06b50;margin:14px 0 4px;">Junior Section</p>
+        <ul>
+            <li><i class="fas fa-star"></i> Class 1</li>
+            <li><i class="fas fa-star"></i> Class 2</li>
+            <li><i class="fas fa-star"></i> Class 3</li>
+            <li><i class="fas fa-star"></i> Class 4</li>
+            <li><i class="fas fa-star"></i> Class 5</li>
+        </ul>
+    </div>
+    <div class="card" id="events">
+        <div class="card-icon"><i class="fas fa-calendar-day"></i></div>
+        <h2>Events</h2>
+        <p>Stay tuned for upcoming school events, annual days, and parent-teacher meetings throughout the year.</p>
+        <ul>
+            <li><i class="fas fa-bullhorn"></i> Annual Day celebrations</li>
+            <li><i class="fas fa-bullhorn"></i> Parent-teacher meetings</li>
+            <li><i class="fas fa-bullhorn"></i> Sports &amp; activity days</li>
+        </ul>
+    </div>
+    <div class="card" id="contact">
+        <div class="card-icon"><i class="fas fa-phone"></i></div>
+        <h2>Contact Us</h2>
+        <p>We'd love to hear from you. Reach out via email or phone.</p>
+        <div class="contact-detail">
+            <i class="fas fa-envelope"></i> contact@heritagemux.com
+        </div>
+        <div class="contact-detail">
+            <i class="fas fa-mobile-screen"></i> +92 336 1515260
+        </div>
+        <a class="button" href="mailto:contact@heritagemux.com"><i class="fas fa-paper-plane"></i> Email Us</a>
+    </div>
+</div>
+<div class="form-wrapper" id="admission">
+    <div class="form-inner">
+        <div class="form-header">
+            <div class="form-header-icon"><i class="fas fa-clipboard-list"></i></div>
+            <div>
+                <h2>Admission Enquiry</h2>
+                <p>Fill in the details below and we'll get back to you shortly.</p>
+            </div>
+        </div>
+        <form id="admissionForm" name="admission" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+            <input type="hidden" name="form-name" value="admission">
+            <p style="display:none"><label>Don't fill this out: <input name="bot-field"></label></p>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="parentName"><i class="fas fa-user"></i> Parent / Guardian Name</label>
+                    <input type="text" id="parentName" name="parentName" required placeholder="Full name">
+                </div>
+                <div class="form-group">
+                    <label for="phone"><i class="fas fa-phone"></i> Phone Number</label>
+                    <input type="tel" id="phone" name="phone" required placeholder="e.g. +92 300 1234567">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="email"><i class="fas fa-envelope"></i> Email Address</label>
+                <input type="email" id="email" name="email" placeholder="email@example.com">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="childName"><i class="fas fa-child-reaching"></i> Child's Name</label>
+                    <input type="text" id="childName" name="childName" required placeholder="Child's full name">
+                </div>
+                <div class="form-group">
+                    <label for="childAge"><i class="fas fa-cake-candles"></i> Child's Age</label>
+                    <input type="text" id="childAge" name="childAge" required placeholder="e.g. 4 years">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="classApplied"><i class="fas fa-chalkboard"></i> Class Applied For</label>
+                <select id="classApplied" name="classApplied" required>
+                    <option value="" disabled selected>Select a class</option>
+                    <option value="Mont 1">Mont 1</option>
+                    <option value="Mont 2">Mont 2</option>
+                    <option value="Mont 3">Mont 3</option>
+                    <option value="Class 1">Class 1</option>
+                    <option value="Class 2">Class 2</option>
+                    <option value="Class 3">Class 3</option>
+                    <option value="Class 4">Class 4</option>
+                    <option value="Class 5">Class 5</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="message"><i class="fas fa-comment-dots"></i> Additional Message (optional)</label>
+                <textarea id="message" name="message" placeholder="Any questions or special requirements..."></textarea>
+            </div>
+            <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Submit Enquiry</button>
+        </form>
+        <div class="form-success" id="formSuccess">
+            <i class="fas fa-check-circle"></i> Thank you! Your enquiry has been submitted. We'll contact you soon.
+        </div>
+    </div>
+</div>
+<footer>
+    <div class="footer-logo"><i class="fas fa-graduation-cap"></i> Heritage Montessori and School</div>
+    <p>&copy; 2025 Heritage Montessori and School &nbsp;·&nbsp; <a href="mailto:contact@heritagemux.com">contact@heritagemux.com</a></p>
+</footer>
+<a class="whatsapp-btn" href="https://wa.me/923361515260" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+</a>
+<div class="whatsapp-tooltip"><i class="fab fa-whatsapp" style="color:#25d366;margin-right:5px;"></i> Chat with us</div>
+<script>
+    document.getElementById('admissionForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        var form = e.target;
+        var formData = new FormData(form);
+        fetch('/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams(formData).toString()
+        }).then(function() {
+            form.style.display = 'none';
+            document.getElementById('formSuccess').style.display = 'block';
+        }).catch(function() {
+            alert('Something went wrong. Please try again or contact us directly.');
+        });
+    });
+</script>
+</body>
+</html>
