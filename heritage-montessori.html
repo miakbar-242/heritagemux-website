@@ -8,18 +8,18 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --cream: #f9f7f4;
+            --cream: #f7f4ef;
             --warm-white: #ffffff;
-            --sand: #e8e3dc;
-            --teal: #2b2d35;
-            --teal-light: #3d4050;
-            --teal-pale: #f2eeeb;
-            --rust: #e06b50;
-            --text-dark: #1a1c22;
-            --text-mid: #3d404d;
-            --text-light: #737680;
-            --border: #d8d3cb;
-            --shadow: rgba(43, 45, 53, 0.13);
+            --sand: #e7dfd4;
+            --teal: #3a4652;
+            --teal-light: #4c5a67;
+            --teal-pale: #f1ece5;
+            --rust: #c97a64;
+            --text-dark: #232a31;
+            --text-mid: #49525c;
+            --text-light: #6f7680;
+            --border: #d9d1c5;
+            --shadow: rgba(58, 70, 82, 0.12);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -33,7 +33,7 @@
 
         /* ── HEADER ── */
         header {
-            background: var(--teal);
+            background: linear-gradient(140deg, #3a4652 0%, #445260 100%);
             color: white;
             padding: 0 32px;
             display: flex;
@@ -167,15 +167,15 @@
             position: absolute;
             inset: 0;
             background-image:
-                radial-gradient(circle at 20% 50%, rgba(43,45,53,0.04) 0%, transparent 50%),
-                radial-gradient(circle at 80% 50%, rgba(224,107,80,0.07) 0%, transparent 50%);
+                radial-gradient(circle at 20% 50%, rgba(58,70,82,0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(201,122,100,0.08) 0%, transparent 50%);
         }
         .hero-content { position: relative; z-index: 1; }
         .hero-tag {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: #fdeee9;
+            background: #f6ebe6;
             color: var(--rust);
             border: 1px solid rgba(224,107,80,0.25);
             padding: 6px 16px;
@@ -212,7 +212,7 @@
             background: var(--teal);
             color: white;
             padding: 13px 28px;
-            border-radius: 8px;
+            border-radius: 999px;
             font-weight: 600;
             font-size: 0.9rem;
             text-decoration: none;
@@ -264,7 +264,7 @@
         .card {
             background: var(--warm-white);
             border: 1.5px solid var(--border);
-            border-radius: 16px;
+            border-radius: 18px;
             padding: 28px;
             transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
             position: relative;
@@ -280,16 +280,16 @@
             transition: opacity 0.2s ease;
         }
         .card:hover {
-            border-color: var(--rust);
-            box-shadow: 0 8px 32px var(--shadow);
-            transform: translateY(-3px);
+            border-color: rgba(201,122,100,0.45);
+            box-shadow: 0 10px 30px var(--shadow);
+            transform: translateY(-2px);
         }
         .card:hover::before { opacity: 1; }
 
         .card-icon {
             width: 44px; height: 44px;
-            background: #fdeee9;
-            border: 1.5px solid rgba(224,107,80,0.25);
+            background: #f6ebe6;
+            border: 1.5px solid rgba(201,122,100,0.24);
             border-radius: 12px;
             display: flex; align-items: center; justify-content: center;
             margin-bottom: 18px;
@@ -327,7 +327,7 @@
             color: white;
             padding: 10px 20px;
             text-decoration: none;
-            border-radius: 8px;
+            border-radius: 999px;
             font-weight: 600;
             font-size: 0.875rem;
             transition: background 0.2s ease;
@@ -417,7 +417,7 @@
             outline: none;
             border-color: var(--rust);
             background: var(--warm-white);
-            box-shadow: 0 0 0 3px rgba(224,107,80,0.15);
+            box-shadow: 0 0 0 3px rgba(201,122,100,0.16);
         }
         .form-group input::placeholder,
         .form-group textarea::placeholder { color: #b0b4bc; }
@@ -433,7 +433,7 @@
             color: white;
             padding: 14px 32px;
             border: none;
-            border-radius: 10px;
+            border-radius: 999px;
             font-weight: 600;
             font-size: 0.95rem;
             cursor: pointer;
