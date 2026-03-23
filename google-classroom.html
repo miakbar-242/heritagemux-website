@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Google Classroom for Parents | Heritage Montessori and School</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f7f4ef;
+    --warm-white: #ffffff;
+    --sand: #e7dfd4;
+    --teal: #3a4652;
+    --teal-light: #4c5a67;
+    --teal-pale: #f1ece5;
+    --rust: #c97a64;
+    --text-dark: #232a31;
+    --text-mid: #49525c;
+    --text-light: #6f7680;
+    --border: #d9d1c5;
+    --shadow: rgba(58, 70, 82, 0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    line-height: 1.6;
+  }
+
+  /* ── HEADER (matches index.html exactly) ── */
+  header {
+    background: linear-gradient(140deg, #3a4652 0%, #445260 100%);
+    color: white;
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    right: -60px; top: -60px;
+    width: 260px; height: 260px;
+    border-radius: 50%;
+    border: 40px solid rgba(255,255,255,0.06);
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    right: 80px; bottom: -80px;
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    border: 30px solid rgba(255,255,255,0.05);
+  }
+  .header-left { display: flex; align-items: center; gap: 16px; z-index: 1; }
+  .header-icon {
+    width: 52px; height: 52px;
+    background: rgba(255,255,255,0.12);
+    border: 1.5px solid rgba(255,255,255,0.25);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+  header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.55rem;
+    font-weight: 400;
+    letter-spacing: 0.2px;
+    line-height: 1.25;
+  }
+  header h1 span {
+    display: block;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 400;
+    opacity: 0.7;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  .header-motto {
+    display: block;
+    font-family: 'DM Sans', sans-serif;
+    font-style: italic;
+    font-size: 0.82rem;
+    font-weight: 400;
+    color: #e06b50;
+    letter-spacing: 0.3px;
+    margin-top: 3px;
+    opacity: 0.95;
+  }
+  .header-back {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.9);
+    padding: 8px 18px;
+    border-radius: 50px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    z-index: 1;
+    white-space: nowrap;
+    text-decoration: none;
+    display: flex; align-items: center; gap: 7px;
+    transition: background 0.2s;
+  }
+  .header-back:hover { background: rgba(255,255,255,0.2); }
+
+  /* ── NAV (matches index.html exactly) ── */
+  nav {
+    background: var(--warm-white);
+    border-bottom: 1.5px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  nav a {
+    color: var(--text-mid);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.875rem;
+    padding: 16px 16px;
+    border-bottom: 2.5px solid transparent;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    letter-spacing: 0.2px;
+  }
+  nav a i { font-size: 0.8rem; }
+  nav a:hover, nav a.active {
+    color: var(--rust);
+    border-bottom-color: var(--rust);
+  }
+
+  /* ── PAGE HERO ── */
+  .page-hero {
+    background: var(--warm-white);
+    border-bottom: 1.5px solid var(--border);
+    padding: 64px 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .page-hero-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 50%, rgba(58,70,82,0.05) 0%, transparent 50%),
+      radial-gradient(circle at 80% 50%, rgba(201,122,100,0.08) 0%, transparent 50%);
+  }
+  .page-hero-content { position: relative; z-index: 1; }
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #f6ebe6;
+    color: var(--rust);
+    border: 1px solid rgba(224,107,80,0.25);
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-bottom: 22px;
+  }
+  .page-hero h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 400;
+    color: var(--text-dark);
+    max-width: 640px;
+    margin: 0 auto 16px;
+    line-height: 1.25;
+  }
+  .page-hero h2 em { font-style: italic; color: var(--rust); }
+  .page-hero p {
+    color: var(--text-light);
+    font-size: 1.05rem;
+    max-width: 500px;
+    margin: 0 auto 28px;
+    font-weight: 300;
+  }
+  .hero-chips {
+    display: flex; flex-wrap: wrap;
+    justify-content: center; gap: 10px;
+  }
+  .chip {
+    background: var(--cream);
+    border: 1.5px solid var(--border);
+    color: var(--text-mid);
+    font-size: 0.83rem;
+    font-weight: 500;
+    padding: 7px 16px;
+    border-radius: 50px;
+    display: flex; align-items: center; gap: 7px;
+  }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    background: var(--teal);
+    color: white;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .stat-item {
+    padding: 20px 36px;
+    text-align: center;
+    border-right: 1px solid rgba(255,255,255,0.15);
+    flex: 1;
+    min-width: 140px;
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.8rem;
+    font-weight: 400;
+    display: block;
+  }
+  .stat-label {
+    font-size: 0.75rem;
+    opacity: 0.75;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* ── LAYOUT ── */
+  .container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 48px 28px;
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+  .section-header {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 48px 28px 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .section-header h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.6rem;
+    font-weight: 400;
+    color: var(--text-dark);
+  }
+  .section-header p {
+    color: var(--text-light);
+    font-size: 0.9rem;
+    font-weight: 300;
+    max-width: 480px;
+  }
+
+  /* ── CARDS (matches index.html style) ── */
+  .card {
+    background: var(--warm-white);
+    border: 1.5px solid var(--border);
+    border-radius: 18px;
+    padding: 28px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--rust), #e8896f);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  .card:hover {
+    border-color: rgba(201,122,100,0.45);
+    box-shadow: 0 10px 30px var(--shadow);
+    transform: translateY(-2px);
+  }
+  .card:hover::before { opacity: 1; }
+  .card-icon {
+    width: 44px; height: 44px;
+    background: #f6ebe6;
+    border: 1.5px solid rgba(201,122,100,0.24);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 18px;
+    color: var(--rust);
+    font-size: 1rem;
+  }
+  .card h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.15rem;
+    font-weight: 400;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+  }
+  .card p { color: var(--text-light); font-size: 0.92rem; font-weight: 300; line-height: 1.7; }
+
+  /* ── STEPS SECTION ── */
+  .steps-section {
+    background: var(--warm-white);
+    border-top: 1.5px solid var(--border);
+    border-bottom: 1.5px solid var(--border);
+    padding: 56px 28px;
+  }
+  .steps-inner { max-width: 760px; margin: 0 auto; }
+  .steps-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.6rem;
+    font-weight: 400;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+  }
+  .steps-sub {
+    color: var(--text-light);
+    font-size: 0.92rem;
+    font-weight: 300;
+    margin-bottom: 36px;
+    max-width: 520px;
+  }
+  .step {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--sand);
+  }
+  .step:last-child { border-bottom: none; }
+  .step-num {
+    flex-shrink: 0;
+    width: 36px; height: 36px;
+    background: var(--teal);
+    color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Serif Display', serif;
+    font-size: 1rem;
+    margin-top: 2px;
+  }
+  .step-body { flex: 1; }
+  .step-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 50px;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .t-all     { background: #eef3f0; color: #3a5245; border: 1px solid #c5d9cc; }
+  .t-mont    { background: #fdf6e3; color: #7a5c00; border: 1px solid #e8d5a0; }
+  .t-primary { background: #eaf0f8; color: #2a4a72; border: 1px solid #b0c8e0; }
+  .step-body h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.05rem;
+    font-weight: 400;
+    color: var(--text-dark);
+    margin-bottom: 5px;
+  }
+  .step-body p { font-size: 0.9rem; color: var(--text-light); font-weight: 300; line-height: 1.75; }
+
+  /* ── FAQ ── */
+  .faq-section {
+    padding: 56px 28px;
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+  .faq-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.6rem;
+    font-weight: 400;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+  }
+  .faq-sub {
+    color: var(--text-light);
+    font-size: 0.92rem;
+    font-weight: 300;
+    margin-bottom: 32px;
+  }
+  .faq-list { display: flex; flex-direction: column; gap: 8px; }
+  .faq-item {
+    background: var(--warm-white);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .faq-item.open { border-color: rgba(201,122,100,0.4); }
+  .faq-btn {
+    width: 100%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: var(--text-dark);
+    text-align: left;
+    transition: background 0.18s;
+  }
+  .faq-btn:hover { background: var(--cream); }
+  .faq-btn i { color: var(--rust); font-size: 0.8rem; flex-shrink: 0; transition: transform 0.25s; }
+  .faq-item.open .faq-btn { background: var(--cream); }
+  .faq-item.open .faq-btn i { transform: rotate(45deg); }
+  .faq-ans {
+    display: none;
+    padding: 0 20px 18px;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    line-height: 1.78;
+    font-weight: 300;
+    border-top: 1px solid var(--sand);
+    padding-top: 14px;
+  }
+  .faq-item.open .faq-ans { display: block; }
+
+  /* ── CONTACT STRIP ── */
+  .contact-strip {
+    background: var(--teal);
+    color: white;
+    padding: 48px 28px;
+    text-align: center;
+  }
+  .contact-strip h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.6rem;
+    font-weight: 400;
+    margin-bottom: 10px;
+  }
+  .contact-strip h2 em { font-style: italic; color: #e8896f; }
+  .contact-strip p {
+    opacity: 0.75;
+    font-size: 0.95rem;
+    font-weight: 300;
+    max-width: 480px;
+    margin: 0 auto 24px;
+    line-height: 1.75;
+  }
+  .contact-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--rust);
+    color: white;
+    padding: 13px 28px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: background 0.2s ease, transform 0.15s ease;
+  }
+  .contact-btn:hover { background: #b8694f; transform: translateY(-1px); }
+
+  /* ── FOOTER (matches index.html exactly) ── */
+  footer {
+    background: var(--text-dark);
+    color: rgba(255,255,255,0.6);
+    text-align: center;
+    padding: 24px 20px;
+    font-size: 0.85rem;
+  }
+  footer a { color: rgba(255,255,255,0.85); text-decoration: none; }
+  footer a:hover { color: white; text-decoration: underline; }
+  .footer-logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.05rem;
+    color: white;
+    margin-bottom: 6px;
+  }
+
+  /* ── WHATSAPP ── */
+  .whatsapp-btn {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    width: 56px; height: 56px;
+    background: #25d366;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 18px rgba(37,211,102,0.35);
+    z-index: 999;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-decoration: none;
+  }
+  .whatsapp-btn:hover { transform: scale(1.06) translateY(-2px); box-shadow: 0 8px 24px rgba(37,211,102,0.45); }
+  .whatsapp-btn i { color: white; font-size: 1.6rem; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    header { flex-direction: column; align-items: flex-start; gap: 12px; padding: 20px; }
+    .page-hero { padding: 48px 20px; }
+    .step { flex-direction: column; gap: 10px; }
+    .container { padding: 28px 16px; }
+    nav a { font-size: 0.8rem; padding: 12px 10px; }
+    .steps-section, .faq-section { padding: 40px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER — matches your index.html exactly -->
+<header>
+  <div class="header-left">
+    <div class="header-icon">🌿</div>
+    <h1>
+      Heritage Montessori and School
+      <span>Creative · Thematic · Individually Focused</span>
+      <em class="header-motto">Nurturing Young Minds</em>
+    </h1>
+  </div>
+  <a href="index.html" class="header-back">
+    <i class="fa-solid fa-arrow-left"></i> Back to Website
+  </a>
+</header>
+
+<!-- NAV — matches your index.html exactly -->
+<nav>
+  <a href="index.html#about"><i class="fa-solid fa-school"></i> About</a>
+  <a href="index.html#montessori"><i class="fa-solid fa-seedling"></i> Montessori</a>
+  <a href="index.html#primary"><i class="fa-solid fa-book-open"></i> Primary</a>
+  <a href="index.html#admissions"><i class="fa-solid fa-file-pen"></i> Admissions</a>
+  <a href="google-classroom.html" class="active"><i class="fa-brands fa-google"></i> Google Classroom</a>
+  <a href="index.html#contact"><i class="fa-solid fa-envelope"></i> Contact</a>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="page-hero-content">
+    <div class="hero-tag">
+      <i class="fa-brands fa-google"></i> Digital Learning at Heritage
+    </div>
+    <h2>Google Classroom<br><em>for Parents</em></h2>
+    <p>Your complete guide to our new online learning platform — how it works, what to expect, and how to support your child from home.</p>
+    <div class="hero-chips">
+      <div class="chip"><i class="fa-solid fa-school"></i> All 8 Classes</div>
+      <div class="chip"><i class="fa-solid fa-seedling"></i> Montessori &amp; Primary</div>
+      <div class="chip"><i class="fa-solid fa-circle-check"></i> Free for Families</div>
+    </div>
+  </div>
+</div>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat-item">
+    <span class="stat-num">8</span>
+    <span class="stat-label">Classes Online</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">5</span>
+    <span class="stat-label">Easy Steps</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">Free</span>
+    <span class="stat-label">For All Families</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">Any</span>
+    <span class="stat-label">Phone Works</span>
+  </div>
+</div>
+
+<!-- WHAT IS IT — 4 CARDS -->
+<div class="section-header">
+  <div>
+    <h2>What is Google Classroom?</h2>
+    <p>A free, safe platform connecting your child with their teacher — lessons, assignments and feedback, all from your phone.</p>
+  </div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="card-icon"><i class="fa-solid fa-video"></i></div>
+    <h3>Watch Lessons Anytime</h3>
+    <p>Teachers record short video lessons your child can watch at home, at whatever time suits your family. Videos stay available to rewatch.</p>
+  </div>
+  <div class="card">
+    <div class="card-icon"><i class="fa-solid fa-clipboard-list"></i></div>
+    <h3>Receive Assignments</h3>
+    <p>Work and learning materials are posted in the app. You get an automatic notification the moment something new is available.</p>
+  </div>
+  <div class="card">
+    <div class="card-icon"><i class="fa-solid fa-upload"></i></div>
+    <h3>Submit Completed Work</h3>
+    <p>Photograph your child's completed work and upload it in seconds. No printing or scanning needed — just your phone camera.</p>
+  </div>
+  <div class="card">
+    <div class="card-icon"><i class="fa-solid fa-comment-dots"></i></div>
+    <h3>Receive Teacher Feedback</h3>
+    <p>The teacher reviews the submitted work, leaves comments or marks, and sends it back — so you always know how your child is doing.</p>
+  </div>
+</div>
+
+<!-- HOW IT WORKS — STEPS -->
+<div class="steps-section">
+  <div class="steps-inner">
+    <h2 class="steps-title">How a Lesson Works</h2>
+    <p class="steps-sub">The same simple process applies to every class — from the moment the teacher records a lesson to the moment feedback reaches you.</p>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <span class="step-tag t-all">All Classes</span>
+        <h3>Teacher records and posts the lesson</h3>
+        <p>Your child's teacher records a short video lesson — 5 to 15 minutes — and posts it in Google Classroom with the day's task or worksheet. The video stays available to rewatch at any time.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <span class="step-tag t-all">All Classes</span>
+        <h3>You receive a notification</h3>
+        <p>The moment a new lesson is posted, you will receive an email notification. Open Google Classroom to find the video and the day's instructions.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <span class="step-tag t-mont">Montessori Parents — Mont 1, 2 &amp; 3</span>
+        <h3>Watch together and do the activity with your child</h3>
+        <p>Sit with your child, watch the lesson video together, and help them complete the hands-on activity — tracing, sorting, counting, colouring, or whatever the teacher has set. When done, take a clear photo of the completed work. Your involvement at this age makes all the difference.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <span class="step-tag t-primary">Primary Parents — Class 1 to 5</span>
+        <h3>Your child watches the lesson and completes the work</h3>
+        <p>Your child watches the lesson and then completes the assigned work in their notebook, textbook, or on a worksheet. When finished, take a clear photo of the completed pages.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <span class="step-tag t-all">All Classes</span>
+        <h3>Submit the work through Google Classroom</h3>
+        <p>Open the assignment in the app, tap <strong>Add Attachment</strong>, upload the photo, then tap <strong>Turn In</strong>. Done — the teacher is notified straight away.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <span class="step-tag t-all">All Classes</span>
+        <h3>Teacher reviews and sends feedback</h3>
+        <p>Your child's teacher reviews the submitted work, adds an encouraging comment or grade, and clicks Return. You get a notification — open the assignment to read the feedback and celebrate your child's effort! 🌟</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<div class="faq-section">
+  <h2 class="faq-title">Parents Ask, We Answer</h2>
+  <p class="faq-sub">The questions we hear most from our parent community. If yours is not here, please reach out — we are always happy to help.</p>
+  <div class="faq-list">
+
+    <div class="faq-item">
+      <button class="faq-btn" onclick="toggleFaq(this)">
+        Do I need to pay anything to use Google Classroom?
+        <i class="fa-solid fa-plus"></i>
+      </button>
+      <div class="faq-ans">No — Google Classroom is completely free for all families. You only need a Google account for your child, which the school will provide or help you set up. There are no subscriptions or hidden charges.</div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-btn" onclick="toggleFaq(this)">
+        Do I need a laptop, or will a smartphone work?
+        <i class="fa-solid fa-plus"></i>
+      </button>
+      <div class="faq-ans">A smartphone is all you need. Download the free Google Classroom app on any Android or iPhone and you can do everything — watch lessons, read assignments, upload photos, and read feedback. Most parents manage everything from their phone.</div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-btn" onclick="toggleFaq(this)">
+        My child is in Montessori. Do they use the app themselves?
+        <i class="fa-solid fa-plus"></i>
+      </button>
+      <div class="faq-ans">Not at all. For Montessori children (Mont 1, 2 and 3), parents manage Google Classroom completely. You watch the lesson with your child, help with the activity, photograph it, and submit on their behalf. Your child does not need to touch a phone or tablet independently.</div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-btn" onclick="toggleFaq(this)">
+        What if we miss a lesson or forget to submit on time?
+        <i class="fa-solid fa-plus"></i>
+      </button>
+      <div class="faq-ans">All lesson videos stay available permanently, so your child can rewatch any lesson at any time. If you miss a deadline, simply submit as soon as you can and leave a short comment for the teacher. Our teachers are understanding and will always support your family.</div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-btn" onclick="toggleFaq(this)">
+        Is Google Classroom safe for my child?
+        <i class="fa-solid fa-plus"></i>
+      </button>
+      <div class="faq-ans">Yes. The school account your child uses is fully managed by Heritage School and restricts access to school content only. Your child cannot browse the open internet through this account. Google Classroom is trusted by millions of schools worldwide and meets strict child safety standards.</div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-btn" onclick="toggleFaq(this)">
+        How will I know when a new lesson has been posted?
+        <i class="fa-solid fa-plus"></i>
+      </button>
+      <div class="faq-ans">You will receive an automatic email notification each time your child's teacher posts a new assignment or lesson. Make sure notifications are turned on in your Gmail or Google Classroom app. The school will also send a daily reminder through the class WhatsApp group.</div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-btn" onclick="toggleFaq(this)">
+        I am not very tech-savvy. Will I manage this?
+        <i class="fa-solid fa-plus"></i>
+      </button>
+      <div class="faq-ans">Absolutely. The school is hosting a parent orientation session where we walk through every step together on your phone — no prior experience needed. Staff are also available in person during school hours if you need extra help at any time.</div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-btn" onclick="toggleFaq(this)">
+        What if my child does not understand the lesson video?
+        <i class="fa-solid fa-plus"></i>
+      </button>
+      <div class="faq-ans">Your child can rewatch the video as many times as needed. If there is still confusion, leave a comment in the assignment or contact the teacher via WhatsApp. Teachers are available during school hours to answer questions from both students and parents.</div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-btn" onclick="toggleFaq(this)">
+        How will I know when the teacher has reviewed my child's work?
+        <i class="fa-solid fa-plus"></i>
+      </button>
+      <div class="faq-ans">Once the teacher reviews the work and clicks Return, you will receive an email notification. Open Google Classroom and go to that assignment to read the comment. For Classes 3 to 5, a grade or marks may also appear alongside the comment.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- CONTACT STRIP -->
+<div class="contact-strip">
+  <h2>Need help? <em>We are here.</em></h2>
+  <p>The Heritage School team is with you every step of the way. Come to the school office, call us, or send a WhatsApp message — no question is too small.<br><br>
+        📱 WhatsApp: 0336 1515260 &nbsp;·&nbsp; ☎️ Landline: 061 6151526</p>
+  <a href="index.html#contact" class="contact-btn">
+    <i class="fa-solid fa-envelope"></i> Contact the School
+  </a>
+</div>
+
+<!-- FOOTER — matches index.html exactly -->
+<footer>
+  <div class="footer-logo">Heritage Montessori and School</div>
+  <p>Established 2007 · Multan, Pakistan · <a href="index.html">heritagemux.com</a></p>
+</footer>
+
+<!-- WHATSAPP BUTTON -->
+<a href="https://wa.me/923361515260" class="whatsapp-btn" target="_blank" rel="noopener">
+  <i class="fa-brands fa-whatsapp"></i>
+</a>
+
+
+<script>
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  // Smooth scroll for nav links pointing to sections on this page
+  document.querySelectorAll('nav a[href^="#"]').forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+</script>
+</body>
+</html>
