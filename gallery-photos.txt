@@ -1,0 +1,15 @@
+# Heritage School Gallery — Photo List
+# =====================================
+# HOW TO ADD A NEW PHOTO:
+# 1. Upload the photo to the "gallery" folder in GitHub
+# 2. Add the filename on a new line below (just the filename, nothing else)
+# 3. Commit the change
+# 4. The photo will appear on the website automatically!
+#
+# FORMAT: filename.jpg | Caption
+# EXAMPLE: sports-day.jpg | Sports Day 2025
+# =====================================
+
+IMG-20260227-WA0014.jpg | School Event
+IMG-20260310-WA0025.jpg | School Event
+IMG-20260310-WA0026.jpg | School Event
