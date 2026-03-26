@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gallery | Heritage Montessori and School</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f7f4ef;
+    --warm-white: #ffffff;
+    --sand: #e7dfd4;
+    --teal: #3a4652;
+    --teal-light: #4c5a67;
+    --rust: #c97a64;
+    --text-dark: #232a31;
+    --text-mid: #49525c;
+    --text-light: #6f7680;
+    --border: #d9d1c5;
+    --shadow: rgba(58,70,82,0.12);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text-dark); line-height: 1.6; }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(140deg, #3a4652 0%, #445260 100%);
+    color: white; padding: 0 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    min-height: 80px; position: sticky; top: 0; z-index: 200;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.2); overflow: hidden;
+  }
+  header::before {
+    content: ''; position: absolute; right: -60px; top: -60px;
+    width: 260px; height: 260px; border-radius: 50%;
+    border: 40px solid rgba(255,255,255,0.06);
+  }
+  .header-left { display: flex; align-items: center; gap: 16px; z-index: 1; }
+  .header-icon {
+    width: 52px; height: 52px; background: rgba(255,255,255,0.12);
+    border: 1.5px solid rgba(255,255,255,0.25); border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; flex-shrink: 0;
+  }
+  header h1 { font-family: 'DM Serif Display', serif; font-size: 1.55rem; font-weight: 400; line-height: 1.25; }
+  header h1 span { display: block; font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 400; opacity: 0.7; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; }
+  .header-motto { display: block; font-style: italic; font-size: 0.82rem; color: #e06b50; margin-top: 3px; opacity: 0.95; }
+  .back-btn {
+    background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.9); padding: 8px 18px; border-radius: 50px;
+    font-size: 0.82rem; font-weight: 500; text-decoration: none; z-index: 1;
+    white-space: nowrap; display: flex; align-items: center; gap: 7px; transition: background 0.2s;
+  }
+  .back-btn:hover { background: rgba(255,255,255,0.2); }
+
+  /* HERO */
+  .hero {
+    background: var(--warm-white); border-bottom: 1.5px solid var(--border);
+    padding: 56px 24px; text-align: center; position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background-image: radial-gradient(circle at 20% 50%, rgba(58,70,82,0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 50%, rgba(201,122,100,0.08) 0%, transparent 50%);
+  }
+  .hero-content { position: relative; z-index: 1; }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #f6ebe6; color: var(--rust); border: 1px solid rgba(224,107,80,0.25);
+    padding: 6px 16px; border-radius: 50px; font-size: 0.82rem; font-weight: 600; margin-bottom: 18px;
+  }
+  .hero h2 { font-family: 'DM Serif Display', serif; font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 400; color: var(--text-dark); margin-bottom: 12px; }
+  .hero h2 em { font-style: italic; color: var(--rust); }
+  .hero p { color: var(--text-light); font-size: 1rem; max-width: 480px; margin: 0 auto; font-weight: 300; }
+
+  /* HOW TO ADD */
+  .how-to-add {
+    max-width: 1120px; margin: 32px auto 0; padding: 0 24px;
+  }
+  .how-to-box {
+    background: var(--warm-white);
+    border: 1.5px solid var(--border);
+    border-left: 4px solid var(--rust);
+    border-radius: 0 12px 12px 0;
+    padding: 16px 20px;
+    display: flex; align-items: flex-start; gap: 12px;
+    font-size: 0.88rem; color: var(--text-light); line-height: 1.75;
+  }
+  .how-to-box i { color: var(--rust); margin-top: 2px; flex-shrink: 0; }
+  .how-to-box strong { color: var(--text-dark); }
+
+  /* GALLERY WRAP */
+  .gallery-wrap { max-width: 1120px; margin: 0 auto; padding: 32px 24px 48px; }
+
+  /* LOADING */
+  .loading {
+    text-align: center; padding: 60px 20px;
+    color: var(--text-light); font-size: 0.95rem;
+  }
+  .loading i { font-size: 1.5rem; color: var(--rust); margin-bottom: 12px; display: block; }
+
+  /* EMPTY */
+  .empty {
+    text-align: center; padding: 60px 20px;
+    color: var(--text-light); font-size: 0.95rem;
+  }
+  .empty i { font-size: 2rem; color: var(--border); margin-bottom: 12px; display: block; }
+
+  /* MASONRY GRID */
+  .gallery-grid { columns: 3 260px; column-gap: 16px; }
+  .gallery-item {
+    break-inside: avoid; margin-bottom: 16px; border-radius: 14px;
+    overflow: hidden; position: relative; cursor: pointer;
+    border: 1.5px solid var(--border); background: var(--sand);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .gallery-item:hover { transform: translateY(-3px); box-shadow: 0 10px 28px var(--shadow); }
+  .gallery-item img { width: 100%; display: block; transition: transform 0.4s; min-height: 140px; object-fit: cover; }
+  .gallery-item:hover img { transform: scale(1.04); }
+  .gallery-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(35,42,49,0.65) 0%, transparent 55%);
+    opacity: 0; transition: opacity 0.3s;
+    display: flex; align-items: flex-end; padding: 16px;
+  }
+  .gallery-item:hover .gallery-overlay { opacity: 1; }
+  .gallery-caption { color: white; font-size: 0.82rem; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+
+  /* LIGHTBOX */
+  .lightbox {
+    display: none; position: fixed; inset: 0;
+    background: rgba(10,12,16,0.94); z-index: 9999;
+    align-items: center; justify-content: center; padding: 20px;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox-img { max-width: 92vw; max-height: 86vh; border-radius: 12px; object-fit: contain; box-shadow: 0 24px 60px rgba(0,0,0,0.5); }
+  .lb-btn {
+    position: fixed; width: 46px; height: 46px;
+    background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 50%; color: white; font-size: 1rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; transition: background 0.2s;
+  }
+  .lb-btn:hover { background: rgba(255,255,255,0.25); }
+  .lb-close { top: 18px; right: 18px; }
+  .lb-prev { top: 50%; left: 14px; transform: translateY(-50%); }
+  .lb-next { top: 50%; right: 14px; transform: translateY(-50%); }
+  .lb-counter { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); color: white; font-size: 0.82rem; padding: 5px 16px; border-radius: 20px; }
+  .lb-caption { position: fixed; bottom: 56px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.8); font-size: 0.88rem; white-space: nowrap; }
+
+  /* FOOTER */
+  footer { background: var(--text-dark); color: rgba(255,255,255,0.6); text-align: center; padding: 24px 20px; font-size: 0.85rem; }
+  footer a { color: rgba(255,255,255,0.85); text-decoration: none; }
+  footer a:hover { color: white; }
+  .footer-logo { font-family: 'DM Serif Display', serif; font-size: 1.05rem; color: white; margin-bottom: 6px; }
+
+  /* WHATSAPP */
+  .whatsapp-btn { position: fixed; bottom: 24px; right: 24px; width: 56px; height: 56px; background: #25d366; border-radius: 14px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 18px rgba(37,211,102,0.35); z-index: 998; text-decoration: none; transition: transform 0.2s; }
+  .whatsapp-btn:hover { transform: scale(1.06) translateY(-2px); }
+  .whatsapp-btn i { color: white; font-size: 1.6rem; }
+
+  @media(max-width:600px){
+    header { padding: 12px 16px; flex-wrap: wrap; gap: 10px; min-height: auto; }
+    .gallery-grid { columns: 2 150px; }
+    .hero { padding: 40px 16px; }
+    .gallery-wrap, .how-to-add { padding-left: 16px; padding-right: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-left">
+    <div class="header-icon">🌿</div>
+    <h1>
+      Heritage Montessori and School
+      <em class="header-motto">Creative, Thematic and Individually Focused</em>
+      <span>Established 2007 &nbsp;·&nbsp; Nurturing Young Minds</span>
+    </h1>
+  </div>
+  <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back</a>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-content">
+    <div class="hero-tag"><i class="fas fa-images"></i> Our School Life</div>
+    <h2>School <em>Gallery</em></h2>
+    <p>A glimpse into the vibrant and joyful learning environment at Heritage Montessori and School.</p>
+  </div>
+</div>
+
+<!-- HOW TO ADD NOTE -->
+<div class="how-to-add">
+  <div class="how-to-box">
+    <i class="fas fa-circle-info"></i>
+    <span>
+      <strong>To add new photos:</strong>
+      Upload the photo to the <strong>gallery</strong> folder in GitHub,
+      then open <strong>gallery-photos.txt</strong> and add a new line with:
+      <strong>filename.jpg | Caption</strong>
+      — the photo appears here automatically.
+    </span>
+  </div>
+</div>
+
+<!-- GALLERY -->
+<div class="gallery-wrap">
+  <div id="galleryContainer">
+    <div class="loading">
+      <i class="fas fa-spinner fa-spin"></i>
+      Loading gallery...
+    </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightboxBg(event)">
+  <button class="lb-btn lb-close" onclick="closeLightbox()"><i class="fas fa-times"></i></button>
+  <button class="lb-btn lb-prev" onclick="changePhoto(-1)"><i class="fas fa-chevron-left"></i></button>
+  <img class="lightbox-img" id="lbImg" src="" alt="Gallery Photo">
+  <button class="lb-btn lb-next" onclick="changePhoto(1)"><i class="fas fa-chevron-right"></i></button>
+  <div class="lb-caption" id="lbCaption"></div>
+  <div class="lb-counter" id="lbCounter"></div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo"><i class="fas fa-graduation-cap"></i> Heritage Montessori and School</div>
+  <p>&copy; 2025 Heritage Montessori and School &nbsp;·&nbsp; <a href="mailto:contact@heritagemux.com">contact@heritagemux.com</a></p>
+</footer>
+
+<!-- WHATSAPP -->
+<a class="whatsapp-btn" href="https://wa.me/923361515260" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i></a>
+
+<script>
+  let photos = [];
+  let captions = [];
+  let current = 0;
+
+  // Load gallery-photos.txt and build gallery
+  fetch('gallery-photos.txt')
+    .then(function(r) { return r.text(); })
+    .then(function(text) {
+      var lines = text.split('\n');
+      lines.forEach(function(line) {
+        line = line.trim();
+        // Skip blank lines and comment lines
+        if (!line || line.startsWith('#')) return;
+        var parts = line.split('|');
+        var filename = parts[0].trim();
+        var caption = parts[1] ? parts[1].trim() : 'School Photo';
+        if (filename) {
+          photos.push('gallery/' + filename);
+          captions.push(caption);
+        }
+      });
+      buildGallery();
+    })
+    .catch(function() {
+      document.getElementById('galleryContainer').innerHTML =
+        '<div class="empty"><i class="fas fa-image"></i>Gallery is being updated. Please check back soon.</div>';
+    });
+
+  function buildGallery() {
+    if (photos.length === 0) {
+      document.getElementById('galleryContainer').innerHTML =
+        '<div class="empty"><i class="fas fa-image"></i>No photos yet. Upload photos to the gallery folder to get started.</div>';
+      return;
+    }
+
+    var grid = '<div class="gallery-grid">';
+    photos.forEach(function(src, i) {
+      grid += '<div class="gallery-item" onclick="openLightbox(' + i + ')">'
+        + '<img src="' + src + '" alt="' + captions[i] + '" loading="lazy">'
+        + '<div class="gallery-overlay"><span class="gallery-caption"><i class="fas fa-expand"></i> ' + captions[i] + '</span></div>'
+        + '</div>';
+    });
+    grid += '</div>';
+    document.getElementById('galleryContainer').innerHTML = grid;
+  }
+
+  function openLightbox(i) {
+    current = i;
+    document.getElementById('lbImg').src = photos[current];
+    document.getElementById('lbCaption').textContent = captions[current];
+    document.getElementById('lbCounter').textContent = (current+1) + ' / ' + photos.length;
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function closeLightboxBg(e) {
+    if (e.target === document.getElementById('lightbox')) closeLightbox();
+  }
+
+  function changePhoto(dir) {
+    current = (current + dir + photos.length) % photos.length;
+    document.getElementById('lbImg').src = photos[current];
+    document.getElementById('lbCaption').textContent = captions[current];
+    document.getElementById('lbCounter').textContent = (current+1) + ' / ' + photos.length;
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (!document.getElementById('lightbox').classList.contains('open')) return;
+    if (e.key === 'ArrowLeft') changePhoto(-1);
+    if (e.key === 'ArrowRight') changePhoto(1);
+    if (e.key === 'Escape') closeLightbox();
+  });
+</script>
+</body>
+</html>
