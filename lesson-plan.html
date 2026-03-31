@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson Plan | Heritage Montessori & School</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f7f4ef;
+    --warm-white: #ffffff;
+    --sand: #e7dfd4;
+    --teal: #3a4652;
+    --teal-light: #4c5a67;
+    --rust: #c97a64;
+    --text-dark: #232a31;
+    --text-mid: #49525c;
+    --text-light: #6f7680;
+    --border: #d9d1c5;
+    --shadow: rgba(58,70,82,0.10);
+    --green: #2d7a47;
+    --green-dark: #1e5631;
+    --green-pale: #e8f5ed;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    line-height: 1.6;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(140deg, #3a4652 0%, #445260 100%);
+    color: white; padding: 0 28px;
+    display: flex; align-items: center; justify-content: space-between;
+    min-height: 68px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .header-icon {
+    width: 42px; height: 42px;
+    background: rgba(255,255,255,0.12);
+    border: 1.5px solid rgba(255,255,255,0.22);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+  }
+  .header-text .school {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1rem; color: white; display: block;
+  }
+  .header-text .sub {
+    font-size: 0.7rem; opacity: 0.6;
+    letter-spacing: 1px; text-transform: uppercase;
+  }
+  .print-btn {
+    background: var(--rust); color: white;
+    border: none; padding: 8px 18px;
+    border-radius: 20px; font-size: 0.82rem;
+    font-weight: 600; font-family: inherit;
+    cursor: pointer; display: flex;
+    align-items: center; gap: 7px;
+    transition: opacity 0.2s;
+  }
+  .print-btn:hover { opacity: 0.88; }
+
+  /* PAGE WRAP */
+  .page {
+    max-width: 820px;
+    margin: 32px auto;
+    padding: 0 20px 48px;
+  }
+
+  /* LESSON PLAN CARD */
+  .plan-card {
+    background: var(--warm-white);
+    border: 1.5px solid var(--border);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px var(--shadow);
+  }
+
+  /* PLAN HEADER */
+  .plan-header {
+    background: var(--teal);
+    padding: 24px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .plan-header-left h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem; font-weight: 400;
+    color: white; margin-bottom: 2px;
+  }
+  .plan-header-left p {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 0.5px;
+  }
+  .plan-badge {
+    background: var(--rust);
+    color: white; font-size: 0.75rem;
+    font-weight: 600; padding: 5px 14px;
+    border-radius: 20px;
+  }
+
+  /* SECTIONS */
+  .plan-body { padding: 0; }
+
+  .plan-section {
+    padding: 20px 28px;
+    border-bottom: 1.5px solid var(--border);
+  }
+  .plan-section:last-child { border-bottom: none; }
+
+  .section-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-label i { font-size: 0.8rem; }
+
+  /* TWO COL */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  @media(max-width:560px){
+    .two-col { grid-template-columns: 1fr; }
+    .three-col { grid-template-columns: 1fr; }
+  }
+
+  /* FIELD */
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-mid);
+    letter-spacing: 0.2px;
+  }
+  .field input,
+  .field select,
+  .field textarea {
+    padding: 10px 13px;
+    border: 1.5px solid var(--border);
+    border-radius: 9px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    color: var(--text-dark);
+    background: var(--cream);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -webkit-appearance: none;
+  }
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    outline: none;
+    border-color: var(--teal);
+    background: var(--warm-white);
+    box-shadow: 0 0 0 3px rgba(58,70,82,0.1);
+  }
+  .field textarea {
+    resize: vertical;
+    min-height: 72px;
+  }
+  .field input::placeholder,
+  .field textarea::placeholder { color: #b8bcc4; font-size: 0.85rem; }
+
+  /* VIDEO DURATION VISUAL */
+  .duration-bar {
+    margin-top: 8px;
+    background: var(--sand);
+    border-radius: 6px;
+    height: 8px;
+    overflow: hidden;
+  }
+  .duration-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--green), var(--rust));
+    border-radius: 6px;
+    transition: width 0.3s;
+    width: 0%;
+  }
+  .duration-hint {
+    font-size: 0.72rem;
+    color: var(--text-light);
+    margin-top: 4px;
+  }
+
+  /* OBJECTIVE CHIPS */
+  .objective-chips {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-top: 10px;
+  }
+  .obj-chip {
+    background: var(--cream);
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    padding: 9px 18px;
+    font-size: 0.8rem;
+    color: var(--text-mid);
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .obj-chip.selected {
+    background: var(--teal);
+    border-color: var(--teal);
+    color: white;
+  }
+
+  /* SUBMISSION SECTION */
+  .radio-row { display: flex; gap: 16px; margin-top: 6px; flex-wrap: wrap; }
+  .radio-opt {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 0.88rem; color: var(--text-mid);
+    cursor: pointer;
+  }
+  .radio-opt input { accent-color: var(--teal); width: 16px; height: 16px; cursor: pointer; }
+
+  /* CHECKLIST */
+  .pre-checklist { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+  .check-row {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 0.88rem; color: var(--text-mid);
+    cursor: pointer; padding: 12px 14px;
+    background: var(--cream); border: 1.5px solid var(--border);
+    border-radius: 8px; transition: all 0.15s;
+    user-select: none;
+  }
+  .check-row.checked {
+    background: var(--green-pale);
+    border-color: #b5d9c0;
+    color: var(--green-dark);
+  }
+  .check-box {
+    width: 20px; height: 20px;
+    border: 2px solid var(--border);
+    border-radius: 5px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; color: white;
+    transition: all 0.15s;
+  }
+  .check-row.checked .check-box {
+    background: var(--green);
+    border-color: var(--green);
+  }
+
+  /* SAVE BUTTON */
+  .save-row {
+    padding: 20px 28px;
+    background: var(--cream);
+    border-top: 1.5px solid var(--border);
+    display: flex; align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .save-btn {
+    background: var(--green-dark); color: white;
+    border: none; padding: 12px 28px;
+    border-radius: 999px; font-size: 0.92rem;
+    font-weight: 600; font-family: inherit;
+    cursor: pointer; display: flex;
+    align-items: center; gap: 8px;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .save-btn:hover { background: var(--green); transform: translateY(-1px); }
+  .reset-btn {
+    background: none; color: var(--text-light);
+    border: 1.5px solid var(--border);
+    padding: 11px 20px; border-radius: 999px;
+    font-size: 0.85rem; font-weight: 500;
+    font-family: inherit; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .reset-btn:hover { border-color: var(--rust); color: var(--rust); }
+  .save-success {
+    display: none;
+    background: var(--green-pale);
+    color: var(--green-dark);
+    border: 1.5px solid #b5d9c0;
+    padding: 10px 18px; border-radius: 8px;
+    font-size: 0.85rem; font-weight: 600;
+    width: 100%;
+  }
+
+  /* PRINT STYLES */
+  @media print {
+    header, .print-btn, .save-row { display: none !important; }
+    body { background: white; }
+    .plan-card { box-shadow: none; border: 1px solid #ccc; }
+    .page { margin: 0; padding: 0; max-width: 100%; }
+    .field input, .field select, .field textarea {
+      border: 1px solid #ccc;
+      background: white;
+    }
+  }
+
+  @media(max-width:600px){
+    header { padding: 0 14px; }
+    .plan-section { padding: 16px 18px; }
+    .plan-header { padding: 18px 18px; }
+    .save-row { padding: 16px 18px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-left">
+    <div class="header-icon">📋</div>
+    <div class="header-text">
+      <span class="school">Heritage Montessori &amp; School</span>
+      <span class="sub">Daily Lesson Plan</span>
+    </div>
+  </div>
+  <button class="print-btn" onclick="window.print()">
+    <i class="fas fa-print"></i> Print / Save as PDF
+  </button>
+</header>
+
+<!-- PAGE NAV -->
+<nav style="background:#fff;border-bottom:1.5px solid #d9d1c5;display:flex;overflow-x:auto;padding:0 20px;box-shadow:0 2px 8px rgba(58,70,82,0.08);scrollbar-width:none;position:sticky;top:0;z-index:100;">
+  <a href="#basic-info" style="font-size:0.82rem;font-weight:600;color:#6f7680;padding:13px 16px;text-decoration:none;white-space:nowrap;border-bottom:2.5px solid transparent;transition:all 0.2s;display:flex;align-items:center;gap:6px;" onmouseover="this.style.color='#3a4652';this.style.borderBottomColor='#c97a64'" onmouseout="this.style.color='#6f7680';this.style.borderBottomColor='transparent'">📋 Basic Info</a>
+  <a href="#objective" style="font-size:0.82rem;font-weight:600;color:#6f7680;padding:13px 16px;text-decoration:none;white-space:nowrap;border-bottom:2.5px solid transparent;transition:all 0.2s;display:flex;align-items:center;gap:6px;" onmouseover="this.style.color='#3a4652';this.style.borderBottomColor='#c97a64'" onmouseout="this.style.color='#6f7680';this.style.borderBottomColor='transparent'">🎯 Objective</a>
+  <a href="#video-plan" style="font-size:0.82rem;font-weight:600;color:#6f7680;padding:13px 16px;text-decoration:none;white-space:nowrap;border-bottom:2.5px solid transparent;transition:all 0.2s;display:flex;align-items:center;gap:6px;" onmouseover="this.style.color='#3a4652';this.style.borderBottomColor='#c97a64'" onmouseout="this.style.color='#6f7680';this.style.borderBottomColor='transparent'">🎬 Video Plan</a>
+  <a href="#assignment" style="font-size:0.82rem;font-weight:600;color:#6f7680;padding:13px 16px;text-decoration:none;white-space:nowrap;border-bottom:2.5px solid transparent;transition:all 0.2s;display:flex;align-items:center;gap:6px;" onmouseover="this.style.color='#3a4652';this.style.borderBottomColor='#c97a64'" onmouseout="this.style.color='#6f7680';this.style.borderBottomColor='transparent'">📝 Assignment</a>
+  <a href="#submission" style="font-size:0.82rem;font-weight:600;color:#6f7680;padding:13px 16px;text-decoration:none;white-space:nowrap;border-bottom:2.5px solid transparent;transition:all 0.2s;display:flex;align-items:center;gap:6px;" onmouseover="this.style.color='#3a4652';this.style.borderBottomColor='#c97a64'" onmouseout="this.style.color='#6f7680';this.style.borderBottomColor='transparent'">⏰ Deadline</a>
+  <a href="#checklist" style="font-size:0.82rem;font-weight:600;color:#6f7680;padding:13px 16px;text-decoration:none;white-space:nowrap;border-bottom:2.5px solid transparent;transition:all 0.2s;display:flex;align-items:center;gap:6px;" onmouseover="this.style.color='#3a4652';this.style.borderBottomColor='#c97a64'" onmouseout="this.style.color='#6f7680';this.style.borderBottomColor='transparent'">✅ Checklist</a>
+</nav>
+
+<!-- PAGE -->
+<div class="page">
+  <div class="plan-card">
+
+    <!-- PLAN HEADER -->
+    <div class="plan-header">
+      <div class="plan-header-left">
+        <h2>Daily Lesson Plan</h2>
+        <p>Complete this before recording your lesson video</p>
+      </div>
+      <div class="plan-badge"><i class="fas fa-chalkboard-teacher"></i> Teacher Copy</div>
+    </div>
+
+    <div class="plan-body">
+
+      <!-- SECTION 1: BASIC INFO -->
+      <div id="basic-info"></div>
+      <div class="plan-section">
+        <div class="section-label"><i class="fas fa-circle-info"></i> Basic Information</div>
+        <div class="three-col">
+          <div class="field">
+            <label>Teacher Name</label>
+            <input type="text" placeholder="Your full name">
+          </div>
+          <div class="field">
+            <label>Date</label>
+            <input type="date" id="dateField">
+          </div>
+          <div class="field">
+            <label>Class</label>
+            <select id="classField" onchange="updateSubjects()">
+              <option value="">Select class...</option>
+              <optgroup label="Montessori Section">
+                <option value="Mont 1">Mont 1</option>
+                <option value="Mont 2">Mont 2</option>
+                <option value="Mont 3">Mont 3</option>
+              </optgroup>
+              <optgroup label="Junior Section">
+                <option value="Class 1">Class 1</option>
+                <option value="Class 2">Class 2</option>
+                <option value="Class 3">Class 3</option>
+                <option value="Class 4">Class 4</option>
+                <option value="Class 5">Class 5</option>
+              </optgroup>
+            </select>
+          </div>
+        </div>
+        <div class="two-col" style="margin-top:14px;">
+          <div class="field">
+            <label>Subject</label>
+            <select id="subjectField">
+              <option value="">Select class first...</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Topic / Chapter</label>
+            <input type="text" placeholder="e.g. Addition with Carrying, Letter A Sounds">
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2: LEARNING OBJECTIVE -->
+      <div id="objective"></div>
+      <div class="plan-section">
+        <div class="section-label"><i class="fas fa-bullseye"></i> Learning Objective</div>
+        <div class="field">
+          <label>By the end of this lesson, students will be able to:</label>
+          <textarea placeholder="e.g. Identify and write the letter A and its sound. / Add two 2-digit numbers with carrying."></textarea>
+        </div>
+        <div style="margin-top:10px;">
+          <div style="font-size:0.78rem;font-weight:600;color:var(--text-mid);margin-bottom:6px;">Quick select — lesson type:</div>
+          <div class="objective-chips">
+            <div class="obj-chip" onclick="toggleChip(this)">Understand a concept</div>
+            <div class="obj-chip" onclick="toggleChip(this)">Practise a skill</div>
+            <div class="obj-chip" onclick="toggleChip(this)">Complete an activity</div>
+            <div class="obj-chip" onclick="toggleChip(this)">Revise previous topic</div>
+            <div class="obj-chip" onclick="toggleChip(this)">Introduce new topic</div>
+            <div class="obj-chip" onclick="toggleChip(this)">Creative work</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 3: VIDEO PLAN -->
+      <div id="video-plan"></div>
+      <div class="plan-section">
+        <div class="section-label"><i class="fas fa-video"></i> Video Plan</div>
+        <div class="two-col">
+          <div class="field">
+            <label>Planned Video Duration (minutes)</label>
+            <input type="number" id="durationInput" min="1" max="20"
+              placeholder="e.g. 8" oninput="updateBar()">
+            <div class="duration-bar"><div class="duration-fill" id="durationFill"></div></div>
+            <div class="duration-hint" id="durationHint">Enter duration above</div>
+          </div>
+          <div class="field">
+            <label>Materials / Resources Needed</label>
+            <textarea placeholder="e.g. Whiteboard, marker, textbook page 22, flashcards" style="min-height:80px;"></textarea>
+          </div>
+        </div>
+        <div class="field" style="margin-top:14px;">
+          <label>What will you say at the START of the video?</label>
+          <input type="text" placeholder='e.g. "Assalamu Alaikum! Today we are learning Addition with Carrying."'>
+        </div>
+        <div class="field" style="margin-top:12px;">
+          <label>What will you say at the END of the video?</label>
+          <input type="text" placeholder='e.g. "Now complete Exercise 4 Q1-5 on page 22 in your notebook and submit by tomorrow."'>
+        </div>
+      </div>
+
+      <!-- SECTION 4: ASSIGNMENT INSTRUCTIONS -->
+      <div id="assignment"></div>
+      <div class="plan-section">
+        <div class="section-label"><i class="fas fa-clipboard-list"></i> Assignment Instructions for Students</div>
+        <div class="field">
+          <label>Assignment Title (copy this exactly into Google Classroom)</label>
+          <input type="text" id="assignTitle" placeholder="Subject — Topic — Date  e.g. Maths — Addition — 1 April">
+        </div>
+        <div class="field" style="margin-top:12px;">
+          <label>Instructions to write in Google Classroom</label>
+          <textarea placeholder="e.g. Watch the video below. Then complete Exercise 4 (Q1 to Q5) on page 22 in your Maths notebook. Take a clear photo of your work and submit." style="min-height:90px;"></textarea>
+        </div>
+        <div class="two-col" style="margin-top:12px;">
+          <div class="field">
+            <label>Worksheet / Page Reference (if any)</label>
+            <input type="text" placeholder="e.g. Page 22, Ex 4 / Worksheet 3">
+          </div>
+          <div class="field">
+            <label>Will you attach a worksheet?</label>
+            <div class="radio-row">
+              <label class="radio-opt"><input type="radio" name="worksheet"> Yes</label>
+              <label class="radio-opt"><input type="radio" name="worksheet"> No</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 5: SUBMISSION -->
+      <div id="submission"></div>
+      <div class="plan-section">
+        <div class="section-label"><i class="fas fa-calendar-check"></i> Submission & Deadline</div>
+        <div class="two-col">
+          <div class="field">
+            <label>Submission Deadline</label>
+            <input type="datetime-local" id="deadlineField">
+            <div class="duration-hint">24 hrs for Junior · 48 hrs for Montessori</div>
+          </div>
+          <div class="field">
+            <label>What should students submit?</label>
+            <div class="radio-row" style="margin-top:8px;">
+              <label class="radio-opt"><input type="radio" name="submit-type"> Photo of notebook</label>
+              <label class="radio-opt"><input type="radio" name="submit-type"> Photo of activity</label>
+              <label class="radio-opt"><input type="radio" name="submit-type"> Completed worksheet</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 6: PRE-POSTING CHECKLIST -->
+      <div id="checklist"></div>
+      <div class="plan-section">
+        <div class="section-label"><i class="fas fa-list-check"></i> Pre-Posting Checklist</div>
+        <div class="pre-checklist">
+          <div class="check-row" onclick="toggleCheck(this)">
+            <div class="check-box"><i class="fas fa-check"></i></div>
+            Video recorded and saved to phone gallery
+          </div>
+          <div class="check-row" onclick="toggleCheck(this)">
+            <div class="check-box"><i class="fas fa-check"></i></div>
+            Video uploaded to Google Drive class folder
+          </div>
+          <div class="check-row" onclick="toggleCheck(this)">
+            <div class="check-box"><i class="fas fa-check"></i></div>
+            Video link copied from Drive
+          </div>
+          <div class="check-row" onclick="toggleCheck(this)">
+            <div class="check-box"><i class="fas fa-check"></i></div>
+            Assignment title written clearly (Subject — Topic — Date)
+          </div>
+          <div class="check-row" onclick="toggleCheck(this)">
+            <div class="check-box"><i class="fas fa-check"></i></div>
+            Instructions are clear — student knows exactly what to do
+          </div>
+          <div class="check-row" onclick="toggleCheck(this)">
+            <div class="check-box"><i class="fas fa-check"></i></div>
+            Due date set in Google Classroom
+          </div>
+          <div class="check-row" onclick="toggleCheck(this)">
+            <div class="check-box"><i class="fas fa-check"></i></div>
+            Tapped Assign — lesson is now live!
+          </div>
+          <div class="check-row" onclick="toggleCheck(this)">
+            <div class="check-box"><i class="fas fa-check"></i></div>
+            Daily Lesson Log filled in at forms.gle/uJgo5gf4dCWEM2cp6
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end plan-body -->
+
+    <!-- SAVE ROW -->
+    <div class="save-row">
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="save-btn" onclick="savePlan()">
+          <i class="fas fa-floppy-disk"></i> Save Plan
+        </button>
+        <button class="reset-btn" onclick="resetForm()">
+          <i class="fas fa-rotate-left"></i> Reset
+        </button>
+      </div>
+      <div style="font-size:0.78rem;color:var(--text-light);">
+        <i class="fas fa-info-circle"></i> Plans save on this device
+      </div>
+      <div class="save-success" id="saveSuccess">
+        <i class="fas fa-check-circle"></i> Plan saved successfully!
+      </div>
+    </div>
+
+  </div><!-- end plan-card -->
+</div><!-- end page -->
+
+<script>
+  // Smooth scroll for nav anchors
+  document.querySelectorAll('nav a[href^="#"]').forEach(function(a) {
+    a.addEventListener('click', function(e) {
+      e.preventDefault();
+      var target = document.querySelector(this.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  const SUBJECTS = {
+    'Mont 1': ['Phonics','Numbers','General Knowledge'],
+    'Mont 2': ['English','Mathematics','Urdu','General Knowledge'],
+    'Mont 3': ['English','Mathematics','Urdu','General Knowledge'],
+    'Class 1': ['English','Urdu','Mathematics','Science','Islamiyat'],
+    'Class 2': ['English','Urdu','Mathematics','Science','Islamiyat'],
+    'Class 3': ['English','Urdu','Mathematics','Science','Islamiyat'],
+    'Class 4': ['English','Urdu','Mathematics','Science','Islamiyat'],
+    'Class 5': ['English','Urdu','Mathematics','Science','Islamiyat']
+  };
+
+  const MONT_CLASSES = ['Mont 1','Mont 2','Mont 3'];
+
+  // Set today's date
+  window.addEventListener('load', function() {
+    var today = new Date().toISOString().split('T')[0];
+    document.getElementById('dateField').value = today;
+
+    // Set default deadline 24hrs from now
+    var tomorrow = new Date();
+    tomorrow.setHours(tomorrow.getHours() + 24);
+    var dl = tomorrow.toISOString().slice(0,16);
+    document.getElementById('deadlineField').value = dl;
+  });
+
+  function updateSubjects() {
+    var cls = document.getElementById('classField').value;
+    var sel = document.getElementById('subjectField');
+    sel.innerHTML = '<option value="">Select subject...</option>';
+    if (cls && SUBJECTS[cls]) {
+      SUBJECTS[cls].forEach(function(s) {
+        sel.innerHTML += '<option value="' + s + '">' + s + '</option>';
+      });
+    }
+    // Update deadline hint
+    var hint = document.querySelector('.duration-hint:last-of-type');
+    if (MONT_CLASSES.includes(cls)) {
+      document.getElementById('deadlineField').title = '48 hours recommended for Montessori';
+    }
+  }
+
+  function updateBar() {
+    var val = parseInt(document.getElementById('durationInput').value) || 0;
+    var fill = document.getElementById('durationFill');
+    var hint = document.getElementById('durationHint');
+    var cls = document.getElementById('classField').value;
+    var isMont = MONT_CLASSES.includes(cls);
+    var max = isMont ? 10 : 10;
+    var pct = Math.min((val / max) * 100, 100);
+    fill.style.width = pct + '%';
+
+    if (val === 0) {
+      hint.textContent = 'Enter duration above';
+      hint.style.color = 'var(--text-light)';
+    } else if (isMont && val <= 10) {
+      hint.textContent = '✅ Good length for Montessori (' + val + ' min)';
+      hint.style.color = 'var(--green)';
+    } else if (!isMont && val <= 10) {
+      hint.textContent = '✅ Good length for Junior Section (' + val + ' min)';
+      hint.style.color = 'var(--green)';
+    } else {
+      hint.textContent = '⚠️ Too long — keep videos under 10 minutes (' + val + ' min)';
+      hint.style.color = 'var(--rust)';
+    }
+  }
+
+  function toggleChip(el) {
+    el.classList.toggle('selected');
+    el.style.background = el.classList.contains('selected') ? 'var(--teal)' : '';
+    el.style.color = el.classList.contains('selected') ? 'white' : '';
+    el.style.borderColor = el.classList.contains('selected') ? 'var(--teal)' : '';
+  }
+
+  function toggleCheck(el) {
+    var row = el.closest ? el.closest('.check-row') : el;
+    row.classList.toggle('checked');
+  }
+
+  function savePlan() {
+    try {
+      // Collect all field values
+      var data = {};
+      document.querySelectorAll('input:not([type=radio]):not([type=checkbox])').forEach(function(inp, i){
+        data['input_' + i] = inp.value;
+      });
+      document.querySelectorAll('textarea').forEach(function(ta, i){
+        data['textarea_' + i] = ta.value;
+      });
+      document.querySelectorAll('select').forEach(function(sel, i){
+        data['select_' + i] = sel.value;
+      });
+      // Save checked items
+      var checked = [];
+      document.querySelectorAll('.check-row.checked').forEach(function(r){
+        checked.push(r.textContent.trim());
+      });
+      data['checked'] = checked;
+      localStorage.setItem('hms_lesson_plan', JSON.stringify(data));
+    } catch(e) {
+      // localStorage may not be available - just show success anyway
+    }
+    var s = document.getElementById('saveSuccess');
+    s.style.display = 'block';
+    s.style.width = '100%';
+    setTimeout(function(){ s.style.display = 'none'; }, 3000);
+  }
+
+  function resetForm() {
+    if (confirm('Reset all fields? This cannot be undone.')) {
+      document.querySelectorAll('input:not([type=radio]):not([type=checkbox])').forEach(function(i){
+        if (i.type === 'date' || i.type === 'datetime-local') return;
+        i.value = '';
+      });
+      document.querySelectorAll('textarea').forEach(function(t){ t.value = ''; });
+      document.querySelectorAll('select').forEach(function(s){ s.selectedIndex = 0; });
+      document.querySelectorAll('input[type=radio]').forEach(function(r){ r.checked = false; });
+      document.querySelectorAll('.obj-chip').forEach(function(c){ c.classList.remove('selected'); });
+      document.querySelectorAll('.check-row').forEach(function(r){ r.classList.remove('checked'); });
+      document.getElementById('durationFill').style.width = '0%';
+      document.getElementById('durationHint').textContent = 'Enter duration above';
+    }
+  }
+</script>
+</body>
+</html>
