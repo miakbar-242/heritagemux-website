@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Classroom Lesson Plan | Heritage Montessori & School</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+
+<!-- docx.js — generates real .docx Word files in the browser -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.umd.min.js"></script>
+
+<style>
+  :root {
+    --cream: #f7f4ef;
+    --warm-white: #ffffff;
+    --sand: #e7dfd4;
+    --teal: #3a4652;
+    --teal-light: #4c5a67;
+    --rust: #c97a64;
+    --text-dark: #232a31;
+    --text-mid: #49525c;
+    --text-light: #6f7680;
+    --border: #d9d1c5;
+    --shadow: rgba(58,70,82,0.10);
+    --green: #2d7a47;
+    --green-dark: #1e5631;
+    --green-pale: #e8f5ed;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'DM Sans',sans-serif; background:var(--cream); color:var(--text-dark); line-height:1.6; }
+
+  /* HEADER */
+  header {
+    background:linear-gradient(140deg,#3a4652 0%,#445260 100%);
+    color:white; padding:0 28px;
+    display:flex; align-items:center; justify-content:space-between;
+    min-height:68px; box-shadow:0 2px 12px rgba(0,0,0,0.2);
+    position:sticky; top:0; z-index:100;
+  }
+  .header-left { display:flex; align-items:center; gap:12px; }
+  .header-icon {
+    width:42px; height:42px; background:rgba(255,255,255,0.12);
+    border:1.5px solid rgba(255,255,255,0.22); border-radius:12px;
+    display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0;
+  }
+  .header-text .school { font-family:'DM Serif Display',serif; font-size:1rem; color:white; display:block; }
+  .header-text .sub { font-size:0.7rem; opacity:0.6; letter-spacing:1px; text-transform:uppercase; }
+  .header-actions { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .hdr-btn {
+    border:none; padding:8px 16px; border-radius:20px; font-size:0.8rem;
+    font-weight:600; font-family:inherit; cursor:pointer;
+    display:flex; align-items:center; gap:6px; transition:opacity 0.2s; white-space:nowrap;
+  }
+  .hdr-btn:hover { opacity:0.85; }
+  .btn-print { background:var(--rust); color:white; }
+  .btn-save  { background:var(--green); color:white; }
+  .btn-drive { background:rgba(255,255,255,0.15); color:white; border:1px solid rgba(255,255,255,0.25); }
+  .btn-word  { background:#2b579a; color:white; }
+
+  /* BADGE STRIP */
+  .badge-strip {
+    background:var(--warm-white); border-bottom:1.5px solid var(--border);
+    padding:10px 28px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+  }
+  .badge-strip span { font-size:0.75rem; font-weight:600; letter-spacing:0.5px; color:var(--text-light); }
+  .badge-pill {
+    display:inline-flex; align-items:center; gap:6px;
+    background:#f0f4f3; border:1px solid #c6d9ce;
+    color:var(--green-dark); padding:4px 12px; border-radius:20px; font-size:0.75rem; font-weight:600;
+  }
+
+  /* PAGE */
+  .page { max-width:860px; margin:28px auto; padding:0 18px 56px; }
+
+  /* PLAN CARD */
+  .plan-card {
+    background:var(--warm-white); border:1.5px solid var(--border);
+    border-radius:18px; overflow:hidden; box-shadow:0 4px 20px var(--shadow);
+  }
+
+  /* PLAN HEADER */
+  .plan-header {
+    background:var(--teal); padding:22px 28px;
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;
+  }
+  .plan-header-left h2 { font-family:'DM Serif Display',serif; font-size:1.35rem; font-weight:400; color:white; margin-bottom:2px; }
+  .plan-header-left p  { font-size:0.75rem; color:rgba(255,255,255,0.55); letter-spacing:0.5px; }
+  .plan-badge { background:var(--rust); color:white; font-size:0.74rem; font-weight:600; padding:5px 14px; border-radius:20px; white-space:nowrap; }
+
+  /* SECTIONS */
+  .plan-body { padding:0; }
+  .plan-section { padding:20px 28px; border-bottom:1.5px solid var(--border); }
+  .plan-section:last-child { border-bottom:none; }
+  .section-label {
+    font-size:0.68rem; font-weight:700; letter-spacing:2px; text-transform:uppercase;
+    color:var(--rust); margin-bottom:14px; display:flex; align-items:center; gap:8px;
+  }
+  .section-label i { font-size:0.78rem; }
+
+  /* GRIDS */
+  .two-col   { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; }
+  .four-col  { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:14px; }
+  @media(max-width:600px){
+    .two-col   { grid-template-columns:1fr; }
+    .three-col { grid-template-columns:1fr 1fr; }
+    .four-col  { grid-template-columns:1fr 1fr; }
+  }
+
+  /* FIELD */
+  .field { display:flex; flex-direction:column; gap:5px; }
+  .field label { font-size:0.77rem; font-weight:600; color:var(--text-mid); letter-spacing:0.2px; }
+  .field input,.field select,.field textarea {
+    padding:10px 13px; border:1.5px solid var(--border); border-radius:9px;
+    font-size:0.9rem; font-family:inherit; color:var(--text-dark);
+    background:var(--cream); transition:border-color 0.2s,box-shadow 0.2s;
+    -webkit-appearance:none; width:100%;
+  }
+  .field input:focus,.field select:focus,.field textarea:focus {
+    outline:none; border-color:var(--teal); background:var(--warm-white);
+    box-shadow:0 0 0 3px rgba(58,70,82,0.09);
+  }
+  .field textarea { resize:vertical; min-height:80px; }
+  .field input::placeholder,.field textarea::placeholder { color:#b8bcc4; font-size:0.84rem; }
+  .field-hint { font-size:0.72rem; color:var(--text-light); margin-top:3px; }
+
+  /* STAGE BLOCKS */
+  .stage-block { border:1.5px solid var(--border); border-radius:12px; overflow:hidden; margin-bottom:12px; }
+  .stage-block:last-of-type { margin-bottom:0; }
+  .stage-head { display:flex; align-items:center; gap:10px; padding:12px 16px; }
+  .stage-head.intro { background:#eef6f1; border-bottom:1.5px solid #c6dece; }
+  .stage-head.main  { background:#eef0f5; border-bottom:1.5px solid #c6ccd9; }
+  .stage-head.close { background:#fdf3ef; border-bottom:1.5px solid #e8ccbe; }
+  .stage-icon { width:34px; height:34px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:0.95rem; flex-shrink:0; }
+  .intro .stage-icon { background:var(--green-pale); color:var(--green); }
+  .main  .stage-icon { background:#e4e9f4; color:var(--teal); }
+  .close .stage-icon { background:#f8e8e2; color:var(--rust); }
+  .stage-title { font-weight:600; font-size:0.88rem; color:var(--text-dark); }
+  .stage-sub   { font-size:0.72rem; color:var(--text-light); margin-top:1px; }
+  .stage-time  { margin-left:auto; display:flex; align-items:center; gap:6px; }
+  .stage-time input { width:64px; padding:5px 8px; border:1.5px solid var(--border); border-radius:7px; font-size:0.82rem; font-family:inherit; color:var(--text-dark); background:white; text-align:center; }
+  .stage-time input:focus { outline:none; border-color:var(--teal); }
+  .stage-time label { font-size:0.72rem; color:var(--text-light); white-space:nowrap; }
+  .stage-body { padding:14px 16px; }
+  .stage-body .field { margin-bottom:10px; }
+  .stage-body .field:last-child { margin-bottom:0; }
+
+  /* MATERIALS */
+  .materials-list { display:flex; flex-direction:column; gap:8px; margin-top:4px; }
+  .mat-row { display:flex; align-items:center; gap:10px; }
+  .mat-row input { flex:1; padding:9px 12px; border:1.5px solid var(--border); border-radius:8px; font-size:0.88rem; font-family:inherit; color:var(--text-dark); background:var(--cream); }
+  .mat-row input:focus { outline:none; border-color:var(--teal); background:var(--warm-white); box-shadow:0 0 0 3px rgba(58,70,82,0.09); }
+  .mat-dot { width:8px; height:8px; border-radius:50%; background:var(--rust); flex-shrink:0; }
+  .add-mat-btn {
+    margin-top:8px; background:none; border:1.5px dashed var(--border);
+    border-radius:8px; padding:8px 14px; font-size:0.82rem; font-weight:600;
+    color:var(--text-light); font-family:inherit; cursor:pointer;
+    display:flex; align-items:center; gap:7px; transition:border-color 0.2s,color 0.2s;
+    width:100%; justify-content:center;
+  }
+  .add-mat-btn:hover { border-color:var(--teal); color:var(--teal); }
+
+  /* CHECKLIST */
+  .pre-checklist { display:flex; flex-direction:column; gap:8px; margin-top:4px; }
+  .check-row {
+    display:flex; align-items:center; gap:10px; padding:11px 14px;
+    border:1.5px solid var(--border); border-radius:9px; cursor:pointer;
+    font-size:0.88rem; color:var(--text-mid); background:var(--cream);
+    transition:all 0.15s; user-select:none;
+  }
+  .check-row:hover { border-color:var(--teal); }
+  .check-row.checked { background:var(--green-pale); border-color:#b5d9c0; color:var(--green-dark); text-decoration:line-through; opacity:0.75; }
+  .check-box {
+    width:20px; height:20px; border-radius:5px; border:1.5px solid var(--border);
+    background:white; display:flex; align-items:center; justify-content:center;
+    flex-shrink:0; transition:all 0.15s; color:transparent; font-size:0.65rem;
+  }
+  .check-row.checked .check-box { background:var(--green); border-color:var(--green); color:white; }
+
+  /* CHIPS */
+  .obj-chips { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+  .obj-chip {
+    background:var(--cream); border:1.5px solid var(--border); border-radius:20px;
+    padding:8px 16px; font-size:0.8rem; color:var(--text-mid);
+    cursor:pointer; transition:all 0.15s; user-select:none;
+  }
+  .obj-chip.selected { background:var(--teal); border-color:var(--teal); color:white; }
+
+  /* RADIO */
+  .radio-row { display:flex; gap:14px; margin-top:8px; flex-wrap:wrap; }
+  .radio-opt { display:flex; align-items:center; gap:7px; font-size:0.88rem; color:var(--text-mid); cursor:pointer; }
+  .radio-opt input { accent-color:var(--teal); width:16px; height:16px; cursor:pointer; }
+
+  /* TIME BAR */
+  .time-summary {
+    display:flex; align-items:center; gap:12px;
+    background:var(--cream); border:1.5px solid var(--border);
+    border-radius:10px; padding:12px 16px; margin-top:14px;
+  }
+  .time-summary-label { font-size:0.78rem; font-weight:600; color:var(--text-mid); }
+  .time-bar-wrap { flex:1; background:var(--sand); border-radius:6px; height:8px; overflow:hidden; }
+  .time-bar-fill { height:100%; background:linear-gradient(90deg,var(--green),var(--teal)); border-radius:6px; transition:width 0.4s; width:0%; }
+  .time-total-val { font-size:0.85rem; font-weight:700; color:var(--teal); white-space:nowrap; }
+
+  /* SAVE ROW */
+  .save-row {
+    background:var(--cream); border-top:1.5px solid var(--border);
+    padding:18px 28px; display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+  }
+  .save-btn {
+    background:var(--teal); color:white; border:none; padding:11px 22px;
+    border-radius:22px; font-size:0.88rem; font-weight:600; font-family:inherit;
+    cursor:pointer; display:flex; align-items:center; gap:8px; transition:opacity 0.2s;
+  }
+  .save-btn:hover { opacity:0.88; }
+  .word-btn {
+    background:#2b579a; color:white; border:none; padding:11px 20px;
+    border-radius:22px; font-size:0.88rem; font-weight:600; font-family:inherit;
+    cursor:pointer; display:flex; align-items:center; gap:8px; transition:opacity 0.2s;
+  }
+  .word-btn:hover { opacity:0.88; }
+  .drive-btn {
+    background:white; color:var(--text-mid); border:1.5px solid var(--border); padding:11px 20px;
+    border-radius:22px; font-size:0.88rem; font-weight:600; font-family:inherit;
+    cursor:pointer; display:flex; align-items:center; gap:8px; transition:all 0.2s;
+  }
+  .drive-btn:hover { border-color:var(--teal); color:var(--teal); }
+  .print-btn-row {
+    background:white; color:var(--text-mid); border:1.5px solid var(--border); padding:11px 18px;
+    border-radius:22px; font-size:0.88rem; font-family:inherit; cursor:pointer;
+    display:flex; align-items:center; gap:7px; transition:all 0.2s;
+  }
+  .print-btn-row:hover { color:var(--rust); border-color:var(--rust); }
+  .reset-btn {
+    background:none; color:var(--text-light); border:1.5px solid var(--border); padding:11px 16px;
+    border-radius:22px; font-size:0.88rem; font-family:inherit; cursor:pointer;
+    display:flex; align-items:center; gap:7px; transition:all 0.2s;
+  }
+  .reset-btn:hover { color:var(--rust); border-color:var(--rust); }
+  .save-info { font-size:0.76rem; color:var(--text-light); margin-left:auto; display:flex; align-items:center; gap:5px; }
+  .save-success {
+    display:none; align-items:center; gap:8px;
+    background:var(--green-pale); border:1.5px solid #b5d9c0;
+    color:var(--green-dark); padding:10px 16px; border-radius:10px;
+    font-size:0.85rem; font-weight:600; width:100%;
+  }
+
+  /* TOAST */
+  .toast {
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+    background:#232a31; color:white; padding:12px 22px; border-radius:30px;
+    font-size:0.85rem; font-weight:600; display:flex; align-items:center; gap:9px;
+    box-shadow:0 6px 24px rgba(0,0,0,0.25); z-index:9999;
+    opacity:0; transition:opacity 0.3s; pointer-events:none;
+  }
+  .toast.show { opacity:1; }
+  .toast i { color:#6ddd9b; }
+
+  /* PRINT */
+  @media print {
+    body { background:white; font-size:11pt; }
+    header,.badge-strip,.save-row { display:none !important; }
+    .page { margin:0; max-width:100%; padding:0; }
+    .plan-card { box-shadow:none; border:1pt solid #ccc; border-radius:0; }
+    .plan-section { padding:12pt 16pt; break-inside:avoid; }
+    .field input,.field select,.field textarea { border:1pt solid #bbb; background:white; padding:4pt 8pt; font-size:10pt; }
+    .mat-row input { border:1pt solid #bbb; background:white; }
+    .stage-body { padding:10pt 14pt; }
+    .plan-header,.section-label,.stage-head { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    .add-mat-btn { display:none; }
+  }
+
+  @media(max-width:480px){
+    .plan-section,.plan-header,.save-row { padding-left:16px; padding-right:16px; }
+    .header-actions .btn-drive { display:none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-left">
+    <div class="header-icon"><i class="fas fa-school"></i></div>
+    <div class="header-text">
+      <span class="school">Heritage Montessori & School</span>
+      <span class="sub">Classroom Lesson Planner</span>
+    </div>
+  </div>
+  <div class="header-actions">
+    <button class="hdr-btn btn-word" onclick="saveAsWord()">
+      <i class="fas fa-file-word"></i> Save as Word
+    </button>
+    <button class="hdr-btn btn-drive" onclick="saveToDrive()">
+      <i class="fab fa-google-drive"></i> Drive
+    </button>
+    <button class="hdr-btn btn-print" onclick="window.print()">
+      <i class="fas fa-print"></i> Print
+    </button>
+  </div>
+</header>
+
+<!-- BADGE STRIP -->
+<div class="badge-strip">
+  <span>Physical Classroom Lesson Plan</span>
+  <div class="badge-pill"><i class="fas fa-chalkboard-user" style="font-size:0.7rem;"></i> For In-Person Classes Only</div>
+  <div class="badge-pill" style="margin-left:auto;background:#fff7ed;border-color:#f5c89a;color:#92500a;">
+    <i class="fas fa-file-word" style="font-size:0.7rem;color:#2b579a;"></i> Saves as .docx Word file
+  </div>
+</div>
+
+<div class="page">
+  <div class="plan-card">
+
+    <!-- CARD HEADER -->
+    <div class="plan-header">
+      <div class="plan-header-left">
+        <h2><i class="fas fa-chalkboard-user" style="font-size:1.1rem;margin-right:6px;opacity:0.8;"></i> Classroom Lesson Plan</h2>
+        <p>Fill in before every physical class &nbsp;·&nbsp; Heritage Montessori & School</p>
+      </div>
+      <div class="plan-badge">In-Person Classes</div>
+    </div>
+
+    <div class="plan-body">
+
+      <!-- SECTION 1: LESSON DETAILS -->
+      <div class="plan-section">
+        <div class="section-label"><i class="fas fa-circle-info"></i> Lesson Details</div>
+        <div class="four-col" style="margin-bottom:14px;">
+          <div class="field">
+            <label>Date</label>
+            <input type="date" id="dateField">
+          </div>
+          <div class="field">
+            <label>Day</label>
+            <select id="dayField">
+              <option value="">Select...</option>
+              <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
+              <option>Thursday</option><option>Friday</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Period / Time</label>
+            <input type="text" id="periodField" placeholder="e.g. 1st Period / 08:10">
+          </div>
+          <div class="field">
+            <label>Duration (mins)</label>
+            <input type="number" id="totalDuration" placeholder="e.g. 45" min="1" max="120" oninput="updateTimeBar()">
+          </div>
+        </div>
+        <div class="three-col">
+          <div class="field">
+            <label>Teacher Name</label>
+            <input type="text" id="teacherField" placeholder="Full name">
+          </div>
+          <div class="field">
+            <label>Class</label>
+            <select id="classField" onchange="updateSubjects()">
+              <option value="">Select class...</option>
+              <option>Mont 1</option><option>Mont 2</option><option>Mont 3</option>
+              <option>Class 1</option><option>Class 2</option><option>Class 3</option>
+              <option>Class 4</option><option>Class 5</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Subject</label>
+            <select id="subjectField"><option value="">Select subject...</option></select>
+          </div>
+        </div>
+        <div class="field" style="margin-top:14px;">
+          <label>Topic / Chapter</label>
+          <input type="text" id="topicField" placeholder="e.g. Addition with Carrying — Chapter 4">
+        </div>
+      </div>
+
+      <!-- SECTION 2: LEARNING OBJECTIVES -->
+      <div class="plan-section">
+        <div class="section-label"><i class="fas fa-bullseye"></i> Learning Objectives</div>
+        <div class="field" style="margin-bottom:12px;">
+          <label>By the end of this lesson, students will be able to…</label>
+          <textarea id="objectivesText" placeholder="Write 1–3 clear objectives. e.g. Identify letters A–C with correct sounds. Solve 2-digit addition using the column method."></textarea>
+        </div>
+        <div class="section-label" style="margin-bottom:8px;font-size:0.65rem;">Quick-select Bloom's level</div>
+        <div class="obj-chips">
+          <div class="obj-chip" onclick="toggleChip(this)">🧠 Remember</div>
+          <div class="obj-chip" onclick="toggleChip(this)">💡 Understand</div>
+          <div class="obj-chip" onclick="toggleChip(this)">🔧 Apply</div>
+          <div class="obj-chip" onclick="toggleChip(this)">🔍 Analyse</div>
+          <div class="obj-chip" onclick="toggleChip(this)">⭐ Evaluate</div>
+          <div class="obj-chip" onclick="toggleChip(this)">✏️ Create</div>
+        </div>
+      </div>
+
+      <!-- SECTION 3: MATERIALS -->
+      <div class="plan-section">
+        <div class="section-label"><i class="fas fa-box-open"></i> Materials & Resources Needed</div>
+        <div class="two-col" style="margin-bottom:14px;">
+          <div class="field">
+            <label>Textbook / Page Reference</label>
+            <input type="text" id="textbookRef" placeholder="e.g. Maths Book 2 — p. 34–36">
+          </div>
+          <div class="field">
+            <label>Worksheet / Handout</label>
+            <select id="worksheetStatus">
+              <option value="">Select...</option>
+              <option>Worksheet prepared</option>
+              <option>Handout from textbook</option>
+              <option>No worksheet today</option>
+              <option>To be prepared</option>
+            </select>
+          </div>
+        </div>
+        <label style="font-size:0.77rem;font-weight:600;color:var(--text-mid);display:block;margin-bottom:6px;">Classroom Materials / Teaching Aids</label>
+        <div class="materials-list" id="materialsList">
+          <div class="mat-row"><div class="mat-dot"></div><input type="text" placeholder="e.g. Whiteboard markers, flashcards"></div>
+          <div class="mat-row"><div class="mat-dot"></div><input type="text" placeholder="e.g. Counting blocks, ruler"></div>
+          <div class="mat-row"><div class="mat-dot"></div><input type="text" placeholder="e.g. Coloured paper, scissors"></div>
+        </div>
+        <button class="add-mat-btn" onclick="addMaterial()"><i class="fas fa-plus"></i> Add material</button>
+      </div>
+
+      <!-- SECTION 4: LESSON STAGES -->
+      <div class="plan-section">
+        <div class="section-label"><i class="fas fa-layer-group"></i> Lesson Stages</div>
+
+        <div class="stage-block">
+          <div class="stage-head intro">
+            <div class="stage-icon"><i class="fas fa-play"></i></div>
+            <div><div class="stage-title">Introduction / Warm-Up</div><div class="stage-sub">Hook the class, recap prior knowledge</div></div>
+            <div class="stage-time"><input type="number" id="introTime" placeholder="5" min="1" max="30" oninput="updateTimeBar()"><label>mins</label></div>
+          </div>
+          <div class="stage-body">
+            <div class="field"><label>What will you do to open the lesson?</label><textarea id="introActivity" placeholder="e.g. Quick recap questions on previous topic. Show flashcards. Ask 'what do you remember about…?'"></textarea></div>
+            <div class="two-col">
+              <div class="field"><label>Prior knowledge to activate</label><input type="text" id="priorKnowledge" placeholder="e.g. Simple addition, Letter sounds A–B"></div>
+              <div class="field"><label>Opening activity / question</label><input type="text" id="openingQ" placeholder="e.g. '2 + 2 = ?' on the board"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stage-block">
+          <div class="stage-head main">
+            <div class="stage-icon"><i class="fas fa-chalkboard"></i></div>
+            <div><div class="stage-title">Main Teaching</div><div class="stage-sub">Direct instruction, explanation, modelling</div></div>
+            <div class="stage-time"><input type="number" id="mainTime" placeholder="20" min="1" max="60" oninput="updateTimeBar()"><label>mins</label></div>
+          </div>
+          <div class="stage-body">
+            <div class="field">
+              <label>Teaching method(s)</label>
+              <div class="radio-row" style="margin-top:6px;">
+                <label class="radio-opt"><input type="radio" name="method" value="Board work"> Board work</label>
+                <label class="radio-opt"><input type="radio" name="method" value="Demonstration"> Demonstration</label>
+                <label class="radio-opt"><input type="radio" name="method" value="Group activity"> Group activity</label>
+                <label class="radio-opt"><input type="radio" name="method" value="Story / Discussion"> Story / Discussion</label>
+                <label class="radio-opt"><input type="radio" name="method" value="Other"> Other</label>
+              </div>
+            </div>
+            <div class="field" style="margin-top:10px;"><label>Step-by-step teaching plan</label><textarea id="teachingPlan" style="min-height:100px;" placeholder="e.g.&#10;1. Write the topic on the board and explain the concept.&#10;2. Work through 2 examples with the class.&#10;3. Ask students to try one independently.&#10;4. Correct together on the board."></textarea></div>
+            <div class="field"><label>Key vocabulary / terms to introduce</label><input type="text" id="keyVocab" placeholder="e.g. Carry over, digit, column, sum"></div>
+          </div>
+        </div>
+
+        <div class="stage-block">
+          <div class="stage-head close">
+            <div class="stage-icon"><i class="fas fa-flag-checkered"></i></div>
+            <div><div class="stage-title">Closing / Wrap-Up</div><div class="stage-sub">Reinforce, summarise, set homework</div></div>
+            <div class="stage-time"><input type="number" id="closeTime" placeholder="10" min="1" max="30" oninput="updateTimeBar()"><label>mins</label></div>
+          </div>
+          <div class="stage-body">
+            <div class="field"><label>How will you close the lesson?</label><textarea id="closingActivity" placeholder="e.g. Ask 3 students to share what they learned. Quick verbal quiz."></textarea></div>
+            <div class="field"><label>Key takeaway to leave with students</label><input type="text" id="keyTakeaway" placeholder="e.g. 'Today we learned that when a column adds up to 10 or more, we carry over.'"></div>
+          </div>
+        </div>
+
+        <div class="time-summary">
+          <span class="time-summary-label"><i class="fas fa-clock"></i> Total Time Planned</span>
+          <div class="time-bar-wrap"><div class="time-bar-fill" id="timeBarFill"></div></div>
+          <span class="time-total-val" id="timeTotalVal">0 mins</span>
+        </div>
+      </div>
+
+      <!-- SECTION 5: ASSESSMENT & HOMEWORK -->
+      <div class="plan-section">
+        <div class="section-label"><i class="fas fa-pen-to-square"></i> Assessment & Homework</div>
+        <div class="two-col" style="margin-bottom:14px;">
+          <div class="field">
+            <label>In-class assessment method</label>
+            <select id="assessMethod">
+              <option value="">Select...</option>
+              <option>Verbal questions to class</option>
+              <option>Individual board / slate work</option>
+              <option>Written class exercise</option>
+              <option>Group activity observation</option>
+              <option>No formal assessment today</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Will students do class work in their notebook?</label>
+            <div class="radio-row">
+              <label class="radio-opt"><input type="radio" name="classwork" value="Yes"> Yes</label>
+              <label class="radio-opt"><input type="radio" name="classwork" value="No"> No</label>
+            </div>
+          </div>
+        </div>
+        <div class="two-col">
+          <div class="field"><label>Homework / Assignment</label><textarea id="homework" placeholder="e.g. Complete Exercise 4 on p. 36. Learn the 4-times table up to 40."></textarea></div>
+          <div class="field">
+            <label>Homework due date</label>
+            <input type="date" id="hwDueDate">
+            <div class="field-hint">Leave blank if no homework today</div>
+          </div>
+        </div>
+        <div class="field" style="margin-top:14px;"><label>Differentiation — support for students who need extra help</label><input type="text" id="differentiation" placeholder="e.g. Pair slower learners with a buddy. Give simpler examples first."></div>
+        <div class="field" style="margin-top:10px;"><label>Extension — challenge for students who finish early</label><input type="text" id="extension" placeholder="e.g. Try the challenge questions on p. 37."></div>
+      </div>
+
+      <!-- SECTION 6: CLASS NOTES & REMARKS -->
+      <div class="plan-section">
+        <div class="section-label"><i class="fas fa-note-sticky"></i> Class Notes & Remarks</div>
+        <div class="field" style="margin-bottom:12px;"><label>Pre-lesson notes / reminders to self</label><textarea id="preNotes" placeholder="e.g. Bring extra worksheets. Check if markers are available."></textarea></div>
+        <div class="two-col">
+          <div class="field"><label>Post-lesson reflection (fill after class)</label><textarea id="reflection" placeholder="e.g. Most students understood. 3 students need extra practice."></textarea></div>
+          <div class="field"><label>Topics to revisit / carry forward</label><textarea id="carryForward" placeholder="e.g. Continue carrying over tomorrow. Review letter B sounds."></textarea></div>
+        </div>
+      </div>
+
+      <!-- SECTION 7: PRE-CLASS CHECKLIST -->
+      <div class="plan-section">
+        <div class="section-label"><i class="fas fa-list-check"></i> Pre-Class Checklist</div>
+        <div class="pre-checklist">
+          <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><i class="fas fa-check"></i></div>Lesson plan fully filled in</div>
+          <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><i class="fas fa-check"></i></div>Textbook/pages and materials ready on the desk</div>
+          <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><i class="fas fa-check"></i></div>Worksheet/handout prepared and copies made (if needed)</div>
+          <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><i class="fas fa-check"></i></div>Board is clean and markers available</div>
+          <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><i class="fas fa-check"></i></div>Learning objective is clear in my mind</div>
+          <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><i class="fas fa-check"></i></div>I know how I will open and close the lesson</div>
+          <div class="check-row" onclick="toggleCheck(this)"><div class="check-box"><i class="fas fa-check"></i></div>Lesson plan saved to Drive folder</div>
+        </div>
+      </div>
+
+    </div><!-- end plan-body -->
+
+    <!-- SAVE ROW -->
+    <div class="save-row">
+      <button class="save-btn" onclick="savePlan()">
+        <i class="fas fa-floppy-disk"></i> Save
+      </button>
+      <button class="word-btn" onclick="saveAsWord()">
+        <i class="fas fa-file-word"></i> Download Word (.docx)
+      </button>
+      <button class="drive-btn" onclick="saveToDrive()">
+        <i class="fab fa-google-drive"></i> Save to Drive
+      </button>
+      <button class="print-btn-row" onclick="window.print()">
+        <i class="fas fa-print"></i> Print
+      </button>
+      <button class="reset-btn" onclick="resetForm()">
+        <i class="fas fa-rotate-left"></i> Reset
+      </button>
+      <div class="save-info"><i class="fas fa-info-circle"></i> Saves as .docx for Word & Drive</div>
+      <div class="save-success" id="saveSuccess"><i class="fas fa-check-circle"></i> Saved! Word file downloaded.</div>
+    </div>
+
+  </div><!-- end plan-card -->
+</div><!-- end page -->
+
+<div class="toast" id="toast"><i class="fas fa-check-circle"></i> <span id="toastMsg">Done!</span></div>
+
+<script>
+/* ── SUBJECTS ── */
+const SUBJECTS = {
+  'Mont 1':  ['Phonics','Numbers','General Knowledge'],
+  'Mont 2':  ['English','Mathematics','Urdu','General Knowledge'],
+  'Mont 3':  ['English','Mathematics','Urdu','General Knowledge'],
+  'Class 1': ['English','Urdu','Mathematics','Science','Islamiyat'],
+  'Class 2': ['English','Urdu','Mathematics','Science','Islamiyat'],
+  'Class 3': ['English','Urdu','Mathematics','Science','Islamiyat'],
+  'Class 4': ['English','Urdu','Mathematics','Science','Islamiyat'],
+  'Class 5': ['English','Urdu','Mathematics','Science','Islamiyat']
+};
+
+/* ── ON LOAD ── */
+window.addEventListener('load', function() {
+  var today = new Date().toISOString().split('T')[0];
+  document.getElementById('dateField').value = today;
+  var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var dayName = days[new Date().getDay()];
+  var dayField = document.getElementById('dayField');
+  for (var i = 0; i < dayField.options.length; i++) {
+    if (dayField.options[i].value === dayName) { dayField.selectedIndex = i; break; }
+  }
+  try {
+    var saved = localStorage.getItem('hms_classroom_plan');
+    if (saved) restorePlan(JSON.parse(saved));
+  } catch(e) {}
+  updateTimeBar();
+});
+
+function updateSubjects() {
+  var cls = document.getElementById('classField').value;
+  var sel = document.getElementById('subjectField');
+  sel.innerHTML = '<option value="">Select subject...</option>';
+  if (cls && SUBJECTS[cls]) {
+    SUBJECTS[cls].forEach(function(s){ sel.innerHTML += '<option>' + s + '</option>'; });
+  }
+}
+
+function updateTimeBar() {
+  var intro = parseInt(document.getElementById('introTime').value) || 0;
+  var main  = parseInt(document.getElementById('mainTime').value)  || 0;
+  var close = parseInt(document.getElementById('closeTime').value) || 0;
+  var cap   = parseInt(document.getElementById('totalDuration').value) || 60;
+  var used  = intro + main + close;
+  var pct   = Math.min((used / cap) * 100, 100);
+  document.getElementById('timeBarFill').style.width = pct + '%';
+  var label = used + ' mins' + (document.getElementById('totalDuration').value ? ' of ' + cap : '');
+  if (used > cap && document.getElementById('totalDuration').value) label += ' ⚠️ over!';
+  document.getElementById('timeTotalVal').textContent = label;
+}
+
+function toggleChip(el) { el.classList.toggle('selected'); }
+
+function toggleCheck(el) {
+  var row = el;
+  while (row && !row.classList.contains('check-row')) row = row.parentElement;
+  if (row) row.classList.toggle('checked');
+}
+
+function addMaterial() {
+  var list = document.getElementById('materialsList');
+  var row  = document.createElement('div');
+  row.className = 'mat-row';
+  row.innerHTML = '<div class="mat-dot"></div><input type="text" placeholder="Add material...">';
+  list.appendChild(row);
+  row.querySelector('input').focus();
+}
+
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 3000);
+}
+
+/* ── GET ALL MATERIALS ── */
+function getMaterials() {
+  var items = [];
+  document.querySelectorAll('#materialsList .mat-row input').forEach(function(inp){
+    if (inp.value.trim()) items.push(inp.value.trim());
+  });
+  return items;
+}
+
+/* ── GET CHECKED RADIO ── */
+function getRadio(name) {
+  var el = document.querySelector('input[name="' + name + '"]:checked');
+  return el ? el.value : '';
+}
+
+/* ── GET SELECTED CHIPS ── */
+function getChips() {
+  var chips = [];
+  document.querySelectorAll('.obj-chip.selected').forEach(function(c){ chips.push(c.textContent.trim()); });
+  return chips.join(', ');
+}
+
+/* ── GET CHECKLIST ── */
+function getChecklist() {
+  var list = [];
+  document.querySelectorAll('.check-row').forEach(function(r){
+    list.push({ text: r.textContent.trim(), done: r.classList.contains('checked') });
+  });
+  return list;
+}
+
+/* ── val helper ── */
+function val(id) {
+  var el = document.getElementById(id);
+  return el ? (el.value || '').trim() : '';
+}
+
+/* ════════════════════════════════════════════
+   GENERATE REAL .DOCX WORD FILE
+═══════════════════════════════════════════ */
+async function saveAsWord() {
+  if (typeof docx === 'undefined') {
+    showToast('Word library not loaded yet — check internet connection');
+    return;
+  }
+
+  const {
+    Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell,
+    AlignmentType, BorderStyle, WidthType, ShadingType, VerticalAlign,
+    HeadingLevel, PageNumber, Header, Footer
+  } = docx;
+
+  const TEAL   = '3A4652';
+  const RUST   = 'C97A64';
+  const CREAM  = 'F7F4EF';
+  const LTGRAY = 'F2F2F2';
+  const WHITE  = 'FFFFFF';
+  const borderNone  = { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' };
+  const borderThin  = { style: BorderStyle.SINGLE, size: 4, color: 'D9D1C5' };
+  const borderTeal  = { style: BorderStyle.SINGLE, size: 12, color: TEAL };
+  const allNone     = { top: borderNone, bottom: borderNone, left: borderNone, right: borderNone };
+  const allThin     = { top: borderThin, bottom: borderThin, left: borderThin, right: borderThin };
+
+  /* Helper: section heading row (full-width shaded) */
+  function sectionRow(title, icon) {
+    return new TableRow({
+      children: [
+        new TableCell({
+          columnSpan: 4,
+          borders: { top: borderTeal, bottom: borderThin, left: borderNone, right: borderNone },
+          shading: { fill: '3A4652', type: ShadingType.CLEAR },
+          margins: { top: 120, bottom: 120, left: 200, right: 200 },
+          children: [new Paragraph({
+            children: [new TextRun({ text: (icon ? icon + '  ' : '') + title, bold: true, color: WHITE, size: 22, font: 'Arial' })]
+          })]
+        })
+      ]
+    });
+  }
+
+  /* Helper: label + value row (2-col) */
+  function row2(label1, value1, label2, value2) {
+    return new TableRow({
+      children: [
+        labelCell(label1), valueCell(value1),
+        labelCell(label2 || ''), valueCell(value2 || '')
+      ]
+    });
+  }
+
+  /* Helper: label + value spanning full width */
+  function rowFull(label, value) {
+    return new TableRow({
+      children: [
+        labelCell(label),
+        new TableCell({
+          columnSpan: 3,
+          borders: allThin,
+          shading: { fill: WHITE, type: ShadingType.CLEAR },
+          margins: { top: 80, bottom: 80, left: 150, right: 150 },
+          children: [new Paragraph({ children: [new TextRun({ text: value || '', font: 'Arial', size: 20 })] })]
+        })
+      ]
+    });
+  }
+
+  /* Helper: label + multiline value full-width */
+  function rowArea(label, value) {
+    var lines = (value || '').split('\n').filter(Boolean);
+    if (!lines.length) lines = [''];
+    return new TableRow({
+      children: [
+        labelCell(label),
+        new TableCell({
+          columnSpan: 3,
+          borders: allThin,
+          shading: { fill: WHITE, type: ShadingType.CLEAR },
+          margins: { top: 100, bottom: 100, left: 150, right: 150 },
+          children: lines.map(function(l){ return new Paragraph({ children: [new TextRun({ text: l, font: 'Arial', size: 20 })] }); })
+        })
+      ]
+    });
+  }
+
+  function labelCell(text) {
+    return new TableCell({
+      width: { size: 2100, type: WidthType.DXA },
+      borders: allThin,
+      shading: { fill: LTGRAY, type: ShadingType.CLEAR },
+      margins: { top: 80, bottom: 80, left: 150, right: 150 },
+      children: [new Paragraph({ children: [new TextRun({ text: text, bold: true, font: 'Arial', size: 18, color: '49525C' })] })]
+    });
+  }
+
+  function valueCell(text) {
+    return new TableCell({
+      width: { size: 2580, type: WidthType.DXA },
+      borders: allThin,
+      shading: { fill: WHITE, type: ShadingType.CLEAR },
+      margins: { top: 80, bottom: 80, left: 150, right: 150 },
+      children: [new Paragraph({ children: [new TextRun({ text: text || '', font: 'Arial', size: 20 })] })]
+    });
+  }
+
+  /* Helper: stage block (Intro / Main / Close) */
+  function stageRows(title, color, timeVal, rows) {
+    var stageHeader = new TableRow({
+      children: [
+        new TableCell({
+          columnSpan: 4,
+          borders: { top: { style: BorderStyle.SINGLE, size: 8, color: color }, bottom: borderThin, left: borderNone, right: borderNone },
+          shading: { fill: color + '22', type: ShadingType.CLEAR },
+          margins: { top: 100, bottom: 100, left: 200, right: 200 },
+          children: [new Paragraph({
+            children: [
+              new TextRun({ text: title, bold: true, font: 'Arial', size: 20, color: color }),
+              new TextRun({ text: timeVal ? '    (' + timeVal + ' mins)' : '', font: 'Arial', size: 18, color: '888888' })
+            ]
+          })]
+        })
+      ]
+    });
+    return [stageHeader].concat(rows);
+  }
+
+  /* Checklist rows */
+  function checklistRows(items) {
+    return items.map(function(item) {
+      return new TableRow({
+        children: [
+          new TableCell({
+            columnSpan: 4,
+            borders: { top: borderNone, bottom: borderThin, left: borderNone, right: borderNone },
+            margins: { top: 70, bottom: 70, left: 200, right: 200 },
+            children: [new Paragraph({
+              children: [
+                new TextRun({ text: item.done ? '☑  ' : '☐  ', font: 'Arial', size: 20, color: item.done ? '2D7A47' : '888888' }),
+                new TextRun({ text: item.text, font: 'Arial', size: 20, color: item.done ? '2D7A47' : '232A31',
+                  strike: item.done })
+              ]
+            })]
+          })
+        ]
+      });
+    });
+  }
+
+  /* Gather all values */
+  var v = {
+    date:        val('dateField'),
+    day:         val('dayField'),
+    period:      val('periodField'),
+    duration:    val('totalDuration'),
+    teacher:     val('teacherField'),
+    cls:         val('classField'),
+    subject:     val('subjectField'),
+    topic:       val('topicField'),
+    objectives:  val('objectivesText'),
+    blooms:      getChips(),
+    textbook:    val('textbookRef'),
+    worksheet:   val('worksheetStatus'),
+    materials:   getMaterials().join('\n'),
+    introTime:   val('introTime'),
+    introAct:    val('introActivity'),
+    priorKnow:   val('priorKnowledge'),
+    openingQ:    val('openingQ'),
+    mainTime:    val('mainTime'),
+    method:      getRadio('method'),
+    teachPlan:   val('teachingPlan'),
+    vocab:       val('keyVocab'),
+    closeTime:   val('closeTime'),
+    closingAct:  val('closingActivity'),
+    takeaway:    val('keyTakeaway'),
+    assessM:     val('assessMethod'),
+    classwork:   getRadio('classwork'),
+    homework:    val('homework'),
+    hwDue:       val('hwDueDate'),
+    diff:        val('differentiation'),
+    ext:         val('extension'),
+    preNotes:    val('preNotes'),
+    reflection:  val('reflection'),
+    carry:       val('carryForward'),
+    checklist:   getChecklist()
+  };
+
+  // Total time
+  var totalUsed = (parseInt(v.introTime)||0) + (parseInt(v.mainTime)||0) + (parseInt(v.closeTime)||0);
+
+  var TABLE_W = 9360; // US Letter 1" margins
+
+  var doc = new Document({
+    styles: {
+      default: { document: { run: { font: 'Arial', size: 22 } } }
+    },
+    sections: [{
+      properties: {
+        page: {
+          size: { width: 12240, height: 15840 },
+          margin: { top: 1080, right: 1080, bottom: 1080, left: 1080 }
+        }
+      },
+      headers: {
+        default: new Header({
+          children: [
+            new Table({
+              width: { size: TABLE_W, type: WidthType.DXA },
+              columnWidths: [7000, 2360],
+              borders: { top: borderNone, bottom: { style: BorderStyle.SINGLE, size: 6, color: TEAL }, left: borderNone, right: borderNone, insideH: borderNone, insideV: borderNone },
+              rows: [
+                new TableRow({
+                  children: [
+                    new TableCell({
+                      borders: allNone,
+                      margins: { top: 60, bottom: 60, left: 0, right: 0 },
+                      children: [new Paragraph({
+                        children: [
+                          new TextRun({ text: 'Heritage Montessori & School', bold: true, font: 'Arial', size: 22, color: TEAL }),
+                          new TextRun({ text: '   |   Classroom Lesson Plan — Physical Classes', font: 'Arial', size: 18, color: '888888' })
+                        ]
+                      })]
+                    }),
+                    new TableCell({
+                      borders: allNone,
+                      margins: { top: 60, bottom: 60, left: 0, right: 0 },
+                      children: [new Paragraph({
+                        alignment: AlignmentType.RIGHT,
+                        children: [new TextRun({ text: v.cls ? v.cls + (v.subject ? ' — ' + v.subject : '') : 'Lesson Plan', font: 'Arial', size: 18, color: RUST, bold: true })]
+                      })]
+                    })
+                  ]
+                })
+              ]
+            })
+          ]
+        })
+      },
+      footers: {
+        default: new Footer({
+          children: [new Paragraph({
+            alignment: AlignmentType.CENTER,
+            children: [
+              new TextRun({ text: 'Heritage Montessori & School  ·  Classroom Lesson Plan  ·  Page ', font: 'Arial', size: 16, color: 'AAAAAA' }),
+              new TextRun({ children: [PageNumber.CURRENT], font: 'Arial', size: 16, color: 'AAAAAA' }),
+              new TextRun({ text: ' of ', font: 'Arial', size: 16, color: 'AAAAAA' }),
+              new TextRun({ children: [PageNumber.TOTAL_PAGES], font: 'Arial', size: 16, color: 'AAAAAA' })
+            ]
+          })]
+        })
+      },
+      children: [
+
+        /* ══ TITLE BLOCK ══ */
+        new Table({
+          width: { size: TABLE_W, type: WidthType.DXA },
+          columnWidths: [TABLE_W],
+          rows: [
+            new TableRow({
+              children: [
+                new TableCell({
+                  borders: allNone,
+                  shading: { fill: TEAL, type: ShadingType.CLEAR },
+                  margins: { top: 200, bottom: 200, left: 300, right: 300 },
+                  children: [
+                    new Paragraph({
+                      alignment: AlignmentType.CENTER,
+                      children: [new TextRun({ text: 'CLASSROOM LESSON PLAN', bold: true, font: 'Arial', size: 32, color: WHITE, allCaps: true })]
+                    }),
+                    new Paragraph({
+                      alignment: AlignmentType.CENTER,
+                      children: [new TextRun({ text: 'Heritage Montessori & School  ·  Physical Classes', font: 'Arial', size: 18, color: 'CCCCCC' })]
+                    })
+                  ]
+                })
+              ]
+            })
+          ]
+        }),
+
+        new Paragraph({ children: [new TextRun({ text: '' })], spacing: { after: 100 } }),
+
+        /* ══ SECTION 1: LESSON DETAILS ══ */
+        new Table({
+          width: { size: TABLE_W, type: WidthType.DXA },
+          columnWidths: [2100, 2580, 2100, 2580],
+          rows: [
+            sectionRow('LESSON DETAILS', '📋'),
+            row2('Date', v.date, 'Day', v.day),
+            row2('Period / Time', v.period, 'Duration', v.duration ? v.duration + ' mins' : ''),
+            row2('Teacher', v.teacher, 'Class', v.cls),
+            row2('Subject', v.subject, '', ''),
+            rowFull('Topic / Chapter', v.topic)
+          ]
+        }),
+
+        new Paragraph({ children: [new TextRun({ text: '' })], spacing: { after: 120 } }),
+
+        /* ══ SECTION 2: LEARNING OBJECTIVES ══ */
+        new Table({
+          width: { size: TABLE_W, type: WidthType.DXA },
+          columnWidths: [2100, 2580, 2100, 2580],
+          rows: [
+            sectionRow('LEARNING OBJECTIVES', '🎯'),
+            rowArea('Objectives', v.objectives),
+            rowFull("Bloom's Level", v.blooms)
+          ]
+        }),
+
+        new Paragraph({ children: [new TextRun({ text: '' })], spacing: { after: 120 } }),
+
+        /* ══ SECTION 3: MATERIALS ══ */
+        new Table({
+          width: { size: TABLE_W, type: WidthType.DXA },
+          columnWidths: [2100, 2580, 2100, 2580],
+          rows: [
+            sectionRow('MATERIALS & RESOURCES', '📦'),
+            row2('Textbook / Page', v.textbook, 'Worksheet', v.worksheet),
+            rowArea('Teaching Aids', v.materials)
+          ]
+        }),
+
+        new Paragraph({ children: [new TextRun({ text: '' })], spacing: { after: 120 } }),
+
+        /* ══ SECTION 4: LESSON STAGES ══ */
+        new Table({
+          width: { size: TABLE_W, type: WidthType.DXA },
+          columnWidths: [2100, 2580, 2100, 2580],
+          rows: [
+            sectionRow('LESSON STAGES', '📚'),
+            ...stageRows('Introduction / Warm-Up', '2D7A47', v.introTime, [
+              rowArea('Opening Activity', v.introAct),
+              row2('Prior Knowledge', v.priorKnow, 'Opening Question', v.openingQ)
+            ]),
+            ...stageRows('Main Teaching', '3A4652', v.mainTime, [
+              rowFull('Teaching Method', v.method),
+              rowArea('Teaching Plan', v.teachPlan),
+              rowFull('Key Vocabulary', v.vocab)
+            ]),
+            ...stageRows('Closing / Wrap-Up', 'C97A64', v.closeTime, [
+              rowArea('Closing Activity', v.closingAct),
+              rowFull('Key Takeaway', v.takeaway)
+            ]),
+            new TableRow({
+              children: [
+                new TableCell({
+                  columnSpan: 4,
+                  borders: { top: borderThin, bottom: borderThin, left: borderNone, right: borderNone },
+                  shading: { fill: 'FFFDF5', type: ShadingType.CLEAR },
+                  margins: { top: 100, bottom: 100, left: 200, right: 200 },
+                  children: [new Paragraph({
+                    children: [
+                      new TextRun({ text: 'Total Time Planned: ', bold: true, font: 'Arial', size: 20 }),
+                      new TextRun({ text: totalUsed + ' mins', font: 'Arial', size: 20, color: TEAL, bold: true }),
+                      v.duration ? new TextRun({ text: '  of  ' + v.duration + ' mins lesson', font: 'Arial', size: 18, color: '888888' }) : new TextRun({ text: '' })
+                    ]
+                  })]
+                })
+              ]
+            })
+          ]
+        }),
+
+        new Paragraph({ children: [new TextRun({ text: '' })], spacing: { after: 120 } }),
+
+        /* ══ SECTION 5: ASSESSMENT & HOMEWORK ══ */
+        new Table({
+          width: { size: TABLE_W, type: WidthType.DXA },
+          columnWidths: [2100, 2580, 2100, 2580],
+          rows: [
+            sectionRow('ASSESSMENT & HOMEWORK', '✏️'),
+            row2('Assessment Method', v.assessM, 'Class Notebook Work', v.classwork),
+            rowArea('Homework / Assignment', v.homework),
+            row2('Homework Due Date', v.hwDue, '', ''),
+            rowFull('Differentiation (Support)', v.diff),
+            rowFull('Extension (Challenge)', v.ext)
+          ]
+        }),
+
+        new Paragraph({ children: [new TextRun({ text: '' })], spacing: { after: 120 } }),
+
+        /* ══ SECTION 6: NOTES & REMARKS ══ */
+        new Table({
+          width: { size: TABLE_W, type: WidthType.DXA },
+          columnWidths: [2100, 2580, 2100, 2580],
+          rows: [
+            sectionRow('CLASS NOTES & REMARKS', '📝'),
+            rowArea('Pre-Lesson Notes', v.preNotes),
+            rowArea('Post-Lesson Reflection', v.reflection),
+            rowArea('Topics to Carry Forward', v.carry)
+          ]
+        }),
+
+        new Paragraph({ children: [new TextRun({ text: '' })], spacing: { after: 120 } }),
+
+        /* ══ SECTION 7: PRE-CLASS CHECKLIST ══ */
+        new Table({
+          width: { size: TABLE_W, type: WidthType.DXA },
+          columnWidths: [2100, 2580, 2100, 2580],
+          rows: [
+            sectionRow('PRE-CLASS CHECKLIST', '☑'),
+            ...checklistRows(v.checklist)
+          ]
+        }),
+
+        new Paragraph({ children: [new TextRun({ text: '' })], spacing: { after: 200 } }),
+
+        /* ══ TEACHER SIGNATURE ROW ══ */
+        new Table({
+          width: { size: TABLE_W, type: WidthType.DXA },
+          columnWidths: [4680, 4680],
+          rows: [
+            new TableRow({
+              children: [
+                new TableCell({
+                  borders: allNone,
+                  margins: { top: 80, bottom: 80, left: 0, right: 200 },
+                  children: [
+                    new Paragraph({
+                      border: { bottom: { style: BorderStyle.SINGLE, size: 4, color: TEAL } },
+                      children: [new TextRun({ text: 'Teacher Signature: ', font: 'Arial', size: 18, color: '888888' })]
+                    })
+                  ]
+                }),
+                new TableCell({
+                  borders: allNone,
+                  margins: { top: 80, bottom: 80, left: 200, right: 0 },
+                  children: [
+                    new Paragraph({
+                      border: { bottom: { style: BorderStyle.SINGLE, size: 4, color: TEAL } },
+                      children: [new TextRun({ text: 'Reviewed by (Admin): ', font: 'Arial', size: 18, color: '888888' })]
+                    })
+                  ]
+                })
+              ]
+            })
+          ]
+        })
+
+      ]
+    }]
+  });
+
+  /* ── Generate and download ── */
+  try {
+    const blob = await Packer.toBlob(doc);
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    var cls    = val('classField')   || 'Class';
+    var subj   = val('subjectField') || 'Subject';
+    var date   = val('dateField')    || 'Date';
+    a.download = 'LessonPlan_' + cls + '_' + subj + '_' + date + '.docx';
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('Word file downloaded — open in Microsoft Word');
+    var s = document.getElementById('saveSuccess');
+    s.style.display = 'flex';
+    setTimeout(function(){ s.style.display = 'none'; }, 4000);
+  } catch(err) {
+    console.error(err);
+    showToast('Error generating Word file — please try again');
+  }
+}
+
+/* ── SAVE TO DEVICE (localStorage) + download Word ── */
+function savePlan() {
+  try { localStorage.setItem('hms_classroom_plan', JSON.stringify(collectData())); } catch(e) {}
+  saveAsWord();
+}
+
+/* ── SAVE TO DRIVE: download Word then open Drive ── */
+function saveToDrive() {
+  saveAsWord();
+  setTimeout(function(){
+    window.open('https://drive.google.com', '_blank');
+    showToast('Word file downloaded — upload it to your Drive folder');
+  }, 1200);
+}
+
+/* ── COLLECT / RESTORE ── */
+function collectData() {
+  var data = { inputs:{}, textareas:{}, selects:{}, chips:[], checks:[], radios:{} };
+  document.querySelectorAll('input:not([type=radio]):not([type=checkbox])').forEach(function(inp, i){ data.inputs[i] = inp.value; });
+  document.querySelectorAll('textarea').forEach(function(ta, i){ data.textareas[i] = ta.value; });
+  document.querySelectorAll('select').forEach(function(sel, i){ data.selects[i] = sel.value; });
+  document.querySelectorAll('.obj-chip').forEach(function(c, i){ if (c.classList.contains('selected')) data.chips.push(i); });
+  document.querySelectorAll('.check-row').forEach(function(r, i){ if (r.classList.contains('checked')) data.checks.push(i); });
+  document.querySelectorAll('input[type=radio]').forEach(function(r, i){ if (r.checked) data.radios[i] = true; });
+  return data;
+}
+
+function restorePlan(data) {
+  if (!data) return;
+  var inputs = document.querySelectorAll('input:not([type=radio]):not([type=checkbox])');
+  Object.keys(data.inputs||{}).forEach(function(i){ if (inputs[i]) inputs[i].value = data.inputs[i]; });
+  var textareas = document.querySelectorAll('textarea');
+  Object.keys(data.textareas||{}).forEach(function(i){ if (textareas[i]) textareas[i].value = data.textareas[i]; });
+  var selects = document.querySelectorAll('select');
+  Object.keys(data.selects||{}).forEach(function(i){ if (selects[i]) { selects[i].value = data.selects[i]; } });
+  updateSubjects();
+  setTimeout(function(){
+    var selects2 = document.querySelectorAll('select');
+    Object.keys(data.selects||{}).forEach(function(i){ if (selects2[i]) selects2[i].value = data.selects[i]; });
+  }, 50);
+  var chips = document.querySelectorAll('.obj-chip');
+  (data.chips||[]).forEach(function(i){ if (chips[i]) chips[i].classList.add('selected'); });
+  var rows = document.querySelectorAll('.check-row');
+  (data.checks||[]).forEach(function(i){ if (rows[i]) rows[i].classList.add('checked'); });
+  var radios = document.querySelectorAll('input[type=radio]');
+  Object.keys(data.radios||{}).forEach(function(i){ if (radios[i]) radios[i].checked = true; });
+  updateTimeBar();
+}
+
+function resetForm() {
+  if (!confirm('Reset all fields? This cannot be undone.')) return;
+  document.querySelectorAll('input:not([type=radio]):not([type=checkbox])').forEach(function(i){
+    if (i.type !== 'date') i.value = '';
+  });
+  document.querySelectorAll('textarea').forEach(function(t){ t.value = ''; });
+  document.querySelectorAll('select').forEach(function(s){ s.selectedIndex = 0; });
+  document.querySelectorAll('input[type=radio]').forEach(function(r){ r.checked = false; });
+  document.querySelectorAll('.obj-chip').forEach(function(c){ c.classList.remove('selected'); });
+  document.querySelectorAll('.check-row').forEach(function(r){ r.classList.remove('checked'); });
+  document.getElementById('timeBarFill').style.width = '0%';
+  document.getElementById('timeTotalVal').textContent = '0 mins';
+  try { localStorage.removeItem('hms_classroom_plan'); } catch(e){}
+  showToast('Form reset');
+}
+</script>
+</body>
+</html>
