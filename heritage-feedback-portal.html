@@ -108,6 +108,25 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
 .toast { position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(100px); background:var(--forest); color:white; padding:13px 28px; font-size:13px; font-weight:500; border-radius:2px; box-shadow:0 4px 24px rgba(0,0,0,0.25); transition:transform 0.4s ease; z-index:9999; white-space:nowrap; }
 .toast.show { transform:translateX(-50%) translateY(0); }
 .page-footer { text-align:center; padding:16px; font-size:9.5px; color:rgba(0,0,0,0.35); letter-spacing:1px; text-transform:uppercase; background:var(--parchment); }
+
+/* ── NOTIFY PANEL ── */
+.notify-panel { margin-top:24px; border:1.5px solid var(--line); overflow:hidden; animation:slideIn 0.4s ease; }
+@keyframes slideIn { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
+.notify-header { background:var(--success); color:white; padding:14px 20px; display:flex; align-items:center; gap:14px; }
+.notify-check { font-size:22px; background:rgba(255,255,255,0.2); width:38px; height:38px; display:inline-flex; align-items:center; justify-content:center; border-radius:50%; flex-shrink:0; }
+.notify-title { font-family:'Cormorant Garamond',serif; font-size:17px; font-weight:600; }
+.notify-sub { font-size:11px; color:rgba(255,255,255,0.8); margin-top:3px; line-height:1.5; }
+.notify-body { padding:18px 20px; background:var(--cream); }
+.notify-label { font-size:9px; font-weight:500; letter-spacing:2.5px; text-transform:uppercase; color:var(--sage); margin-bottom:12px; }
+.notify-btns { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px; }
+.notify-btn { display:flex; align-items:center; gap:12px; padding:13px 18px; text-decoration:none; border-radius:2px; flex:1; min-width:200px; transition:opacity 0.2s; }
+.notify-btn:hover { opacity:0.88; }
+.notify-wa { background:#25d366; color:white; }
+.notify-email { background:var(--forest); color:white; }
+.nb-icon { font-size:22px; flex-shrink:0; }
+.nb-title { display:block; font-size:13px; font-weight:600; letter-spacing:0.3px; }
+.nb-sub { display:block; font-size:10px; opacity:0.8; margin-top:1px; }
+.notify-note { font-size:10.5px; color:var(--muted); font-style:italic; line-height:1.5; }
 </style>
 </head>
 <body>
@@ -309,6 +328,37 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
             <button class="btn btn-primary" id="submitBtn" onclick="submitFeedback()">Submit Feedback →</button>
           </div>
           <div class="spinner-row" id="spinnerRow"><div class="spinner"></div> Submitting to school…</div>
+        </div>
+      </div>
+
+      <!-- NOTIFY SCHOOL PANEL -->
+      <div class="notify-panel" id="notifyPanel" style="display:none;">
+        <div class="notify-header">
+          <span class="notify-check">✓</span>
+          <div>
+            <div class="notify-title">Feedback Submitted Successfully!</div>
+            <div class="notify-sub">Please take one more step to notify the school directly so they can attend to your feedback promptly.</div>
+          </div>
+        </div>
+        <div class="notify-body">
+          <div class="notify-label">&#9670; Notify Heritage Montessori via</div>
+          <div class="notify-btns">
+            <a id="waBtn" href="#" target="_blank" class="notify-btn notify-wa">
+              <span class="nb-icon">&#128172;</span>
+              <span>
+                <span class="nb-title">WhatsApp</span>
+                <span class="nb-sub">Send a pre-filled message</span>
+              </span>
+            </a>
+            <a id="emailBtn" href="#" class="notify-btn notify-email">
+              <span class="nb-icon">&#9993;&#65039;</span>
+              <span>
+                <span class="nb-title">Email</span>
+                <span class="nb-sub">Send a pre-filled email</span>
+              </span>
+            </a>
+          </div>
+          <div class="notify-note">These buttons open WhatsApp / your email app with the message already written. Just tap Send.</div>
         </div>
       </div>
 
@@ -531,6 +581,31 @@ window.submitFeedback = async function() {
   try {
     await set(ref(db,`feedback/${key}`), record);
     showToast('✓ Feedback submitted successfully!');
+
+    // Build WhatsApp & email notification links
+    const childName   = record.childName;
+    const parentName  = record.parentName || 'Parent';
+    const grade       = record.grade || '—';
+    const date        = record.submittedOn;
+    const modeLabel   = currentMode === 'ptm' ? 'Parent-Teacher Meeting' : 'General Observation';
+
+    const waMsg = encodeURIComponent(
+      `Hello Heritage Montessori,\n\nI have submitted a ${modeLabel} feedback for my child *${childName}* (${grade}) on ${date} via the Parent Feedback Portal.\n\nKindly review it at your earliest convenience.\n\nThank you,\n${parentName}`
+    );
+    // ← Replace 91XXXXXXXXXX with the school's WhatsApp number (with country code, no + or spaces)
+    const schoolWA    = '91XXXXXXXXXX';
+    const schoolEmail = 'info@heritagemux.com';
+
+    const emailSubject = encodeURIComponent(`Parent Feedback Submitted — ${childName} (${grade})`);
+    const emailBody    = encodeURIComponent(
+      `Dear Heritage Montessori Team,\n\nI have submitted a ${modeLabel} feedback for my child ${childName} (${grade}) on ${date} via the Parent Feedback Portal on the school website.\n\nKindly log in to the Staff Response Panel to review and respond.\n\nThank you,\n${parentName}`
+    );
+
+    document.getElementById('waBtn').href    = `https://wa.me/${schoolWA}?text=${waMsg}`;
+    document.getElementById('emailBtn').href = `mailto:${schoolEmail}?subject=${emailSubject}&body=${emailBody}`;
+    document.getElementById('notifyPanel').style.display = 'block';
+    document.getElementById('notifyPanel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
     setTimeout(()=>checkStatus(), 800);
   } catch(e) {
     showToast('⚠ Could not submit. Please check your connection and try again.');
@@ -588,6 +663,7 @@ window.clearForm = function() {
   document.getElementById('sameTeacher').checked=false;
   document.getElementById('chipLimitMsg').style.display='none';
   document.getElementById('submitBtn').disabled=false;
+  document.getElementById('notifyPanel').style.display='none';
   if(responseUnsub){responseUnsub();responseUnsub=null;}
   resetStatusBar();
 };
