@@ -7,427 +7,112 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
-  --forest:    #2d4a2d;
-  --forest-lt: #3d6b3d;
-  --gold:      #b8962e;
-  --gold-lt:   #d4b254;
-  --cream:     #faf7f2;
-  --parchment: #f2ece0;
-  --tan:       #e8dfc8;
-  --line:      #d9cebc;
-  --ink:       #1e1e1e;
-  --muted:     #6e6456;
-  --sage:      #5a7a5a;
-  --error:     #c0392b;
-  --success:   #2d7a4a;
+  --forest:#2d4a2d; --gold:#b8962e; --cream:#faf7f2; --parchment:#f2ece0;
+  --tan:#e8dfc8; --line:#d9cebc; --ink:#1e1e1e; --muted:#6e6456;
+  --sage:#5a7a5a; --error:#c0392b; --success:#2d7a4a;
 }
-
-@media print {
-  body { background: white !important; }
-  .no-print { display: none !important; }
-  .page { box-shadow: none !important; }
-}
-
-body {
-  background: #cfc9bc;
-  font-family: 'Jost', sans-serif;
-  min-height: 100vh;
-  padding: 30px 16px 50px;
-  color: var(--ink);
-}
-
-/* ── PORTAL WRAPPER ── */
-.portal {
-  max-width: 780px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-
-/* ── TOP BANNER ── */
-.top-banner {
-  background: var(--forest);
-  color: white;
-  padding: 18px 32px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-.banner-school {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 20px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
-}
-.banner-sub {
-  font-size: 10px;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.6);
-  margin-top: 2px;
-}
-.banner-badge {
-  background: var(--gold);
-  color: var(--forest);
-  font-size: 9.5px;
-  font-weight: 600;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  padding: 5px 12px;
-  border-radius: 2px;
-}
-
-/* ── PAGE BODY ── */
-.page {
-  background: var(--cream);
-  padding: 38px 52px 44px;
-  box-shadow: 0 8px 48px rgba(0,0,0,0.18);
-  position: relative;
-}
-
-/* ── PURPOSE TOGGLE ── */
-.purpose-bar {
-  display: flex;
-  gap: 0;
-  border: 1.5px solid var(--line);
-  margin-bottom: 28px;
-  overflow: hidden;
-}
-.purpose-btn {
-  flex: 1;
-  padding: 11px 10px;
-  background: transparent;
-  border: none;
-  font-family: 'Jost', sans-serif;
-  font-size: 11.5px;
-  font-weight: 500;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--muted);
-  cursor: pointer;
-  transition: all 0.2s;
-  position: relative;
-}
-.purpose-btn + .purpose-btn { border-left: 1.5px solid var(--line); }
-.purpose-btn.active {
-  background: var(--forest);
-  color: white;
-}
-.purpose-btn .p-icon { margin-right: 6px; }
-
-/* ── STATUS BAR ── */
-.status-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: var(--parchment);
-  border-left: 4px solid var(--gold);
-  padding: 10px 14px;
-  margin-bottom: 22px;
-  font-size: 12px;
-  color: var(--muted);
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.status-bar.locked { border-left-color: var(--error); }
-.status-bar.ok    { border-left-color: var(--success); }
-.status-label { font-weight: 500; }
-.status-reset {
-  font-size: 10.5px;
-  color: var(--sage);
-  letter-spacing: 0.5px;
-}
-.countdown { font-weight: 600; color: var(--forest); }
-
-/* ── LOCKED OVERLAY ── */
-.locked-msg {
-  text-align: center;
-  padding: 40px 20px;
-  display: none;
-}
-.locked-msg h3 {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 22px;
-  color: var(--forest);
-  margin-bottom: 8px;
-}
-.locked-msg p { font-size: 13px; color: var(--muted); line-height: 1.6; }
-.locked-msg .lock-icon { font-size: 40px; margin-bottom: 14px; opacity: 0.4; }
-
-/* ── DIVIDER ── */
-.sep { border: none; border-top: 1px dashed var(--line); margin: 20px 0; }
-
-/* ── INFO GRID ── */
-.info-grid {
-  display: grid;
-  grid-template-columns: 1.3fr 1fr 1fr;
-  gap: 14px 18px;
-  margin-bottom: 22px;
-  background: var(--parchment);
-  padding: 16px 18px;
-  border-left: 3px solid var(--gold);
-}
-.info-field { display: flex; flex-direction: column; gap: 4px; }
-.info-field label {
-  font-size: 8.5px;
-  font-weight: 500;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-  color: var(--sage);
-}
-.f-input {
-  border: none;
-  border-bottom: 1.5px solid var(--line);
-  background: transparent;
-  font-family: 'Jost', sans-serif;
-  font-size: 12.5px;
-  color: var(--ink);
-  padding: 4px 2px;
-  width: 100%;
-  outline: none;
-}
-.f-input:focus { border-bottom-color: var(--gold); }
-.f-input::placeholder { color: #c8bfb0; font-size: 11.5px; }
-.f-input:disabled { opacity: 0.45; cursor: not-allowed; }
-
-/* ── MET WITH ── */
-.met-block {
-  background: var(--parchment);
-  border-left: 3px solid var(--forest);
-  padding: 14px 18px;
-  margin-bottom: 22px;
-}
-.met-title {
-  font-size: 9px; font-weight: 500;
-  letter-spacing: 2.5px; text-transform: uppercase;
-  color: var(--forest); margin-bottom: 12px;
-}
-/* Hide met-with for General Observation mode */
-.mode-general .met-block { display: none; }
-
-.met-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px 18px;
-  align-items: end;
-}
-.same-row { grid-column: 1/-1; display: flex; align-items: center; gap: 8px; margin-top: 6px; }
-.same-row input[type=checkbox] { width:14px; height:14px; accent-color: var(--gold); cursor:pointer; }
+@media print { body{background:white!important;} .no-print{display:none!important;} .page{box-shadow:none!important;} }
+body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padding:30px 16px 50px; color:var(--ink); }
+.portal { max-width:780px; margin:0 auto; display:flex; flex-direction:column; }
+.top-banner { background:var(--forest); color:white; padding:18px 32px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+.banner-school { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:600; }
+.banner-sub { font-size:10px; letter-spacing:2.5px; text-transform:uppercase; color:rgba(255,255,255,0.6); margin-top:2px; }
+.banner-badge { background:var(--gold); color:var(--forest); font-size:9.5px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; padding:5px 12px; border-radius:2px; }
+.page { background:var(--cream); padding:38px 52px 44px; box-shadow:0 8px 48px rgba(0,0,0,0.18); }
+.purpose-bar { display:flex; border:1.5px solid var(--line); margin-bottom:28px; overflow:hidden; }
+.purpose-btn { flex:1; padding:11px 10px; background:transparent; border:none; font-family:'Jost',sans-serif; font-size:11.5px; font-weight:500; letter-spacing:1px; text-transform:uppercase; color:var(--muted); cursor:pointer; transition:all 0.2s; }
+.purpose-btn+.purpose-btn { border-left:1.5px solid var(--line); }
+.purpose-btn.active { background:var(--forest); color:white; }
+.status-bar { display:flex; align-items:center; justify-content:space-between; background:var(--parchment); border-left:4px solid var(--gold); padding:10px 14px; margin-bottom:22px; font-size:12px; color:var(--muted); flex-wrap:wrap; gap:8px; }
+.status-bar.locked { border-left-color:var(--error); }
+.status-bar.ok { border-left-color:var(--success); }
+.status-label { font-weight:500; }
+.countdown { font-weight:600; color:var(--forest); }
+.locked-msg { text-align:center; padding:40px 20px; display:none; }
+.locked-msg h3 { font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--forest); margin-bottom:8px; }
+.locked-msg p { font-size:13px; color:var(--muted); line-height:1.6; }
+.lock-icon { font-size:40px; margin-bottom:14px; opacity:0.4; }
+.sep { border:none; border-top:1px dashed var(--line); margin:20px 0; }
+.info-grid { display:grid; grid-template-columns:1.3fr 1fr 1fr; gap:14px 18px; margin-bottom:22px; background:var(--parchment); padding:16px 18px; border-left:3px solid var(--gold); }
+.info-field { display:flex; flex-direction:column; gap:4px; }
+.info-field label { font-size:8.5px; font-weight:500; letter-spacing:2.5px; text-transform:uppercase; color:var(--sage); }
+.f-input { border:none; border-bottom:1.5px solid var(--line); background:transparent; font-family:'Jost',sans-serif; font-size:12.5px; color:var(--ink); padding:4px 2px; width:100%; outline:none; }
+.f-input:focus { border-bottom-color:var(--gold); }
+.f-input::placeholder { color:#c8bfb0; font-size:11.5px; }
+.met-block { background:var(--parchment); border-left:3px solid var(--forest); padding:14px 18px; margin-bottom:22px; }
+.met-title { font-size:9px; font-weight:500; letter-spacing:2.5px; text-transform:uppercase; color:var(--forest); margin-bottom:12px; }
+.met-row { display:grid; grid-template-columns:1fr 1fr; gap:14px 18px; align-items:end; }
+.same-row { grid-column:1/-1; display:flex; align-items:center; gap:8px; margin-top:6px; }
+.same-row input[type=checkbox] { width:14px; height:14px; accent-color:var(--gold); cursor:pointer; }
 .same-row label { font-size:11.5px; color:var(--muted); cursor:pointer; user-select:none; }
-
-/* ── SECTION TITLES ── */
-.sec-title {
-  display: flex; align-items: center; gap: 9px;
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 14.5px; font-weight: 600;
-  color: var(--forest);
-  margin-bottom: 16px;
-  letter-spacing: 0.3px;
-}
+.sec-title { display:flex; align-items:center; gap:9px; font-family:'Cormorant Garamond',serif; font-size:14.5px; font-weight:600; color:var(--forest); margin-bottom:16px; }
 .sec-title::after { content:''; flex:1; height:1px; background:var(--line); }
-.sec-num {
-  width:22px; height:22px; background:var(--forest); color:white;
-  font-family:'Jost',sans-serif; font-size:10px; font-weight:500;
-  display:inline-flex; align-items:center; justify-content:center;
-  border-radius:50%; flex-shrink:0;
-}
-
-/* ── QUESTIONS ── */
-.q-block { margin-bottom: 18px; }
+.sec-num { width:22px; height:22px; background:var(--forest); color:white; font-family:'Jost',sans-serif; font-size:10px; font-weight:500; display:inline-flex; align-items:center; justify-content:center; border-radius:50%; flex-shrink:0; }
+.q-block { margin-bottom:18px; }
 .q-text { font-size:12.5px; font-weight:500; color:#2e2820; line-height:1.55; margin-bottom:7px; }
 .q-hint { font-size:10.5px; color:var(--muted); font-style:italic; margin-bottom:8px; }
-
 .chip-group { display:flex; flex-wrap:wrap; gap:6px; }
-.chip {
-  padding:5px 12px; border:1.5px solid var(--line);
-  font-size:11px; color:var(--muted); cursor:pointer;
-  transition:all 0.15s; user-select:none; background:transparent; border-radius:2px;
-}
+.chip { padding:5px 12px; border:1.5px solid var(--line); font-size:11px; color:var(--muted); cursor:pointer; transition:all 0.15s; user-select:none; background:transparent; border-radius:2px; }
 .chip:hover { border-color:var(--gold); color:var(--ink); }
 .chip.on { background:var(--forest); border-color:var(--forest); color:white; }
-
-.w-area {
-  width:100%; border:none; border-bottom:1.5px solid var(--line);
-  background:transparent; font-family:'Jost',sans-serif;
-  font-size:12.5px; color:var(--ink); padding:5px 2px;
-  outline:none; resize:none; line-height:1.75;
-}
-.w-area:focus { border-bottom-color: var(--gold); }
+.w-area { width:100%; border:none; border-bottom:1.5px solid var(--line); background:transparent; font-family:'Jost',sans-serif; font-size:12.5px; color:var(--ink); padding:5px 2px; outline:none; resize:none; line-height:1.75; }
+.w-area:focus { border-bottom-color:var(--gold); }
 .w-area::placeholder { color:#c0b8ab; font-size:11.5px; }
-
-.lined-area {
-  width:100%; min-height:54px; border:none;
-  background:repeating-linear-gradient(transparent,transparent 27px,var(--line) 27px,var(--line) 28.5px);
-  font-family:'Jost',sans-serif; font-size:12.5px; line-height:28px;
-  color:var(--ink); outline:none; resize:none; padding:0 2px;
-}
-
-/* ── STARS ── */
+.lined-area { width:100%; min-height:54px; border:none; background:repeating-linear-gradient(transparent,transparent 27px,var(--line) 27px,var(--line) 28.5px); font-family:'Jost',sans-serif; font-size:12.5px; line-height:28px; color:var(--ink); outline:none; resize:none; padding:0 2px; }
 .sat-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:16px; }
 .sat-card { background:var(--parchment); padding:12px 14px; border-radius:2px; }
 .sat-label { font-size:11px; font-weight:500; color:var(--forest); margin-bottom:8px; line-height:1.4; }
 .stars { display:flex; gap:4px; align-items:center; }
-.star {
-  font-size:22px; color:var(--line); cursor:pointer;
-  transition:color 0.12s, transform 0.1s; user-select:none; line-height:1;
-}
+.star { font-size:22px; color:var(--line); cursor:pointer; transition:color 0.12s,transform 0.1s; user-select:none; line-height:1; }
 .star:hover,.star.on { color:var(--gold); }
 .star:active { transform:scale(1.3); }
 .star-desc { font-size:10px; color:var(--muted); font-style:italic; margin-left:6px; min-width:72px; }
-
-/* ── SCHOOL RESPONSE SECTION ── */
-.school-response-section {
-  margin-top: 30px;
-  border: 1.5px solid var(--line);
-  overflow: hidden;
-}
-.school-response-header {
-  background: var(--forest);
-  color: white;
-  padding: 12px 18px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.school-response-header h3 {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
-}
-.school-response-header span {
-  font-size: 9.5px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.6);
-}
-.school-response-body { padding: 20px 20px 22px; }
-
-/* Awaiting response state */
-.awaiting-response {
-  text-align: center;
-  padding: 24px;
-  color: var(--muted);
-}
-.awaiting-response .await-icon { font-size: 32px; margin-bottom: 10px; opacity: 0.35; }
-.awaiting-response p { font-size: 12px; line-height: 1.6; }
-
-/* Response filled state */
-.response-filled { display: none; }
-.response-date-row {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 12px; flex-wrap: wrap; gap: 6px;
-}
-.response-from {
-  font-size: 10px; font-weight: 500; letter-spacing: 2px;
-  text-transform: uppercase; color: var(--sage);
-}
-.response-date {
-  font-size: 10px; color: var(--muted);
-  background: var(--parchment); padding: 3px 8px; border-radius: 2px;
-}
-.response-text-box {
-  background: var(--parchment);
-  border-left: 3px solid var(--gold);
-  padding: 14px 16px;
-  font-size: 13px;
-  color: var(--ink);
-  line-height: 1.7;
-  margin-bottom: 18px;
-  font-style: italic;
-}
-.response-grade-section { margin-top: 16px; }
-.response-grade-label {
-  font-size: 11px; font-weight: 500; color: var(--forest);
-  margin-bottom: 10px; display: block;
-}
-.response-stars-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.res-star {
-  font-size: 26px; color: var(--line); cursor: pointer;
-  transition: color 0.12s, transform 0.1s; user-select: none;
-}
-.res-star:hover, .res-star.on { color: var(--gold); }
-.res-star:active { transform: scale(1.2); }
-.res-grade-desc {
-  font-size: 11.5px; color: var(--muted); margin-left: 8px;
-  font-style: italic;
-}
-.res-grade-note {
-  font-size: 10.5px; color: var(--muted);
-  margin-top: 8px; display: block;
-}
-
-/* Saved grade display */
-.grade-saved {
-  font-size: 11px; color: var(--success);
-  font-weight: 500; margin-top: 6px;
-  display: none;
-}
-
-/* ── SIGNATURE ── */
-.sig-row {
-  display: grid; grid-template-columns: 1fr 1px 1fr;
-  gap: 20px; align-items: end;
-  border-top: 1px solid var(--line);
-  padding-top: 18px; margin-top: 26px;
-}
-.sig-divider { background: var(--line); height: 40px; }
-
-/* ── SUBMIT BUTTON ── */
-.submit-bar {
-  display: flex; align-items: center; justify-content: space-between;
-  flex-wrap: wrap; gap: 12px;
-  margin-top: 24px; padding-top: 18px;
-  border-top: 1px solid var(--line);
-}
-.submit-note { font-size: 10.5px; color: var(--muted); line-height: 1.5; max-width: 320px; }
-.submit-note strong { color: var(--forest); }
-.btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
-.btn {
-  padding: 11px 26px;
-  font-family: 'Jost', sans-serif; font-size: 11.5px;
-  font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase;
-  cursor: pointer; border: none; transition: background 0.2s;
-}
-.btn-primary { background: var(--forest); color: white; }
-.btn-primary:hover { background: var(--gold); }
-.btn-clear { background: transparent; color: var(--muted); border: 1.5px solid var(--line); }
-.btn-clear:hover { border-color: var(--muted); }
-.btn-print { background: var(--parchment); color: var(--forest); border: 1.5px solid var(--line); }
-.btn-print:hover { background: var(--tan); }
-
-/* ── SUCCESS TOAST ── */
-.toast {
-  position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(100px);
-  background: var(--forest); color: white;
-  padding: 13px 28px; font-size: 13px; font-weight: 500;
-  border-radius: 2px; box-shadow: 0 4px 24px rgba(0,0,0,0.25);
-  transition: transform 0.4s ease; z-index: 9999;
-  white-space: nowrap; letter-spacing: 0.3px;
-}
-.toast.show { transform: translateX(-50%) translateY(0); }
-
-/* ── FOOTER ── */
-.page-footer {
-  text-align: center; padding: 16px;
-  font-size: 9.5px; color: rgba(0,0,0,0.35);
-  letter-spacing: 1px; text-transform: uppercase;
-  background: var(--parchment);
-}
-
-
+.school-response-section { margin-top:30px; border:1.5px solid var(--line); overflow:hidden; }
+.school-response-header { background:var(--forest); color:white; padding:12px 18px; display:flex; align-items:center; justify-content:space-between; }
+.school-response-header h3 { font-family:'Cormorant Garamond',serif; font-size:16px; font-weight:600; }
+.school-response-header span { font-size:9.5px; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.6); }
+.school-response-body { padding:20px; }
+.awaiting-response { text-align:center; padding:24px; color:var(--muted); }
+.await-icon { font-size:32px; margin-bottom:10px; opacity:0.35; }
+.awaiting-response p { font-size:12px; line-height:1.6; }
+.response-filled { display:none; }
+.response-date-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; flex-wrap:wrap; gap:6px; }
+.response-from { font-size:10px; font-weight:500; letter-spacing:2px; text-transform:uppercase; color:var(--sage); }
+.response-date { font-size:10px; color:var(--muted); background:var(--parchment); padding:3px 8px; border-radius:2px; }
+.response-text-box { background:var(--parchment); border-left:3px solid var(--gold); padding:14px 16px; font-size:13px; color:var(--ink); line-height:1.7; margin-bottom:18px; font-style:italic; white-space:pre-wrap; }
+.response-grade-section { margin-top:16px; }
+.response-grade-label { font-size:11px; font-weight:500; color:var(--forest); margin-bottom:10px; display:block; }
+.response-stars-row { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.res-star { font-size:26px; color:var(--line); cursor:pointer; transition:color 0.12s,transform 0.1s; user-select:none; }
+.res-star:hover,.res-star.on { color:var(--gold); }
+.res-grade-desc { font-size:11.5px; color:var(--muted); margin-left:8px; font-style:italic; }
+.res-grade-note { font-size:10.5px; color:var(--muted); margin-top:8px; display:block; }
+.grade-saved { font-size:11px; color:var(--success); font-weight:500; margin-top:6px; display:none; }
+.sig-row { display:grid; grid-template-columns:1fr 1px 1fr; gap:20px; align-items:end; border-top:1px solid var(--line); padding-top:18px; margin-top:26px; }
+.sig-divider { background:var(--line); height:40px; }
+.submit-bar { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-top:24px; padding-top:18px; border-top:1px solid var(--line); }
+.submit-note { font-size:10.5px; color:var(--muted); line-height:1.5; max-width:320px; }
+.submit-note strong { color:var(--forest); }
+.btn-row { display:flex; gap:10px; flex-wrap:wrap; }
+.btn { padding:11px 26px; font-family:'Jost',sans-serif; font-size:11.5px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; border:none; transition:background 0.2s; }
+.btn-primary { background:var(--forest); color:white; }
+.btn-primary:hover { background:var(--gold); }
+.btn-primary:disabled { opacity:0.5; cursor:not-allowed; }
+.btn-clear { background:transparent; color:var(--muted); border:1.5px solid var(--line); }
+.btn-clear:hover { border-color:var(--muted); }
+.btn-print { background:var(--parchment); color:var(--forest); border:1.5px solid var(--line); }
+.spinner-row { display:none; align-items:center; gap:8px; font-size:12px; color:var(--muted); margin-top:10px; }
+.spinner { width:16px; height:16px; border:2px solid var(--line); border-top-color:var(--forest); border-radius:50%; animation:spin 0.7s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+.toast { position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(100px); background:var(--forest); color:white; padding:13px 28px; font-size:13px; font-weight:500; border-radius:2px; box-shadow:0 4px 24px rgba(0,0,0,0.25); transition:transform 0.4s ease; z-index:9999; white-space:nowrap; }
+.toast.show { transform:translateX(-50%) translateY(0); }
+.page-footer { text-align:center; padding:16px; font-size:9.5px; color:rgba(0,0,0,0.35); letter-spacing:1px; text-transform:uppercase; background:var(--parchment); }
 </style>
 </head>
 <body>
-
 <div class="portal">
 
-  <!-- TOP BANNER -->
   <div class="top-banner">
     <div>
       <div class="banner-school">Heritage Montessori &amp; School</div>
@@ -436,47 +121,35 @@ body {
     <div class="banner-badge">Parent Feedback Portal</div>
   </div>
 
-  <!-- PAGE BODY -->
-  <div class="page" id="mainPage">
+  <div class="page">
 
-    <!-- PURPOSE TOGGLE -->
     <div class="purpose-bar">
-      <button class="purpose-btn active" onclick="setMode('ptm')" id="btn-ptm">
-        <span class="p-icon">🤝</span> Parent · Teacher Meeting
-      </button>
-      <button class="purpose-btn" onclick="setMode('general')" id="btn-general">
-        <span class="p-icon">📋</span> General Observation Feedback
-      </button>
+      <button class="purpose-btn active" onclick="setMode('ptm')" id="btn-ptm">🤝 Parent · Teacher Meeting</button>
+      <button class="purpose-btn" onclick="setMode('general')" id="btn-general">📋 General Observation Feedback</button>
     </div>
 
-    <!-- STATUS BAR -->
     <div class="status-bar" id="statusBar">
       <div>
         <span class="status-label" id="statusLabel">Monthly Feedback</span>
         <span id="statusMsg"> — One submission per child per month. Resets on <span id="resetDateInline" style="font-weight:600;color:var(--forest);">—</span></span>
       </div>
-      <div class="status-reset">Resets in: <span class="countdown" id="resetCountdown">—</span></div>
+      <div>Resets in: <span class="countdown" id="resetCountdown">—</span></div>
     </div>
 
-    <!-- LOCKED MESSAGE -->
     <div class="locked-msg" id="lockedMsg">
       <div class="lock-icon">🔒</div>
       <h3>Feedback Already Submitted This Month</h3>
-      <p>
-        You have already submitted a feedback for <strong id="lockedChildName">your child</strong> this month.<br>
-        Your next submission window opens on <strong id="lockedResetDate">—</strong>.<br><br>
-        You can still view your previous submission and the school's response below.
-      </p>
+      <p>You have already submitted feedback for <strong id="lockedChildName">your child</strong> this month.<br>
+      Your next submission window opens on <strong id="lockedResetDate">—</strong>.<br><br>
+      You can view the school's response below once it is posted.</p>
     </div>
 
-    <!-- MAIN FORM -->
     <div id="formBody">
 
-      <!-- INFO GRID -->
       <div class="info-grid">
         <div class="info-field">
           <label>Child's Full Name</label>
-          <input class="f-input" type="text" id="childName" placeholder="As per school records" oninput="checkSubmissionStatus()">
+          <input class="f-input" type="text" id="childName" placeholder="As per school records" oninput="onChildNameChange()">
         </div>
         <div class="info-field">
           <label>Class / Grade</label>
@@ -484,19 +157,18 @@ body {
         </div>
         <div class="info-field">
           <label>Date</label>
-          <input class="f-input" type="text" id="feedbackDate" placeholder="DD / MM / YYYY">
+          <input class="f-input" type="text" id="feedbackDate">
         </div>
         <div class="info-field">
           <label>Parent / Guardian Name</label>
-          <input class="f-input" type="text" id="parentName" placeholder="">
+          <input class="f-input" type="text" id="parentName">
         </div>
         <div class="info-field" style="grid-column:span 2;">
           <label>Contact Number (optional)</label>
-          <input class="f-input" type="text" placeholder="">
+          <input class="f-input" type="text" id="contactNumber">
         </div>
       </div>
 
-      <!-- MET WITH (PTM only) -->
       <div class="met-block" id="metBlock">
         <div class="met-title">◆ Discussion / Meeting held with</div>
         <div class="met-row">
@@ -504,7 +176,7 @@ body {
             <label>Class Teacher's Name</label>
             <input class="f-input" type="text" id="classTeacher" placeholder="Name of class teacher">
           </div>
-          <div class="info-field" id="subjectField">
+          <div class="info-field">
             <label>Subject Teacher's Name</label>
             <input class="f-input" type="text" id="subjectTeacher" placeholder="Name of subject teacher">
           </div>
@@ -515,12 +187,11 @@ body {
         </div>
       </div>
 
-      <!-- SECTION 1 -->
-      <div class="sec-title"><span class="sec-num">1</span> <span id="sec1Label">Reflecting on Your Child's Progress</span></div>
+      <div class="sec-title"><span class="sec-num">1</span><span id="sec1Label">Reflecting on Your Child's Progress</span></div>
 
       <div class="q-block">
         <div class="q-text" id="q1text">What positive changes have you noticed in your child this term?</div>
-        <textarea class="lined-area" rows="2" placeholder="e.g. More confident in reading, showing curiosity at home, improved focus…"></textarea>
+        <textarea class="lined-area" id="positiveChanges" rows="2" placeholder="e.g. More confident in reading, showing curiosity at home, improved focus…"></textarea>
       </div>
 
       <div class="q-block">
@@ -544,7 +215,7 @@ body {
 
       <div class="q-block">
         <div class="q-text" id="q3text">What skill or ability are you actively working on with your child at home?</div>
-        <div class="q-hint">Please share a specific skill or ability you are nurturing — for example, reading together, practising handwriting, storytelling, memory games, problem-solving activities, etc. Additional coaching or tuition outside school is not required here.</div>
+        <div class="q-hint">Share a specific skill — e.g. reading together, handwriting, storytelling, memory games. Tuition or coaching outside school is not required here.</div>
         <div class="chip-group" style="margin-bottom:8px;" id="homeSkillChips">
           <span class="chip" onclick="toggleSkillChip(this)">Daily Reading Together</span>
           <span class="chip" onclick="toggleSkillChip(this)">Storytelling &amp; Narration</span>
@@ -558,30 +229,26 @@ body {
           <span class="chip" onclick="toggleSkillChip(this)">Responsibility &amp; Chores</span>
         </div>
         <textarea class="w-area" rows="1" id="homeSkillOther" placeholder="Or describe another specific skill you are working on together at home…"></textarea>
-        <div id="homeSkillNote" style="margin-top:6px;font-size:10.5px;color:var(--sage);font-style:italic;">
-          💡 Focus on skills you share time on — not external tutoring or coaching sessions.
-        </div>
+        <div style="margin-top:6px;font-size:10.5px;color:var(--sage);font-style:italic;">💡 Focus on skills you share time on — not external tutoring or coaching sessions.</div>
       </div>
 
       <hr class="sep">
 
-      <!-- SECTION 2 -->
-      <div class="sec-title"><span class="sec-num">2</span> <span id="sec2Label">Your Suggestions for the School</span></div>
+      <div class="sec-title"><span class="sec-num">2</span><span id="sec2Label">Your Suggestions for the School</span></div>
 
       <div class="q-block">
         <div class="q-text" id="q4text">If you could introduce one new activity or programme, what would it be?</div>
-        <textarea class="w-area" rows="1" placeholder="e.g. A coding club, more outdoor learning, drama workshops…"></textarea>
+        <textarea class="w-area" rows="1" id="suggestion" placeholder="e.g. A coding club, more outdoor learning, drama workshops…"></textarea>
       </div>
 
       <div class="q-block">
         <div class="q-text">What is one thing Heritage is doing wonderfully that you'd love to see expanded?</div>
-        <textarea class="w-area" rows="1" placeholder="e.g. Collaborative projects, the Montessori programme, field trips…"></textarea>
+        <textarea class="w-area" rows="1" id="schoolStrength" placeholder="e.g. Collaborative projects, the Montessori programme, field trips…"></textarea>
       </div>
 
       <hr class="sep">
 
-      <!-- SECTION 3 -->
-      <div class="sec-title"><span class="sec-num">3</span> Your Appreciation &amp; Satisfaction</div>
+      <div class="sec-title"><span class="sec-num">3</span>Your Appreciation &amp; Satisfaction</div>
 
       <div class="sat-grid">
         <div class="sat-card">
@@ -610,71 +277,62 @@ body {
 
       <div class="q-block">
         <div class="q-text">Is there something specific you'd like to appreciate about the teacher or staff?</div>
-        <textarea class="w-area" rows="1" placeholder="Please feel free to name specific efforts or qualities you are grateful for…"></textarea>
+        <textarea class="w-area" rows="1" id="appreciation" placeholder="Feel free to name specific efforts or qualities you are grateful for…"></textarea>
       </div>
 
       <div class="q-block">
-        <div class="q-text" id="q_last">Any specific question or topic you'd like to raise with the school today?</div>
-        <textarea class="w-area" rows="1" placeholder="We'll ensure this is addressed during your conversation with the teacher."></textarea>
+        <div class="q-text" id="q_last">Any specific question or topic you'd like to raise with the school?</div>
+        <textarea class="w-area" rows="1" id="questionRaised" placeholder="We'll ensure this is addressed during your conversation with the teacher."></textarea>
       </div>
 
-      <!-- SIGNATURE -->
       <div class="sig-row">
         <div class="info-field">
           <label>Parent / Guardian Name (Print)</label>
-          <input class="f-input" type="text">
+          <input class="f-input" type="text" id="sigName">
         </div>
         <div class="sig-divider"></div>
         <div class="info-field">
           <label>Signature</label>
-          <input class="f-input" type="text">
+          <input class="f-input" type="text" id="sigSign">
         </div>
       </div>
 
-      <!-- SUBMIT BAR -->
       <div class="submit-bar">
         <div class="submit-note">
           <strong>One submission per child per month.</strong><br>
-          Your feedback helps us grow together. The school will respond within 5 working days.
+          The school will respond within 5 working days.
         </div>
-        <div class="btn-row">
-          <button class="btn btn-clear" onclick="clearForm()">↺ Clear</button>
-          <button class="btn btn-print no-print" onclick="window.print()">🖨 Print</button>
-          <button class="btn btn-primary" onclick="submitFeedback()">Submit Feedback →</button>
+        <div>
+          <div class="btn-row">
+            <button class="btn btn-clear" onclick="clearForm()">↺ Clear</button>
+            <button class="btn btn-print no-print" onclick="window.print()">🖨 Print</button>
+            <button class="btn btn-primary" id="submitBtn" onclick="submitFeedback()">Submit Feedback →</button>
+          </div>
+          <div class="spinner-row" id="spinnerRow"><div class="spinner"></div> Submitting to school…</div>
         </div>
       </div>
 
     </div><!-- /formBody -->
 
-    <!-- ─────────────────────────────────────────── -->
-    <!-- SCHOOL RESPONSE SECTION (always visible)   -->
-    <!-- ─────────────────────────────────────────── -->
+    <!-- SCHOOL RESPONSE SECTION -->
     <div class="school-response-section" id="responseSection" style="display:none;">
       <div class="school-response-header">
         <h3>School's Response</h3>
         <span>Official Communication</span>
       </div>
       <div class="school-response-body">
-
-        <!-- Awaiting state -->
         <div class="awaiting-response" id="awaitingResponse">
           <div class="await-icon">📬</div>
           <p>Your feedback has been received.<br>
           The school will respond within <strong>5 working days</strong>.<br>
           Once a response is posted, you will see it here.</p>
         </div>
-
-        <!-- Filled state (shown when school has responded) -->
         <div class="response-filled" id="responseFilled">
           <div class="response-date-row">
             <span class="response-from">Response from Heritage Montessori</span>
             <span class="response-date" id="responseDateLabel">—</span>
           </div>
-          <div class="response-text-box" id="responseTextDisplay">
-            —
-          </div>
-
-          <!-- Parent grades the school response -->
+          <div class="response-text-box" id="responseTextDisplay">—</div>
           <div class="response-grade-section">
             <span class="response-grade-label">How satisfied are you with this response?</span>
             <div class="response-stars-row">
@@ -689,157 +347,136 @@ body {
             <div class="grade-saved" id="gradeSaved">✓ Thank you — your rating has been saved.</div>
           </div>
         </div>
-
       </div>
     </div>
 
   </div><!-- /page -->
 
-  <!-- FOOTER -->
-  <div class="page-footer">
-    Heritage Montessori &amp; School &nbsp;·&nbsp; Nurturing Young Minds since 2007 &nbsp;◆&nbsp; Parent Feedback Portal
-  </div>
+  <div class="page-footer">Heritage Montessori &amp; School &nbsp;·&nbsp; Nurturing Young Minds since 2007 &nbsp;◆&nbsp; Parent Feedback Portal</div>
+</div>
 
+<div class="toast" id="toast"></div>
 
-</div><!-- /portal -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, set, get, update, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-<!-- TOAST -->
-<div class="toast" id="toast">✓ Feedback submitted successfully!</div>
+const firebaseConfig = {
+  apiKey: "AIzaSyAtB9d9zEr-ES-lRI_Pf9fWJmaJ8o8ghvQ",
+  authDomain: "my-hms42.firebaseapp.com",
+  databaseURL: "https://my-hms42-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "my-hms42",
+  storageBucket: "my-hms42.firebasestorage.app",
+  messagingSenderId: "468345935508",
+  appId: "1:468345935508:web:db42663bb9484619518681"
+};
 
-<script>
-// ═══════════════════════════════════════════════════════════
-//  STATE & STORAGE
-// ═══════════════════════════════════════════════════════════
-const STORAGE_KEY = 'heritage_feedback';
+const app = initializeApp(firebaseConfig);
+const db  = getDatabase(app);
 
-function getStorageKey(childName) {
-  // Normalise child name as key
-  return 'heritage_fb_' + (childName || 'default').toLowerCase().replace(/\s+/g,'_');
+// ── Helpers ──
+function monthKey() { const n=new Date(); return `${n.getFullYear()}-${n.getMonth()}`; }
+function childKey(name) { return name.toLowerCase().replace(/\s+/g,'_').replace(/[^a-z0-9_]/g,''); }
+function getResetDate() { const n=new Date(); return new Date(n.getFullYear(),n.getMonth()+1,1); }
+function daysUntil(d) { return Math.ceil((d-new Date())/86400000); }
+function fmtDate(d) { return d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}); }
+function showToast(msg) {
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3200);
 }
 
-function getRecord(childName) {
-  try {
-    const raw = localStorage.getItem(getStorageKey(childName));
-    return raw ? JSON.parse(raw) : null;
-  } catch(e) { return null; }
-}
-
-function setRecord(childName, data) {
-  try {
-    localStorage.setItem(getStorageKey(childName), JSON.stringify(data));
-  } catch(e) {}
-}
-
-// ═══════════════════════════════════════════════════════════
-//  MODE TOGGLE (PTM vs General Observation)
-// ═══════════════════════════════════════════════════════════
+// ── State ──
 let currentMode = 'ptm';
+let currentChildKey = null;
+let responseUnsub = null;
 
-function setMode(mode) {
+// ── Init ──
+document.getElementById('feedbackDate').value = new Date().toLocaleDateString('en-GB');
+const rd = getResetDate();
+document.getElementById('resetDateInline').textContent = fmtDate(rd);
+document.getElementById('resetCountdown').textContent  = `${daysUntil(rd)} days`;
+
+// ── Mode toggle ──
+window.setMode = function(mode) {
   currentMode = mode;
-  document.getElementById('btn-ptm').classList.toggle('active', mode === 'ptm');
-  document.getElementById('btn-general').classList.toggle('active', mode === 'general');
+  document.getElementById('btn-ptm').classList.toggle('active', mode==='ptm');
+  document.getElementById('btn-general').classList.toggle('active', mode==='general');
+  const p = mode==='ptm';
+  document.getElementById('metBlock').style.display     = p?'':'none';
+  document.getElementById('sec1Label').textContent      = p?"Reflecting on Your Child's Progress":"Your Child's Observations This Month";
+  document.getElementById('sec2Label').textContent      = p?"Your Suggestions for the School":"Suggestions & Ideas for the School";
+  document.getElementById('q1text').textContent         = p?"What positive changes have you noticed in your child this term?":"What behaviours or progress have you observed at home this month?";
+  document.getElementById('q3text').textContent         = p?"What skill or ability are you actively working on with your child at home?":"What skill or ability have you been nurturing with your child this month?";
+  document.getElementById('q4text').textContent         = p?"If you could introduce one new activity or programme, what would it be?":"What addition or change would most benefit your child's experience?";
+  document.getElementById('q_last').textContent         = p?"Any specific question or topic you'd like to raise with the school today?":"Is there anything specific you'd like the school's attention or awareness on?";
+  document.getElementById('sat1label').textContent      = p?"Satisfaction with the class teacher":"Satisfaction with communication from school";
+};
 
-  const isPTM = mode === 'ptm';
-  document.getElementById('metBlock').style.display = isPTM ? '' : 'none';
+// ── Child name input — debounced check ──
+let nameTimer = null;
+window.onChildNameChange = function() {
+  clearTimeout(nameTimer);
+  nameTimer = setTimeout(checkStatus, 700);
+};
 
-  // Adapt section labels
-  document.getElementById('sec1Label').textContent  = isPTM ? "Reflecting on Your Child's Progress" : "Your Child's Observations This Month";
-  document.getElementById('sec2Label').textContent  = isPTM ? "Your Suggestions for the School" : "Suggestions & Ideas for the School";
-  document.getElementById('q1text').textContent     = isPTM ? "What positive changes have you noticed in your child this term?" : "What behaviours or progress have you observed at home this month?";
-  document.getElementById('q3text').textContent     = isPTM ? "What skill or ability are you actively working on with your child at home?" : "What skill or ability have you been nurturing with your child this month?";
-  document.getElementById('q4text').textContent     = isPTM ? "If you could introduce one new activity or programme, what would it be?" : "What addition or change would most benefit your child's experience?";
-  document.getElementById('q_last').textContent     = isPTM ? "Any specific question or topic you'd like to raise with the school today?" : "Is there anything specific you'd like the school's attention or awareness on?";
-  document.getElementById('sat1label').textContent  = isPTM ? "Satisfaction with the class teacher" : "Satisfaction with communication from school";
-}
-
-// ═══════════════════════════════════════════════════════════
-//  SUBMISSION LIMIT LOGIC
-// ═══════════════════════════════════════════════════════════
-function getMonthKey() {
-  const now = new Date();
-  return `${now.getFullYear()}-${now.getMonth()}`;
-}
-
-function getResetDate() {
-  const now = new Date();
-  return new Date(now.getFullYear(), now.getMonth() + 1, 1);
-}
-
-function daysUntilReset() {
-  const now  = new Date();
-  const next = getResetDate();
-  return Math.ceil((next - now) / (1000 * 60 * 60 * 24));
-}
-
-function checkSubmissionStatus() {
-  const child  = document.getElementById('childName').value.trim();
-  if (!child) {
-    showFormState(false, null);
-    return;
-  }
-  const record  = getRecord(child);
-  const locked  = record && record.monthKey === getMonthKey() && record.submitted;
-  showFormState(locked, record);
-}
-
-function showFormState(locked, record) {
-  const statusBar  = document.getElementById('statusBar');
-  const formBody   = document.getElementById('formBody');
-  const lockedMsg  = document.getElementById('lockedMsg');
-  const resSection = document.getElementById('responseSection');
-
-  const days   = daysUntilReset();
-  const reset  = getResetDate().toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'});
-  document.getElementById('resetCountdown').textContent = `${days} day${days !== 1 ? 's' : ''}`;
-
+async function checkStatus() {
+  const name = document.getElementById('childName').value.trim();
+  if (!name) { resetStatusBar(); return; }
+  const key  = childKey(name);
+  currentChildKey = key;
+  const snap = await get(ref(db, `feedback/${key}`));
+  const rec  = snap.exists() ? snap.val() : null;
+  const locked = rec && rec.monthKey === monthKey() && rec.submitted;
+  const reset  = getResetDate();
+  document.getElementById('resetCountdown').textContent = `${daysUntil(reset)} days`;
   if (locked) {
-    statusBar.className = 'status-bar locked';
-    document.getElementById('statusLabel').textContent = '⛔ Submission Limit Reached';
-    document.getElementById('statusMsg').innerHTML = ` — One feedback per child per month. Resets on <span style="font-weight:600;color:var(--error);">${reset}</span>`;
-    formBody.style.display  = 'none';
-    lockedMsg.style.display = 'block';
-    document.getElementById('lockedChildName').textContent  = document.getElementById('childName').value.trim();
-    document.getElementById('lockedResetDate').textContent  = reset;
-    resSection.style.display = 'block';
-    renderResponse(record);
+    document.getElementById('statusBar').className        = 'status-bar locked';
+    document.getElementById('statusLabel').textContent    = '⛔ Submission Limit Reached';
+    document.getElementById('statusMsg').innerHTML        = ` — One feedback per child per month. Resets on <strong style="color:var(--error)">${fmtDate(reset)}</strong>`;
+    document.getElementById('formBody').style.display     = 'none';
+    document.getElementById('lockedMsg').style.display    = 'block';
+    document.getElementById('lockedChildName').textContent = name;
+    document.getElementById('lockedResetDate').textContent = fmtDate(reset);
+    document.getElementById('responseSection').style.display = 'block';
+    renderResponse(rec);
+    listenForResponse(key);
   } else {
-    statusBar.className = 'status-bar ok';
-    document.getElementById('statusLabel').textContent = '✓ Ready to Submit';
-    document.getElementById('statusMsg').innerHTML = ` — Submission window open. Resets on <span style="font-weight:600;color:var(--forest);">${reset}</span>`;
-    formBody.style.display  = 'block';
-    lockedMsg.style.display = 'none';
-    if (record && record.schoolResponse) {
-      resSection.style.display = 'block';
-      renderResponse(record);
+    document.getElementById('statusBar').className        = 'status-bar ok';
+    document.getElementById('statusLabel').textContent    = '✓ Ready to Submit';
+    document.getElementById('statusMsg').innerHTML        = ` — Submission window open. Resets on <strong style="color:var(--forest)">${fmtDate(reset)}</strong>`;
+    document.getElementById('formBody').style.display     = 'block';
+    document.getElementById('lockedMsg').style.display    = 'none';
+    if (rec && rec.schoolResponse) {
+      document.getElementById('responseSection').style.display = 'block';
+      renderResponse(rec);
     } else {
-      resSection.style.display = 'none';
+      document.getElementById('responseSection').style.display = 'none';
     }
   }
 }
 
-// ═══════════════════════════════════════════════════════════
-//  RENDER SCHOOL RESPONSE
-// ═══════════════════════════════════════════════════════════
-function renderResponse(record) {
+// ── Listen for school response in real time ──
+function listenForResponse(key) {
+  if (responseUnsub) responseUnsub();
+  responseUnsub = onValue(ref(db, `feedback/${key}`), snap => {
+    if (snap.exists()) renderResponse(snap.val());
+  });
+}
+
+// ── Render school response ──
+function renderResponse(rec) {
+  if (!rec) return;
   const awaiting = document.getElementById('awaitingResponse');
   const filled   = document.getElementById('responseFilled');
-
-  if (!record) return;
-
-  if (record.schoolResponse) {
+  if (rec.schoolResponse) {
     awaiting.style.display = 'none';
     filled.style.display   = 'block';
-    document.getElementById('responseTextDisplay').textContent = record.schoolResponse;
-    document.getElementById('responseDateLabel').textContent   = record.schoolResponseDate || '—';
-
-    // Show existing grade if saved
-    if (record.responseGrade) {
-      document.querySelectorAll('.res-star').forEach((s, i) => {
-        s.classList.toggle('on', i < record.responseGrade);
-      });
-      document.getElementById('resGradeDesc').textContent = ratingLabels[record.responseGrade];
-      document.getElementById('gradeSaved').style.display = 'block';
+    document.getElementById('responseTextDisplay').textContent = rec.schoolResponse;
+    document.getElementById('responseDateLabel').textContent   = rec.schoolResponseDate || '—';
+    if (rec.responseGrade) {
+      document.querySelectorAll('.res-star').forEach((s,i)=>s.classList.toggle('on',i<rec.responseGrade));
+      document.getElementById('resGradeDesc').textContent      = ratingLabels[rec.responseGrade];
+      document.getElementById('gradeSaved').style.display      = 'block';
     }
   } else {
     awaiting.style.display = 'block';
@@ -847,151 +484,113 @@ function renderResponse(record) {
   }
 }
 
-// ═══════════════════════════════════════════════════════════
-//  SUBMIT
-// ═══════════════════════════════════════════════════════════
-function submitFeedback() {
-  const child = document.getElementById('childName').value.trim();
-  if (!child) { alert('Please enter the child\'s name before submitting.'); return; }
-
-  // Collect growth area chips (max 2)
-  const growthAreas = [...document.querySelectorAll('#growthChips .chip.on')].map(c => c.textContent.trim());
-
-  // Collect home skill chips
-  const homeSkills = [...document.querySelectorAll('#homeSkillChips .chip.on')].map(c => c.textContent.trim());
-
-  // Collect all textarea values in order
-  const textareas = document.querySelectorAll('#formBody .lined-area, #formBody .w-area');
-
-  // Star ratings — read lit stars count
-  const ratingTeacher = document.querySelectorAll('#stars-ct .star.on').length || 0;
-  const ratingSchool  = document.querySelectorAll('#stars-sc .star.on').length || 0;
-
-  const record = getRecord(child) || {};
-  record.submitted        = true;
-  record.monthKey         = getMonthKey();
-  record.submittedOn      = new Date().toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'});
-  record.mode             = currentMode;
-  record.grade            = document.getElementById('childGrade').value.trim();
-  record.parentName       = document.getElementById('parentName').value.trim();
-  record.classTeacher     = document.getElementById('classTeacher').value.trim();
-  record.subjectTeacher   = document.getElementById('subjectTeacher').value.trim();
-  record.growthAreas      = growthAreas;
-  record.homeSkills       = homeSkills;
-  record.homeSkillOther   = document.getElementById('homeSkillOther').value.trim();
-  record.positiveChanges  = textareas[0] ? textareas[0].value.trim() : '';
-  record.suggestion       = textareas[1] ? textareas[1].value.trim() : '';
-  record.schoolStrength   = textareas[2] ? textareas[2].value.trim() : '';
-  record.appreciation     = textareas[3] ? textareas[3].value.trim() : '';
-  record.questionRaised   = textareas[4] ? textareas[4].value.trim() : '';
-  record.ratingTeacher    = ratingTeacher;
-  record.ratingSchool     = ratingSchool;
-  record.schoolResponse   = record.schoolResponse || null;
-  setRecord(child, record);
-
-  showToast('✓ Feedback submitted successfully!');
-  setTimeout(() => checkSubmissionStatus(), 600);
-}
-
-// ═══════════════════════════════════════════════════════════
-//  GRADE SCHOOL RESPONSE
-// ═══════════════════════════════════════════════════════════
-const ratingLabels = ['','Unsatisfactory','Below expectation','Satisfactory','Good','Excellent ✦'];
-
-function gradeResponse(val) {
-  const child = document.getElementById('childName').value.trim();
-  document.querySelectorAll('.res-star').forEach((s, i) => s.classList.toggle('on', i < val));
-  document.getElementById('resGradeDesc').textContent = ratingLabels[val];
-  document.getElementById('gradeSaved').style.display = 'block';
-
-  if (child) {
-    const record = getRecord(child) || {};
-    record.responseGrade = val;
-    setRecord(child, record);
-  }
-}
-
-// ═══════════════════════════════════════════════════════════
-//  STAR RATINGS (feedback form)
-// ═══════════════════════════════════════════════════════════
-const starLabels = ['','Needs improvement','Satisfactory','Good','Very good','Excellent ✦'];
-function rate(group, val) {
-  document.querySelectorAll(`#stars-${group} .star`).forEach((s, i) => s.classList.toggle('on', i < val));
-  document.getElementById(`lbl-${group}`).textContent = starLabels[val];
-}
-
-// ═══════════════════════════════════════════════════════════
-//  CHIPS — max 2 for growth priority areas
-// ═══════════════════════════════════════════════════════════
-function toggleChip(el) {
-  const chips    = document.querySelectorAll('#growthChips .chip');
-  const selected = [...chips].filter(c => c.classList.contains('on'));
-  const msg      = document.getElementById('chipLimitMsg');
-  if (!el.classList.contains('on') && selected.length >= 2) {
-    msg.style.display = 'block';
-    el.style.transform = 'scale(0.94)';
-    setTimeout(() => { el.style.transform = ''; }, 140);
-    return;
-  }
-  msg.style.display = 'none';
-  el.classList.toggle('on');
-}
-
-// Home skill chips — free multi-select
-function toggleSkillChip(el) { el.classList.toggle('on'); }
-
-// ═══════════════════════════════════════════════════════════
-//  SAME TEACHER
-// ═══════════════════════════════════════════════════════════
-function handleSameTeacher(cb) {
-  const si = document.getElementById('subjectTeacher');
-  if (cb.checked) {
-    si.value    = document.getElementById('classTeacher').value || '(Same as above)';
-    si.readOnly = true; si.style.opacity = '0.45';
-  } else {
-    si.value    = ''; si.readOnly = false; si.style.opacity = '1';
-  }
-}
-
-// ═══════════════════════════════════════════════════════════
-//  TOAST
-// ═══════════════════════════════════════════════════════════
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3200);
-}
-
-// ═══════════════════════════════════════════════════════════
-//  CLEAR FORM
-// ═══════════════════════════════════════════════════════════
-function clearForm() {
-  if (!confirm('Clear all entries?')) return;
-  document.querySelectorAll('.f-input, .w-area, .lined-area').forEach(el => el.value = '');
-  document.querySelectorAll('.chip').forEach(el => el.classList.remove('on'));
-  document.querySelectorAll('.star').forEach(el => el.classList.remove('on'));
-  ['lbl-ct','lbl-sc'].forEach(id => document.getElementById(id).textContent = '—');
-  document.getElementById('sameTeacher').checked = false;
-  document.getElementById('chipLimitMsg').style.display = 'none';
-  const si = document.getElementById('subjectTeacher');
-  si.readOnly = false; si.style.opacity = '1';
-  document.getElementById('statusBar').className = 'status-bar';
+function resetStatusBar() {
+  const reset = getResetDate();
+  document.getElementById('statusBar').className     = 'status-bar';
   document.getElementById('statusLabel').textContent = 'Monthly Feedback';
-  const reset = getResetDate().toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'});
-  document.getElementById('statusMsg').innerHTML = ` — One submission per child per month. Resets on <span style="font-weight:600;color:var(--forest);">${reset}</span>`;
+  document.getElementById('statusMsg').innerHTML     = ` — One submission per child per month. Resets on <strong style="color:var(--forest)">${fmtDate(reset)}</strong>`;
   document.getElementById('responseSection').style.display = 'none';
+  document.getElementById('formBody').style.display  = 'block';
+  document.getElementById('lockedMsg').style.display = 'none';
 }
 
+// ── Submit ──
+window.submitFeedback = async function() {
+  const name = document.getElementById('childName').value.trim();
+  if (!name) { alert('Please enter the child\'s name before submitting.'); return; }
+  const key         = childKey(name);
+  const growthAreas = [...document.querySelectorAll('#growthChips .chip.on')].map(c=>c.textContent.trim());
+  const homeSkills  = [...document.querySelectorAll('#homeSkillChips .chip.on')].map(c=>c.textContent.trim());
+  const snap        = await get(ref(db,`feedback/${key}`));
+  const existing    = snap.exists() ? snap.val() : {};
+  const record = {
+    submitted:true, monthKey:monthKey(),
+    submittedOn:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}),
+    mode:currentMode,
+    childName:name,
+    grade:document.getElementById('childGrade').value.trim(),
+    parentName:document.getElementById('parentName').value.trim(),
+    contactNumber:document.getElementById('contactNumber').value.trim(),
+    classTeacher:document.getElementById('classTeacher').value.trim(),
+    subjectTeacher:document.getElementById('subjectTeacher').value.trim(),
+    growthAreas, homeSkills,
+    homeSkillOther:document.getElementById('homeSkillOther').value.trim(),
+    positiveChanges:document.getElementById('positiveChanges').value.trim(),
+    suggestion:document.getElementById('suggestion').value.trim(),
+    schoolStrength:document.getElementById('schoolStrength').value.trim(),
+    appreciation:document.getElementById('appreciation').value.trim(),
+    questionRaised:document.getElementById('questionRaised').value.trim(),
+    ratingTeacher:document.querySelectorAll('#stars-ct .star.on').length||0,
+    ratingSchool:document.querySelectorAll('#stars-sc .star.on').length||0,
+    schoolResponse:existing.schoolResponse||null,
+    schoolResponseDate:existing.schoolResponseDate||null,
+    responseGrade:existing.responseGrade||null,
+  };
+  document.getElementById('submitBtn').disabled = true;
+  document.getElementById('spinnerRow').style.display = 'flex';
+  try {
+    await set(ref(db,`feedback/${key}`), record);
+    showToast('✓ Feedback submitted successfully!');
+    setTimeout(()=>checkStatus(), 800);
+  } catch(e) {
+    showToast('⚠ Could not submit. Please check your connection and try again.');
+    console.error(e);
+    document.getElementById('submitBtn').disabled = false;
+  } finally {
+    document.getElementById('spinnerRow').style.display = 'none';
+  }
+};
 
-// Init date field + reset date shown immediately on load
-document.getElementById('feedbackDate').value = new Date().toLocaleDateString('en-GB');
-(function initResetDate() {
-  const reset = getResetDate().toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'});
-  const days  = daysUntilReset();
-  document.getElementById('resetDateInline').textContent = reset;
-  document.getElementById('resetCountdown').textContent  = `${days} day${days !== 1 ? 's' : ''}`;
-})();
+// ── Grade response ──
+const ratingLabels = ['','Unsatisfactory','Below expectation','Satisfactory','Good','Excellent ✦'];
+window.gradeResponse = async function(val) {
+  document.querySelectorAll('.res-star').forEach((s,i)=>s.classList.toggle('on',i<val));
+  document.getElementById('resGradeDesc').textContent    = ratingLabels[val];
+  document.getElementById('gradeSaved').style.display    = 'block';
+  if (currentChildKey) await update(ref(db,`feedback/${currentChildKey}`),{responseGrade:val});
+};
+
+// ── Star ratings ──
+const starLabels = ['','Needs improvement','Satisfactory','Good','Very good','Excellent ✦'];
+window.rate = function(group,val) {
+  document.querySelectorAll(`#stars-${group} .star`).forEach((s,i)=>s.classList.toggle('on',i<val));
+  document.getElementById(`lbl-${group}`).textContent = starLabels[val];
+};
+
+// ── Chips ──
+window.toggleChip = function(el) {
+  const selected = [...document.querySelectorAll('#growthChips .chip.on')];
+  const msg = document.getElementById('chipLimitMsg');
+  if (!el.classList.contains('on') && selected.length>=2) {
+    msg.style.display='block'; el.style.transform='scale(0.94)';
+    setTimeout(()=>el.style.transform='',140); return;
+  }
+  msg.style.display='none'; el.classList.toggle('on');
+};
+window.toggleSkillChip = function(el) { el.classList.toggle('on'); };
+
+// ── Same teacher ──
+window.handleSameTeacher = function(cb) {
+  const si=document.getElementById('subjectTeacher');
+  if(cb.checked){si.value=document.getElementById('classTeacher').value||'(Same as above)';si.readOnly=true;si.style.opacity='0.45';}
+  else{si.value='';si.readOnly=false;si.style.opacity='1';}
+};
+
+// ── Clear ──
+window.clearForm = function() {
+  if(!confirm('Clear all entries?')) return;
+  ['childName','childGrade','parentName','contactNumber','classTeacher','subjectTeacher',
+   'positiveChanges','homeSkillOther','suggestion','schoolStrength','appreciation','questionRaised','sigName','sigSign']
+  .forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.querySelectorAll('.chip').forEach(el=>el.classList.remove('on'));
+  document.querySelectorAll('.star').forEach(el=>el.classList.remove('on'));
+  ['lbl-ct','lbl-sc'].forEach(id=>document.getElementById(id).textContent='—');
+  document.getElementById('sameTeacher').checked=false;
+  document.getElementById('chipLimitMsg').style.display='none';
+  document.getElementById('submitBtn').disabled=false;
+  if(responseUnsub){responseUnsub();responseUnsub=null;}
+  resetStatusBar();
+};
 </script>
 </body>
 </html>

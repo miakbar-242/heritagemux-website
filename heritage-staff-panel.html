@@ -7,758 +7,467 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
-  --forest:    #2d4a2d;
-  --gold:      #b8962e;
-  --cream:     #faf7f2;
-  --parchment: #f2ece0;
-  --tan:       #e8dfc8;
-  --line:      #d9cebc;
-  --ink:       #1e1e1e;
-  --muted:     #6e6456;
-  --sage:      #5a7a5a;
-  --error:     #c0392b;
-  --success:   #2d7a4a;
+  --forest:#2d4a2d; --gold:#b8962e; --cream:#faf7f2; --parchment:#f2ece0;
+  --tan:#e8dfc8; --line:#d9cebc; --ink:#1e1e1e; --muted:#6e6456;
+  --sage:#5a7a5a; --error:#c0392b; --success:#2d7a4a;
 }
+body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padding:30px 16px 50px; color:var(--ink); }
+.portal { max-width:860px; margin:0 auto; }
+.banner { background:var(--forest); color:white; padding:18px 32px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+.banner h1 { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:600; }
+.banner p { font-size:10px; letter-spacing:2.5px; text-transform:uppercase; color:rgba(255,255,255,0.55); margin-top:2px; }
+.banner-badge { background:var(--gold); color:var(--forest); font-size:9.5px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; padding:5px 12px; border-radius:2px; }
 
-body {
-  background: #cfc9bc;
-  font-family: 'Jost', sans-serif;
-  min-height: 100vh;
-  padding: 30px 16px 50px;
-  color: var(--ink);
-}
+/* LOGIN */
+.login-box { background:var(--cream); padding:52px; box-shadow:0 8px 48px rgba(0,0,0,0.15); text-align:center; }
+.login-box h2 { font-family:'Cormorant Garamond',serif; font-size:24px; color:var(--forest); margin-bottom:8px; }
+.login-box p { font-size:12.5px; color:var(--muted); margin-bottom:28px; line-height:1.6; }
+.login-row { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+.pin-input { border:1.5px solid var(--line); background:var(--parchment); font-family:'Jost',sans-serif; font-size:22px; font-weight:500; letter-spacing:8px; text-align:center; padding:10px 18px; width:170px; outline:none; color:var(--forest); }
+.pin-input:focus { border-color:var(--gold); }
+.login-error { color:var(--error); font-size:11.5px; margin-top:10px; display:none; }
+.pin-hint { font-size:10.5px; color:var(--muted); margin-top:14px; font-style:italic; }
 
-.portal { max-width: 820px; margin: 0 auto; }
+/* BUTTONS */
+.btn { padding:11px 26px; font-family:'Jost',sans-serif; font-size:11.5px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; border:none; transition:background 0.2s; border-radius:2px; }
+.btn-primary { background:var(--forest); color:white; }
+.btn-primary:hover { background:var(--gold); }
+.btn-outline { background:transparent; color:var(--muted); border:1.5px solid var(--line); }
+.btn-outline:hover { border-color:var(--muted); color:var(--ink); }
+.btn-success { background:var(--success); color:white; }
+.btn-success:hover { opacity:0.85; }
+.btn-danger { background:var(--error); color:white; }
+.btn-danger:hover { opacity:0.85; }
 
-/* ── BANNER ── */
-.banner {
-  background: var(--forest);
-  color: white;
-  padding: 18px 32px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-.banner-left h1 {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 20px; font-weight: 600;
-}
-.banner-left p {
-  font-size: 10px; letter-spacing: 2.5px;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.55);
-  margin-top: 2px;
-}
-.banner-badge {
-  background: var(--gold); color: var(--forest);
-  font-size: 9.5px; font-weight: 600;
-  letter-spacing: 1.5px; text-transform: uppercase;
-  padding: 5px 12px; border-radius: 2px;
-}
+/* MAIN PANEL */
+.main-panel { display:none; }
+.search-section { background:var(--cream); padding:22px 32px; box-shadow:0 2px 12px rgba(0,0,0,0.08); border-bottom:2px solid var(--tan); display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+.search-input { flex:1; min-width:200px; border:1.5px solid var(--line); background:var(--parchment); font-family:'Jost',sans-serif; font-size:13px; color:var(--ink); padding:9px 14px; outline:none; }
+.search-input:focus { border-color:var(--gold); }
+.search-input::placeholder { color:#c0b8ab; }
+.filter-btns { display:flex; gap:6px; flex-wrap:wrap; }
+.filter-btn { padding:7px 14px; font-family:'Jost',sans-serif; font-size:10.5px; font-weight:500; letter-spacing:1px; text-transform:uppercase; cursor:pointer; border:1.5px solid var(--line); background:transparent; color:var(--muted); border-radius:2px; transition:all 0.15s; }
+.filter-btn.active { background:var(--forest); border-color:var(--forest); color:white; }
 
-/* ── LOGIN GATE ── */
-.login-box {
-  background: var(--cream);
-  padding: 48px 52px;
-  box-shadow: 0 8px 48px rgba(0,0,0,0.15);
-  text-align: center;
-}
-.login-box h2 {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 24px; color: var(--forest);
-  margin-bottom: 8px;
-}
-.login-box p { font-size: 12.5px; color: var(--muted); margin-bottom: 28px; line-height: 1.6; }
-.login-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-.pin-input {
-  border: 1.5px solid var(--line);
-  background: var(--parchment);
-  font-family: 'Jost', sans-serif;
-  font-size: 20px; font-weight: 500;
-  letter-spacing: 8px;
-  text-align: center;
-  padding: 10px 18px;
-  width: 160px;
-  outline: none;
-  color: var(--forest);
-}
-.pin-input:focus { border-color: var(--gold); }
-.btn {
-  padding: 11px 26px;
-  font-family: 'Jost', sans-serif; font-size: 11.5px;
-  font-weight: 500; letter-spacing: 1.5px;
-  text-transform: uppercase; cursor: pointer;
-  border: none; transition: background 0.2s;
-}
-.btn-primary { background: var(--forest); color: white; }
-.btn-primary:hover { background: var(--gold); }
-.btn-outline { background: transparent; color: var(--muted); border: 1.5px solid var(--line); }
-.btn-outline:hover { border-color: var(--muted); color: var(--ink); }
-.btn-danger { background: var(--error); color: white; }
-.btn-danger:hover { opacity: 0.85; }
-.btn-success { background: var(--success); color: white; }
-.btn-success:hover { opacity: 0.85; }
-.login-error {
-  color: var(--error); font-size: 11.5px;
-  margin-top: 10px; display: none;
-}
-.pin-hint {
-  font-size: 10.5px; color: var(--muted);
-  margin-top: 14px; font-style: italic;
-}
+/* SUBMISSIONS */
+.submissions-area { background:var(--cream); padding:28px 32px; box-shadow:0 8px 48px rgba(0,0,0,0.12); min-height:300px; }
+.submissions-title { font-family:'Cormorant Garamond',serif; font-size:17px; font-weight:600; color:var(--forest); margin-bottom:18px; padding-bottom:10px; border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+.sub-count { font-family:'Jost',sans-serif; font-size:11px; font-weight:400; color:var(--muted); }
+.empty-state { text-align:center; padding:48px 20px; color:var(--muted); }
+.empty-state .ei { font-size:36px; opacity:0.3; margin-bottom:12px; }
+.empty-state p { font-size:13px; line-height:1.6; }
 
-/* ── MAIN PANEL ── */
-.main-panel { display: none; }
+/* CARD */
+.sub-card { border:1.5px solid var(--line); margin-bottom:14px; overflow:hidden; transition:box-shadow 0.2s; }
+.sub-card:hover { box-shadow:0 2px 16px rgba(0,0,0,0.08); }
+.card-header { background:var(--parchment); padding:12px 16px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; cursor:pointer; user-select:none; }
+.card-header:hover { background:var(--tan); }
+.card-name { font-family:'Cormorant Garamond',serif; font-size:16px; font-weight:600; color:var(--forest); }
+.card-meta { font-size:11px; color:var(--muted); margin-top:2px; }
+.badges { display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
+.badge { font-size:9px; font-weight:600; letter-spacing:1px; text-transform:uppercase; padding:3px 8px; border-radius:2px; }
+.b-ptm      { background:#e8f0e8; color:var(--forest); }
+.b-general  { background:#e8edf5; color:#2d4070; }
+.b-pending  { background:#fdf3e3; color:#8a6020; }
+.b-responded{ background:#e8f5ec; color:var(--success); }
+.b-graded   { background:#f0e8f5; color:#6a2d8a; }
+.chevron { font-size:12px; color:var(--muted); transition:transform 0.2s; }
+.chevron.open { transform:rotate(180deg); }
 
-/* ── SEARCH BAR ── */
-.search-section {
-  background: var(--cream);
-  padding: 24px 32px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-  border-bottom: 2px solid var(--tan);
-}
-.search-title {
-  font-size: 9px; font-weight: 500; letter-spacing: 2.5px;
-  text-transform: uppercase; color: var(--sage); margin-bottom: 12px;
-}
-.search-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-.search-input {
-  flex: 1; min-width: 200px;
-  border: 1.5px solid var(--line);
-  background: var(--parchment);
-  font-family: 'Jost', sans-serif;
-  font-size: 13px; color: var(--ink);
-  padding: 9px 14px; outline: none;
-}
-.search-input:focus { border-color: var(--gold); }
-.search-input::placeholder { color: #c0b8ab; font-size: 12px; }
+/* CARD BODY */
+.card-body { display:none; padding:20px; }
+.card-body.open { display:block; }
+.detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px 20px; margin-bottom:16px; background:var(--parchment); padding:14px 16px; border-left:3px solid var(--gold); }
+.d-label { font-size:8.5px; font-weight:500; letter-spacing:2px; text-transform:uppercase; color:var(--sage); margin-bottom:3px; }
+.d-value { font-size:12.5px; color:var(--ink); line-height:1.5; }
+.section-block { margin-bottom:14px; }
+.section-block-title { font-size:9px; font-weight:500; letter-spacing:2px; text-transform:uppercase; color:var(--forest); margin-bottom:6px; padding-bottom:4px; border-bottom:1px dashed var(--line); }
+.section-block-content { font-size:12.5px; color:var(--ink); line-height:1.65; padding:8px 12px; background:var(--cream); border-left:2px solid var(--line); }
+.chip-pills { display:flex; flex-wrap:wrap; gap:5px; }
+.chip-pill { background:var(--forest); color:white; font-size:10.5px; padding:3px 10px; border-radius:2px; }
 
-/* ── SUBMISSIONS LIST ── */
-.submissions-area {
-  background: var(--cream);
-  padding: 28px 32px;
-  box-shadow: 0 8px 48px rgba(0,0,0,0.12);
-  min-height: 300px;
-}
-.submissions-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 17px; font-weight: 600;
-  color: var(--forest); margin-bottom: 18px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--line);
-  display: flex; align-items: center;
-  justify-content: space-between; flex-wrap: wrap; gap: 8px;
-}
-.sub-count {
-  font-family: 'Jost', sans-serif;
-  font-size: 11px; font-weight: 400;
-  color: var(--muted); letter-spacing: 0.5px;
-}
+/* RESPONSE COMPOSER */
+.response-composer { margin-top:20px; border-top:1.5px solid var(--line); padding-top:20px; }
+.composer-title { font-family:'Cormorant Garamond',serif; font-size:15px; font-weight:600; color:var(--forest); margin-bottom:14px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.ctag { font-family:'Jost',sans-serif; font-size:9px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; background:var(--gold); color:var(--forest); padding:2px 8px; border-radius:2px; }
+.existing-response { background:var(--parchment); border-left:3px solid var(--success); padding:14px 16px; margin-bottom:14px; font-size:12.5px; color:var(--ink); line-height:1.65; font-style:italic; white-space:pre-wrap; }
+.existing-meta { font-size:10px; color:var(--sage); font-style:normal; margin-bottom:8px; font-weight:500; }
+.parent-grade-box { background:#f0e8f5; border-left:3px solid #9b59b6; padding:10px 14px; margin-bottom:14px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.pg-label { font-size:11px; font-weight:500; color:#6a2d8a; }
+.pg-stars { color:var(--gold); font-size:18px; letter-spacing:2px; }
+.pg-desc { font-size:11px; color:var(--muted); font-style:italic; }
+.hints-box { background:#f0f5f0; border-left:3px solid var(--sage); padding:10px 14px; margin:10px 0; font-size:11.5px; color:var(--sage); line-height:1.65; }
+.hints-box strong { color:var(--forest); }
+.response-textarea { width:100%; min-height:130px; border:1.5px solid var(--line); background:var(--parchment); font-family:'Jost',sans-serif; font-size:13px; color:var(--ink); padding:12px 14px; outline:none; resize:vertical; line-height:1.7; }
+.response-textarea:focus { border-color:var(--gold); }
+.response-textarea::placeholder { color:#c0b8ab; font-size:12px; }
+.composer-actions { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:12px; }
+.char-count { font-size:10.5px; color:var(--muted); margin-left:auto; }
+.saved-ok { font-size:11px; color:var(--success); font-weight:500; display:none; margin-left:8px; }
+.spinner { display:inline-block; width:14px; height:14px; border:2px solid var(--line); border-top-color:var(--forest); border-radius:50%; animation:spin 0.7s linear infinite; vertical-align:middle; margin-right:4px; }
+@keyframes spin { to{transform:rotate(360deg);} }
 
-.empty-state {
-  text-align: center; padding: 48px 20px; color: var(--muted);
-}
-.empty-state .e-icon { font-size: 36px; opacity: 0.3; margin-bottom: 12px; }
-.empty-state p { font-size: 13px; line-height: 1.6; }
+/* FOOTER */
+.panel-footer { background:var(--parchment); display:flex; align-items:center; justify-content:space-between; padding:14px 32px; flex-wrap:wrap; gap:8px; }
+.panel-footer span { font-size:9.5px; color:rgba(0,0,0,0.35); letter-spacing:1px; text-transform:uppercase; }
+.logout-btn { font-size:10.5px; color:var(--muted); cursor:pointer; background:none; border:none; font-family:'Jost',sans-serif; text-decoration:underline; }
+.logout-btn:hover { color:var(--error); }
 
-/* ── SUBMISSION CARD ── */
-.sub-card {
-  border: 1.5px solid var(--line);
-  margin-bottom: 16px;
-  overflow: hidden;
-  transition: box-shadow 0.2s;
-}
-.sub-card:hover { box-shadow: 0 2px 16px rgba(0,0,0,0.08); }
+/* TOAST */
+.toast { position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(100px); background:var(--forest); color:white; padding:13px 28px; font-size:13px; font-weight:500; border-radius:2px; box-shadow:0 4px 24px rgba(0,0,0,0.25); transition:transform 0.4s ease; z-index:9999; white-space:nowrap; }
+.toast.show { transform:translateX(-50%) translateY(0); }
 
-.sub-card-header {
-  background: var(--parchment);
-  padding: 12px 16px;
-  display: flex; align-items: center;
-  justify-content: space-between; flex-wrap: wrap; gap: 8px;
-  cursor: pointer;
-  user-select: none;
-}
-.sub-card-header:hover { background: var(--tan); }
-
-.sub-name {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 16px; font-weight: 600; color: var(--forest);
-}
-.sub-meta {
-  font-size: 11px; color: var(--muted); margin-top: 2px;
-}
-.sub-badges { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
-.badge {
-  font-size: 9.5px; font-weight: 600;
-  letter-spacing: 1px; text-transform: uppercase;
-  padding: 3px 9px; border-radius: 2px;
-}
-.badge-ptm      { background: #e8f0e8; color: var(--forest); }
-.badge-general  { background: #e8edf5; color: #2d4070; }
-.badge-pending  { background: #fdf3e3; color: #8a6020; }
-.badge-responded{ background: #e8f5ec; color: var(--success); }
-.badge-graded   { background: #f0e8f5; color: #6a2d8a; }
-.chevron { font-size: 13px; color: var(--muted); transition: transform 0.2s; }
-.chevron.open { transform: rotate(180deg); }
-
-/* ── CARD BODY ── */
-.sub-card-body { display: none; padding: 20px; }
-.sub-card-body.open { display: block; }
-
-.detail-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px 20px;
-  margin-bottom: 18px;
-  background: var(--parchment);
-  padding: 14px 16px;
-  border-left: 3px solid var(--gold);
-}
-.detail-item {}
-.detail-label {
-  font-size: 8.5px; font-weight: 500;
-  letter-spacing: 2px; text-transform: uppercase;
-  color: var(--sage); margin-bottom: 3px;
-}
-.detail-value { font-size: 12.5px; color: var(--ink); line-height: 1.5; }
-
-.section-block { margin-bottom: 16px; }
-.section-block-title {
-  font-size: 9px; font-weight: 500;
-  letter-spacing: 2px; text-transform: uppercase;
-  color: var(--forest); margin-bottom: 6px;
-  padding-bottom: 4px; border-bottom: 1px dashed var(--line);
-}
-.section-block-content {
-  font-size: 12.5px; color: var(--ink);
-  line-height: 1.65; padding: 8px 12px;
-  background: var(--cream); border-left: 2px solid var(--line);
-}
-.chip-display { display: flex; flex-wrap: wrap; gap: 5px; }
-.chip-pill {
-  background: var(--forest); color: white;
-  font-size: 10.5px; padding: 3px 10px; border-radius: 2px;
-}
-
-/* ── RESPONSE COMPOSER ── */
-.response-composer {
-  margin-top: 20px;
-  border-top: 1.5px solid var(--line);
-  padding-top: 20px;
-}
-.composer-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 15px; font-weight: 600;
-  color: var(--forest); margin-bottom: 14px;
-  display: flex; align-items: center; gap: 8px;
-}
-.composer-title .ctag {
-  font-family: 'Jost', sans-serif;
-  font-size: 9px; font-weight: 500;
-  letter-spacing: 1.5px; text-transform: uppercase;
-  background: var(--gold); color: var(--forest);
-  padding: 2px 8px; border-radius: 2px;
-}
-
-/* Existing response display */
-.existing-response {
-  background: var(--parchment);
-  border-left: 3px solid var(--success);
-  padding: 14px 16px;
-  margin-bottom: 16px;
-  font-size: 12.5px; color: var(--ink);
-  line-height: 1.65; font-style: italic;
-}
-.existing-response-meta {
-  font-size: 10px; color: var(--sage);
-  font-style: normal; margin-bottom: 8px;
-  font-weight: 500; letter-spacing: 0.5px;
-}
-
-/* Parent grade display */
-.parent-grade-display {
-  background: #f0e8f5;
-  border-left: 3px solid #9b59b6;
-  padding: 10px 14px;
-  margin-bottom: 14px;
-  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
-}
-.pg-label { font-size: 11px; font-weight: 500; color: #6a2d8a; }
-.pg-stars { color: var(--gold); font-size: 18px; letter-spacing: 2px; }
-.pg-desc { font-size: 11px; color: var(--muted); font-style: italic; }
-
-.response-textarea {
-  width: 100%; min-height: 120px;
-  border: 1.5px solid var(--line);
-  background: var(--parchment);
-  font-family: 'Jost', sans-serif;
-  font-size: 13px; color: var(--ink);
-  padding: 12px 14px; outline: none;
-  resize: vertical; line-height: 1.7;
-}
-.response-textarea:focus { border-color: var(--gold); }
-.response-textarea::placeholder { color: #c0b8ab; font-size: 12px; }
-
-.composer-hints {
-  background: #f0f5f0;
-  border-left: 3px solid var(--sage);
-  padding: 10px 14px; margin: 10px 0;
-  font-size: 11.5px; color: var(--sage);
-  line-height: 1.65;
-}
-.composer-hints strong { color: var(--forest); }
-
-.composer-actions {
-  display: flex; gap: 10px;
-  align-items: center; flex-wrap: wrap;
-  margin-top: 12px;
-}
-.char-count {
-  font-size: 10.5px; color: var(--muted);
-  margin-left: auto;
-}
-.saved-indicator {
-  font-size: 11px; color: var(--success);
-  font-weight: 500; display: none;
-}
-
-/* ── FOOTER ── */
-.panel-footer {
-  background: var(--parchment);
-  text-align: center; padding: 14px;
-  font-size: 9.5px; color: rgba(0,0,0,0.35);
-  letter-spacing: 1px; text-transform: uppercase;
-  display: flex; align-items: center;
-  justify-content: space-between; padding: 14px 32px;
-  flex-wrap: wrap; gap: 8px;
-}
-.logout-btn {
-  font-size: 10.5px; color: var(--muted);
-  cursor: pointer; text-decoration: underline;
-  background: none; border: none;
-  font-family: 'Jost', sans-serif;
-}
-.logout-btn:hover { color: var(--error); }
-
-/* ── TOAST ── */
-.toast {
-  position: fixed; bottom: 28px; left: 50%;
-  transform: translateX(-50%) translateY(100px);
-  background: var(--forest); color: white;
-  padding: 13px 28px; font-size: 13px; font-weight: 500;
-  border-radius: 2px; box-shadow: 0 4px 24px rgba(0,0,0,0.25);
-  transition: transform 0.4s ease; z-index: 9999;
-  white-space: nowrap;
-}
-.toast.show { transform: translateX(-50%) translateY(0); }
+/* Live indicator */
+.live-dot { display:inline-block; width:8px; height:8px; background:#2ecc71; border-radius:50%; margin-right:6px; animation:pulse 1.5s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
 </style>
 </head>
 <body>
-
 <div class="portal">
 
-  <!-- BANNER -->
   <div class="banner">
-    <div class="banner-left">
+    <div>
       <h1>Heritage Montessori &amp; School</h1>
       <p>Nurturing Young Minds · Est. 2007</p>
     </div>
     <div class="banner-badge">Staff Response Panel</div>
   </div>
 
-  <!-- ── LOGIN GATE ── -->
+  <!-- LOGIN -->
   <div class="login-box" id="loginBox">
-    <div style="font-size:38px;margin-bottom:14px;opacity:0.4;">🔐</div>
+    <div style="font-size:40px;margin-bottom:14px;opacity:0.35;">🔐</div>
     <h2>Staff Access Only</h2>
-    <p>This panel is for Heritage Montessori staff to review parent feedback<br>and post official school responses. Please enter your staff PIN to continue.</p>
+    <p>This panel is for Heritage Montessori staff to review parent feedback<br>and post official school responses. Enter your staff PIN to continue.</p>
     <div class="login-row">
-      <input class="pin-input" type="password" id="pinInput" maxlength="6" placeholder="· · · · · ·" onkeydown="if(event.key==='Enter') checkPin()">
+      <input class="pin-input" type="password" id="pinInput" maxlength="6" placeholder="· · · · · ·" onkeydown="if(event.key==='Enter')checkPin()">
       <button class="btn btn-primary" onclick="checkPin()">Enter →</button>
     </div>
     <div class="login-error" id="loginError">⚠ Incorrect PIN. Please try again.</div>
     <div class="pin-hint">Contact the school administrator if you have forgotten your PIN.</div>
   </div>
 
-  <!-- ── MAIN PANEL ── -->
+  <!-- MAIN PANEL -->
   <div class="main-panel" id="mainPanel">
 
-    <!-- SEARCH -->
     <div class="search-section">
-      <div class="search-title">◆ Look up a parent submission</div>
-      <div class="search-row">
-        <input class="search-input" type="text" id="searchInput"
-          placeholder="Type child's name to search submissions…"
-          oninput="searchSubmissions()">
-        <button class="btn btn-outline" onclick="loadAll()">Show All</button>
+      <input class="search-input" type="text" id="searchInput" placeholder="Search by child's name…" oninput="filterCards()">
+      <div class="filter-btns">
+        <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
+        <button class="filter-btn" onclick="setFilter('pending',this)">Pending</button>
+        <button class="filter-btn" onclick="setFilter('responded',this)">Responded</button>
+        <button class="filter-btn" onclick="setFilter('graded',this)">Graded</button>
       </div>
     </div>
 
-    <!-- SUBMISSIONS LIST -->
     <div class="submissions-area">
       <div class="submissions-title">
-        <span>Parent Submissions</span>
+        <span><span class="live-dot"></span>Live Submissions</span>
         <span class="sub-count" id="subCount"></span>
       </div>
       <div id="submissionsList">
-        <div class="empty-state">
-          <div class="e-icon">📋</div>
-          <p>Search for a child's name above to view their feedback,<br>or click <strong>Show All</strong> to see all submissions.</p>
-        </div>
+        <div class="empty-state"><div class="ei">⏳</div><p>Loading submissions…</p></div>
       </div>
     </div>
 
-    <!-- FOOTER -->
     <div class="panel-footer">
-      <span>Heritage Montessori &amp; School · Staff Portal</span>
+      <span>Heritage Montessori · Staff Portal · Live via Firebase</span>
       <button class="logout-btn" onclick="logout()">Log out</button>
     </div>
 
-  </div><!-- /mainPanel -->
+  </div>
 
-</div><!-- /portal -->
-
+</div>
 <div class="toast" id="toast"></div>
 
-<script>
-// ═══════════════════════════════════════════════════════════
-//  PIN AUTH
-//  Change STAFF_PIN to whatever PIN you want for your school
-// ═══════════════════════════════════════════════════════════
-const STAFF_PIN = '2007';   // ← Change this to your preferred PIN
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, onValue, update, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-function checkPin() {
-  const val = document.getElementById('pinInput').value.trim();
-  if (val === STAFF_PIN) {
-    document.getElementById('loginBox').style.display = 'none';
-    document.getElementById('mainPanel').style.display = 'block';
-    loadAll();
-  } else {
-    const err = document.getElementById('loginError');
-    err.style.display = 'block';
-    document.getElementById('pinInput').value = '';
-    setTimeout(() => err.style.display = 'none', 3000);
-  }
+const firebaseConfig = {
+  apiKey: "AIzaSyAtB9d9zEr-ES-lRI_Pf9fWJmaJ8o8ghvQ",
+  authDomain: "my-hms42.firebaseapp.com",
+  databaseURL: "https://my-hms42-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "my-hms42",
+  storageBucket: "my-hms42.firebasestorage.app",
+  messagingSenderId: "468345935508",
+  appId: "1:468345935508:web:db42663bb9484619518681"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getDatabase(app);
+
+const STAFF_PIN = '2007'; // ← Change this PIN
+const ratingLabels = ['','Unsatisfactory','Below expectation','Satisfactory','Good','Excellent'];
+
+let allSubmissions = [];
+let currentFilter  = 'all';
+
+// ── Toast ──
+function showToast(msg) {
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
 }
 
-function logout() {
+// ── PIN ──
+window.checkPin = function() {
+  if (document.getElementById('pinInput').value.trim() === STAFF_PIN) {
+    document.getElementById('loginBox').style.display  = 'none';
+    document.getElementById('mainPanel').style.display = 'block';
+    startListening();
+  } else {
+    const e = document.getElementById('loginError');
+    e.style.display = 'block';
+    document.getElementById('pinInput').value = '';
+    setTimeout(()=>e.style.display='none', 3000);
+  }
+};
+
+window.logout = function() {
   document.getElementById('mainPanel').style.display = 'none';
   document.getElementById('loginBox').style.display  = 'block';
   document.getElementById('pinInput').value = '';
-}
+};
 
-// ═══════════════════════════════════════════════════════════
-//  STORAGE HELPERS (same key scheme as parent portal)
-// ═══════════════════════════════════════════════════════════
-function getStorageKey(childName) {
-  return 'heritage_fb_' + childName.toLowerCase().replace(/\s+/g,'_');
-}
-
-function getRecord(childName) {
-  try {
-    const raw = localStorage.getItem(getStorageKey(childName));
-    return raw ? JSON.parse(raw) : null;
-  } catch(e) { return null; }
-}
-
-function setRecord(childName, data) {
-  try {
-    localStorage.setItem(getStorageKey(childName), JSON.stringify(data));
-  } catch(e) {}
-}
-
-function getAllSubmissions() {
-  const results = [];
-  for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    if (!key.startsWith('heritage_fb_')) continue;
-    try {
-      const data = JSON.parse(localStorage.getItem(key));
-      if (data && data.submitted) {
-        // Derive child name from key
-        const name = key.replace('heritage_fb_', '').replace(/_/g, ' ')
-          .replace(/\b\w/g, c => c.toUpperCase());
-        results.push({ key, name, ...data });
-      }
-    } catch(e) {}
-  }
-  // Sort: pending responses first, then by submission date
-  results.sort((a, b) => {
-    if (!a.schoolResponse && b.schoolResponse) return -1;
-    if (a.schoolResponse && !b.schoolResponse) return 1;
-    return 0;
+// ── Real-time listener ──
+function startListening() {
+  onValue(ref(db,'feedback'), snap => {
+    allSubmissions = [];
+    if (snap.exists()) {
+      snap.forEach(child => {
+        const d = child.val();
+        if (d && d.submitted) allSubmissions.push({ key: child.key, ...d });
+      });
+      // Pending first, then by submission date
+      allSubmissions.sort((a,b) => {
+        if (!a.schoolResponse && b.schoolResponse) return -1;
+        if (a.schoolResponse && !b.schoolResponse) return 1;
+        return 0;
+      });
+    }
+    renderList();
   });
-  return results;
 }
 
-// ═══════════════════════════════════════════════════════════
-//  RENDER
-// ═══════════════════════════════════════════════════════════
-function loadAll() {
-  document.getElementById('searchInput').value = '';
-  renderList(getAllSubmissions());
-}
+// ── Filter ──
+window.setFilter = function(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderList();
+};
 
-function searchSubmissions() {
+window.filterCards = function() { renderList(); };
+
+function getFiltered() {
   const q = document.getElementById('searchInput').value.trim().toLowerCase();
-  if (!q) { renderList([]); return; }
-  const all = getAllSubmissions().filter(s => s.name.toLowerCase().includes(q));
-  renderList(all);
+  return allSubmissions.filter(s => {
+    const nameMatch = !q || (s.childName||s.key).toLowerCase().includes(q);
+    const filterMatch =
+      currentFilter === 'all' ? true :
+      currentFilter === 'pending'   ? !s.schoolResponse :
+      currentFilter === 'responded' ? (s.schoolResponse && !s.responseGrade) :
+      currentFilter === 'graded'    ? !!s.responseGrade : true;
+    return nameMatch && filterMatch;
+  });
 }
 
-function renderList(submissions) {
-  const container = document.getElementById('submissionsList');
-  const count     = document.getElementById('subCount');
-
-  if (!submissions.length) {
-    count.textContent = '';
-    container.innerHTML = `
-      <div class="empty-state">
-        <div class="e-icon">🔍</div>
-        <p>No submissions found. Parents need to submit feedback from the Parent Feedback Portal first.</p>
-      </div>`;
+// ── Render list ──
+function renderList() {
+  const list    = document.getElementById('submissionsList');
+  const count   = document.getElementById('subCount');
+  const filtered = getFiltered();
+  count.textContent = `${filtered.length} submission${filtered.length!==1?'s':''}`;
+  if (!filtered.length) {
+    list.innerHTML = `<div class="empty-state"><div class="ei">🔍</div><p>${
+      allSubmissions.length ? 'No submissions match this filter.' :
+      'No submissions yet. Parents need to submit feedback from the Parent Feedback Portal first.'
+    }</p></div>`;
     return;
   }
-
-  count.textContent = `${submissions.length} submission${submissions.length !== 1 ? 's' : ''}`;
-  container.innerHTML = submissions.map((s, idx) => buildCard(s, idx)).join('');
+  list.innerHTML = filtered.map((s,i) => buildCard(s,i)).join('');
 }
 
-const ratingLabels = ['','Unsatisfactory','Below expectation','Satisfactory','Good','Excellent'];
-
+// ── Build card ──
 function buildCard(s, idx) {
-  const modeBadge   = s.mode === 'ptm'
-    ? `<span class="badge badge-ptm">PTM</span>`
-    : `<span class="badge badge-general">General</span>`;
-  const statusBadge = s.schoolResponse
-    ? (s.responseGrade
-        ? `<span class="badge badge-graded">Graded by Parent</span>`
-        : `<span class="badge badge-responded">Response Sent</span>`)
-    : `<span class="badge badge-pending">Awaiting Response</span>`;
+  const name  = s.childName || s.key.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+  const mBadge = s.mode==='ptm' ? `<span class="badge b-ptm">PTM</span>` : `<span class="badge b-general">General</span>`;
+  const sBadge = s.responseGrade
+    ? `<span class="badge b-graded">Graded by Parent</span>`
+    : s.schoolResponse
+      ? `<span class="badge b-responded">Response Sent</span>`
+      : `<span class="badge b-pending">⚠ Awaiting Response</span>`;
 
-  // Growth chips
-  const growthChips = (s.growthAreas || []).map(g =>
-    `<span class="chip-pill">${g}</span>`).join('') || '<span style="color:var(--muted);font-size:12px;">Not specified</span>';
+  const growthHtml = (s.growthAreas||[]).length
+    ? `<div class="chip-pills">${(s.growthAreas).map(g=>`<span class="chip-pill">${esc(g)}</span>`).join('')}</div>`
+    : '<span style="color:var(--muted);font-size:12px;">Not selected</span>';
 
-  // Home skills
-  const homeSkills = (s.homeSkills || []).map(g =>
-    `<span class="chip-pill">${g}</span>`).join('') || '';
+  const homeSkillHtml = [
+    ...(s.homeSkills||[]).map(g=>`<span class="chip-pill">${esc(g)}</span>`),
+  ].join('');
 
-  // Teacher info (PTM only)
-  const teacherBlock = s.mode === 'ptm' ? `
-    <div class="detail-item">
-      <div class="detail-label">Class Teacher</div>
-      <div class="detail-value">${s.classTeacher || '—'}</div>
+  const teacherBlock = s.mode==='ptm' ? `
+    <div>
+      <div class="d-label">Class Teacher</div>
+      <div class="d-value">${esc(s.classTeacher||'—')}</div>
     </div>
-    <div class="detail-item">
-      <div class="detail-label">Subject Teacher</div>
-      <div class="detail-value">${s.subjectTeacher || '—'}</div>
+    <div>
+      <div class="d-label">Subject Teacher</div>
+      <div class="d-value">${esc(s.subjectTeacher||'—')}</div>
     </div>` : '';
 
-  // Existing response block
-  const existingResponseBlock = s.schoolResponse ? `
+  const existingBlock = s.schoolResponse ? `
     <div class="existing-response">
-      <div class="existing-response-meta">Response posted on ${s.schoolResponseDate || '—'}</div>
-      ${escHtml(s.schoolResponse)}
+      <div class="existing-meta">Response posted · ${s.schoolResponseDate||'—'}</div>
+      ${esc(s.schoolResponse)}
     </div>` : '';
 
-  // Parent grade block
-  const parentGradeBlock = s.responseGrade ? `
-    <div class="parent-grade-display">
+  const gradeBlock = s.responseGrade ? `
+    <div class="parent-grade-box">
       <span class="pg-label">Parent rated this response:</span>
-      <span class="pg-stars">${'★'.repeat(s.responseGrade)}${'☆'.repeat(5 - s.responseGrade)}</span>
+      <span class="pg-stars">${'★'.repeat(s.responseGrade)}${'☆'.repeat(5-s.responseGrade)}</span>
       <span class="pg-desc">${ratingLabels[s.responseGrade]}</span>
     </div>` : '';
 
-  const composerLabel = s.schoolResponse ? 'Edit / Update Response' : 'Write Response';
-  const composerTag   = s.schoolResponse ? '' : `<span class="ctag">Action Required</span>`;
-  const placeholder   = buildPlaceholder(s);
+  const areas = (s.growthAreas||[]).join(' and ') || 'the highlighted areas';
+  const skill = (s.homeSkills||[])[0] || s.homeSkillOther || 'the home activity mentioned';
+  const placeholder = `Dear ${esc(s.parentName||'Parent')},\n\nThank you for your thoughtful feedback. We have noted the focus on ${areas} and are glad to hear about the work being done at home on ${skill}.\n\nWarm regards,\nHeritage Montessori`;
+
+  const deleteBtn = s.schoolResponse
+    ? `<button class="btn btn-danger" onclick="deleteResponse('${s.key}',${idx})">✕ Remove</button>` : '';
 
   return `
   <div class="sub-card" id="card-${idx}">
-    <div class="sub-card-header" onclick="toggleCard(${idx})">
+    <div class="card-header" onclick="toggleCard(${idx})">
       <div>
-        <div class="sub-name">${escHtml(s.name)}</div>
-        <div class="sub-meta">Grade: ${s.grade || '—'} &nbsp;·&nbsp; Submitted: ${s.submittedOn || '—'} &nbsp;·&nbsp; Parent: ${escHtml(s.parentName || '—')}</div>
+        <div class="card-name">${esc(name)}</div>
+        <div class="card-meta">Grade: ${esc(s.grade||'—')} &nbsp;·&nbsp; Submitted: ${esc(s.submittedOn||'—')} &nbsp;·&nbsp; Parent: ${esc(s.parentName||'—')}</div>
       </div>
-      <div class="sub-badges">
-        ${modeBadge}
-        ${statusBadge}
-        <span class="chevron" id="chev-${idx}">▼</span>
-      </div>
+      <div class="badges">${mBadge}${sBadge}<span class="chevron" id="chev-${idx}">▼</span></div>
     </div>
+    <div class="card-body" id="body-${idx}">
 
-    <div class="sub-card-body" id="body-${idx}">
-
-      <!-- Details -->
       <div class="detail-grid">
-        <div class="detail-item">
-          <div class="detail-label">Child's Name</div>
-          <div class="detail-value">${escHtml(s.name)}</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-label">Feedback Type</div>
-          <div class="detail-value">${s.mode === 'ptm' ? 'Parent · Teacher Meeting' : 'General Observation'}</div>
-        </div>
+        <div><div class="d-label">Feedback Type</div><div class="d-value">${s.mode==='ptm'?'Parent · Teacher Meeting':'General Observation'}</div></div>
+        <div><div class="d-label">Date Submitted</div><div class="d-value">${esc(s.submittedOn||'—')}</div></div>
         ${teacherBlock}
       </div>
 
-      <!-- Positive changes -->
       <div class="section-block">
         <div class="section-block-title">Positive Changes Observed</div>
-        <div class="section-block-content">${escHtml(s.positiveChanges || '—')}</div>
+        <div class="section-block-content">${esc(s.positiveChanges||'—')}</div>
       </div>
-
-      <!-- Priority growth areas -->
       <div class="section-block">
         <div class="section-block-title">Priority Growth Areas (Top 2)</div>
-        <div class="section-block-content"><div class="chip-display">${growthChips}</div></div>
+        <div class="section-block-content">${growthHtml}</div>
       </div>
-
-      <!-- Home skill -->
       <div class="section-block">
         <div class="section-block-title">Skill Being Worked on at Home</div>
         <div class="section-block-content">
-          <div class="chip-display" style="margin-bottom:${homeSkills ? '8px' : '0'}">${homeSkills}</div>
-          ${s.homeSkillOther ? escHtml(s.homeSkillOther) : (!homeSkills ? '—' : '')}
+          ${homeSkillHtml ? `<div class="chip-pills" style="margin-bottom:6px">${homeSkillHtml}</div>` : ''}
+          ${esc(s.homeSkillOther||(!homeSkillHtml?'—':''))}
         </div>
       </div>
-
-      <!-- Suggestions -->
       <div class="section-block">
         <div class="section-block-title">Suggestion for School</div>
-        <div class="section-block-content">${escHtml(s.suggestion || '—')}</div>
+        <div class="section-block-content">${esc(s.suggestion||'—')}</div>
       </div>
-
-      <!-- What school does well -->
       <div class="section-block">
         <div class="section-block-title">What the School Does Wonderfully</div>
-        <div class="section-block-content">${escHtml(s.schoolStrength || '—')}</div>
+        <div class="section-block-content">${esc(s.schoolStrength||'—')}</div>
       </div>
-
-      <!-- Question raised -->
+      <div class="section-block">
+        <div class="section-block-title">Specific Appreciation</div>
+        <div class="section-block-content">${esc(s.appreciation||'—')}</div>
+      </div>
       <div class="section-block">
         <div class="section-block-title">Question / Topic Raised by Parent</div>
-        <div class="section-block-content">${escHtml(s.questionRaised || '—')}</div>
+        <div class="section-block-content">${esc(s.questionRaised||'—')}</div>
       </div>
-
-      <!-- Star ratings -->
       <div class="section-block">
         <div class="section-block-title">Parent Satisfaction Ratings</div>
         <div class="section-block-content" style="display:flex;gap:24px;flex-wrap:wrap;">
-          <span><strong>Teacher:</strong> ${'★'.repeat(s.ratingTeacher||0)}${'☆'.repeat(5-(s.ratingTeacher||0))} ${s.ratingTeacher ? `(${s.ratingTeacher}/5)` : '—'}</span>
-          <span><strong>School:</strong> ${'★'.repeat(s.ratingSchool||0)}${'☆'.repeat(5-(s.ratingSchool||0))} ${s.ratingSchool ? `(${s.ratingSchool}/5)` : '—'}</span>
+          <span><strong>${s.mode==='ptm'?'Teacher':'Communication'}:</strong> ${'★'.repeat(s.ratingTeacher||0)}${'☆'.repeat(5-(s.ratingTeacher||0))} ${s.ratingTeacher?`(${s.ratingTeacher}/5)`:'—'}</span>
+          <span><strong>School:</strong> ${'★'.repeat(s.ratingSchool||0)}${'☆'.repeat(5-(s.ratingSchool||0))} ${s.ratingSchool?`(${s.ratingSchool}/5)`:'—'}</span>
         </div>
       </div>
 
-      <!-- ── RESPONSE COMPOSER ── -->
+      <!-- RESPONSE COMPOSER -->
       <div class="response-composer">
-        <div class="composer-title">${composerLabel} ${composerTag}</div>
-
-        ${existingResponseBlock}
-        ${parentGradeBlock}
-
-        <div class="composer-hints">
-          <strong>Writing tips:</strong> Address the specific growth areas the parent selected
-          (${(s.growthAreas||[]).join(', ') || 'see above'}).
-          Acknowledge the home skill they mentioned. Keep the tone warm and constructive.
-          Respond to any question raised if one was noted.
+        <div class="composer-title">
+          ${s.schoolResponse ? 'Edit / Update Response' : 'Write Response'}
+          ${!s.schoolResponse ? '<span class="ctag">Action Required</span>' : ''}
         </div>
-
+        ${existingBlock}
+        ${gradeBlock}
+        <div class="hints-box">
+          <strong>Tip:</strong> Address the growth areas selected
+          (<em>${esc((s.growthAreas||[]).join(', ')||'see above')}</em>),
+          acknowledge the home skill
+          (<em>${esc((s.homeSkills||[])[0]||s.homeSkillOther||'see above')}</em>),
+          and respond to any question raised if noted.
+        </div>
         <textarea class="response-textarea" id="resp-${idx}"
           placeholder="${placeholder}"
-          oninput="updateCharCount(${idx})">${escHtml(s.schoolResponse || '')}</textarea>
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:4px;">
+          oninput="updateCC(${idx})">${esc(s.schoolResponse||'')}</textarea>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px;flex-wrap:wrap;gap:6px;">
           <span class="char-count" id="cc-${idx}"></span>
-          <span class="saved-indicator" id="saved-${idx}">✓ Response saved</span>
+          <span class="saved-ok" id="saved-${idx}">✓ Response saved &amp; live for parent</span>
         </div>
-
         <div class="composer-actions">
-          <button class="btn btn-success" onclick="saveResponse('${escAttr(s.name)}', ${idx})">
+          <button class="btn btn-success" id="saveBtn-${idx}" onclick="saveResponse('${s.key}',${idx})">
             ${s.schoolResponse ? '↻ Update Response' : '✓ Post Response'}
           </button>
-          <button class="btn btn-outline" onclick="clearResponse(${idx})">Clear</button>
-          ${s.schoolResponse ? `<button class="btn btn-danger" onclick="deleteResponse('${escAttr(s.name)}', ${idx})">✕ Remove Response</button>` : ''}
+          <button class="btn btn-outline" onclick="document.getElementById('resp-${idx}').value='';updateCC(${idx})">Clear</button>
+          ${deleteBtn}
         </div>
       </div>
 
-    </div><!-- /body -->
+    </div>
   </div>`;
 }
 
-// Build a contextual placeholder based on what parent submitted
-function buildPlaceholder(s) {
-  const areas = (s.growthAreas || []).slice(0, 2).join(' and ') || 'the highlighted areas';
-  const skill = (s.homeSkills || [])[0] || s.homeSkillOther || 'the home activities you mentioned';
-  return `Dear ${s.parentName || 'Parent'},\\n\\nThank you for your thoughtful feedback. We have noted your focus on ${areas} and are glad to hear you are working on ${skill} at home — this partnership makes a real difference.\\n\\nWarm regards,\\nHeritage Montessori`;
-}
-
-// ═══════════════════════════════════════════════════════════
-//  CARD TOGGLE
-// ═══════════════════════════════════════════════════════════
-function toggleCard(idx) {
+window.toggleCard = function(idx) {
   const body = document.getElementById(`body-${idx}`);
   const chev = document.getElementById(`chev-${idx}`);
   const open = body.classList.toggle('open');
   chev.classList.toggle('open', open);
-}
+};
 
-// ═══════════════════════════════════════════════════════════
-//  RESPONSE ACTIONS
-// ═══════════════════════════════════════════════════════════
-function saveResponse(childName, idx) {
+window.updateCC = function(idx) {
+  const v = document.getElementById(`resp-${idx}`).value;
+  document.getElementById(`cc-${idx}`).textContent = `${v.length} characters`;
+};
+
+window.saveResponse = async function(key, idx) {
   const text = document.getElementById(`resp-${idx}`).value.trim();
   if (!text) { showToast('⚠ Please write a response before saving.'); return; }
+  const btn = document.getElementById(`saveBtn-${idx}`);
+  btn.innerHTML = '<span class="spinner"></span> Saving…';
+  btn.disabled  = true;
+  try {
+    await update(ref(db,`feedback/${key}`), {
+      schoolResponse: text,
+      schoolResponseDate: new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})
+    });
+    showToast('✓ Response saved — parent can see it now.');
+    document.getElementById(`saved-${idx}`).style.display = 'inline';
+  } catch(e) {
+    showToast('⚠ Error saving. Check connection.'); console.error(e);
+  } finally {
+    btn.innerHTML = '↻ Update Response';
+    btn.disabled  = false;
+  }
+};
 
-  const record = getRecord(childName) || {};
-  record.schoolResponse     = text;
-  record.schoolResponseDate = new Date().toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'});
-  setRecord(childName, record);
-
-  document.getElementById(`saved-${idx}`).style.display = 'inline';
-  showToast('✓ Response saved — parent will see it on their portal.');
-  setTimeout(() => loadAll(), 800);
-}
-
-function deleteResponse(childName, idx) {
+window.deleteResponse = async function(key, idx) {
   if (!confirm('Remove this response? The parent will no longer see it.')) return;
-  const record = getRecord(childName) || {};
-  delete record.schoolResponse;
-  delete record.schoolResponseDate;
-  delete record.responseGrade;
-  setRecord(childName, record);
+  await update(ref(db,`feedback/${key}`),{schoolResponse:null, schoolResponseDate:null, responseGrade:null});
   showToast('↺ Response removed.');
-  setTimeout(() => loadAll(), 500);
-}
+};
 
-function clearResponse(idx) {
-  document.getElementById(`resp-${idx}`).value = '';
-  updateCharCount(idx);
-}
-
-function updateCharCount(idx) {
-  const val = document.getElementById(`resp-${idx}`).value;
-  document.getElementById(`cc-${idx}`).textContent = `${val.length} characters`;
-}
-
-// ═══════════════════════════════════════════════════════════
-//  HELPERS
-// ═══════════════════════════════════════════════════════════
-function escHtml(str) {
-  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-function escAttr(str) {
-  return String(str || '').replace(/'/g,"\\'");
-}
-
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
+function esc(str) {
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 </script>
 </body>
