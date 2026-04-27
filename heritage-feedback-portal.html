@@ -420,22 +420,7 @@ body {
   background: var(--parchment);
 }
 
-/* ── DEMO PANEL (for testing) ── */
-.demo-panel {
-  background: #fff8e8;
-  border: 1.5px dashed var(--gold);
-  padding: 14px 18px;
-  margin-top: 20px;
-  font-size: 11.5px;
-  color: var(--muted);
-}
-.demo-panel strong { color: var(--forest); }
-.demo-panel button {
-  background: var(--gold); color: white;
-  border: none; padding: 5px 14px;
-  font-family: 'Jost', sans-serif; font-size: 11px; font-weight: 500;
-  cursor: pointer; margin: 4px 4px 0 0; border-radius: 2px;
-}
+
 </style>
 </head>
 <body>
@@ -715,14 +700,6 @@ body {
     Heritage Montessori &amp; School &nbsp;·&nbsp; Nurturing Young Minds since 2007 &nbsp;◆&nbsp; Parent Feedback Portal
   </div>
 
-  <!-- DEMO PANEL -->
-  <div class="demo-panel no-print">
-    <strong>🛠 Demo Controls</strong> (remove before going live on website)<br>
-    <button onclick="simulateSchoolResponse()">Simulate School Response</button>
-    <button onclick="clearAllStorage()">Reset All Data</button>
-    <button onclick="simulatePreviousMonth()">Simulate Past Submission</button>
-    <br><small style="color:#999;margin-top:4px;display:block;">These buttons simulate scenarios. In production, school responses would be entered via a staff portal.</small>
-  </div>
 
 </div><!-- /portal -->
 
@@ -770,7 +747,7 @@ function setMode(mode) {
   document.getElementById('sec1Label').textContent  = isPTM ? "Reflecting on Your Child's Progress" : "Your Child's Observations This Month";
   document.getElementById('sec2Label').textContent  = isPTM ? "Your Suggestions for the School" : "Suggestions & Ideas for the School";
   document.getElementById('q1text').textContent     = isPTM ? "What positive changes have you noticed in your child this term?" : "What behaviours or progress have you observed at home this month?";
-  document.getElementById('q3text').textContent     = isPTM ? "What kind of support at home would help your child thrive further?" : "What at-home support are you currently providing, and how is it going?";
+  document.getElementById('q3text').textContent     = isPTM ? "What skill or ability are you actively working on with your child at home?" : "What skill or ability have you been nurturing with your child this month?";
   document.getElementById('q4text').textContent     = isPTM ? "If you could introduce one new activity or programme, what would it be?" : "What addition or change would most benefit your child's experience?";
   document.getElementById('q_last').textContent     = isPTM ? "Any specific question or topic you'd like to raise with the school today?" : "Is there anything specific you'd like the school's attention or awareness on?";
   document.getElementById('sat1label').textContent  = isPTM ? "Satisfaction with the class teacher" : "Satisfaction with communication from school";
@@ -819,7 +796,7 @@ function showFormState(locked, record) {
   if (locked) {
     statusBar.className = 'status-bar locked';
     document.getElementById('statusLabel').textContent = '⛔ Submission Limit Reached';
-    document.getElementById('statusMsg').textContent   = ' — One feedback per child per month.';
+    document.getElementById('statusMsg').innerHTML = ` — One feedback per child per month. Resets on <span style="font-weight:600;color:var(--error);">${reset}</span>`;
     formBody.style.display  = 'none';
     lockedMsg.style.display = 'block';
     document.getElementById('lockedChildName').textContent  = document.getElementById('childName').value.trim();
@@ -829,10 +806,9 @@ function showFormState(locked, record) {
   } else {
     statusBar.className = 'status-bar ok';
     document.getElementById('statusLabel').textContent = '✓ Ready to Submit';
-    document.getElementById('statusMsg').textContent   = ' — Submission window is open for this month.';
+    document.getElementById('statusMsg').innerHTML = ` — Submission window open. Resets on <span style="font-weight:600;color:var(--forest);">${reset}</span>`;
     formBody.style.display  = 'block';
     lockedMsg.style.display = 'none';
-    // Show response section if there's a prior month's record with response
     if (record && record.schoolResponse) {
       resSection.style.display = 'block';
       renderResponse(record);
@@ -878,12 +854,39 @@ function submitFeedback() {
   const child = document.getElementById('childName').value.trim();
   if (!child) { alert('Please enter the child\'s name before submitting.'); return; }
 
+  // Collect growth area chips (max 2)
+  const growthAreas = [...document.querySelectorAll('#growthChips .chip.on')].map(c => c.textContent.trim());
+
+  // Collect home skill chips
+  const homeSkills = [...document.querySelectorAll('#homeSkillChips .chip.on')].map(c => c.textContent.trim());
+
+  // Collect all textarea values in order
+  const textareas = document.querySelectorAll('#formBody .lined-area, #formBody .w-area');
+
+  // Star ratings — read lit stars count
+  const ratingTeacher = document.querySelectorAll('#stars-ct .star.on').length || 0;
+  const ratingSchool  = document.querySelectorAll('#stars-sc .star.on').length || 0;
+
   const record = getRecord(child) || {};
-  record.submitted       = true;
-  record.monthKey        = getMonthKey();
-  record.submittedOn     = new Date().toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'});
-  record.mode            = currentMode;
-  record.schoolResponse  = record.schoolResponse || null;
+  record.submitted        = true;
+  record.monthKey         = getMonthKey();
+  record.submittedOn      = new Date().toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'});
+  record.mode             = currentMode;
+  record.grade            = document.getElementById('childGrade').value.trim();
+  record.parentName       = document.getElementById('parentName').value.trim();
+  record.classTeacher     = document.getElementById('classTeacher').value.trim();
+  record.subjectTeacher   = document.getElementById('subjectTeacher').value.trim();
+  record.growthAreas      = growthAreas;
+  record.homeSkills       = homeSkills;
+  record.homeSkillOther   = document.getElementById('homeSkillOther').value.trim();
+  record.positiveChanges  = textareas[0] ? textareas[0].value.trim() : '';
+  record.suggestion       = textareas[1] ? textareas[1].value.trim() : '';
+  record.schoolStrength   = textareas[2] ? textareas[2].value.trim() : '';
+  record.appreciation     = textareas[3] ? textareas[3].value.trim() : '';
+  record.questionRaised   = textareas[4] ? textareas[4].value.trim() : '';
+  record.ratingTeacher    = ratingTeacher;
+  record.ratingSchool     = ratingSchool;
+  record.schoolResponse   = record.schoolResponse || null;
   setRecord(child, record);
 
   showToast('✓ Feedback submitted successfully!');
@@ -980,38 +983,6 @@ function clearForm() {
   document.getElementById('responseSection').style.display = 'none';
 }
 
-// ═══════════════════════════════════════════════════════════
-//  DEMO CONTROLS
-// ═══════════════════════════════════════════════════════════
-function simulateSchoolResponse() {
-  const child = document.getElementById('childName').value.trim();
-  if (!child) { alert('Enter a child name first, then submit feedback, then simulate response.'); return; }
-  const record = getRecord(child);
-  if (!record) { alert('Please submit a feedback first for this child.'); return; }
-  record.schoolResponse     = 'Thank you for your thoughtful feedback. We have noted your observations and will be incorporating the growth areas you have highlighted into our planning for the coming term. Please feel free to arrange a one-on-one session with the class teacher for a more detailed discussion. We appreciate your continued partnership in your child\'s journey.';
-  record.schoolResponseDate = new Date().toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'});
-  setRecord(child, record);
-  checkSubmissionStatus();
-  showToast('📬 School response added!');
-}
-
-function clearAllStorage() {
-  if (!confirm('Clear ALL stored feedback data?')) return;
-  Object.keys(localStorage).filter(k => k.startsWith('heritage_fb_')).forEach(k => localStorage.removeItem(k));
-  clearForm();
-  showToast('↺ All data cleared.');
-}
-
-function simulatePreviousMonth() {
-  const child = document.getElementById('childName').value.trim();
-  if (!child) { alert('Enter a child name first.'); return; }
-  const now  = new Date();
-  const prev = `${now.getFullYear()}-${now.getMonth() - 1}`;
-  const record = { submitted: true, monthKey: getMonthKey(), submittedOn: 'Demo submission' };
-  setRecord(child, record);
-  checkSubmissionStatus();
-  showToast('🔒 Simulated: submission limit reached this month.');
-}
 
 // Init date field + reset date shown immediately on load
 document.getElementById('feedbackDate').value = new Date().toLocaleDateString('en-GB');
