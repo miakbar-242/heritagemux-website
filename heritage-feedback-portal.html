@@ -331,38 +331,38 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
         </div>
       </div>
 
-      <!-- NOTIFY SCHOOL PANEL -->
-      <div class="notify-panel" id="notifyPanel" style="display:none;">
-        <div class="notify-header">
-          <span class="notify-check">✓</span>
-          <div>
-            <div class="notify-title">Feedback Submitted Successfully!</div>
-            <div class="notify-sub">Please take one more step to notify the school directly so they can attend to your feedback promptly.</div>
-          </div>
-        </div>
-        <div class="notify-body">
-          <div class="notify-label">&#9670; Notify Heritage Montessori via</div>
-          <div class="notify-btns">
-            <a id="waBtn" href="#" target="_blank" class="notify-btn notify-wa">
-              <span class="nb-icon">&#128172;</span>
-              <span>
-                <span class="nb-title">WhatsApp</span>
-                <span class="nb-sub">Send a pre-filled message</span>
-              </span>
-            </a>
-            <a id="emailBtn" href="#" class="notify-btn notify-email">
-              <span class="nb-icon">&#9993;&#65039;</span>
-              <span>
-                <span class="nb-title">Email</span>
-                <span class="nb-sub">Send a pre-filled email</span>
-              </span>
-            </a>
-          </div>
-          <div class="notify-note">These buttons open WhatsApp / your email app with the message already written. Just tap Send.</div>
+    </div><!-- /formBody -->
+
+    <!-- NOTIFY SCHOOL PANEL — outside formBody so it stays visible after lock -->
+    <div class="notify-panel" id="notifyPanel" style="display:none;">
+      <div class="notify-header">
+        <span class="notify-check">✓</span>
+        <div>
+          <div class="notify-title">Feedback Submitted Successfully!</div>
+          <div class="notify-sub">Please take one more step to notify the school directly so they can attend to your feedback promptly.</div>
         </div>
       </div>
-
-    </div><!-- /formBody -->
+      <div class="notify-body">
+        <div class="notify-label">&#9670; Notify Heritage Montessori via</div>
+        <div class="notify-btns">
+          <a id="waBtn" href="#" target="_blank" class="notify-btn notify-wa">
+            <span class="nb-icon">&#128172;</span>
+            <span>
+              <span class="nb-title">WhatsApp</span>
+              <span class="nb-sub">Send a pre-filled message</span>
+            </span>
+          </a>
+          <a id="emailBtn" href="#" class="notify-btn notify-email">
+            <span class="nb-icon">&#9993;&#65039;</span>
+            <span>
+              <span class="nb-title">Email</span>
+              <span class="nb-sub">Send a pre-filled email</span>
+            </span>
+          </a>
+        </div>
+        <div class="notify-note">These buttons open WhatsApp / your email app with the message already written. Just tap Send.</div>
+      </div>
+    </div>
 
     <!-- SCHOOL RESPONSE SECTION -->
     <div class="school-response-section" id="responseSection" style="display:none;">
@@ -593,7 +593,7 @@ window.submitFeedback = async function() {
       `Hello Heritage Montessori,\n\nI have submitted a ${modeLabel} feedback for my child *${childName}* (${grade}) on ${date} via the Parent Feedback Portal.\n\nKindly review it at your earliest convenience.\n\nThank you,\n${parentName}`
     );
     // ← Replace 91XXXXXXXXXX with the school's WhatsApp number (with country code, no + or spaces)
-    const schoolWA    = '923361515260';
+    const schoolWA    = '91XXXXXXXXXX';
     const schoolEmail = 'info@heritagemux.com';
 
     const emailSubject = encodeURIComponent(`Parent Feedback Submitted — ${childName} (${grade})`);
