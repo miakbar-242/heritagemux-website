@@ -308,9 +308,6 @@ body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;color:var
                   <option>Class 3</option>
                   <option>Class 4</option>
                   <option>Class 5</option>
-                  <option>Grade 6</option>
-                  <option>Grade 7</option>
-                  <option>Grade 8</option>
                   <option>ALL CLASSES</option>
                 </select>
               </div>
@@ -401,8 +398,7 @@ body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;color:var
                   <option value="">— Select —</option>
                   <option>Mont 1</option><option>Mont 2</option><option>Mont 3</option>
                   <option>Class 1</option><option>Class 2</option><option>Class 3</option>
-                  <option>Class 4</option><option>Class 5</option><option>Grade 6</option>
-                  <option>Grade 7</option><option>Grade 8</option>
+                  <option>Class 4</option><option>Class 5</option>
                 </select>
               </div>
             </div>
@@ -411,6 +407,11 @@ body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;color:var
               <div class="f-group"><label class="f-label">Parent Email (for login)</label><input class="f-input" type="email" id="ap-email" placeholder="parent@email.com"></div>
             </div>
             <div class="f-hint" style="margin-bottom:14px;">⚠ Phone numbers are not stored or shared in this system. Email is used only for login — it is never shown to other parents or staff.</div>
+            <div id="ap-save-error" style="display:none;background:#fde8e8;border-left:3px solid var(--error);padding:11px 14px;margin-bottom:12px;font-size:12px;color:var(--error);line-height:1.6;">
+              <strong>Firebase rules need updating.</strong> Go to Firebase Console → Realtime Database → Rules and make sure the rules allow writing to <code>/parents</code>:<br>
+              <code style="font-size:11px;background:rgba(0,0,0,0.06);padding:2px 6px;display:inline-block;margin-top:4px;">{ "rules": { ".read": true, ".write": true } }</code><br>
+              Then click Publish and try again.
+            </div>
             <div class="btn-row">
               <button class="btn btn-primary" onclick="addParent()">Save Parent →</button>
               <button class="btn btn-outline" onclick="showPanel('parents')">Cancel</button>
@@ -522,14 +523,27 @@ window.addParent=async function(){
   const parent=document.getElementById('ap-parent').value.trim();
   const email=document.getElementById('ap-email').value.trim().toLowerCase();
   if(!child||!grade||!parent||!email){showToast('⚠ Please fill in all fields.');return;}
-  const emailKey=email.replace(/\./g,'_').replace(/@/g,'__at__');
-  await set(ref(db,`parents/${emailKey}`),{childName:child,grade,parentName:parent,email,addedOn:new Date().toLocaleDateString('en-GB')});
-  showToast('✓ Parent added to directory.');
-  document.getElementById('ap-child').value='';
-  document.getElementById('ap-grade').value='';
-  document.getElementById('ap-parent').value='';
-  document.getElementById('ap-email').value='';
-  showPanel('parents');
+  const btn=document.querySelector('#panel-addParent .btn-primary');
+  btn.innerHTML='<span class="spinner"></span> Saving…';btn.disabled=true;
+  try{
+    const emailKey=email.replace(/\./g,'_').replace(/@/g,'__at__');
+    await set(ref(db,`parents/${emailKey}`),{
+      childName:child,grade,parentName:parent,email,
+      addedOn:new Date().toLocaleDateString('en-GB')
+    });
+    showToast('✓ Parent added to directory.');
+    document.getElementById('ap-child').value='';
+    document.getElementById('ap-grade').value='';
+    document.getElementById('ap-parent').value='';
+    document.getElementById('ap-email').value='';
+    showPanel('parents');
+  }catch(e){
+    console.error('Firebase write error:',e);
+    showToast('⚠ Could not save. Check Firebase rules — see instructions below.');
+    document.getElementById('ap-save-error').style.display='block';
+  }finally{
+    btn.innerHTML='Save Parent →';btn.disabled=false;
+  }
 };
 
 function renderDirectory(){
