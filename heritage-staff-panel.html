@@ -182,7 +182,7 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, onValue, update, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getDatabase, ref, get, onValue, update, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAtB9d9zEr-ES-lRI_Pf9fWJmaJ8o8ghvQ",
@@ -451,7 +451,32 @@ window.saveResponse = async function(key, idx) {
       schoolResponseDate: new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})
     });
     showToast('✓ Response saved — parent can see it now.');
-    document.getElementById(`saved-${idx}`).style.display = 'inline';
+
+    // Re-fetch and re-render just this card so response shows immediately
+    const snap = await get(ref(db,`feedback/${key}`));
+    if (snap.exists()) {
+      const updated = { key, ...snap.val() };
+      // Update in allSubmissions array
+      const pos = allSubmissions.findIndex(s => s.key === key);
+      if (pos !== -1) allSubmissions[pos] = updated;
+      // Rebuild just this card
+      const cardEl = document.getElementById(`card-${idx}`);
+      if (cardEl) {
+        cardEl.outerHTML = buildCard(updated, idx);
+        // Re-open the card body
+        const newBody = document.getElementById(`body-${idx}`);
+        const newChev = document.getElementById(`chev-${idx}`);
+        if (newBody) newBody.classList.add('open');
+        if (newChev) newChev.classList.add('open');
+        // Show saved indicator
+        const savedEl = document.getElementById(`saved-${idx}`);
+        if (savedEl) savedEl.style.display = 'inline';
+      }
+    }
+
+    // Show WhatsApp nudge to notify parent
+    showWaNudge(key, idx);
+
   } catch(e) {
     showToast('⚠ Error saving. Check connection.'); console.error(e);
   } finally {
@@ -459,6 +484,42 @@ window.saveResponse = async function(key, idx) {
     btn.disabled  = false;
   }
 };
+
+// ── WhatsApp nudge after saving response ──
+function showWaNudge(key, idx) {
+  const s = allSubmissions.find(x => x.key === key);
+  if (!s) return;
+  // Remove any existing nudge
+  document.querySelectorAll('.wa-nudge').forEach(el => el.remove());
+  const parentName = s.parentName || 'Parent';
+  const childName  = s.childName  || 'your child';
+  const msg = encodeURIComponent(
+    `Dear ${parentName},\n\nThe school has posted a response to your recent feedback for ${childName} on the Heritage Montessori Parent Feedback Portal.\n\nPlease log in to view the response at:\nhttps://www.heritagemux.com/heritage-feedback-portal.html\n\nRegards,\nHeritage Montessori`
+  );
+  // ← Replace with school's WhatsApp number (country code + number, no + or spaces)
+  // We use wa.me/SCHOOLNUMBER to send FROM school phone TO parent
+  // Since we don't store parent phone (by design), this opens WA for staff to forward
+  const nudgeHtml = `
+    <div class="wa-nudge" id="nudge-${idx}" style="
+      background:#e8f5ec;border-left:4px solid #25d366;
+      padding:12px 16px;margin-top:10px;
+      display:flex;align-items:center;justify-content:space-between;
+      flex-wrap:wrap;gap:10px;font-size:12px;color:var(--forest);">
+      <span>📱 <strong>Notify parent via WhatsApp?</strong> Let them know their response is ready.</span>
+      <div style="display:flex;gap:8px;">
+        <a href="https://wa.me/?text=${msg}" target="_blank"
+          style="background:#25d366;color:white;padding:7px 14px;font-size:11px;font-weight:600;
+          text-decoration:none;letter-spacing:0.5px;border-radius:2px;">
+          💬 Open WhatsApp
+        </a>
+        <span onclick="document.getElementById('nudge-${idx}').remove()"
+          style="cursor:pointer;color:var(--muted);padding:7px 10px;border:1px solid var(--line);
+          font-size:11px;border-radius:2px;">✕</span>
+      </div>
+    </div>`;
+  const body = document.getElementById(`body-${idx}`);
+  if (body) body.insertAdjacentHTML('beforeend', nudgeHtml);
+}
 
 window.deleteResponse = async function(key, idx) {
   if (!confirm('Remove this response? The parent will no longer see it.')) return;

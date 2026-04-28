@@ -105,6 +105,7 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
 .spinner-row { display:none; align-items:center; gap:8px; font-size:12px; color:var(--muted); margin-top:10px; }
 .spinner { width:16px; height:16px; border:2px solid var(--line); border-top-color:var(--forest); border-radius:50%; animation:spin 0.7s linear infinite; }
 @keyframes spin { to { transform:rotate(360deg); } }
+@keyframes slideIn { from{opacity:0;transform:translateY(8px);} to{opacity:1;transform:translateY(0);} }
 .toast { position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(100px); background:var(--forest); color:white; padding:13px 28px; font-size:13px; font-weight:500; border-radius:2px; box-shadow:0 4px 24px rgba(0,0,0,0.25); transition:transform 0.4s ease; z-index:9999; white-space:nowrap; }
 .toast.show { transform:translateX(-50%) translateY(0); }
 .page-footer { text-align:center; padding:16px; font-size:9.5px; color:rgba(0,0,0,0.35); letter-spacing:1px; text-transform:uppercase; background:var(--parchment); }
@@ -172,7 +173,7 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
         </div>
         <div class="info-field">
           <label>Class / Grade</label>
-          <input class="f-input" type="text" id="childGrade" placeholder="e.g. Grade 3 – A">
+          <input class="f-input" type="text" id="childGrade" placeholder="e.g. Class 3 or Mont 2">
         </div>
         <div class="info-field">
           <label>Date</label>
@@ -514,11 +515,17 @@ function listenForResponse(key) {
 }
 
 // ── Render school response ──
+// Track if we already notified for this response
+let _notifiedResponse = false;
+
 function renderResponse(rec) {
   if (!rec) return;
   const awaiting = document.getElementById('awaitingResponse');
   const filled   = document.getElementById('responseFilled');
   if (rec.schoolResponse) {
+    const isNew = !_notifiedResponse;
+    _notifiedResponse = true;
+
     awaiting.style.display = 'none';
     filled.style.display   = 'block';
     document.getElementById('responseTextDisplay').textContent = rec.schoolResponse;
@@ -528,7 +535,39 @@ function renderResponse(rec) {
       document.getElementById('resGradeDesc').textContent      = ratingLabels[rec.responseGrade];
       document.getElementById('gradeSaved').style.display      = 'block';
     }
+
+    // Show response notification banner if this is newly appeared
+    const existing = document.getElementById('responseNotifyBanner');
+    if (isNew && !existing) {
+      const banner = document.createElement('div');
+      banner.id = 'responseNotifyBanner';
+      banner.style.cssText = `
+        background:#e8f5ec;border-left:4px solid var(--success);
+        padding:13px 18px;margin-bottom:14px;
+        display:flex;align-items:center;justify-content:space-between;
+        flex-wrap:wrap;gap:10px;animation:slideIn 0.4s ease;`;
+      banner.innerHTML = `
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-size:20px;">🔔</span>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--success);">
+              The school has posted a response to your feedback!
+            </div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px;">
+              Posted on ${rec.schoolResponseDate || 'recently'} — please read and rate the response below.
+            </div>
+          </div>
+        </div>
+        <span onclick="this.parentElement.remove()"
+          style="cursor:pointer;color:var(--muted);font-size:18px;padding:2px 6px;">✕</span>`;
+      const body = document.querySelector('.school-response-body');
+      if (body) body.insertBefore(banner, body.firstChild);
+      // Scroll to response
+      document.getElementById('responseSection').scrollIntoView({behavior:'smooth',block:'nearest'});
+    }
+
   } else {
+    _notifiedResponse = false;
     awaiting.style.display = 'block';
     filled.style.display   = 'none';
   }
@@ -593,7 +632,7 @@ window.submitFeedback = async function() {
       `Hello Heritage Montessori,\n\nI have submitted a ${modeLabel} feedback for my child *${childName}* (${grade}) on ${date} via the Parent Feedback Portal.\n\nKindly review it at your earliest convenience.\n\nThank you,\n${parentName}`
     );
     // ← Replace 91XXXXXXXXXX with the school's WhatsApp number (with country code, no + or spaces)
-    const schoolWA    = '923361515260';
+    const schoolWA    = '91XXXXXXXXXX';
     const schoolEmail = 'info@heritagemux.com';
 
     const emailSubject = encodeURIComponent(`Parent Feedback Submitted — ${childName} (${grade})`);
