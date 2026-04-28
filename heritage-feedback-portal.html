@@ -488,6 +488,7 @@ async function checkStatus() {
     document.getElementById('lockedMsg').style.display    = 'block';
     document.getElementById('lockedChildName').textContent = name;
     document.getElementById('lockedResetDate').textContent = fmtDate(reset);
+    // Always show response section when locked — school may respond any time
     document.getElementById('responseSection').style.display = 'block';
     renderResponse(rec);
     listenForResponse(key);
@@ -497,9 +498,11 @@ async function checkStatus() {
     document.getElementById('statusMsg').innerHTML        = ` — Submission window open. Resets on <strong style="color:var(--forest)">${fmtDate(reset)}</strong>`;
     document.getElementById('formBody').style.display     = 'block';
     document.getElementById('lockedMsg').style.display    = 'none';
-    if (rec && rec.schoolResponse) {
+    // Show response section if there is a previous submission with a response
+    if (rec) {
       document.getElementById('responseSection').style.display = 'block';
       renderResponse(rec);
+      listenForResponse(key);
     } else {
       document.getElementById('responseSection').style.display = 'none';
     }
@@ -510,7 +513,12 @@ async function checkStatus() {
 function listenForResponse(key) {
   if (responseUnsub) responseUnsub();
   responseUnsub = onValue(ref(db, `feedback/${key}`), snap => {
-    if (snap.exists()) renderResponse(snap.val());
+    if (snap.exists()) {
+      const rec = snap.val();
+      // Always make sure response section is visible when we have a record
+      document.getElementById('responseSection').style.display = 'block';
+      renderResponse(rec);
+    }
   });
 }
 
@@ -632,7 +640,7 @@ window.submitFeedback = async function() {
       `Hello Heritage Montessori,\n\nI have submitted a ${modeLabel} feedback for my child *${childName}* (${grade}) on ${date} via the Parent Feedback Portal.\n\nKindly review it at your earliest convenience.\n\nThank you,\n${parentName}`
     );
     // ← Replace 91XXXXXXXXXX with the school's WhatsApp number (with country code, no + or spaces)
-    const schoolWA    = '923361515260';
+    const schoolWA    = '91XXXXXXXXXX';
     const schoolEmail = 'info@heritagemux.com';
 
     const emailSubject = encodeURIComponent(`Parent Feedback Submitted — ${childName} (${grade})`);
