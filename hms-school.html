@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HMS · School Messaging Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --forest:#2d4a2d;--forest-lt:#3d6b3d;--gold:#b8962e;--gold-lt:#d4b254;
+  --cream:#faf7f2;--parchment:#f2ece0;--tan:#e8dfc8;--line:#d9cebc;
+  --ink:#1e1e1e;--muted:#6e6456;--sage:#5a7a5a;--error:#c0392b;--success:#2d7a4a;
+  --sky:#e8f0f8;--blue:#2d5070;
+}
+body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;color:var(--ink);}
+
+/* ── LAYOUT ── */
+.app{display:grid;grid-template-columns:280px 1fr;min-height:100vh;max-width:1100px;margin:0 auto;box-shadow:0 0 60px rgba(0,0,0,0.2);}
+
+/* ── SIDEBAR ── */
+.sidebar{background:var(--forest);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;}
+.sidebar-head{padding:24px 20px 18px;border-bottom:1px solid rgba(255,255,255,0.1);}
+.sidebar-logo{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;color:white;line-height:1.2;}
+.sidebar-sub{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-top:4px;}
+.sidebar-badge{background:var(--gold);color:var(--forest);font-size:8.5px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:3px 8px;border-radius:2px;display:inline-block;margin-top:8px;}
+.sidebar-nav{flex:1;overflow-y:auto;padding:16px 0;}
+.nav-section-title{font-size:8px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.35);padding:12px 20px 6px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 20px;cursor:pointer;transition:background 0.15s;color:rgba(255,255,255,0.7);font-size:12.5px;font-weight:400;border-left:3px solid transparent;}
+.nav-item:hover{background:rgba(255,255,255,0.07);color:white;}
+.nav-item.active{background:rgba(255,255,255,0.12);color:white;border-left-color:var(--gold);}
+.nav-item .ni{font-size:15px;width:20px;text-align:center;}
+.nav-badge{background:var(--error);color:white;font-size:9px;font-weight:600;padding:1px 6px;border-radius:10px;margin-left:auto;}
+.sidebar-footer{padding:16px 20px;border-top:1px solid rgba(255,255,255,0.1);}
+.logout-btn{width:100%;padding:9px;background:transparent;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.6);font-family:'Jost',sans-serif;font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;border-radius:2px;}
+.logout-btn:hover{background:rgba(255,255,255,0.08);color:white;}
+
+/* ── MAIN ── */
+.main{background:var(--cream);display:flex;flex-direction:column;overflow:hidden;}
+.topbar{background:white;padding:16px 28px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.topbar-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--forest);}
+.topbar-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.live-dot{display:inline-block;width:7px;height:7px;background:#2ecc71;border-radius:50%;margin-right:5px;animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+.content{flex:1;overflow-y:auto;padding:24px 28px;}
+
+/* ── PANELS ── */
+.panel{display:none;}
+.panel.active{display:block;}
+
+/* ── CARDS ── */
+.card{background:white;border:1px solid var(--line);margin-bottom:16px;overflow:hidden;}
+.card-header{background:var(--parchment);padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.card-title{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;color:var(--forest);}
+.card-body{padding:18px;}
+
+/* ── FORMS ── */
+.form-row{display:grid;gap:14px;margin-bottom:14px;}
+.form-row.cols-2{grid-template-columns:1fr 1fr;}
+.form-row.cols-3{grid-template-columns:1fr 1fr 1fr;}
+.f-group{display:flex;flex-direction:column;gap:4px;}
+.f-label{font-size:8.5px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--sage);}
+.f-input,.f-select,.f-textarea{border:1.5px solid var(--line);background:var(--parchment);font-family:'Jost',sans-serif;font-size:13px;color:var(--ink);padding:9px 12px;outline:none;width:100%;transition:border-color 0.15s;}
+.f-input:focus,.f-select:focus,.f-textarea:focus{border-color:var(--gold);}
+.f-input::placeholder,.f-textarea::placeholder{color:#c0b8ab;font-size:12px;}
+.f-textarea{min-height:110px;resize:vertical;line-height:1.65;}
+.f-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236e6456'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
+.f-hint{font-size:10.5px;color:var(--muted);font-style:italic;margin-top:4px;}
+
+/* ── RECIPIENT CHIPS ── */
+.recipient-search-results{border:1.5px solid var(--line);border-top:none;background:white;max-height:180px;overflow-y:auto;display:none;}
+.r-result-item{padding:9px 12px;cursor:pointer;font-size:12.5px;color:var(--ink);display:flex;align-items:center;gap:8px;transition:background 0.12s;}
+.r-result-item:hover{background:var(--parchment);}
+.r-avatar{width:28px;height:28px;border-radius:50%;background:var(--forest);color:white;font-size:11px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.r-name{font-weight:500;}
+.r-meta{font-size:10.5px;color:var(--muted);}
+.selected-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.chip-recipient{display:inline-flex;align-items:center;gap:6px;background:var(--forest);color:white;font-size:11px;padding:4px 10px;border-radius:2px;}
+.chip-recipient .remove-chip{cursor:pointer;opacity:0.7;font-size:13px;line-height:1;}
+.chip-recipient .remove-chip:hover{opacity:1;}
+
+/* ── PRIORITY TAGS ── */
+.priority-row{display:flex;gap:8px;flex-wrap:wrap;}
+.priority-tag{padding:6px 14px;border:1.5px solid var(--line);font-size:11px;color:var(--muted);cursor:pointer;border-radius:2px;transition:all 0.15s;user-select:none;}
+.priority-tag:hover{border-color:var(--gold);}
+.priority-tag.on.normal{background:#e8f0e8;border-color:var(--sage);color:var(--sage);}
+.priority-tag.on.important{background:#fdf3e3;border-color:#b8962e;color:#8a6020;}
+.priority-tag.on.urgent{background:#fde8e8;border-color:var(--error);color:var(--error);}
+
+/* ── BUTTONS ── */
+.btn{padding:10px 24px;font-family:'Jost',sans-serif;font-size:11.5px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border:none;transition:all 0.2s;border-radius:2px;}
+.btn-primary{background:var(--forest);color:white;}
+.btn-primary:hover{background:var(--gold);}
+.btn-primary:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-outline{background:transparent;color:var(--muted);border:1.5px solid var(--line);}
+.btn-outline:hover{border-color:var(--muted);color:var(--ink);}
+.btn-gold{background:var(--gold);color:white;}
+.btn-gold:hover{background:var(--forest);}
+.btn-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:16px;}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;margin-right:6px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ── MESSAGE INBOX (sent) ── */
+.msg-list{display:flex;flex-direction:column;gap:10px;}
+.msg-item{background:white;border:1px solid var(--line);padding:14px 16px;cursor:pointer;transition:box-shadow 0.15s;position:relative;}
+.msg-item:hover{box-shadow:0 2px 12px rgba(0,0,0,0.08);}
+.msg-item-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:6px;}
+.msg-to{font-size:11px;font-weight:600;color:var(--forest);letter-spacing:0.3px;}
+.msg-date{font-size:10px;color:var(--muted);}
+.msg-subject{font-size:13px;font-weight:500;color:var(--ink);margin-bottom:4px;}
+.msg-preview{font-size:11.5px;color:var(--muted);line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.msg-badges{display:flex;gap:5px;align-items:center;flex-wrap:wrap;}
+.badge{font-size:8.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:2px 7px;border-radius:2px;}
+.b-broadcast{background:#e8f0e8;color:var(--sage);}
+.b-individual{background:var(--sky);color:var(--blue);}
+.b-urgent{background:#fde8e8;color:var(--error);}
+.b-important{background:#fdf3e3;color:#8a6020;}
+.b-normal{background:#f0f0f0;color:var(--muted);}
+.b-replied{background:#f0e8f5;color:#6a2d8a;}
+.b-unread{background:var(--forest);color:white;}
+.reply-indicator{font-size:10.5px;color:#6a2d8a;font-weight:500;margin-top:6px;}
+
+/* ── MESSAGE DETAIL ── */
+.msg-detail{background:white;border:1px solid var(--line);}
+.msg-detail-header{background:var(--parchment);padding:16px 20px;border-bottom:1px solid var(--line);}
+.msg-detail-subject{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:600;color:var(--forest);margin-bottom:6px;}
+.msg-detail-meta{font-size:11px;color:var(--muted);display:flex;flex-wrap:wrap;gap:12px;}
+.msg-thread{padding:20px;}
+.bubble-wrap{margin-bottom:16px;}
+.bubble-label{font-size:9px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
+.bubble{padding:12px 15px;font-size:13px;line-height:1.65;color:var(--ink);max-width:85%;white-space:pre-wrap;}
+.bubble.school{background:var(--parchment);border-left:3px solid var(--forest);margin-right:auto;}
+.bubble.parent{background:var(--sky);border-left:3px solid var(--blue);margin-left:auto;}
+.bubble-time{font-size:9.5px;color:var(--muted);margin-top:4px;}
+
+/* ── STATS ── */
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px;}
+.stat-card{background:white;border:1px solid var(--line);padding:16px 18px;}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:700;color:var(--forest);line-height:1;}
+.stat-label{font-size:10.5px;color:var(--muted);margin-top:4px;letter-spacing:0.5px;}
+.stat-card.highlight{background:var(--forest);border-color:var(--forest);}
+.stat-card.highlight .stat-num{color:var(--gold);}
+.stat-card.highlight .stat-label{color:rgba(255,255,255,0.6);}
+
+/* ── EMPTY ── */
+.empty{text-align:center;padding:48px 20px;color:var(--muted);}
+.empty .ei{font-size:36px;opacity:0.3;margin-bottom:12px;}
+.empty p{font-size:13px;line-height:1.6;}
+
+/* ── LOGIN ── */
+.login-screen{position:fixed;inset:0;background:#cfc9bc;display:flex;align-items:center;justify-content:center;z-index:9999;}
+.login-card{background:var(--cream);padding:52px;width:100%;max-width:440px;box-shadow:0 12px 60px rgba(0,0,0,0.2);}
+.login-card h1{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--forest);margin-bottom:6px;}
+.login-card p{font-size:12.5px;color:var(--muted);margin-bottom:28px;line-height:1.6;}
+.pin-wrap{display:flex;gap:10px;margin-bottom:16px;}
+.pin-input{flex:1;border:1.5px solid var(--line);background:var(--parchment);font-family:'Jost',sans-serif;font-size:22px;font-weight:500;letter-spacing:8px;text-align:center;padding:12px;outline:none;color:var(--forest);}
+.pin-input:focus{border-color:var(--gold);}
+.login-error{color:var(--error);font-size:11.5px;margin-top:8px;display:none;}
+.pin-hint{font-size:10.5px;color:var(--muted);margin-top:12px;font-style:italic;}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--forest);color:white;padding:13px 28px;font-size:13px;font-weight:500;border-radius:2px;box-shadow:0 4px 24px rgba(0,0,0,0.25);transition:transform 0.4s ease;z-index:9999;white-space:nowrap;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:700px){
+  .app{grid-template-columns:1fr;}
+  .sidebar{position:relative;height:auto;}
+  .sidebar-nav{display:flex;overflow-x:auto;padding:8px 0;}
+  .nav-section-title{display:none;}
+  .nav-item{flex-direction:column;gap:4px;padding:8px 14px;font-size:10px;white-space:nowrap;border-left:none;border-bottom:3px solid transparent;}
+  .nav-item.active{border-bottom-color:var(--gold);border-left:none;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .form-row.cols-2,.form-row.cols-3{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <div style="font-size:36px;margin-bottom:16px;opacity:0.35;">🏫</div>
+    <h1>Staff Messaging Portal</h1>
+    <p>Heritage Montessori &amp; School — Staff access only.<br>Enter your staff PIN to continue.</p>
+    <div class="pin-wrap">
+      <input class="pin-input" type="password" id="pinInput" maxlength="6" placeholder="· · · · · ·" onkeydown="if(event.key==='Enter')checkPin()">
+      <button class="btn btn-primary" onclick="checkPin()">Enter →</button>
+    </div>
+    <div class="login-error" id="loginError">⚠ Incorrect PIN. Please try again.</div>
+    <div class="pin-hint">Contact the school administrator if you have forgotten your PIN.</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="appShell" style="display:none;">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-head">
+      <div class="sidebar-logo">Heritage Montessori<br>&amp; School</div>
+      <div class="sidebar-sub">Messaging Portal</div>
+      <div class="sidebar-badge">Staff Panel</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-title">Messaging</div>
+      <div class="nav-item active" onclick="showPanel('compose')" id="nav-compose">
+        <span class="ni">✏️</span> Compose Message
+      </div>
+      <div class="nav-item" onclick="showPanel('sent')" id="nav-sent">
+        <span class="ni">📤</span> Sent Messages
+      </div>
+      <div class="nav-item" onclick="showPanel('replies')" id="nav-replies">
+        <span class="ni">💬</span> Parent Replies
+        <span class="nav-badge" id="replyBadge" style="display:none;">0</span>
+      </div>
+      <div class="nav-section-title">Broadcast</div>
+      <div class="nav-item" onclick="showPanel('broadcast')" id="nav-broadcast">
+        <span class="ni">📢</span> Class Broadcast
+      </div>
+      <div class="nav-section-title">Records</div>
+      <div class="nav-item" onclick="showPanel('parents')" id="nav-parents">
+        <span class="ni">👨‍👩‍👧</span> Parent Directory
+      </div>
+      <div class="nav-item" onclick="showPanel('dashboard')" id="nav-dashboard">
+        <span class="ni">📊</span> Dashboard
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="logout-btn" onclick="logout()">Log Out</button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <div class="topbar-title" id="topbarTitle">Compose Message</div>
+        <div class="topbar-sub"><span class="live-dot"></span>Live · Heritage Montessori Staff Portal</div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ── COMPOSE ── -->
+      <div class="panel active" id="panel-compose">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">✏️ New Individual Message</div>
+            <div style="font-size:11px;color:var(--muted);">Message will be sent privately to the parent only</div>
+          </div>
+          <div class="card-body">
+            <div class="form-row">
+              <div class="f-group">
+                <label class="f-label">Search Parent / Child</label>
+                <input class="f-input" type="text" id="recipientSearch" placeholder="Type child's name, class, or parent name…" oninput="searchParents()" autocomplete="off">
+                <div class="recipient-search-results" id="searchResults"></div>
+                <div class="selected-chips" id="selectedChips"></div>
+              </div>
+            </div>
+            <div class="form-row cols-2">
+              <div class="f-group">
+                <label class="f-label">Subject</label>
+                <input class="f-input" type="text" id="msgSubject" placeholder="e.g. Progress Update — Term 2">
+              </div>
+              <div class="f-group">
+                <label class="f-label">Priority</label>
+                <div class="priority-row">
+                  <span class="priority-tag on normal" onclick="setPriority('normal',this)">Normal</span>
+                  <span class="priority-tag important" onclick="setPriority('important',this)">Important</span>
+                  <span class="priority-tag urgent" onclick="setPriority('urgent',this)">Urgent</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="f-group">
+                <label class="f-label">Message</label>
+                <textarea class="f-textarea" id="msgBody" placeholder="Write your message here. Be clear and constructive. Phone numbers and personal contact details will not be shared."></textarea>
+                <div class="f-hint">💡 Do not include phone numbers or personal contact details — these will be visible to the parent.</div>
+              </div>
+            </div>
+            <div class="btn-row">
+              <button class="btn btn-primary" id="sendBtn" onclick="sendIndividual()">Send Message →</button>
+              <button class="btn btn-outline" onclick="clearCompose()">↺ Clear</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── BROADCAST ── -->
+      <div class="panel" id="panel-broadcast">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">📢 Class Broadcast</div>
+            <div style="font-size:11px;color:var(--muted);">Sends privately to each parent in the class — parents cannot see each other</div>
+          </div>
+          <div class="card-body">
+            <div class="form-row cols-2">
+              <div class="f-group">
+                <label class="f-label">Select Class / Grade</label>
+                <select class="f-select" id="broadcastClass">
+                  <option value="">— Select class —</option>
+                  <option>Nursery</option>
+                  <option>LKG</option>
+                  <option>UKG</option>
+                  <option>Grade 1</option>
+                  <option>Grade 2</option>
+                  <option>Grade 3</option>
+                  <option>Grade 4</option>
+                  <option>Grade 5</option>
+                  <option>Grade 6</option>
+                  <option>Grade 7</option>
+                  <option>Grade 8</option>
+                  <option>ALL CLASSES</option>
+                </select>
+              </div>
+              <div class="f-group">
+                <label class="f-label">Priority</label>
+                <div class="priority-row">
+                  <span class="priority-tag on normal" onclick="setBroadcastPriority('normal',this)">Normal</span>
+                  <span class="priority-tag important" onclick="setBroadcastPriority('important',this)">Important</span>
+                  <span class="priority-tag urgent" onclick="setBroadcastPriority('urgent',this)">Urgent</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="f-group">
+                <label class="f-label">Subject</label>
+                <input class="f-input" type="text" id="bSubject" placeholder="e.g. Annual Day Rehearsal Schedule">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="f-group">
+                <label class="f-label">Message</label>
+                <textarea class="f-textarea" id="bBody" placeholder="Write your broadcast message here. Each parent will receive this privately in their inbox."></textarea>
+                <div class="f-hint">💡 This message will be delivered individually to each parent in the selected class. No parent can see other parents.</div>
+              </div>
+            </div>
+            <div id="broadcastPreview" style="display:none;background:var(--parchment);border-left:3px solid var(--gold);padding:12px 14px;margin-bottom:12px;font-size:12px;color:var(--muted);"></div>
+            <div class="btn-row">
+              <button class="btn btn-gold" onclick="previewBroadcast()">Preview →</button>
+              <button class="btn btn-primary" id="bSendBtn" onclick="sendBroadcast()" style="display:none;">Send to All →</button>
+              <button class="btn btn-outline" onclick="clearBroadcast()">↺ Clear</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SENT ── -->
+      <div class="panel" id="panel-sent">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">📤 Sent Messages</div>
+          </div>
+          <div class="card-body" style="padding:0;">
+            <div id="sentList"><div class="empty"><div class="ei">📭</div><p>Loading…</p></div></div>
+          </div>
+        </div>
+        <div id="msgDetailWrap" style="display:none;margin-top:16px;"></div>
+      </div>
+
+      <!-- ── REPLIES ── -->
+      <div class="panel" id="panel-replies">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">💬 Parent Replies</div>
+          </div>
+          <div class="card-body" style="padding:0;">
+            <div id="repliesList"><div class="empty"><div class="ei">💬</div><p>Loading…</p></div></div>
+          </div>
+        </div>
+        <div id="replyDetailWrap" style="display:none;margin-top:16px;"></div>
+      </div>
+
+      <!-- ── PARENTS DIRECTORY ── -->
+      <div class="panel" id="panel-parents">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">👨‍👩‍👧 Parent Directory</div>
+            <button class="btn btn-primary" onclick="showPanel('addParent')" style="padding:7px 16px;font-size:10.5px;">+ Add Parent</button>
+          </div>
+          <div class="card-body" style="padding-bottom:8px;">
+            <input class="f-input" type="text" id="dirSearch" placeholder="Search by child name, class or parent name…" oninput="renderDirectory()" style="margin-bottom:14px;">
+            <div id="directoryList"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── ADD PARENT ── -->
+      <div class="panel" id="panel-addParent">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">+ Add Parent to Directory</div>
+            <button class="btn btn-outline" onclick="showPanel('parents')" style="padding:7px 16px;font-size:10.5px;">← Back</button>
+          </div>
+          <div class="card-body">
+            <div class="form-row cols-2">
+              <div class="f-group"><label class="f-label">Child's Full Name</label><input class="f-input" type="text" id="ap-child" placeholder="As per school records"></div>
+              <div class="f-group"><label class="f-label">Class / Grade</label>
+                <select class="f-select" id="ap-grade">
+                  <option value="">— Select —</option>
+                  <option>Nursery</option><option>LKG</option><option>UKG</option>
+                  <option>Grade 1</option><option>Grade 2</option><option>Grade 3</option>
+                  <option>Grade 4</option><option>Grade 5</option><option>Grade 6</option>
+                  <option>Grade 7</option><option>Grade 8</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row cols-2">
+              <div class="f-group"><label class="f-label">Parent / Guardian Name</label><input class="f-input" type="text" id="ap-parent" placeholder="Full name"></div>
+              <div class="f-group"><label class="f-label">Parent Email (for login)</label><input class="f-input" type="email" id="ap-email" placeholder="parent@email.com"></div>
+            </div>
+            <div class="f-hint" style="margin-bottom:14px;">⚠ Phone numbers are not stored or shared in this system. Email is used only for login — it is never shown to other parents or staff.</div>
+            <div class="btn-row">
+              <button class="btn btn-primary" onclick="addParent()">Save Parent →</button>
+              <button class="btn btn-outline" onclick="showPanel('parents')">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── DASHBOARD ── -->
+      <div class="panel" id="panel-dashboard">
+        <div class="stats-grid">
+          <div class="stat-card highlight"><div class="stat-num" id="stat-total">0</div><div class="stat-label">Total Messages Sent</div></div>
+          <div class="stat-card"><div class="stat-num" id="stat-replies">0</div><div class="stat-label">Parent Replies</div></div>
+          <div class="stat-card"><div class="stat-num" id="stat-parents">0</div><div class="stat-label">Parents Registered</div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Recent Activity</div></div>
+          <div class="card-body" style="padding:0;"><div id="dashActivity"></div></div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, push, set, get, update, onValue, serverTimestamp, query, orderByChild } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey:"AIzaSyAtB9d9zEr-ES-lRI_Pf9fWJmaJ8o8ghvQ",
+  authDomain:"my-hms42.firebaseapp.com",
+  databaseURL:"https://my-hms42-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:"my-hms42",
+  storageBucket:"my-hms42.firebasestorage.app",
+  messagingSenderId:"468345935508",
+  appId:"1:468345935508:web:db42663bb9484619518681"
+};
+const app = initializeApp(firebaseConfig);
+const db  = getDatabase(app);
+
+const STAFF_PIN = '2007'; // ← Change this PIN
+
+// ── Helpers ──
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function fmtTime(ts){if(!ts)return'—';const d=new Date(ts);return d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})+' · '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});}
+function initials(name){return(name||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);}
+
+// ── Auth ──
+window.checkPin=function(){
+  if(document.getElementById('pinInput').value.trim()===STAFF_PIN){
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('appShell').style.display='grid';
+    initApp();
+  }else{
+    const e=document.getElementById('loginError');e.style.display='block';
+    document.getElementById('pinInput').value='';
+    setTimeout(()=>e.style.display='none',3000);
+  }
+};
+window.logout=function(){
+  document.getElementById('appShell').style.display='none';
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('pinInput').value='';
+};
+
+// ── Nav ──
+const panelTitles={compose:'Compose Message',broadcast:'Class Broadcast',sent:'Sent Messages',replies:'Parent Replies',parents:'Parent Directory',addParent:'Add Parent',dashboard:'Dashboard'};
+window.showPanel=function(id){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById(`panel-${id}`)?.classList.add('active');
+  document.getElementById(`nav-${id}`)?.classList.add('active');
+  document.getElementById('topbarTitle').textContent=panelTitles[id]||'';
+  if(id==='sent')loadSent();
+  if(id==='replies')loadReplies();
+  if(id==='parents')renderDirectory();
+  if(id==='dashboard')loadDashboard();
+};
+
+// ── State ──
+let allParents=[];
+let selectedRecipients=[];
+let currentPriority='normal';
+let currentBroadcastPriority='normal';
+
+// ── Init ──
+function initApp(){
+  loadParents();
+  listenReplies();
+}
+
+// ── Parents ──
+function loadParents(){
+  onValue(ref(db,'parents'),snap=>{
+    allParents=[];
+    if(snap.exists())snap.forEach(c=>{allParents.push({id:c.key,...c.val()});});
+    renderDirectory();
+    updateStats();
+  });
+}
+
+window.addParent=async function(){
+  const child=document.getElementById('ap-child').value.trim();
+  const grade=document.getElementById('ap-grade').value;
+  const parent=document.getElementById('ap-parent').value.trim();
+  const email=document.getElementById('ap-email').value.trim().toLowerCase();
+  if(!child||!grade||!parent||!email){showToast('⚠ Please fill in all fields.');return;}
+  const emailKey=email.replace(/\./g,'_').replace(/@/g,'__at__');
+  await set(ref(db,`parents/${emailKey}`),{childName:child,grade,parentName:parent,email,addedOn:new Date().toLocaleDateString('en-GB')});
+  showToast('✓ Parent added to directory.');
+  document.getElementById('ap-child').value='';
+  document.getElementById('ap-grade').value='';
+  document.getElementById('ap-parent').value='';
+  document.getElementById('ap-email').value='';
+  showPanel('parents');
+};
+
+function renderDirectory(){
+  const q=(document.getElementById('dirSearch')?.value||'').toLowerCase();
+  const filtered=allParents.filter(p=>
+    !q||(p.childName||'').toLowerCase().includes(q)||
+    (p.parentName||'').toLowerCase().includes(q)||
+    (p.grade||'').toLowerCase().includes(q)
+  );
+  const el=document.getElementById('directoryList');
+  if(!el)return;
+  if(!filtered.length){el.innerHTML='<div class="empty"><div class="ei">👨‍👩‍👧</div><p>No parents found. Add parents using the button above.</p></div>';return;}
+  el.innerHTML=filtered.map(p=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 4px;border-bottom:1px solid var(--line);flex-wrap:wrap;gap:8px;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div class="r-avatar">${initials(p.parentName)}</div>
+        <div>
+          <div style="font-size:13px;font-weight:500;">${esc(p.childName)}</div>
+          <div style="font-size:11px;color:var(--muted);">${esc(p.grade)} &nbsp;·&nbsp; Parent: ${esc(p.parentName)}</div>
+        </div>
+      </div>
+      <button class="btn btn-outline" style="padding:5px 12px;font-size:10px;" onclick="quickMessage('${p.id}')">Message</button>
+    </div>`).join('');
+  document.getElementById('stat-parents').textContent=allParents.length;
+}
+
+window.quickMessage=function(id){
+  const p=allParents.find(x=>x.id===id);
+  if(!p)return;
+  showPanel('compose');
+  selectedRecipients=[p];
+  renderChips();
+};
+
+// ── Recipient Search ──
+window.searchParents=function(){
+  const q=document.getElementById('recipientSearch').value.toLowerCase();
+  const box=document.getElementById('searchResults');
+  if(!q){box.style.display='none';return;}
+  const results=allParents.filter(p=>
+    (p.childName||'').toLowerCase().includes(q)||
+    (p.parentName||'').toLowerCase().includes(q)||
+    (p.grade||'').toLowerCase().includes(q)
+  ).slice(0,6);
+  if(!results.length){box.style.display='none';return;}
+  box.innerHTML=results.map(p=>`
+    <div class="r-result-item" onclick="selectRecipient('${p.id}')">
+      <div class="r-avatar">${initials(p.parentName)}</div>
+      <div><div class="r-name">${esc(p.childName)}</div><div class="r-meta">${esc(p.grade)} · Parent: ${esc(p.parentName)}</div></div>
+    </div>`).join('');
+  box.style.display='block';
+};
+
+window.selectRecipient=function(id){
+  const p=allParents.find(x=>x.id===id);
+  if(!p||selectedRecipients.find(x=>x.id===id))return;
+  selectedRecipients.push(p);
+  renderChips();
+  document.getElementById('recipientSearch').value='';
+  document.getElementById('searchResults').style.display='none';
+};
+
+function renderChips(){
+  document.getElementById('selectedChips').innerHTML=selectedRecipients.map(p=>`
+    <span class="chip-recipient">
+      ${esc(p.childName)} (${esc(p.grade)})
+      <span class="remove-chip" onclick="removeRecipient('${p.id}')">×</span>
+    </span>`).join('');
+}
+
+window.removeRecipient=function(id){
+  selectedRecipients=selectedRecipients.filter(p=>p.id!==id);
+  renderChips();
+};
+
+// ── Priority ──
+window.setPriority=function(p,el){
+  currentPriority=p;
+  document.querySelectorAll('#panel-compose .priority-tag').forEach(t=>{t.classList.remove('on');});
+  el.classList.add('on');
+};
+window.setBroadcastPriority=function(p,el){
+  currentBroadcastPriority=p;
+  document.querySelectorAll('#panel-broadcast .priority-tag').forEach(t=>{t.classList.remove('on');});
+  el.classList.add('on');
+};
+
+// ── Send Individual ──
+window.sendIndividual=async function(){
+  if(!selectedRecipients.length){showToast('⚠ Please select at least one parent.');return;}
+  const subject=document.getElementById('msgSubject').value.trim();
+  const body=document.getElementById('msgBody').value.trim();
+  if(!subject||!body){showToast('⚠ Please fill in subject and message.');return;}
+  const btn=document.getElementById('sendBtn');
+  btn.innerHTML='<span class="spinner"></span> Sending…';btn.disabled=true;
+  try{
+    for(const p of selectedRecipients){
+      const msgRef=push(ref(db,'messages'));
+      await set(msgRef,{
+        type:'individual',toId:p.id,toName:p.parentName,toChild:p.childName,toGrade:p.grade,
+        toEmail:p.email,subject,body,priority:currentPriority,
+        sentAt:Date.now(),sentAtFmt:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}),
+        replies:[],hasReply:false
+      });
+    }
+    showToast(`✓ Message sent to ${selectedRecipients.length} parent${selectedRecipients.length>1?'s':''}.`);
+    clearCompose();
+  }catch(e){showToast('⚠ Error sending. Check connection.');console.error(e);}
+  finally{btn.innerHTML='Send Message →';btn.disabled=false;}
+};
+
+// ── Send Broadcast ──
+window.previewBroadcast=function(){
+  const cls=document.getElementById('broadcastClass').value;
+  const subj=document.getElementById('bSubject').value.trim();
+  const body=document.getElementById('bBody').value.trim();
+  if(!cls||!subj||!body){showToast('⚠ Please fill in all fields.');return;}
+  const targets=cls==='ALL CLASSES'?allParents:allParents.filter(p=>p.grade===cls);
+  const prev=document.getElementById('broadcastPreview');
+  prev.style.display='block';
+  prev.innerHTML=`<strong>Ready to send to ${targets.length} parent${targets.length!==1?'s':''}</strong> in <em>${cls}</em>.<br>Subject: <em>${esc(subj)}</em><br><br>Each parent will receive this as a private message in their inbox.`;
+  document.getElementById('bSendBtn').style.display='inline-block';
+};
+
+window.sendBroadcast=async function(){
+  const cls=document.getElementById('broadcastClass').value;
+  const subject=document.getElementById('bSubject').value.trim();
+  const body=document.getElementById('bBody').value.trim();
+  const targets=cls==='ALL CLASSES'?allParents:allParents.filter(p=>p.grade===cls);
+  if(!targets.length){showToast('⚠ No parents found in this class. Add parents to the directory first.');return;}
+  const btn=document.getElementById('bSendBtn');
+  btn.innerHTML='<span class="spinner"></span> Sending…';btn.disabled=true;
+  try{
+    for(const p of targets){
+      const msgRef=push(ref(db,'messages'));
+      await set(msgRef,{
+        type:'broadcast',toId:p.id,toName:p.parentName,toChild:p.childName,toGrade:p.grade,
+        toEmail:p.email,subject,body,priority:currentBroadcastPriority,broadcastClass:cls,
+        sentAt:Date.now(),sentAtFmt:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}),
+        replies:[],hasReply:false
+      });
+    }
+    showToast(`✓ Broadcast sent to ${targets.length} parents in ${cls}.`);
+    clearBroadcast();
+  }catch(e){showToast('⚠ Error. Check connection.');console.error(e);}
+  finally{btn.innerHTML='Send to All →';btn.disabled=false;}
+};
+
+// ── Load Sent ──
+function loadSent(){
+  onValue(ref(db,'messages'),snap=>{
+    const msgs=[];
+    if(snap.exists())snap.forEach(c=>msgs.push({id:c.key,...c.val()}));
+    msgs.sort((a,b)=>(b.sentAt||0)-(a.sentAt||0));
+    const el=document.getElementById('sentList');
+    if(!msgs.length){el.innerHTML='<div class="empty"><div class="ei">📭</div><p>No messages sent yet.</p></div>';return;}
+    el.innerHTML='<div class="msg-list" style="padding:14px;">'+msgs.map(m=>`
+      <div class="msg-item" onclick="openMessage('${m.id}','sent')">
+        <div class="msg-item-header">
+          <span class="msg-to">To: ${esc(m.toChild)} (${esc(m.toGrade)}) · Parent: ${esc(m.toName)}</span>
+          <span class="msg-date">${esc(m.sentAtFmt||'—')}</span>
+        </div>
+        <div class="msg-subject">${esc(m.subject)}</div>
+        <div class="msg-preview">${esc(m.body)}</div>
+        <div class="msg-badges" style="margin-top:8px;">
+          <span class="badge ${m.type==='broadcast'?'b-broadcast':'b-individual'}">${m.type==='broadcast'?'Broadcast':'Individual'}</span>
+          <span class="badge b-${m.priority||'normal'}">${m.priority||'Normal'}</span>
+          ${m.hasReply?'<span class="badge b-replied">Parent Replied</span>':''}
+        </div>
+      </div>`).join('')+'</div>';
+  },{onlyOnce:true});
+}
+
+// ── Load Replies ──
+function loadReplies(){
+  onValue(ref(db,'messages'),snap=>{
+    const msgs=[];
+    if(snap.exists())snap.forEach(c=>{const d={id:c.key,...c.val()};if(d.hasReply)msgs.push(d);});
+    msgs.sort((a,b)=>(b.sentAt||0)-(a.sentAt||0));
+    const el=document.getElementById('repliesList');
+    if(!msgs.length){el.innerHTML='<div class="empty"><div class="ei">💬</div><p>No parent replies yet.</p></div>';return;}
+    el.innerHTML='<div class="msg-list" style="padding:14px;">'+msgs.map(m=>`
+      <div class="msg-item" onclick="openMessage('${m.id}','reply')">
+        <div class="msg-item-header">
+          <span class="msg-to">From: ${esc(m.toName)} · ${esc(m.toChild)} (${esc(m.toGrade)})</span>
+          <span class="msg-date">${esc(m.sentAtFmt||'—')}</span>
+        </div>
+        <div class="msg-subject">Re: ${esc(m.subject)}</div>
+        <div class="msg-preview">${esc((m.replies&&m.replies[m.replies.length-1]?.text)||'')}</div>
+        <div class="msg-badges" style="margin-top:8px;">
+          <span class="badge b-replied">Replied</span>
+          <span class="badge b-${m.priority||'normal'}">${m.priority||'Normal'}</span>
+        </div>
+      </div>`).join('')+'</div>';
+  },{onlyOnce:true});
+}
+
+// ── Listen for new replies (badge) ──
+function listenReplies(){
+  onValue(ref(db,'messages'),snap=>{
+    let count=0;
+    if(snap.exists())snap.forEach(c=>{if(c.val().hasReply)count++;});
+    const badge=document.getElementById('replyBadge');
+    badge.textContent=count;badge.style.display=count?'inline':'none';
+  });
+}
+
+// ── Open message thread ──
+window.openMessage=async function(id,context){
+  const snap=await get(ref(db,`messages/${id}`));
+  if(!snap.exists())return;
+  const m={id,...snap.val()};
+  const wrap=document.getElementById(context==='reply'?'replyDetailWrap':'msgDetailWrap');
+  wrap.style.display='block';
+  const replies=(m.replies||[]).map(r=>`
+    <div class="bubble-wrap">
+      <div class="bubble-label">${r.from==='school'?'School':'Parent · '+esc(m.toName)}</div>
+      <div class="bubble ${r.from==='school'?'school':'parent'}">${esc(r.text)}</div>
+      <div class="bubble-time">${fmtTime(r.at)}</div>
+    </div>`).join('');
+  wrap.innerHTML=`
+    <div class="msg-detail">
+      <div class="msg-detail-header">
+        <div class="msg-detail-subject">${esc(m.subject)}</div>
+        <div class="msg-detail-meta">
+          <span>To: ${esc(m.toChild)} (${esc(m.toGrade)})</span>
+          <span>Parent: ${esc(m.toName)}</span>
+          <span>Sent: ${esc(m.sentAtFmt||'—')}</span>
+        </div>
+      </div>
+      <div class="msg-thread">
+        <div class="bubble-wrap">
+          <div class="bubble-label">School</div>
+          <div class="bubble school">${esc(m.body)}</div>
+          <div class="bubble-time">${fmtTime(m.sentAt)}</div>
+        </div>
+        ${replies}
+        <div style="margin-top:20px;border-top:1px solid var(--line);padding-top:16px;">
+          <div class="f-group" style="margin-bottom:10px;">
+            <label class="f-label">Reply from School</label>
+            <textarea class="f-textarea" id="staffReply-${id}" style="min-height:80px;" placeholder="Type your reply to the parent…"></textarea>
+          </div>
+          <button class="btn btn-primary" onclick="sendStaffReply('${id}')">Send Reply →</button>
+          <button class="btn btn-outline" style="margin-left:8px;" onclick="document.getElementById('${context==='reply'?'replyDetailWrap':'msgDetailWrap'}').style.display='none'">Close</button>
+        </div>
+      </div>
+    </div>`;
+};
+
+window.sendStaffReply=async function(id){
+  const text=document.getElementById(`staffReply-${id}`).value.trim();
+  if(!text){showToast('⚠ Please type a reply.');return;}
+  const snap=await get(ref(db,`messages/${id}`));
+  const m=snap.val();
+  const replies=m.replies||[];
+  replies.push({from:'school',text,at:Date.now()});
+  await update(ref(db,`messages/${id}`),{replies,hasReply:true});
+  showToast('✓ Reply sent to parent.');
+  openMessage(id,'sent');
+};
+
+// ── Dashboard ──
+function loadDashboard(){
+  onValue(ref(db,'messages'),snap=>{
+    let total=0,replies=0;
+    const activity=[];
+    if(snap.exists())snap.forEach(c=>{
+      const d=c.val();total++;
+      if(d.hasReply)replies++;
+      activity.push(d);
+    });
+    activity.sort((a,b)=>(b.sentAt||0)-(a.sentAt||0));
+    document.getElementById('stat-total').textContent=total;
+    document.getElementById('stat-replies').textContent=replies;
+    const el=document.getElementById('dashActivity');
+    el.innerHTML=activity.slice(0,8).map(m=>`
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 18px;border-bottom:1px solid var(--line);flex-wrap:wrap;gap:6px;">
+        <div>
+          <div style="font-size:12.5px;font-weight:500;">${esc(m.subject)}</div>
+          <div style="font-size:11px;color:var(--muted);">To: ${esc(m.toChild)} · ${esc(m.sentAtFmt||'—')}</div>
+        </div>
+        <span class="badge ${m.type==='broadcast'?'b-broadcast':'b-individual'}">${m.type}</span>
+      </div>`).join('')||'<div class="empty"><p>No activity yet.</p></div>';
+  },{onlyOnce:true});
+}
+
+function updateStats(){document.getElementById('stat-parents').textContent=allParents.length;}
+
+// ── Clears ──
+window.clearCompose=function(){
+  selectedRecipients=[];renderChips();
+  document.getElementById('recipientSearch').value='';
+  document.getElementById('msgSubject').value='';
+  document.getElementById('msgBody').value='';
+  document.getElementById('searchResults').style.display='none';
+  currentPriority='normal';
+  document.querySelectorAll('#panel-compose .priority-tag').forEach(t=>{t.classList.remove('on');if(t.textContent.trim()==='Normal')t.classList.add('on');});
+};
+window.clearBroadcast=function(){
+  document.getElementById('broadcastClass').value='';
+  document.getElementById('bSubject').value='';
+  document.getElementById('bBody').value='';
+  document.getElementById('broadcastPreview').style.display='none';
+  document.getElementById('bSendBtn').style.display='none';
+};
+</script>
+</body>
+</html>

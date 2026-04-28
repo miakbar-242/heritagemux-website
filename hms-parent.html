@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HMS · Parent Messaging Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --forest:#2d4a2d;--gold:#b8962e;--cream:#faf7f2;--parchment:#f2ece0;
+  --tan:#e8dfc8;--line:#d9cebc;--ink:#1e1e1e;--muted:#6e6456;
+  --sage:#5a7a5a;--error:#c0392b;--success:#2d7a4a;--sky:#e8f0f8;--blue:#2d5070;
+}
+body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;color:var(--ink);}
+
+/* ── LOGIN SCREEN ── */
+.login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
+.login-card{background:var(--cream);padding:52px;width:100%;max-width:440px;box-shadow:0 12px 60px rgba(0,0,0,0.2);}
+.login-logo{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--forest);margin-bottom:4px;}
+.login-sub{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--sage);margin-bottom:24px;}
+.login-card h2{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;color:var(--ink);margin-bottom:8px;}
+.login-card p{font-size:12.5px;color:var(--muted);line-height:1.65;margin-bottom:28px;}
+.google-btn{width:100%;padding:13px 20px;background:white;border:1.5px solid var(--line);font-family:'Jost',sans-serif;font-size:13px;font-weight:500;color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all 0.2s;margin-bottom:12px;}
+.google-btn:hover{border-color:var(--gold);background:var(--parchment);}
+.google-icon{width:20px;height:20px;}
+.login-note{font-size:10.5px;color:var(--muted);line-height:1.6;font-style:italic;border-top:1px solid var(--line);padding-top:14px;margin-top:14px;}
+.login-error{color:var(--error);font-size:11.5px;margin-top:10px;padding:8px 12px;background:#fde8e8;border-left:3px solid var(--error);display:none;}
+
+/* ── APP LAYOUT ── */
+.app{display:none;max-width:780px;margin:0 auto;min-height:100vh;padding:0 0 40px;}
+
+/* ── TOP BAR ── */
+.topbar{background:var(--forest);color:white;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;position:sticky;top:0;z-index:100;}
+.topbar-left h1{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;}
+.topbar-left p{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-top:2px;}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.user-pill{background:rgba(255,255,255,0.12);padding:5px 12px;font-size:11px;color:rgba(255,255,255,0.8);border-radius:20px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.logout-btn{background:transparent;border:1px solid rgba(255,255,255,0.25);color:rgba(255,255,255,0.7);font-family:'Jost',sans-serif;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;padding:5px 12px;cursor:pointer;transition:all 0.15s;border-radius:2px;}
+.logout-btn:hover{background:rgba(255,255,255,0.1);color:white;}
+
+/* ── CONTENT ── */
+.content{padding:22px 20px;}
+
+/* ── WELCOME CARD ── */
+.welcome-card{background:var(--parchment);border-left:4px solid var(--gold);padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.welcome-name{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--forest);}
+.welcome-meta{font-size:11.5px;color:var(--muted);margin-top:3px;}
+.unread-pill{background:var(--forest);color:white;font-size:10px;font-weight:600;padding:4px 12px;border-radius:20px;letter-spacing:0.5px;}
+
+/* ── TABS ── */
+.tabs{display:flex;border-bottom:2px solid var(--line);margin-bottom:18px;}
+.tab{padding:10px 20px;font-size:12px;font-weight:500;letter-spacing:0.5px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all 0.15s;}
+.tab:hover{color:var(--ink);}
+.tab.active{color:var(--forest);border-bottom-color:var(--gold);font-weight:600;}
+.tab-badge{background:var(--error);color:white;font-size:9px;font-weight:600;padding:1px 5px;border-radius:10px;margin-left:5px;}
+
+/* ── INBOX ── */
+.msg-list{display:flex;flex-direction:column;gap:10px;}
+.msg-card{background:white;border:1.5px solid var(--line);padding:16px 18px;cursor:pointer;transition:all 0.15s;position:relative;}
+.msg-card:hover{box-shadow:0 2px 14px rgba(0,0,0,0.09);border-color:var(--gold);}
+.msg-card.unread{border-left:4px solid var(--forest);}
+.msg-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:6px;}
+.msg-from{font-size:10.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--sage);}
+.msg-date{font-size:10px;color:var(--muted);}
+.msg-subject{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:5px;font-family:'Cormorant Garamond',serif;}
+.msg-preview{font-size:12px;color:var(--muted);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.msg-footer{display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap;}
+.badge{font-size:8.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:2px 7px;border-radius:2px;}
+.b-broadcast{background:#e8f0e8;color:var(--sage);}
+.b-individual{background:var(--sky);color:var(--blue);}
+.b-urgent{background:#fde8e8;color:var(--error);}
+.b-important{background:#fdf3e3;color:#8a6020;}
+.b-normal{background:#f0f0f0;color:var(--muted);}
+.b-replied{background:#f0e8f5;color:#6a2d8a;}
+.unread-dot{width:8px;height:8px;background:var(--forest);border-radius:50%;flex-shrink:0;}
+
+/* ── MESSAGE DETAIL ── */
+.msg-detail{background:white;border:1.5px solid var(--line);}
+.detail-header{background:var(--parchment);padding:18px 20px;border-bottom:1px solid var(--line);}
+.detail-subject{font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:600;color:var(--forest);margin-bottom:8px;}
+.detail-meta{font-size:11px;color:var(--muted);display:flex;flex-wrap:wrap;gap:12px;align-items:center;}
+.back-btn{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:500;color:var(--sage);cursor:pointer;margin-bottom:14px;letter-spacing:0.5px;}
+.back-btn:hover{color:var(--forest);}
+.msg-thread{padding:20px;}
+.bubble-wrap{margin-bottom:18px;}
+.bubble-label{font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
+.bubble{padding:14px 16px;font-size:13px;line-height:1.7;color:var(--ink);white-space:pre-wrap;}
+.bubble.school{background:var(--parchment);border-left:3px solid var(--forest);}
+.bubble.parent{background:var(--sky);border-left:3px solid var(--blue);}
+.bubble-time{font-size:9.5px;color:var(--muted);margin-top:5px;}
+
+/* ── REPLY COMPOSER ── */
+.reply-composer{border-top:1.5px solid var(--line);padding:18px 20px;background:var(--cream);}
+.reply-title{font-size:9px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:var(--sage);margin-bottom:10px;}
+.reply-textarea{width:100%;min-height:90px;border:1.5px solid var(--line);background:white;font-family:'Jost',sans-serif;font-size:13px;color:var(--ink);padding:11px 14px;outline:none;resize:vertical;line-height:1.65;}
+.reply-textarea:focus{border-color:var(--gold);}
+.reply-textarea::placeholder{color:#c0b8ab;font-size:12px;}
+.reply-note{font-size:10.5px;color:var(--muted);font-style:italic;margin-top:6px;line-height:1.5;}
+.reply-actions{display:flex;gap:10px;margin-top:12px;align-items:center;flex-wrap:wrap;}
+
+/* ── BUTTONS ── */
+.btn{padding:10px 22px;font-family:'Jost',sans-serif;font-size:11.5px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border:none;transition:all 0.2s;border-radius:2px;}
+.btn-primary{background:var(--forest);color:white;}
+.btn-primary:hover{background:var(--gold);}
+.btn-primary:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-outline{background:transparent;color:var(--muted);border:1.5px solid var(--line);}
+.btn-outline:hover{border-color:var(--muted);color:var(--ink);}
+.spinner{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;margin-right:5px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ── NOT REGISTERED ── */
+.not-registered{background:white;border:1.5px solid var(--line);padding:40px;text-align:center;}
+.not-registered h3{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--forest);margin-bottom:10px;}
+.not-registered p{font-size:13px;color:var(--muted);line-height:1.7;max-width:380px;margin:0 auto;}
+
+/* ── EMPTY ── */
+.empty{text-align:center;padding:48px 20px;color:var(--muted);}
+.empty .ei{font-size:36px;opacity:0.3;margin-bottom:12px;}
+.empty p{font-size:13px;line-height:1.6;}
+
+/* ── PRIVACY NOTICE ── */
+.privacy-bar{background:#f0f5f0;border-left:3px solid var(--sage);padding:10px 14px;font-size:10.5px;color:var(--sage);margin-bottom:18px;line-height:1.55;}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--forest);color:white;padding:13px 28px;font-size:13px;font-weight:500;border-radius:2px;box-shadow:0 4px 24px rgba(0,0,0,0.25);transition:transform 0.4s ease;z-index:9999;white-space:nowrap;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+@media(max-width:560px){
+  .login-card{padding:32px 24px;}
+  .content{padding:16px 14px;}
+  .detail-subject{font-size:18px;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">Heritage Montessori &amp; School</div>
+    <div class="login-sub">Parent Messaging Portal</div>
+    <h2>Welcome, Parent</h2>
+    <p>Sign in with your Google account to access messages from the school. Only your child's messages are visible — your information is never shared with other parents.</p>
+    <button class="google-btn" onclick="signInWithGoogle()">
+      <svg class="google-icon" viewBox="0 0 48 48">
+        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+        <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+        <path fill="none" d="M0 0h48v48H0z"/>
+      </svg>
+      Continue with Google
+    </button>
+    <div class="login-error" id="loginError"></div>
+    <div class="login-note">
+      🔒 Your Google account is used only to identify you as a registered parent of Heritage Montessori. Your email, phone number, and personal details are never shared with other parents or staff beyond what the school already has on record.
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="appShell">
+  <div class="topbar">
+    <div class="topbar-left">
+      <h1>Heritage Montessori</h1>
+      <p>Parent Messaging Portal</p>
+    </div>
+    <div class="topbar-right">
+      <span class="user-pill" id="userPill">—</span>
+      <button class="logout-btn" onclick="signOut()">Sign Out</button>
+    </div>
+  </div>
+
+  <div class="content" id="appContent">
+    <div class="empty"><div class="ei">⏳</div><p>Loading your messages…</p></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Firebase SDKs -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, onValue, update, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut as fbSignOut }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey:"AIzaSyAtB9d9zEr-ES-lRI_Pf9fWJmaJ8o8ghvQ",
+  authDomain:"my-hms42.firebaseapp.com",
+  databaseURL:"https://my-hms42-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:"my-hms42",
+  storageBucket:"my-hms42.firebasestorage.app",
+  messagingSenderId:"468345935508",
+  appId:"1:468345935508:web:db42663bb9484619518681"
+};
+
+const app      = initializeApp(firebaseConfig);
+const db       = getDatabase(app);
+const auth     = getAuth(app);
+const provider = new GoogleAuthProvider();
+
+// ── Helpers ──
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3200);}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function fmtTime(ts){if(!ts)return'—';const d=new Date(ts);return d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})+' · '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});}
+
+// ── State ──
+let currentUser  = null;
+let parentRecord = null;
+let myMessages   = [];
+let currentTab   = 'inbox';
+let currentMsgId = null;
+
+// ── Auth state ──
+onAuthStateChanged(auth, async user => {
+  if (user) {
+    currentUser = user;
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('appShell').style.display    = 'block';
+    document.getElementById('userPill').textContent      = user.displayName || user.email;
+    await loadParentRecord(user.email.toLowerCase());
+  } else {
+    currentUser  = null;
+    parentRecord = null;
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('appShell').style.display    = 'none';
+  }
+});
+
+// ── Google Sign In ──
+window.signInWithGoogle = async function() {
+  const errEl = document.getElementById('loginError');
+  errEl.style.display = 'none';
+  try {
+    await signInWithPopup(auth, provider);
+  } catch(e) {
+    errEl.textContent = '⚠ Sign-in failed. Please try again or contact the school if the issue persists.';
+    errEl.style.display = 'block';
+    console.error(e);
+  }
+};
+
+window.signOut = async function() {
+  await fbSignOut(auth);
+  showToast('You have been signed out.');
+};
+
+// ── Load parent record from directory ──
+async function loadParentRecord(email) {
+  const emailKey = email.replace(/\./g,'_').replace(/@/g,'__at__');
+  const snap = await get(ref(db, `parents/${emailKey}`));
+  if (snap.exists()) {
+    parentRecord = { id: emailKey, ...snap.val() };
+    startListening();
+  } else {
+    // Not registered
+    document.getElementById('appContent').innerHTML = `
+      <div class="not-registered">
+        <div style="font-size:40px;margin-bottom:16px;opacity:0.3;">🏫</div>
+        <h3>Not Yet Registered</h3>
+        <p>Your Google account (<strong>${esc(email)}</strong>) has not been registered in the Heritage Montessori parent directory yet.<br><br>
+        Please contact the school office and ask them to add your email to the Parent Directory in the Staff Portal.</p>
+      </div>`;
+  }
+}
+
+// ── Listen for messages in real time ──
+function startListening() {
+  onValue(ref(db, 'messages'), snap => {
+    myMessages = [];
+    if (snap.exists()) {
+      snap.forEach(c => {
+        const d = { id: c.key, ...c.val() };
+        // Only show messages addressed to this parent
+        if (d.toId === parentRecord.id) myMessages.push(d);
+      });
+    }
+    myMessages.sort((a,b) => (b.sentAt||0) - (a.sentAt||0));
+    renderApp();
+  });
+}
+
+// ── Render full app ──
+function renderApp() {
+  const unread  = myMessages.filter(m => !m.readByParent).length;
+  const replied = myMessages.filter(m => m.hasReply).length;
+
+  const content = document.getElementById('appContent');
+
+  // Welcome card
+  const welcomeHtml = `
+    <div class="welcome-card">
+      <div>
+        <div class="welcome-name">Welcome, ${esc(parentRecord.parentName)}</div>
+        <div class="welcome-meta">Child: ${esc(parentRecord.childName)} &nbsp;·&nbsp; ${esc(parentRecord.grade)}</div>
+      </div>
+      ${unread ? `<span class="unread-pill">${unread} unread</span>` : ''}
+    </div>`;
+
+  // Privacy bar
+  const privacyHtml = `
+    <div class="privacy-bar">
+      🔒 You can only see messages addressed to you. Other parents, their children, and contact details are not visible to you in this portal.
+    </div>`;
+
+  // Tabs
+  const tabsHtml = `
+    <div class="tabs">
+      <div class="tab ${currentTab==='inbox'?'active':''}" onclick="switchTab('inbox')">
+        Inbox ${unread ? `<span class="tab-badge">${unread}</span>` : ''}
+      </div>
+      <div class="tab ${currentTab==='replied'?'active':''}" onclick="switchTab('replied')">
+        My Replies ${replied ? `<span class="tab-badge">${replied}</span>` : ''}
+      </div>
+    </div>`;
+
+  // If viewing a message detail
+  if (currentMsgId) {
+    const m = myMessages.find(x => x.id === currentMsgId);
+    if (m) {
+      content.innerHTML = welcomeHtml + privacyHtml + renderDetail(m);
+      return;
+    }
+  }
+
+  // List view
+  const filtered = currentTab === 'inbox'
+    ? myMessages
+    : myMessages.filter(m => m.hasReply);
+
+  let listHtml;
+  if (!filtered.length) {
+    listHtml = `<div class="empty"><div class="ei">${currentTab==='inbox'?'📭':'💬'}</div><p>${currentTab==='inbox'?'No messages yet. The school will send you messages here.':'You have not replied to any messages yet.'}</p></div>`;
+  } else {
+    listHtml = '<div class="msg-list">' + filtered.map(m => `
+      <div class="msg-card ${!m.readByParent?'unread':''}" onclick="openMsg('${m.id}')">
+        <div class="msg-card-header">
+          <span class="msg-from">Heritage Montessori</span>
+          <span class="msg-date">${esc(m.sentAtFmt||'—')}</span>
+        </div>
+        <div class="msg-subject">${esc(m.subject)}</div>
+        <div class="msg-preview">${esc(m.body)}</div>
+        <div class="msg-footer">
+          ${!m.readByParent ? '<span class="unread-dot"></span>' : ''}
+          <span class="badge ${m.type==='broadcast'?'b-broadcast':'b-individual'}">${m.type==='broadcast'?'Class Notice':'Personal'}</span>
+          <span class="badge b-${m.priority||'normal'}">${m.priority||'Normal'}</span>
+          ${m.hasReply ? '<span class="badge b-replied">Replied</span>' : ''}
+        </div>
+      </div>`).join('') + '</div>';
+  }
+
+  content.innerHTML = welcomeHtml + privacyHtml + tabsHtml + listHtml;
+}
+
+// ── Render message detail ──
+function renderDetail(m) {
+  const replies = (m.replies||[]).map(r => `
+    <div class="bubble-wrap">
+      <div class="bubble-label">${r.from==='school' ? 'Heritage Montessori' : 'You'}</div>
+      <div class="bubble ${r.from==='school'?'school':'parent'}">${esc(r.text)}</div>
+      <div class="bubble-time">${fmtTime(r.at)}</div>
+    </div>`).join('');
+
+  return `
+    <span class="back-btn" onclick="closeMsg()">← Back to Inbox</span>
+    <div class="msg-detail">
+      <div class="detail-header">
+        <div class="detail-subject">${esc(m.subject)}</div>
+        <div class="detail-meta">
+          <span>From: Heritage Montessori &amp; School</span>
+          <span>${esc(m.sentAtFmt||'—')}</span>
+          <span class="badge ${m.type==='broadcast'?'b-broadcast':'b-individual'}">${m.type==='broadcast'?'Class Notice':'Personal Message'}</span>
+          <span class="badge b-${m.priority||'normal'}">${m.priority||'Normal'}</span>
+        </div>
+      </div>
+      <div class="msg-thread">
+        <div class="bubble-wrap">
+          <div class="bubble-label">Heritage Montessori</div>
+          <div class="bubble school">${esc(m.body)}</div>
+          <div class="bubble-time">${fmtTime(m.sentAt)}</div>
+        </div>
+        ${replies}
+      </div>
+      <div class="reply-composer">
+        <div class="reply-title">◆ Your Reply to the School</div>
+        <textarea class="reply-textarea" id="replyText" placeholder="Type your message to the school here…"></textarea>
+        <div class="reply-note">
+          Your reply goes directly to the school staff only. It is not visible to any other parent.<br>
+          Please do not include personal phone numbers or contact details in your message.
+        </div>
+        <div class="reply-actions">
+          <button class="btn btn-primary" id="replyBtn" onclick="sendReply('${m.id}')">Send Reply →</button>
+          <button class="btn btn-outline" onclick="closeMsg()">← Back</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+// ── Open message ──
+window.openMsg = async function(id) {
+  currentMsgId = id;
+  // Mark as read
+  await update(ref(db, `messages/${id}`), { readByParent: true });
+  renderApp();
+};
+
+window.closeMsg = function() {
+  currentMsgId = null;
+  renderApp();
+};
+
+// ── Switch tab ──
+window.switchTab = function(tab) {
+  currentTab   = tab;
+  currentMsgId = null;
+  renderApp();
+};
+
+// ── Send reply ──
+window.sendReply = async function(id) {
+  const text = document.getElementById('replyText')?.value.trim();
+  if (!text) { showToast('⚠ Please type a reply before sending.'); return; }
+  const btn = document.getElementById('replyBtn');
+  btn.innerHTML = '<span class="spinner"></span> Sending…';
+  btn.disabled  = true;
+  try {
+    const snap   = await get(ref(db, `messages/${id}`));
+    const m      = snap.val();
+    const replies = m.replies || [];
+    replies.push({ from: 'parent', text, at: Date.now() });
+    await update(ref(db, `messages/${id}`), { replies, hasReply: true, readByParent: true });
+    showToast('✓ Reply sent to the school.');
+    currentMsgId = id;
+    renderApp();
+  } catch(e) {
+    showToast('⚠ Could not send reply. Please check your connection.');
+    console.error(e);
+  } finally {
+    if (btn) { btn.innerHTML = 'Send Reply →'; btn.disabled = false; }
+  }
+};
+</script>
+</body>
+</html>
