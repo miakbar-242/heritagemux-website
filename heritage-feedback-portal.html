@@ -715,5 +715,41 @@ window.clearForm = function() {
   resetStatusBar();
 };
 </script>
+  <!-- Add this BEFORE the closing </body> tag -->
+
+<!-- Firebase SDK - Compat Version (works in regular HTML) -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+<script>
+  // Your Firebase Configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyAtB9d9zEr-ES-lRI_Pf9fWJmaJ8o8ghvQ",
+    authDomain: "my-hms42.firebaseapp.com",
+    databaseURL: "https://my-hms42-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "my-hms42",
+    storageBucket: "my-hms42.firebasestorage.app",
+    messagingSenderId: "468345935508",
+    appId: "1:468345935508:web:db42663bb9484619518681",
+    measurementId: "G-MPEHCR5GBW"
+  };
+  
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+  
+  console.log("✅ Firebase Initialized Successfully!");
+  console.log("📊 Firestore Ready:", db);
+  
+  // Test Firestore connection
+  db.collection('test').doc('connection').set({
+    status: 'connected',
+    timestamp: new Date()
+  }).then(() => {
+    console.log("✅ Firestore Write Test Successful!");
+  }).catch((error) => {
+    console.error("❌ Firestore Error:", error);
+  });
+</script>
 </body>
 </html>
