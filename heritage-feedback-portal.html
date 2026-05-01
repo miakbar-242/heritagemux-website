@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heritage Montessori · Parent Feedback Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --forest:#2d4a2d; --gold:#b8962e; --cream:#faf7f2; --parchment:#f2ece0;
+  --tan:#e8dfc8; --line:#d9cebc; --ink:#1e1e1e; --muted:#6e6456;
+  --sage:#5a7a5a; --error:#c0392b; --success:#2d7a4a;
+}
+@media print { body{background:white!important;} .no-print{display:none!important;} .page{box-shadow:none!important;} }
+body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padding:30px 16px 50px; color:var(--ink); }
+.portal { max-width:780px; margin:0 auto; display:flex; flex-direction:column; }
+.top-banner { background:var(--forest); color:white; padding:18px 32px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+.banner-school { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:600; }
+.banner-sub { font-size:10px; letter-spacing:2.5px; text-transform:uppercase; color:rgba(255,255,255,0.6); margin-top:2px; }
+.banner-badge { background:var(--gold); color:var(--forest); font-size:9.5px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; padding:5px 12px; border-radius:2px; }
+.page { background:var(--cream); padding:38px 52px 44px; box-shadow:0 8px 48px rgba(0,0,0,0.18); }
+.purpose-bar { display:flex; border:1.5px solid var(--line); margin-bottom:28px; overflow:hidden; }
+.purpose-btn { flex:1; padding:11px 10px; background:transparent; border:none; font-family:'Jost',sans-serif; font-size:11.5px; font-weight:500; letter-spacing:1px; text-transform:uppercase; color:var(--muted); cursor:pointer; transition:all 0.2s; }
+.purpose-btn+.purpose-btn { border-left:1.5px solid var(--line); }
+.purpose-btn.active { background:var(--forest); color:white; }
+.status-bar { display:flex; align-items:center; justify-content:space-between; background:var(--parchment); border-left:4px solid var(--gold); padding:10px 14px; margin-bottom:22px; font-size:12px; color:var(--muted); flex-wrap:wrap; gap:8px; }
+.status-bar.locked { border-left-color:var(--error); }
+.status-bar.ok { border-left-color:var(--success); }
+.status-label { font-weight:500; }
+.countdown { font-weight:600; color:var(--forest); }
+.locked-msg { text-align:center; padding:40px 20px; display:none; }
+.locked-msg h3 { font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--forest); margin-bottom:8px; }
+.locked-msg p { font-size:13px; color:var(--muted); line-height:1.6; }
+.lock-icon { font-size:40px; margin-bottom:14px; opacity:0.4; }
+.sep { border:none; border-top:1px dashed var(--line); margin:20px 0; }
+.info-grid { display:grid; grid-template-columns:1.3fr 1fr 1fr; gap:14px 18px; margin-bottom:22px; background:var(--parchment); padding:16px 18px; border-left:3px solid var(--gold); }
+.info-field { display:flex; flex-direction:column; gap:4px; }
+.info-field label { font-size:8.5px; font-weight:500; letter-spacing:2.5px; text-transform:uppercase; color:var(--sage); }
+.f-input { border:none; border-bottom:1.5px solid var(--line); background:transparent; font-family:'Jost',sans-serif; font-size:12.5px; color:var(--ink); padding:4px 2px; width:100%; outline:none; }
+.f-input:focus { border-bottom-color:var(--gold); }
+.f-input::placeholder { color:#c8bfb0; font-size:11.5px; }
+.met-block { background:var(--parchment); border-left:3px solid var(--forest); padding:14px 18px; margin-bottom:22px; }
+.met-title { font-size:9px; font-weight:500; letter-spacing:2.5px; text-transform:uppercase; color:var(--forest); margin-bottom:12px; }
+.met-row { display:grid; grid-template-columns:1fr 1fr; gap:14px 18px; align-items:end; }
+.same-row { grid-column:1/-1; display:flex; align-items:center; gap:8px; margin-top:6px; }
+.same-row input[type=checkbox] { width:14px; height:14px; accent-color:var(--gold); cursor:pointer; }
+.same-row label { font-size:11.5px; color:var(--muted); cursor:pointer; user-select:none; }
+.sec-title { display:flex; align-items:center; gap:9px; font-family:'Cormorant Garamond',serif; font-size:14.5px; font-weight:600; color:var(--forest); margin-bottom:16px; }
+.sec-title::after { content:''; flex:1; height:1px; background:var(--line); }
+.sec-num { width:22px; height:22px; background:var(--forest); color:white; font-family:'Jost',sans-serif; font-size:10px; font-weight:500; display:inline-flex; align-items:center; justify-content:center; border-radius:50%; flex-shrink:0; }
+.q-block { margin-bottom:18px; }
+.q-text { font-size:12.5px; font-weight:500; color:#2e2820; line-height:1.55; margin-bottom:7px; }
+.q-hint { font-size:10.5px; color:var(--muted); font-style:italic; margin-bottom:8px; }
+.chip-group { display:flex; flex-wrap:wrap; gap:6px; }
+.chip { padding:5px 12px; border:1.5px solid var(--line); font-size:11px; color:var(--muted); cursor:pointer; transition:all 0.15s; user-select:none; background:transparent; border-radius:2px; }
+.chip:hover { border-color:var(--gold); color:var(--ink); }
+.chip.on { background:var(--forest); border-color:var(--forest); color:white; }
+.w-area { width:100%; border:none; border-bottom:1.5px solid var(--line); background:transparent; font-family:'Jost',sans-serif; font-size:12.5px; color:var(--ink); padding:5px 2px; outline:none; resize:none; line-height:1.75; }
+.w-area:focus { border-bottom-color:var(--gold); }
+.w-area::placeholder { color:#c0b8ab; font-size:11.5px; }
+.lined-area { width:100%; min-height:54px; border:none; background:repeating-linear-gradient(transparent,transparent 27px,var(--line) 27px,var(--line) 28.5px); font-family:'Jost',sans-serif; font-size:12.5px; line-height:28px; color:var(--ink); outline:none; resize:none; padding:0 2px; }
+.sat-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:16px; }
+.sat-card { background:var(--parchment); padding:12px 14px; border-radius:2px; }
+.sat-label { font-size:11px; font-weight:500; color:var(--forest); margin-bottom:8px; line-height:1.4; }
+.stars { display:flex; gap:4px; align-items:center; }
+.star { font-size:22px; color:var(--line); cursor:pointer; transition:color 0.12s,transform 0.1s; user-select:none; line-height:1; }
+.star:hover,.star.on { color:var(--gold); }
+.star:active { transform:scale(1.3); }
+.star-desc { font-size:10px; color:var(--muted); font-style:italic; margin-left:6px; min-width:72px; }
+.school-response-section { margin-top:30px; border:1.5px solid var(--line); overflow:hidden; }
+.school-response-header { background:var(--forest); color:white; padding:12px 18px; display:flex; align-items:center; justify-content:space-between; }
+.school-response-header h3 { font-family:'Cormorant Garamond',serif; font-size:16px; font-weight:600; }
+.school-response-header span { font-size:9.5px; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.6); }
+.school-response-body { padding:20px; }
+.awaiting-response { text-align:center; padding:24px; color:var(--muted); }
+.await-icon { font-size:32px; margin-bottom:10px; opacity:0.35; }
+.awaiting-response p { font-size:12px; line-height:1.6; }
+.response-filled { display:none; }
+.response-date-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; flex-wrap:wrap; gap:6px; }
+.response-from { font-size:10px; font-weight:500; letter-spacing:2px; text-transform:uppercase; color:var(--sage); }
+.response-date { font-size:10px; color:var(--muted); background:var(--parchment); padding:3px 8px; border-radius:2px; }
+.response-text-box { background:var(--parchment); border-left:3px solid var(--gold); padding:14px 16px; font-size:13px; color:var(--ink); line-height:1.7; margin-bottom:18px; font-style:italic; white-space:pre-wrap; }
+.response-grade-section { margin-top:16px; }
+.response-grade-label { font-size:11px; font-weight:500; color:var(--forest); margin-bottom:10px; display:block; }
+.response-stars-row { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.res-star { font-size:26px; color:var(--line); cursor:pointer; transition:color 0.12s,transform 0.1s; user-select:none; }
+.res-star:hover,.res-star.on { color:var(--gold); }
+.res-grade-desc { font-size:11.5px; color:var(--muted); margin-left:8px; font-style:italic; }
+.res-grade-note { font-size:10.5px; color:var(--muted); margin-top:8px; display:block; }
+.grade-saved { font-size:11px; color:var(--success); font-weight:500; margin-top:6px; display:none; }
+.sig-row { display:grid; grid-template-columns:1fr 1px 1fr; gap:20px; align-items:end; border-top:1px solid var(--line); padding-top:18px; margin-top:26px; }
+.sig-divider { background:var(--line); height:40px; }
+.submit-bar { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-top:24px; padding-top:18px; border-top:1px solid var(--line); }
+.submit-note { font-size:10.5px; color:var(--muted); line-height:1.5; max-width:320px; }
+.submit-note strong { color:var(--forest); }
+.btn-row { display:flex; gap:10px; flex-wrap:wrap; }
+.btn { padding:11px 26px; font-family:'Jost',sans-serif; font-size:11.5px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; border:none; transition:background 0.2s; }
+.btn-primary { background:var(--forest); color:white; }
+.btn-primary:hover { background:var(--gold); }
+.btn-primary:disabled { opacity:0.5; cursor:not-allowed; }
+.btn-clear { background:transparent; color:var(--muted); border:1.5px solid var(--line); }
+.btn-clear:hover { border-color:var(--muted); }
+.btn-print { background:var(--parchment); color:var(--forest); border:1.5px solid var(--line); }
+.spinner-row { display:none; align-items:center; gap:8px; font-size:12px; color:var(--muted); margin-top:10px; }
+.spinner { width:16px; height:16px; border:2px solid var(--line); border-top-color:var(--forest); border-radius:50%; animation:spin 0.7s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+@keyframes slideIn { from{opacity:0;transform:translateY(8px);} to{opacity:1;transform:translateY(0);} }
+.toast { position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(100px); background:var(--forest); color:white; padding:13px 28px; font-size:13px; font-weight:500; border-radius:2px; box-shadow:0 4px 24px rgba(0,0,0,0.25); transition:transform 0.4s ease; z-index:9999; white-space:nowrap; }
+.toast.show { transform:translateX(-50%) translateY(0); }
+.page-footer { text-align:center; padding:16px; font-size:9.5px; color:rgba(0,0,0,0.35); letter-spacing:1px; text-transform:uppercase; background:var(--parchment); }
+
+/* ── NOTIFY PANEL ── */
+.notify-panel { margin-top:24px; border:1.5px solid var(--line); overflow:hidden; animation:slideIn 0.4s ease; }
+@keyframes slideIn { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
+.notify-header { background:var(--success); color:white; padding:14px 20px; display:flex; align-items:center; gap:14px; }
+.notify-check { font-size:22px; background:rgba(255,255,255,0.2); width:38px; height:38px; display:inline-flex; align-items:center; justify-content:center; border-radius:50%; flex-shrink:0; }
+.notify-title { font-family:'Cormorant Garamond',serif; font-size:17px; font-weight:600; }
+.notify-sub { font-size:11px; color:rgba(255,255,255,0.8); margin-top:3px; line-height:1.5; }
+.notify-body { padding:18px 20px; background:var(--cream); }
+.notify-label { font-size:9px; font-weight:500; letter-spacing:2.5px; text-transform:uppercase; color:var(--sage); margin-bottom:12px; }
+.notify-btns { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px; }
+.notify-btn { display:flex; align-items:center; gap:12px; padding:13px 18px; text-decoration:none; border-radius:2px; flex:1; min-width:200px; transition:opacity 0.2s; }
+.notify-btn:hover { opacity:0.88; }
+.notify-wa { background:#25d366; color:white; }
+.notify-email { background:var(--forest); color:white; }
+.nb-icon { font-size:22px; flex-shrink:0; }
+.nb-title { display:block; font-size:13px; font-weight:600; letter-spacing:0.3px; }
+.nb-sub { display:block; font-size:10px; opacity:0.8; margin-top:1px; }
+.notify-note { font-size:10.5px; color:var(--muted); font-style:italic; line-height:1.5; }
+</style>
+</head>
+<body>
+<div class="portal">
+
+  <div class="top-banner">
+    <div>
+      <div class="banner-school">Heritage Montessori &amp; School</div>
+      <div class="banner-sub">Nurturing Young Minds · Est. 2007</div>
+    </div>
+    <div class="banner-badge">Parent Feedback Portal</div>
+  </div>
+
+  <div class="page">
+
+    <div class="purpose-bar">
+      <button class="purpose-btn active" onclick="setMode('ptm')" id="btn-ptm">🤝 Parent · Teacher Meeting</button>
+      <button class="purpose-btn" onclick="setMode('general')" id="btn-general">📋 General Observation Feedback</button>
+    </div>
+
+    <div class="status-bar" id="statusBar">
+      <div>
+        <span class="status-label" id="statusLabel">Monthly Feedback</span>
+        <span id="statusMsg"> — One submission per child per month. Resets on <span id="resetDateInline" style="font-weight:600;color:var(--forest);">—</span></span>
+      </div>
+      <div>Resets in: <span class="countdown" id="resetCountdown">—</span></div>
+    </div>
+
+    <div class="locked-msg" id="lockedMsg">
+      <div class="lock-icon">🔒</div>
+      <h3>Feedback Already Submitted This Month</h3>
+      <p>You have already submitted feedback for <strong id="lockedChildName">your child</strong> this month.<br>
+      Your next submission window opens on <strong id="lockedResetDate">—</strong>.<br><br>
+      You can view the school's response below once it is posted.</p>
+    </div>
+
+    <div id="formBody">
+
+      <div class="info-grid">
+        <div class="info-field">
+          <label>Child's Full Name</label>
+          <input class="f-input" type="text" id="childName" placeholder="As per school records" oninput="onChildNameChange()">
+        </div>
+        <div class="info-field">
+          <label>Class / Grade</label>
+          <input class="f-input" type="text" id="childGrade" placeholder="e.g. Class 3 or Mont 2">
+        </div>
+        <div class="info-field">
+          <label>Date</label>
+          <input class="f-input" type="text" id="feedbackDate">
+        </div>
+        <div class="info-field">
+          <label>Parent / Guardian Name</label>
+          <input class="f-input" type="text" id="parentName">
+        </div>
+        <div class="info-field" style="grid-column:span 2;">
+          <label>Contact Number (optional)</label>
+          <input class="f-input" type="text" id="contactNumber">
+        </div>
+      </div>
+
+      <div class="met-block" id="metBlock">
+        <div class="met-title">◆ Discussion / Meeting held with</div>
+        <div class="met-row">
+          <div class="info-field">
+            <label>Class Teacher's Name</label>
+            <input class="f-input" type="text" id="classTeacher" placeholder="Name of class teacher">
+          </div>
+          <div class="info-field">
+            <label>Subject Teacher's Name</label>
+            <input class="f-input" type="text" id="subjectTeacher" placeholder="Name of subject teacher">
+          </div>
+          <div class="same-row">
+            <input type="checkbox" id="sameTeacher" onchange="handleSameTeacher(this)">
+            <label for="sameTeacher">Class teacher and subject teacher are the same person</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec-title"><span class="sec-num">1</span><span id="sec1Label">Reflecting on Your Child's Progress</span></div>
+
+      <div class="q-block">
+        <div class="q-text" id="q1text">What positive changes have you noticed in your child this term?</div>
+        <textarea class="lined-area" id="positiveChanges" rows="2" placeholder="e.g. More confident in reading, showing curiosity at home, improved focus…"></textarea>
+      </div>
+
+      <div class="q-block">
+        <div class="q-text">Which 2 areas would you most like to see your child grow and flourish in?</div>
+        <div class="q-hint">Select your top 2 priorities — these become the shared focus goals for the term ahead.</div>
+        <div class="chip-group" id="growthChips">
+          <span class="chip" onclick="toggleChip(this)">Reading &amp; Comprehension</span>
+          <span class="chip" onclick="toggleChip(this)">Maths &amp; Reasoning</span>
+          <span class="chip" onclick="toggleChip(this)">Creative Arts</span>
+          <span class="chip" onclick="toggleChip(this)">Confidence &amp; Communication</span>
+          <span class="chip" onclick="toggleChip(this)">Social Skills</span>
+          <span class="chip" onclick="toggleChip(this)">Organisation &amp; Time Management</span>
+          <span class="chip" onclick="toggleChip(this)">Sports &amp; Fitness</span>
+          <span class="chip" onclick="toggleChip(this)">Science &amp; Inquiry</span>
+          <span class="chip" onclick="toggleChip(this)">Self-Discipline</span>
+        </div>
+        <div id="chipLimitMsg" style="display:none;margin-top:7px;font-size:11px;color:var(--error);font-style:italic;">
+          ⚠ You can only select 2 priority areas. Please deselect one before choosing another.
+        </div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-text" id="q3text">What skill or ability are you actively working on with your child at home?</div>
+        <div class="q-hint">Share a specific skill — e.g. reading together, handwriting, storytelling, memory games. Tuition or coaching outside school is not required here.</div>
+        <div class="chip-group" style="margin-bottom:8px;" id="homeSkillChips">
+          <span class="chip" onclick="toggleSkillChip(this)">Daily Reading Together</span>
+          <span class="chip" onclick="toggleSkillChip(this)">Storytelling &amp; Narration</span>
+          <span class="chip" onclick="toggleSkillChip(this)">Handwriting Practice</span>
+          <span class="chip" onclick="toggleSkillChip(this)">Memory &amp; Recall Games</span>
+          <span class="chip" onclick="toggleSkillChip(this)">Problem-Solving Activities</span>
+          <span class="chip" onclick="toggleSkillChip(this)">Creative Drawing / Craft</span>
+          <span class="chip" onclick="toggleSkillChip(this)">Nature Observation</span>
+          <span class="chip" onclick="toggleSkillChip(this)">Music or Rhythm Practice</span>
+          <span class="chip" onclick="toggleSkillChip(this)">Physical Play &amp; Motor Skills</span>
+          <span class="chip" onclick="toggleSkillChip(this)">Responsibility &amp; Chores</span>
+        </div>
+        <textarea class="w-area" rows="1" id="homeSkillOther" placeholder="Or describe another specific skill you are working on together at home…"></textarea>
+        <div style="margin-top:6px;font-size:10.5px;color:var(--sage);font-style:italic;">💡 Focus on skills you share time on — not external tutoring or coaching sessions.</div>
+      </div>
+
+      <hr class="sep">
+
+      <div class="sec-title"><span class="sec-num">2</span><span id="sec2Label">Your Suggestions for the School</span></div>
+
+      <div class="q-block">
+        <div class="q-text" id="q4text">If you could introduce one new activity or programme, what would it be?</div>
+        <textarea class="w-area" rows="1" id="suggestion" placeholder="e.g. A coding club, more outdoor learning, drama workshops…"></textarea>
+      </div>
+
+      <div class="q-block">
+        <div class="q-text">What is one thing Heritage is doing wonderfully that you'd love to see expanded?</div>
+        <textarea class="w-area" rows="1" id="schoolStrength" placeholder="e.g. Collaborative projects, the Montessori programme, field trips…"></textarea>
+      </div>
+
+      <hr class="sep">
+
+      <div class="sec-title"><span class="sec-num">3</span>Your Appreciation &amp; Satisfaction</div>
+
+      <div class="sat-grid">
+        <div class="sat-card">
+          <div class="sat-label" id="sat1label">Satisfaction with the class teacher</div>
+          <div class="stars" id="stars-ct">
+            <span class="star" onclick="rate('ct',1)">★</span>
+            <span class="star" onclick="rate('ct',2)">★</span>
+            <span class="star" onclick="rate('ct',3)">★</span>
+            <span class="star" onclick="rate('ct',4)">★</span>
+            <span class="star" onclick="rate('ct',5)">★</span>
+            <span class="star-desc" id="lbl-ct">—</span>
+          </div>
+        </div>
+        <div class="sat-card">
+          <div class="sat-label">Satisfaction with the school overall</div>
+          <div class="stars" id="stars-sc">
+            <span class="star" onclick="rate('sc',1)">★</span>
+            <span class="star" onclick="rate('sc',2)">★</span>
+            <span class="star" onclick="rate('sc',3)">★</span>
+            <span class="star" onclick="rate('sc',4)">★</span>
+            <span class="star" onclick="rate('sc',5)">★</span>
+            <span class="star-desc" id="lbl-sc">—</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="q-block">
+        <div class="q-text">Is there something specific you'd like to appreciate about the teacher or staff?</div>
+        <textarea class="w-area" rows="1" id="appreciation" placeholder="Feel free to name specific efforts or qualities you are grateful for…"></textarea>
+      </div>
+
+      <div class="q-block">
+        <div class="q-text" id="q_last">Any specific question or topic you'd like to raise with the school?</div>
+        <textarea class="w-area" rows="1" id="questionRaised" placeholder="We'll ensure this is addressed during your conversation with the teacher."></textarea>
+      </div>
+
+      <div class="sig-row">
+        <div class="info-field">
+          <label>Parent / Guardian Name (Print)</label>
+          <input class="f-input" type="text" id="sigName">
+        </div>
+        <div class="sig-divider"></div>
+        <div class="info-field">
+          <label>Signature</label>
+          <input class="f-input" type="text" id="sigSign">
+        </div>
+      </div>
+
+      <div class="submit-bar">
+        <div class="submit-note">
+          <strong>One submission per child per month.</strong><br>
+          The school will respond within 5 working days.
+        </div>
+        <div>
+          <div class="btn-row">
+            <button class="btn btn-clear" onclick="clearForm()">↺ Clear</button>
+            <button class="btn btn-print no-print" onclick="window.print()">🖨 Print</button>
+            <button class="btn btn-primary" id="submitBtn" onclick="submitFeedback()">Submit Feedback →</button>
+          </div>
+          <div class="spinner-row" id="spinnerRow"><div class="spinner"></div> Submitting to school…</div>
+        </div>
+      </div>
+
+    </div><!-- /formBody -->
+
+    <!-- NOTIFY SCHOOL PANEL — outside formBody so it stays visible after lock -->
+    <div class="notify-panel" id="notifyPanel" style="display:none;">
+      <div class="notify-header">
+        <span class="notify-check">✓</span>
+        <div>
+          <div class="notify-title">Feedback Submitted Successfully!</div>
+          <div class="notify-sub">Please take one more step to notify the school directly so they can attend to your feedback promptly.</div>
+        </div>
+      </div>
+      <div class="notify-body">
+        <div class="notify-label">&#9670; Notify Heritage Montessori via</div>
+        <div class="notify-btns">
+          <a id="waBtn" href="#" target="_blank" class="notify-btn notify-wa">
+            <span class="nb-icon">&#128172;</span>
+            <span>
+              <span class="nb-title">WhatsApp</span>
+              <span class="nb-sub">Send a pre-filled message</span>
+            </span>
+          </a>
+          <a id="emailBtn" href="#" class="notify-btn notify-email">
+            <span class="nb-icon">&#9993;&#65039;</span>
+            <span>
+              <span class="nb-title">Email</span>
+              <span class="nb-sub">Send a pre-filled email</span>
+            </span>
+          </a>
+        </div>
+        <div class="notify-note">These buttons open WhatsApp / your email app with the message already written. Just tap Send.</div>
+      </div>
+    </div>
+
+    <!-- SCHOOL RESPONSE SECTION -->
+    <div class="school-response-section" id="responseSection" style="display:none;">
+      <div class="school-response-header">
+        <h3>School's Response</h3>
+        <span>Official Communication</span>
+      </div>
+      <div class="school-response-body">
+        <div class="awaiting-response" id="awaitingResponse">
+          <div class="await-icon">📬</div>
+          <p>Your feedback has been received.<br>
+          The school will respond within <strong>5 working days</strong>.<br>
+          Once a response is posted, you will see it here.</p>
+        </div>
+        <div class="response-filled" id="responseFilled">
+          <div class="response-date-row">
+            <span class="response-from">Response from Heritage Montessori</span>
+            <span class="response-date" id="responseDateLabel">—</span>
+          </div>
+          <div class="response-text-box" id="responseTextDisplay">—</div>
+          <div class="response-grade-section">
+            <span class="response-grade-label">How satisfied are you with this response?</span>
+            <div class="response-stars-row">
+              <span class="res-star" onclick="gradeResponse(1)">★</span>
+              <span class="res-star" onclick="gradeResponse(2)">★</span>
+              <span class="res-star" onclick="gradeResponse(3)">★</span>
+              <span class="res-star" onclick="gradeResponse(4)">★</span>
+              <span class="res-star" onclick="gradeResponse(5)">★</span>
+              <span class="res-grade-desc" id="resGradeDesc">Tap to rate</span>
+            </div>
+            <span class="res-grade-note">Your rating helps the school understand how well their communication is received.</span>
+            <div class="grade-saved" id="gradeSaved">✓ Thank you — your rating has been saved.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /page -->
+
+  <div class="page-footer">Heritage Montessori &amp; School &nbsp;·&nbsp; Nurturing Young Minds since 2007 &nbsp;◆&nbsp; Parent Feedback Portal</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, set, get, update, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAtB9d9zEr-ES-lRI_Pf9fWJmaJ8o8ghvQ",
+  authDomain: "my-hms42.firebaseapp.com",
+  databaseURL: "https://my-hms42-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "my-hms42",
+  storageBucket: "my-hms42.firebasestorage.app",
+  messagingSenderId: "468345935508",
+  appId: "1:468345935508:web:db42663bb9484619518681"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getDatabase(app);
+
+console.log("✅ Firebase Initialized Successfully!");
+console.log("📊 Realtime Database Ready:", db);
+
+// ── Helpers ──
+function monthKey() { const n=new Date(); return `${n.getFullYear()}-${n.getMonth()}`; }
+function childKey(name) { return name.toLowerCase().replace(/\s+/g,'_').replace(/[^a-z0-9_]/g,''); }
+function getResetDate() { const n=new Date(); return new Date(n.getFullYear(),n.getMonth()+1,1); }
+function daysUntil(d) { return Math.ceil((d-new Date())/86400000); }
+function fmtDate(d) { return d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}); }
+function showToast(msg) {
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3200);
+}
+
+// ── State ──
+let currentMode = 'ptm';
+let currentChildKey = null;
+let responseUnsub = null;
+
+// ── Init ──
+document.getElementById('feedbackDate').value = new Date().toLocaleDateString('en-GB');
+const rd = getResetDate();
+document.getElementById('resetDateInline').textContent = fmtDate(rd);
+document.getElementById('resetCountdown').textContent  = `${daysUntil(rd)} days`;
+
+// ── Mode toggle ──
+window.setMode = function(mode) {
+  currentMode = mode;
+  document.getElementById('btn-ptm').classList.toggle('active', mode==='ptm');
+  document.getElementById('btn-general').classList.toggle('active', mode==='general');
+  const p = mode==='ptm';
+  document.getElementById('metBlock').style.display     = p?'':'none';
+  document.getElementById('sec1Label').textContent      = p?"Reflecting on Your Child's Progress":"Your Child's Observations This Month";
+  document.getElementById('sec2Label').textContent      = p?"Your Suggestions for the School":"Suggestions & Ideas for the School";
+  document.getElementById('q1text').textContent         = p?"What positive changes have you noticed in your child this term?":"What behaviours or progress have you observed at home this month?";
+  document.getElementById('q3text').textContent         = p?"What skill or ability are you actively working on with your child at home?":"What skill or ability have you been nurturing with your child this month?";
+  document.getElementById('q4text').textContent         = p?"If you could introduce one new activity or programme, what would it be?":"What addition or change would most benefit your child's experience?";
+  document.getElementById('q_last').textContent         = p?"Any specific question or topic you'd like to raise with the school today?":"Is there anything specific you'd like the school's attention or awareness on?";
+  document.getElementById('sat1label').textContent      = p?"Satisfaction with the class teacher":"Satisfaction with communication from school";
+};
+
+// ── Child name input — debounced check ──
+let nameTimer = null;
+window.onChildNameChange = function() {
+  clearTimeout(nameTimer);
+  nameTimer = setTimeout(checkStatus, 700);
+};
+
+async function checkStatus() {
+  const name = document.getElementById('childName').value.trim();
+  if (!name) { resetStatusBar(); return; }
+  const key  = childKey(name);
+  currentChildKey = key;
+  const snap = await get(ref(db, `feedback/${key}`));
+  const rec  = snap.exists() ? snap.val() : null;
+  const locked = rec && rec.monthKey === monthKey() && rec.submitted;
+  const reset  = getResetDate();
+  document.getElementById('resetCountdown').textContent = `${daysUntil(reset)} days`;
+  if (locked) {
+    document.getElementById('statusBar').className        = 'status-bar locked';
+    document.getElementById('statusLabel').textContent    = '⛔ Submission Limit Reached';
+    document.getElementById('statusMsg').innerHTML        = ` — One feedback per child per month. Resets on <strong style="color:var(--error)">${fmtDate(reset)}</strong>`;
+    document.getElementById('formBody').style.display     = 'none';
+    document.getElementById('lockedMsg').style.display    = 'block';
+    document.getElementById('lockedChildName').textContent = name;
+    document.getElementById('lockedResetDate').textContent = fmtDate(reset);
+    document.getElementById('responseSection').style.display = 'block';
+    renderResponse(rec);
+    listenForResponse(key);
+  } else {
+    document.getElementById('statusBar').className        = 'status-bar ok';
+    document.getElementById('statusLabel').textContent    = '✓ Ready to Submit';
+    document.getElementById('statusMsg').innerHTML        = ` — Submission window open. Resets on <strong style="color:var(--forest)">${fmtDate(reset)}</strong>`;
+    document.getElementById('formBody').style.display     = 'block';
+    document.getElementById('lockedMsg').style.display    = 'none';
+    if (rec) {
+      document.getElementById('responseSection').style.display = 'block';
+      renderResponse(rec);
+      listenForResponse(key);
+    } else {
+      document.getElementById('responseSection').style.display = 'none';
+    }
+  }
+}
+
+// ── Listen for school response in real time ──
+function listenForResponse(key) {
+  if (responseUnsub) responseUnsub();
+  responseUnsub = onValue(ref(db, `feedback/${key}`), snap => {
+    if (snap.exists()) {
+      const rec = snap.val();
+      document.getElementById('responseSection').style.display = 'block';
+      renderResponse(rec);
+    }
+  });
+}
+
+// ── Render school response ──
+let _notifiedResponse = false;
+
+function renderResponse(rec) {
+  if (!rec) return;
+  const awaiting = document.getElementById('awaitingResponse');
+  const filled   = document.getElementById('responseFilled');
+  if (rec.schoolResponse) {
+    const isNew = !_notifiedResponse;
+    _notifiedResponse = true;
+
+    awaiting.style.display = 'none';
+    filled.style.display   = 'block';
+    document.getElementById('responseTextDisplay').textContent = rec.schoolResponse;
+    document.getElementById('responseDateLabel').textContent   = rec.schoolResponseDate || '—';
+    if (rec.responseGrade) {
+      document.querySelectorAll('.res-star').forEach((s,i)=>s.classList.toggle('on',i<rec.responseGrade));
+      document.getElementById('resGradeDesc').textContent      = ratingLabels[rec.responseGrade];
+      document.getElementById('gradeSaved').style.display      = 'block';
+    }
+
+    const existing = document.getElementById('responseNotifyBanner');
+    if (isNew && !existing) {
+      const banner = document.createElement('div');
+      banner.id = 'responseNotifyBanner';
+      banner.style.cssText = `
+        background:#e8f5ec;border-left:4px solid var(--success);
+        padding:13px 18px;margin-bottom:14px;
+        display:flex;align-items:center;justify-content:space-between;
+        flex-wrap:wrap;gap:10px;animation:slideIn 0.4s ease;`;
+      banner.innerHTML = `
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-size:20px;">🔔</span>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--success);">
+              The school has posted a response to your feedback!
+            </div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px;">
+              Posted on ${rec.schoolResponseDate || 'recently'} — please read and rate the response below.
+            </div>
+          </div>
+        </div>
+        <span onclick="this.parentElement.remove()"
+          style="cursor:pointer;color:var(--muted);font-size:18px;padding:2px 6px;">✕</span>`;
+      const body = document.querySelector('.school-response-body');
+      if (body) body.insertBefore(banner, body.firstChild);
+      document.getElementById('responseSection').scrollIntoView({behavior:'smooth',block:'nearest'});
+    }
+
+  } else {
+    _notifiedResponse = false;
+    awaiting.style.display = 'block';
+    filled.style.display   = 'none';
+  }
+}
+
+function resetStatusBar() {
+  const reset = getResetDate();
+  document.getElementById('statusBar').className     = 'status-bar';
+  document.getElementById('statusLabel').textContent = 'Monthly Feedback';
+  document.getElementById('statusMsg').innerHTML     = ` — One submission per child per month. Resets on <strong style="color:var(--forest)">${fmtDate(reset)}</strong>`;
+  document.getElementById('responseSection').style.display = 'none';
+  document.getElementById('formBody').style.display  = 'block';
+  document.getElementById('lockedMsg').style.display = 'none';
+}
+
+// ── Submit ──
+window.submitFeedback = async function() {
+  const name = document.getElementById('childName').value.trim();
+  if (!name) { alert('Please enter the child\'s name before submitting.'); return; }
+  const key         = childKey(name);
+  const growthAreas = [...document.querySelectorAll('#growthChips .chip.on')].map(c=>c.textContent.trim());
+  const homeSkills  = [...document.querySelectorAll('#homeSkillChips .chip.on')].map(c=>c.textContent.trim());
+  const snap        = await get(ref(db,`feedback/${key}`));
+  const existing    = snap.exists() ? snap.val() : {};
+  const record = {
+    submitted:true, monthKey:monthKey(),
+    submittedOn:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}),
+    mode:currentMode,
+    childName:name,
+    grade:document.getElementById('childGrade').value.trim(),
+    parentName:document.getElementById('parentName').value.trim(),
+    contactNumber:document.getElementById('contactNumber').value.trim(),
+    classTeacher:document.getElementById('classTeacher').value.trim(),
+    subjectTeacher:document.getElementById('subjectTeacher').value.trim(),
+    growthAreas, homeSkills,
+    homeSkillOther:document.getElementById('homeSkillOther').value.trim(),
+    positiveChanges:document.getElementById('positiveChanges').value.trim(),
+    suggestion:document.getElementById('suggestion').value.trim(),
+    schoolStrength:document.getElementById('schoolStrength').value.trim(),
+    appreciation:document.getElementById('appreciation').value.trim(),
+    questionRaised:document.getElementById('questionRaised').value.trim(),
+    ratingTeacher:document.querySelectorAll('#stars-ct .star.on').length||0,
+    ratingSchool:document.querySelectorAll('#stars-sc .star.on').length||0,
+    schoolResponse:existing.schoolResponse||null,
+    schoolResponseDate:existing.schoolResponseDate||null,
+    responseGrade:existing.responseGrade||null,
+  };
+  document.getElementById('submitBtn').disabled = true;
+  document.getElementById('spinnerRow').style.display = 'flex';
+  try {
+    await set(ref(db,`feedback/${key}`), record);
+    showToast('✓ Feedback submitted successfully!');
+
+    const childName   = record.childName;
+    const parentName  = record.parentName || 'Parent';
+    const grade       = record.grade || '—';
+    const date        = record.submittedOn;
+    const modeLabel   = currentMode === 'ptm' ? 'Parent-Teacher Meeting' : 'General Observation';
+
+    const waMsg = encodeURIComponent(
+      `Hello Heritage Montessori,\n\nI have submitted a ${modeLabel} feedback for my child *${childName}* (${grade}) on ${date} via the Parent Feedback Portal.\n\nKindly review it at your earliest convenience.\n\nThank you,\n${parentName}`
+    );
+    const schoolWA    = '923361515260';
+    const schoolEmail = 'info@heritagemux.com';
+
+    const emailSubject = encodeURIComponent(`Parent Feedback Submitted — ${childName} (${grade})`);
+    const emailBody    = encodeURIComponent(
+      `Dear Heritage Montessori Team,\n\nI have submitted a ${modeLabel} feedback for my child ${childName} (${grade}) on ${date} via the Parent Feedback Portal on the school website.\n\nKindly log in to the Staff Response Panel to review and respond.\n\nThank you,\n${parentName}`
+    );
+
+    document.getElementById('waBtn').href    = `https://wa.me/${schoolWA}?text=${waMsg}`;
+    document.getElementById('emailBtn').href = `mailto:${schoolEmail}?subject=${emailSubject}&body=${emailBody}`;
+    document.getElementById('notifyPanel').style.display = 'block';
+    document.getElementById('notifyPanel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+    setTimeout(()=>checkStatus(), 800);
+  } catch(e) {
+    showToast('⚠ Could not submit. Please check your connection and try again.');
+    console.error(e);
+    document.getElementById('submitBtn').disabled = false;
+  } finally {
+    document.getElementById('spinnerRow').style.display = 'none';
+  }
+};
+
+// ── Grade response ──
+const ratingLabels = ['','Unsatisfactory','Below expectation','Satisfactory','Good','Excellent ✦'];
+window.gradeResponse = async function(val) {
+  document.querySelectorAll('.res-star').forEach((s,i)=>s.classList.toggle('on',i<val));
+  document.getElementById('resGradeDesc').textContent    = ratingLabels[val];
+  document.getElementById('gradeSaved').style.display    = 'block';
+  if (currentChildKey) await update(ref(db,`feedback/${currentChildKey}`),{responseGrade:val});
+};
+
+// ── Star ratings ──
+const starLabels = ['','Needs improvement','Satisfactory','Good','Very good','Excellent ✦'];
+window.rate = function(group,val) {
+  document.querySelectorAll(`#stars-${group} .star`).forEach((s,i)=>s.classList.toggle('on',i<val));
+  document.getElementById(`lbl-${group}`).textContent = starLabels[val];
+};
+
+// ── Chips ──
+window.toggleChip = function(el) {
+  const selected = [...document.querySelectorAll('#growthChips .chip.on')];
+  const msg = document.getElementById('chipLimitMsg');
+  if (!el.classList.contains('on') && selected.length>=2) {
+    msg.style.display='block'; el.style.transform='scale(0.94)';
+    setTimeout(()=>el.style.transform='',140); return;
+  }
+  msg.style.display='none'; el.classList.toggle('on');
+};
+window.toggleSkillChip = function(el) { el.classList.toggle('on'); };
+
+// ── Same teacher ──
+window.handleSameTeacher = function(cb) {
+  const si=document.getElementById('subjectTeacher');
+  if(cb.checked){si.value=document.getElementById('classTeacher').value||'(Same as above)';si.readOnly=true;si.style.opacity='0.45';}
+  else{si.value='';si.readOnly=false;si.style.opacity='1';}
+};
+
+// ── Clear ──
+window.clearForm = function() {
+  if(!confirm('Clear all entries?')) return;
+  ['childName','childGrade','parentName','contactNumber','classTeacher','subjectTeacher',
+   'positiveChanges','homeSkillOther','suggestion','schoolStrength','appreciation','questionRaised','sigName','sigSign']
+  .forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.querySelectorAll('.chip').forEach(el=>el.classList.remove('on'));
+  document.querySelectorAll('.star').forEach(el=>el.classList.remove('on'));
+  ['lbl-ct','lbl-sc'].forEach(id=>document.getElementById(id).textContent='—');
+  document.getElementById('sameTeacher').checked=false;
+  document.getElementById('chipLimitMsg').style.display='none';
+  document.getElementById('submitBtn').disabled=false;
+  document.getElementById('notifyPanel').style.display='none';
+  if(responseUnsub){responseUnsub();responseUnsub=null;}
+  resetStatusBar();
+};
+</script>
+
+</body>
+</html>
