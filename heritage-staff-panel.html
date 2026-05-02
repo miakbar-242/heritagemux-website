@@ -294,13 +294,13 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
 
 <!-- Firebase -->
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc, serverTimestamp }
-  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, onValue, update }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 // ── CONFIG (unchanged from original) ──────────────────────────────────────
 const firebaseConfig = {
-  apiKey: "AIzaSyAtB9d9zEr-ES-lRI_"+"Pf9fWJmaJ8o8ghvQ",
+  apiKey: "AIzaSyAtB9d9zEr-ES-"+"lRI_Pf9fWJmaJ8o8ghvQ",
   authDomain: "my-hms42.firebaseapp.com",
   databaseURL: "https://my-hms42-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "my-hms42",
@@ -308,9 +308,8 @@ const firebaseConfig = {
   messagingSenderId: "468345935508",
   appId: "1:468345935508:web:db42663bb9484619518681"
 };
-
 const app = initializeApp(firebaseConfig);
-const db  = getFirestore(app);
+const db = getDatabase(app);
 
 // ── STATE ──────────────────────────────────────────────────────────────────
 const STAFF_PIN  = "2442";
@@ -372,14 +371,41 @@ window.logout = function() {
 
 // ── FIRESTORE LISTENER ─────────────────────────────────────────────────────
 function startListen() {
-  onSnapshot(collection(db,'feedbackSubmissions'), snap => {
-    allSubs = snap.docs.map(d => ({ id: d.id, ...d.data() }))
-      .filter(s => !s.deleted)
-      .sort((a,b) => {
-        const ta = a.submittedAt?.toMillis?.()||0;
-        const tb = b.submittedAt?.toMillis?.()||0;
-        return tb - ta;
+  onValue(ref(db, 'feedback'), snap => {
+    allSubs = [];
+    if (snap.exists()) {
+      snap.forEach(child => {
+        const d = child.val();
+        if (!d.deleted) {
+          allSubs.push({
+            id: child.key,
+            childName: d.childName,
+            className: d.grade,
+            parentName: d.parentName,
+            contactNumber: d.contactNumber,
+            purpose: d.mode,
+            submittedAt: d.submittedOn,
+            positiveChanges: d.positiveChanges,
+            priorities: d.growthAreas,
+            homeSkills: d.homeSkills,
+            skillWorking: d.homeSkillOther,
+            newActivity: d.suggestion,
+            schoolAppreciation: d.schoolStrength,
+            teacherAppreciation: d.appreciation,
+            questionForSchool: d.questionRaised,
+            satTeacher: d.ratingTeacher,
+            satSchool: d.ratingSchool,
+            classTeacher: d.classTeacher,
+            subjectTeacher: d.subjectTeacher,
+            schoolResponse: d.schoolResponse || null,
+            respondedAt: d.schoolResponseDate || null,
+            parentGrade: d.responseGrade || 0,
+            kept: d.kept || false,
+          });
+        }
       });
+    }
+    allSubs.sort((a,b) => new Date(b.submittedAt||0) - new Date(a.submittedAt||0));
     renderAll();
   });
 }
@@ -692,10 +718,11 @@ window.saveResponse = async function(id) {
   if(spin) spin.style.display='inline';
 
   try {
-    await window._updateDoc(window._doc(window._db,'feedbackSubmissions',id), {
-      schoolResponse: text,
-      respondedAt: window._serverTimestamp(),
-      status: 'responded'
+    await update(ref(db, `feedback/${id}`), {
+  schoolResponse: text,
+  schoolResponseDate: new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}),
+  status: 'responded'
+});
     });
     if(spin) spin.style.display='none';
     if(ok)  { ok.style.display='inline'; setTimeout(()=>ok.style.display='none',3000); }
@@ -718,7 +745,7 @@ window.toggleKeep = async function(id) {
   if(!sub) return;
   const kept = !sub.kept;
   try {
-    await window._updateDoc(window._doc(window._db,'feedbackSubmissions',id), { kept });
+   await update(ref(db, `feedback/${id}`), { kept });
     showToast(kept ? '📌 Submission kept.' : 'Removed from kept.');
   } catch(err) { showToast('Error. Try again.'); }
 };
@@ -732,7 +759,7 @@ window.confirmDelete = async function() {
   if(!deleteTargetId) return;
   try {
     // Mark deleted in Firestore (soft delete — preserves parent's submission record)
-    await window._updateDoc(window._doc(window._db,'feedbackSubmissions',deleteTargetId), { deleted: true });
+    await update(ref(db, `feedback/${deleteTargetId}`), { deleted: true });
     showToast('Submission removed from panel.');
   } catch(err) { showToast('Error deleting. Try again.'); }
   closeModal();
