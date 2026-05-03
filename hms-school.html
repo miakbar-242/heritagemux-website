@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>HMS · School Messaging Portal</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',system-ui,sans-serif;background:#f4f6f9;color:#1a1a2e;min-height:100vh}
+
+  /* ── LOGIN SCREEN ── */
+  #login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:1rem}
+  .login-card{background:#fff;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.08);padding:2.5rem 2rem;width:100%;max-width:400px;text-align:center}
+  .login-logo{font-size:2.5rem;margin-bottom:.5rem}
+  .login-card h1{font-size:1.25rem;font-weight:600;margin-bottom:.25rem}
+  .login-card p{color:#666;font-size:.9rem;margin-bottom:1.75rem}
+  .form-group{text-align:left;margin-bottom:1rem}
+  .form-group label{display:block;font-size:.8rem;font-weight:600;color:#444;margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.04em}
+  .form-group input{width:100%;padding:.7rem .9rem;border:1.5px solid #e0e0e0;border-radius:8px;font-size:.95rem;transition:border-color .2s}
+  .form-group input:focus{outline:none;border-color:#4f46e5}
+  .btn-primary{width:100%;padding:.75rem;background:#4f46e5;color:#fff;border:none;border-radius:8px;font-size:.95rem;font-weight:600;cursor:pointer;transition:background .2s;margin-top:.5rem}
+  .btn-primary:hover{background:#4338ca}
+  .btn-primary:disabled{background:#a0aec0;cursor:not-allowed}
+  #login-error{color:#e53e3e;font-size:.85rem;margin-top:.75rem;display:none;padding:.6rem;background:#fff5f5;border-radius:6px;border:1px solid #fed7d7}
+  #lockout-msg{color:#e53e3e;font-size:.85rem;margin-top:.75rem;display:none;padding:.6rem;background:#fff5f5;border-radius:6px;border:1px solid #fed7d7}
+  .forgot-link{display:block;margin-top:1rem;font-size:.85rem;color:#4f46e5;text-decoration:none}
+  .forgot-link:hover{text-decoration:underline}
+
+  /* ── MAIN APP ── */
+  #app{display:none;flex-direction:row;min-height:100vh}
+
+  /* Sidebar */
+  .sidebar{width:220px;background:#1a1a2e;color:#fff;display:flex;flex-direction:column;flex-shrink:0;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:100}
+  .sidebar-brand{padding:1.25rem 1rem 1rem;border-bottom:1px solid rgba(255,255,255,.1)}
+  .sidebar-brand .school-name{font-size:.85rem;font-weight:700;line-height:1.3;margin-top:.4rem}
+  .sidebar-brand .portal-label{font-size:.7rem;color:#9ca3af;text-transform:uppercase;letter-spacing:.05em}
+  .sidebar-section{padding:.75rem 1rem .25rem;font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:#6b7280;font-weight:700}
+  .nav-item{display:flex;align-items:center;gap:.6rem;padding:.6rem 1rem;font-size:.85rem;color:#d1d5db;cursor:pointer;border-radius:0;transition:background .15s;position:relative}
+  .nav-item:hover{background:rgba(255,255,255,.07);color:#fff}
+  .nav-item.active{background:rgba(79,70,229,.3);color:#fff}
+  .nav-item .badge{margin-left:auto;background:#e53e3e;color:#fff;font-size:.65rem;font-weight:700;padding:2px 6px;border-radius:10px;min-width:18px;text-align:center}
+  .sidebar-footer{margin-top:auto;padding:1rem;border-top:1px solid rgba(255,255,255,.1)}
+  .staff-info{font-size:.75rem;color:#9ca3af;margin-bottom:.75rem;word-break:break-all}
+  .btn-logout{width:100%;padding:.5rem;background:transparent;color:#9ca3af;border:1px solid rgba(255,255,255,.15);border-radius:6px;font-size:.8rem;cursor:pointer;transition:all .2s}
+  .btn-logout:hover{background:rgba(229,62,62,.15);color:#fc8181;border-color:rgba(229,62,62,.3)}
+
+  /* Main content */
+  .main-content{margin-left:220px;flex:1;padding:1.5rem;min-height:100vh}
+  .page-header{margin-bottom:1.5rem}
+  .page-header h2{font-size:1.3rem;font-weight:700}
+  .page-header p{color:#666;font-size:.875rem;margin-top:.2rem}
+  .live-badge{display:inline-flex;align-items:center;gap:.35rem;font-size:.72rem;font-weight:600;color:#059669;background:#ecfdf5;padding:.25rem .6rem;border-radius:20px;margin-bottom:.75rem}
+  .live-badge::before{content:'';width:7px;height:7px;border-radius:50%;background:#059669}
+
+  /* Panels */
+  .panel{display:none}
+  .panel.active{display:block}
+
+  /* Cards */
+  .card{background:#fff;border-radius:12px;box-shadow:0 1px 6px rgba(0,0,0,.06);padding:1.25rem 1.5rem;margin-bottom:1.25rem}
+  .card-title{font-size:1rem;font-weight:600;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+
+  /* Forms */
+  .form-row{margin-bottom:1rem}
+  .form-row label{display:block;font-size:.8rem;font-weight:600;color:#444;margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.04em}
+  .form-row input,.form-row select,.form-row textarea{width:100%;padding:.65rem .9rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.9rem;font-family:inherit;transition:border-color .2s;background:#fff}
+  .form-row input:focus,.form-row select:focus,.form-row textarea:focus{outline:none;border-color:#4f46e5}
+  .form-row textarea{resize:vertical;min-height:120px;line-height:1.5}
+  .form-hint{font-size:.78rem;color:#718096;margin-top:.4rem;padding:.5rem .7rem;background:#fffbeb;border-left:3px solid #f6ad55;border-radius:4px}
+  .form-actions{display:flex;gap:.75rem;margin-top:1.25rem;flex-wrap:wrap}
+  .btn{padding:.6rem 1.2rem;border-radius:8px;font-size:.875rem;font-weight:600;cursor:pointer;border:none;transition:all .2s}
+  .btn-send{background:#4f46e5;color:#fff}
+  .btn-send:hover{background:#4338ca}
+  .btn-send:disabled{background:#a0aec0;cursor:not-allowed}
+  .btn-clear{background:#f7fafc;color:#4a5568;border:1.5px solid #e2e8f0}
+  .btn-clear:hover{background:#edf2f7}
+  .btn-preview{background:#fff;color:#4f46e5;border:1.5px solid #4f46e5}
+  .btn-preview:hover{background:#eef2ff}
+
+  /* Priority badges */
+  .priority-normal{color:#2b6cb0;background:#ebf8ff;padding:2px 8px;border-radius:10px;font-size:.72rem;font-weight:600}
+  .priority-important{color:#744210;background:#fefcbf;padding:2px 8px;border-radius:10px;font-size:.72rem;font-weight:600}
+  .priority-urgent{color:#742a2a;background:#fff5f5;padding:2px 8px;border-radius:10px;font-size:.72rem;font-weight:600}
+
+  /* Message list */
+  .msg-item{padding:1rem 1.25rem;border-bottom:1px solid #f0f0f0;transition:background .15s}
+  .msg-item:last-child{border-bottom:none}
+  .msg-item:hover{background:#fafbff}
+  .msg-meta{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.3rem}
+  .msg-to{font-weight:600;font-size:.875rem}
+  .msg-time{font-size:.75rem;color:#9ca3af;margin-left:auto}
+  .msg-subject{font-size:.875rem;color:#374151;margin-bottom:.2rem}
+  .msg-preview{font-size:.8rem;color:#9ca3af;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .empty-state{text-align:center;padding:3rem 1rem;color:#9ca3af}
+  .empty-state .empty-icon{font-size:2.5rem;margin-bottom:.75rem}
+  .loading-state{text-align:center;padding:2rem;color:#9ca3af;font-size:.875rem}
+
+  /* Toast */
+  #toast{position:fixed;bottom:1.5rem;right:1.5rem;background:#1a1a2e;color:#fff;padding:.75rem 1.25rem;border-radius:10px;font-size:.875rem;font-weight:500;z-index:9999;transform:translateY(100px);opacity:0;transition:all .3s;max-width:320px}
+  #toast.show{transform:translateY(0);opacity:1}
+  #toast.success{background:#059669}
+  #toast.error{background:#dc2626}
+
+  /* Logout confirm modal */
+  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9998;align-items:center;justify-content:center}
+  .modal-overlay.show{display:flex}
+  .modal-box{background:#fff;border-radius:14px;padding:1.75rem 1.5rem;max-width:360px;width:90%;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.15)}
+  .modal-box h3{font-size:1.1rem;font-weight:700;margin-bottom:.5rem}
+  .modal-box p{color:#666;font-size:.875rem;margin-bottom:1.25rem}
+  .modal-actions{display:flex;gap:.75rem;justify-content:center}
+  .btn-cancel{padding:.6rem 1.25rem;background:#f7fafc;color:#4a5568;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.875rem;font-weight:600;cursor:pointer}
+  .btn-confirm-logout{padding:.6rem 1.25rem;background:#dc2626;color:#fff;border:none;border-radius:8px;font-size:.875rem;font-weight:600;cursor:pointer}
+
+  /* Dashboard stats */
+  .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:1.5rem}
+  .stat-card{background:#fff;border-radius:12px;padding:1.25rem;box-shadow:0 1px 6px rgba(0,0,0,.06);text-align:center}
+  .stat-number{font-size:2rem;font-weight:700;color:#4f46e5}
+  .stat-label{font-size:.8rem;color:#718096;margin-top:.25rem}
+
+  /* Directory */
+  .dir-item{padding:.9rem 1.25rem;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;gap:.75rem}
+  .dir-item:last-child{border-bottom:none}
+  .dir-avatar{width:38px;height:38px;border-radius:50%;background:#eef2ff;color:#4f46e5;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0}
+  .dir-info .dir-name{font-size:.875rem;font-weight:600}
+  .dir-info .dir-class{font-size:.78rem;color:#718096}
+  .btn-add-parent{background:#4f46e5;color:#fff;border:none;border-radius:8px;padding:.55rem 1rem;font-size:.82rem;font-weight:600;cursor:pointer;margin-bottom:1rem}
+  .btn-add-parent:hover{background:#4338ca}
+
+  /* Broadcast preview */
+  .preview-box{background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:10px;padding:1rem 1.25rem;margin-bottom:1rem}
+  .preview-box .preview-row{display:flex;gap:.5rem;margin-bottom:.35rem;font-size:.875rem}
+  .preview-box .preview-label{color:#718096;min-width:80px;font-weight:600}
+
+  /* Add parent form */
+  #add-parent-form{display:none}
+
+  /* Responsive */
+  @media(max-width:640px){
+    .sidebar{width:100%;height:auto;position:relative;flex-direction:row;flex-wrap:wrap}
+    .main-content{margin-left:0}
+    #app{flex-direction:column}
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════
+     LOGIN SCREEN
+══════════════════════════════════ -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">🏫</div>
+    <h1>Staff Messaging Portal</h1>
+    <p>Heritage Montessori &amp; School — Staff access only</p>
+
+    <div class="form-group">
+      <label>Staff Email</label>
+      <input type="email" id="login-email" placeholder="your@email.com" autocomplete="email"/>
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="login-password" placeholder="Enter your password" autocomplete="current-password"/>
+    </div>
+
+    <button class="btn-primary" id="btn-login" onclick="doLogin()">Sign In →</button>
+
+    <div id="login-error"></div>
+    <div id="lockout-msg">⛔ Too many failed attempts. Please wait <span id="lockout-countdown">30</span>s before trying again.</div>
+
+    <a class="forgot-link" href="#" onclick="showForgotPassword()">Forgot your password? Contact admin</a>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     MAIN APP
+══════════════════════════════════ -->
+<div id="app">
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <div style="font-size:1.4rem">🏫</div>
+      <div class="school-name">Heritage Montessori<br>&amp; School</div>
+      <div class="portal-label">Messaging Portal</div>
+    </div>
+
+    <div class="sidebar-section">Staff Panel</div>
+    <div class="nav-item" onclick="showPanel('compose')">✏️ &nbsp;Compose Message</div>
+    <div class="nav-item" onclick="showPanel('sent')">📤 &nbsp;Sent Messages</div>
+    <div class="nav-item" id="nav-replies" onclick="showPanel('replies')">💬 &nbsp;Parent Replies <span class="badge" id="replies-badge" style="display:none">0</span></div>
+
+    <div class="sidebar-section">Broadcast</div>
+    <div class="nav-item" onclick="showPanel('broadcast')">📢 &nbsp;Class Broadcast</div>
+
+    <div class="sidebar-section">Records</div>
+    <div class="nav-item" onclick="showPanel('directory')">👨‍👩‍👧 &nbsp;Parent Directory</div>
+    <div class="nav-item" onclick="showPanel('dashboard')">📊 &nbsp;Dashboard</div>
+
+    <div class="sidebar-footer">
+      <div class="staff-info" id="staff-email-display"></div>
+      <button class="btn-logout" onclick="confirmLogout()">Log Out</button>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <main class="main-content">
+
+    <!-- ── COMPOSE ── -->
+    <div class="panel active" id="panel-compose">
+      <div class="live-badge">Live · Heritage Montessori Staff Portal</div>
+      <div class="page-header">
+        <h2>✏️ New Individual Message</h2>
+        <p>Message will be sent privately to the parent only</p>
+      </div>
+      <div class="card">
+        <div class="form-row">
+          <label>Search Parent / Child</label>
+          <select id="compose-parent">
+            <option value="">— Select parent / child —</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>Subject</label>
+          <input type="text" id="compose-subject" placeholder="e.g. Homework reminder — Ahmed"/>
+        </div>
+        <div class="form-row">
+          <label>Priority</label>
+          <select id="compose-priority">
+            <option value="normal">Normal</option>
+            <option value="important">Important</option>
+            <option value="urgent">Urgent — will notify parent immediately</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>Message</label>
+          <textarea id="compose-body" placeholder="Type your message here…"></textarea>
+        </div>
+        <div class="form-hint">💡 Do not include phone numbers or personal contact details — these will be visible to the parent.</div>
+        <div class="form-actions">
+          <button class="btn btn-send" id="btn-send-msg" onclick="sendMessage()">Send Message →</button>
+          <button class="btn btn-clear" onclick="clearCompose()">↺ Clear</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── BROADCAST ── -->
+    <div class="panel" id="panel-broadcast">
+      <div class="page-header">
+        <h2>📢 Class Broadcast</h2>
+        <p>Sends privately to each parent in the class — parents cannot see each other</p>
+      </div>
+      <div class="card">
+        <div class="form-row">
+          <label>Select Class / Grade</label>
+          <select id="bc-class">
+            <option value="">— Select class —</option>
+            <option>Mont 1</option><option>Mont 2</option><option>Mont 3</option>
+            <option>Class 1</option><option>Class 2</option><option>Class 3</option>
+            <option>Class 4</option><option>Class 5</option>
+            <option value="ALL">ALL CLASSES</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>Priority</label>
+          <select id="bc-priority">
+            <option value="normal">Normal</option>
+            <option value="important">Important</option>
+            <option value="urgent">Urgent — will notify parents immediately</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>Subject</label>
+          <input type="text" id="bc-subject" placeholder="e.g. School closed Friday 7th"/>
+        </div>
+        <div class="form-row">
+          <label>Message</label>
+          <textarea id="bc-body" placeholder="Type your broadcast message here…"></textarea>
+        </div>
+        <div class="form-hint">💡 This message will be delivered individually to each parent in the selected class. No parent can see other parents.</div>
+        <div id="bc-preview-box" class="preview-box" style="display:none">
+          <div class="preview-row"><span class="preview-label">To:</span><span id="prev-class"></span></div>
+          <div class="preview-row"><span class="preview-label">Recipients:</span><span id="prev-count"></span> parents</div>
+          <div class="preview-row"><span class="preview-label">Subject:</span><span id="prev-subject"></span></div>
+          <div class="preview-row"><span class="preview-label">Priority:</span><span id="prev-priority"></span></div>
+          <div class="preview-row"><span class="preview-label">Message:</span><span id="prev-body" style="white-space:pre-wrap"></span></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-preview" onclick="previewBroadcast()">Preview →</button>
+          <button class="btn btn-send" id="btn-send-bc" onclick="sendBroadcast()" style="display:none">Send to All →</button>
+          <button class="btn btn-clear" onclick="clearBroadcast()">↺ Clear</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SENT MESSAGES ── -->
+    <div class="panel" id="panel-sent">
+      <div class="page-header">
+        <h2>📤 Sent Messages</h2>
+        <p>All messages sent from your account</p>
+      </div>
+      <div class="card" style="padding:0">
+        <div id="sent-list"><div class="loading-state">Loading sent messages…</div></div>
+      </div>
+    </div>
+
+    <!-- ── PARENT REPLIES ── -->
+    <div class="panel" id="panel-replies">
+      <div class="page-header">
+        <h2>💬 Parent Replies</h2>
+        <p>Replies received from parents</p>
+      </div>
+      <div class="card" style="padding:0">
+        <div id="replies-list"><div class="loading-state">Loading replies…</div></div>
+      </div>
+    </div>
+
+    <!-- ── PARENT DIRECTORY ── -->
+    <div class="panel" id="panel-directory">
+      <div class="page-header">
+        <h2>👨‍👩‍👧 Parent Directory</h2>
+        <p>All registered parents and guardians</p>
+      </div>
+      <button class="btn-add-parent" onclick="toggleAddParent()">+ Add Parent</button>
+
+      <!-- Add parent form -->
+      <div class="card" id="add-parent-form">
+        <div class="card-title">+ Add Parent to Directory</div>
+        <div class="form-row">
+          <label>Child's Full Name</label>
+          <input type="text" id="child-name" placeholder="e.g. Ahmed Ali"/>
+        </div>
+        <div class="form-row">
+          <label>Class / Grade</label>
+          <select id="child-class">
+            <option value="">— Select —</option>
+            <option>Mont 1</option><option>Mont 2</option><option>Mont 3</option>
+            <option>Class 1</option><option>Class 2</option><option>Class 3</option>
+            <option>Class 4</option><option>Class 5</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>Parent / Guardian Name</label>
+          <input type="text" id="parent-name" placeholder="e.g. Mr. Ali Hassan"/>
+        </div>
+        <div class="form-row">
+          <label>Parent Email (for login)</label>
+          <input type="email" id="parent-email" placeholder="parent@email.com"/>
+        </div>
+        <div class="form-hint">⚠ Phone numbers are not stored or shared in this system. Email is used only for login — it is never shown to other parents or staff.</div>
+        <div class="form-actions">
+          <button class="btn btn-send" onclick="saveParent()">Save Parent →</button>
+          <button class="btn btn-clear" onclick="toggleAddParent()">Cancel</button>
+        </div>
+      </div>
+
+      <div class="card" style="padding:0">
+        <div id="directory-list"><div class="loading-state">Loading directory…</div></div>
+      </div>
+    </div>
+
+    <!-- ── DASHBOARD ── -->
+    <div class="panel" id="panel-dashboard">
+      <div class="page-header">
+        <h2>📊 Dashboard</h2>
+        <p>Activity overview for your portal</p>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number" id="stat-sent">—</div>
+          <div class="stat-label">Total Messages Sent</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="stat-replies">—</div>
+          <div class="stat-label">Parent Replies</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="stat-parents">—</div>
+          <div class="stat-label">Parents Registered</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Recent Activity</div>
+        <div id="activity-list"><div class="loading-state">Loading activity…</div></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Logout confirmation modal -->
+<div class="modal-overlay" id="logout-modal">
+  <div class="modal-box">
+    <h3>Log out?</h3>
+    <p>You will be returned to the login screen.</p>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeLogoutModal()">Cancel</button>
+      <button class="btn-confirm-logout" onclick="doLogout()">Log Out</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div id="toast"></div>
+
+
+<!-- ══════════════════════════════════
+     FIREBASE SDK
+══════════════════════════════════ -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import {
+  getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import {
+  getDatabase, ref, push, set, get, query, orderByChild, equalTo, onValue, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey:            "AIzaSyD5F-c9Bq9NCXYigR7pi-l-eeXuEQKOby4",
+  authDomain:        "hms-school-1407c.firebaseapp.com",
+  databaseURL:       "https://hms-school-1407c-default-rtdb.firebaseio.com",
+  projectId:         "hms-school-1407c",
+  storageBucket:     "hms-school-1407c.firebasestorage.app",
+  messagingSenderId: "635121297311",
+  appId:             "1:635121297311:web:bfe63f91ff02e670b77faa"
+};
+
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getDatabase(app);
+
+// ─────────────────────────────────────
+// LOGIN — with lockout after 5 failures
+// ─────────────────────────────────────
+let loginAttempts = 0;
+let lockoutTimer  = null;
+
+window.doLogin = async function() {
+  if (lockoutTimer) return;
+
+  const email    = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  const errDiv   = document.getElementById('login-error');
+  const btn      = document.getElementById('btn-login');
+
+  errDiv.style.display = 'none';
+  btn.disabled = true;
+  btn.textContent = 'Signing in…';
+
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    loginAttempts = 0;
+    // onAuthStateChanged handles the UI transition
+  } catch (err) {
+    loginAttempts++;
+    btn.disabled = false;
+    btn.textContent = 'Sign In →';
+
+    if (loginAttempts >= 5) {
+      startLockout();
+    } else {
+      errDiv.textContent = '⚠ Incorrect email or password. Please try again.';
+      errDiv.style.display = 'block';
+    }
+  }
+};
+
+function startLockout() {
+  let secs = 30;
+  document.getElementById('login-error').style.display = 'none';
+  document.getElementById('lockout-msg').style.display = 'block';
+  document.getElementById('btn-login').disabled = true;
+
+  lockoutTimer = setInterval(() => {
+    secs--;
+    document.getElementById('lockout-countdown').textContent = secs;
+    if (secs <= 0) {
+      clearInterval(lockoutTimer);
+      lockoutTimer = null;
+      loginAttempts = 0;
+      document.getElementById('lockout-msg').style.display = 'none';
+      document.getElementById('btn-login').disabled = false;
+    }
+  }, 1000);
+}
+
+// Press Enter to login
+document.getElementById('login-password').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+
+// ─────────────────────────────────────
+// AUTH STATE LISTENER
+// ─────────────────────────────────────
+onAuthStateChanged(auth, user => {
+  if (user) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+    document.getElementById('staff-email-display').textContent = user.email;
+    loadAllData();
+  } else {
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('app').style.display = 'none';
+  }
+});
+
+// ─────────────────────────────────────
+// LOGOUT
+// ─────────────────────────────────────
+window.confirmLogout = function() {
+  document.getElementById('logout-modal').classList.add('show');
+};
+window.closeLogoutModal = function() {
+  document.getElementById('logout-modal').classList.remove('show');
+};
+window.doLogout = async function() {
+  await signOut(auth);
+  document.getElementById('logout-modal').classList.remove('show');
+};
+
+// ─────────────────────────────────────
+// FORGOT PASSWORD
+// ─────────────────────────────────────
+window.showForgotPassword = async function() {
+  const email = document.getElementById('login-email').value.trim();
+  if (!email) {
+    showToast('Enter your email above first, then click forgot password.', 'error');
+    return;
+  }
+  try {
+    await sendPasswordResetEmail(auth, email);
+    showToast('Password reset email sent! Check your inbox.', 'success');
+  } catch {
+    showToast('Could not send reset email. Check the address and try again.', 'error');
+  }
+};
+
+// ─────────────────────────────────────
+// PANEL NAVIGATION
+// ─────────────────────────────────────
+window.showPanel = function(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+};
+
+// ─────────────────────────────────────
+// LOAD ALL DATA
+// ─────────────────────────────────────
+function loadAllData() {
+  loadParents();
+  loadSentMessages();
+  loadReplies();
+  loadDashboard();
+}
+
+// ─────────────────────────────────────
+// PARENTS
+// ─────────────────────────────────────
+let parentsCache = [];
+
+function loadParents() {
+  const dbRef = ref(db, 'parents');
+  onValue(dbRef, snapshot => {
+    parentsCache = [];
+    const list = document.getElementById('directory-list');
+    const select = document.getElementById('compose-parent');
+
+    if (!snapshot.exists()) {
+      list.innerHTML = '<div class="empty-state"><div class="empty-icon">👨‍👩‍👧</div><p>No parents registered yet.</p></div>';
+      select.innerHTML = '<option value="">— No parents yet —</option>';
+      document.getElementById('stat-parents').textContent = '0';
+      return;
+    }
+
+    const data = snapshot.val();
+    list.innerHTML = '';
+    select.innerHTML = '<option value="">— Select parent / child —</option>';
+
+    Object.entries(data).forEach(([id, p]) => {
+      parentsCache.push({ id, ...p });
+      const initials = (p.parentName || 'P').split(' ').map(w => w[0]).join('').substring(0,2).toUpperCase();
+      list.innerHTML += `
+        <div class="dir-item">
+          <div class="dir-avatar">${initials}</div>
+          <div class="dir-info">
+            <div class="dir-name">${p.childName}</div>
+            <div class="dir-class">${p.class} · Guardian: ${p.parentName}</div>
+          </div>
+        </div>`;
+      select.innerHTML += `<option value="${id}">${p.childName} (${p.class}) — ${p.parentName}</option>`;
+    });
+
+    document.getElementById('stat-parents').textContent = parentsCache.length;
+  }, err => {
+    document.getElementById('directory-list').innerHTML = '<div class="empty-state"><p>Could not load directory. Please check your connection.</p></div>';
+  });
+}
+
+window.saveParent = async function() {
+  const childName  = document.getElementById('child-name').value.trim();
+  const cls        = document.getElementById('child-class').value;
+  const parentName = document.getElementById('parent-name').value.trim();
+  const email      = document.getElementById('parent-email').value.trim();
+
+  if (!childName || !cls || !parentName || !email) {
+    showToast('Please fill in all fields.', 'error'); return;
+  }
+
+  try {
+    await push(ref(db, 'parents'), {
+      childName, class: cls, parentName, email,
+      addedBy: auth.currentUser.email,
+      addedAt: serverTimestamp()
+    });
+    showToast('Parent added successfully!', 'success');
+    document.getElementById('add-parent-form').style.display = 'none';
+    document.getElementById('child-name').value = '';
+    document.getElementById('child-class').value = '';
+    document.getElementById('parent-name').value = '';
+    document.getElementById('parent-email').value = '';
+  } catch (err) {
+    showToast('Failed to save parent. Please try again.', 'error');
+  }
+};
+
+window.toggleAddParent = function() {
+  const form = document.getElementById('add-parent-form');
+  form.style.display = form.style.display === 'none' ? 'block' : 'none';
+};
+
+// ─────────────────────────────────────
+// SEND INDIVIDUAL MESSAGE
+// ─────────────────────────────────────
+window.sendMessage = async function() {
+  const parentId = document.getElementById('compose-parent').value;
+  const subject  = document.getElementById('compose-subject').value.trim();
+  const priority = document.getElementById('compose-priority').value;
+  const body     = document.getElementById('compose-body').value.trim();
+
+  if (!parentId || !subject || !body) {
+    showToast('Please fill in all fields.', 'error'); return;
+  }
+
+  const parent = parentsCache.find(p => p.id === parentId);
+  const btn = document.getElementById('btn-send-msg');
+  btn.disabled = true; btn.textContent = 'Sending…';
+
+  try {
+    await push(ref(db, 'messages'), {
+      parentId, parentName: parent?.parentName || '', childName: parent?.childName || '',
+      subject, priority, body,
+      sentBy: auth.currentUser.email,
+      sentAt: serverTimestamp(),
+      status: 'delivered',
+      type: 'individual'
+    });
+    showToast('Message sent successfully!', 'success');
+    clearCompose();
+  } catch {
+    showToast('Failed to send message. Please try again.', 'error');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Send Message →';
+  }
+};
+
+window.clearCompose = function() {
+  document.getElementById('compose-parent').value = '';
+  document.getElementById('compose-subject').value = '';
+  document.getElementById('compose-priority').value = 'normal';
+  document.getElementById('compose-body').value = '';
+};
+
+// ─────────────────────────────────────
+// BROADCAST
+// ─────────────────────────────────────
+window.previewBroadcast = function() {
+  const cls      = document.getElementById('bc-class').value;
+  const subject  = document.getElementById('bc-subject').value.trim();
+  const priority = document.getElementById('bc-priority').value;
+  const body     = document.getElementById('bc-body').value.trim();
+
+  if (!cls || !subject || !body) {
+    showToast('Please fill in all fields before previewing.', 'error'); return;
+  }
+
+  const recipients = cls === 'ALL'
+    ? parentsCache
+    : parentsCache.filter(p => p.class === cls);
+
+  document.getElementById('prev-class').textContent    = cls === 'ALL' ? 'All Classes' : cls;
+  document.getElementById('prev-count').textContent    = recipients.length;
+  document.getElementById('prev-subject').textContent  = subject;
+  document.getElementById('prev-priority').textContent = priority;
+  document.getElementById('prev-body').textContent     = body;
+
+  document.getElementById('bc-preview-box').style.display = 'block';
+  document.getElementById('btn-send-bc').style.display    = 'inline-flex';
+};
+
+window.sendBroadcast = async function() {
+  const cls      = document.getElementById('bc-class').value;
+  const subject  = document.getElementById('bc-subject').value.trim();
+  const priority = document.getElementById('bc-priority').value;
+  const body     = document.getElementById('bc-body').value.trim();
+
+  const recipients = cls === 'ALL'
+    ? parentsCache
+    : parentsCache.filter(p => p.class === cls);
+
+  if (recipients.length === 0) {
+    showToast('No parents found in this class.', 'error'); return;
+  }
+
+  const btn = document.getElementById('btn-send-bc');
+  btn.disabled = true; btn.textContent = `Sending 0 / ${recipients.length}…`;
+
+  let sent = 0;
+  for (const parent of recipients) {
+    try {
+      await push(ref(db, 'messages'), {
+        parentId: parent.id, parentName: parent.parentName, childName: parent.childName,
+        subject, priority, body,
+        sentBy: auth.currentUser.email,
+        sentAt: serverTimestamp(),
+        status: 'delivered',
+        type: 'broadcast',
+        broadcastClass: cls
+      });
+      sent++;
+      btn.textContent = `Sending ${sent} / ${recipients.length}…`;
+    } catch { /* individual failures are silent; total reported at end */ }
+  }
+
+  showToast(`Broadcast sent to ${sent} of ${recipients.length} parents.`, 'success');
+  clearBroadcast();
+  btn.disabled = false; btn.textContent = 'Send to All →';
+};
+
+window.clearBroadcast = function() {
+  document.getElementById('bc-class').value    = '';
+  document.getElementById('bc-priority').value = 'normal';
+  document.getElementById('bc-subject').value  = '';
+  document.getElementById('bc-body').value     = '';
+  document.getElementById('bc-preview-box').style.display = 'none';
+  document.getElementById('btn-send-bc').style.display    = 'none';
+};
+
+// ─────────────────────────────────────
+// SENT MESSAGES
+// ─────────────────────────────────────
+function loadSentMessages() {
+  const dbRef = ref(db, 'messages');
+  onValue(dbRef, snapshot => {
+    const list = document.getElementById('sent-list');
+    if (!snapshot.exists()) {
+      list.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>No messages sent yet.</p></div>';
+      return;
+    }
+    const messages = [];
+    snapshot.forEach(child => {
+      const m = child.val();
+      if (m.sentBy === auth.currentUser?.email) messages.push(m);
+    });
+    messages.sort((a,b) => (b.sentAt||0) - (a.sentAt||0));
+
+    if (messages.length === 0) {
+      list.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>No messages sent yet.</p></div>';
+      return;
+    }
+
+    list.innerHTML = messages.map(m => `
+      <div class="msg-item">
+        <div class="msg-meta">
+          <span class="msg-to">To: ${m.childName || 'Unknown'} (${m.parentName || ''})</span>
+          <span class="priority-${m.priority||'normal'}">${m.priority||'normal'}</span>
+          <span class="msg-time">${formatTime(m.sentAt)}</span>
+        </div>
+        <div class="msg-subject">${m.subject}</div>
+        <div class="msg-preview">${m.body}</div>
+      </div>`).join('');
+  }, () => {
+    document.getElementById('sent-list').innerHTML = '<div class="empty-state"><p>Could not load messages.</p></div>';
+  });
+}
+
+// ─────────────────────────────────────
+// REPLIES
+// ─────────────────────────────────────
+function loadReplies() {
+  const dbRef = ref(db, 'replies');
+  onValue(dbRef, snapshot => {
+    const list = document.getElementById('replies-list');
+    if (!snapshot.exists()) {
+      list.innerHTML = '<div class="empty-state"><div class="empty-icon">💬</div><p>No replies yet.</p></div>';
+      document.getElementById('replies-badge').style.display = 'none';
+      document.getElementById('stat-replies').textContent = '0';
+      return;
+    }
+    const replies = [];
+    snapshot.forEach(child => replies.push(child.val()));
+    replies.sort((a,b) => (b.sentAt||0) - (a.sentAt||0));
+
+    const unread = replies.filter(r => !r.read).length;
+    const badge = document.getElementById('replies-badge');
+    if (unread > 0) {
+      badge.style.display = 'inline';
+      badge.textContent = unread;
+    } else {
+      badge.style.display = 'none';
+    }
+
+    document.getElementById('stat-replies').textContent = replies.length;
+    list.innerHTML = replies.map(r => `
+      <div class="msg-item">
+        <div class="msg-meta">
+          <span class="msg-to">From: ${r.parentName || 'Parent'}</span>
+          <span class="msg-time">${formatTime(r.sentAt)}</span>
+        </div>
+        <div class="msg-subject">Re: ${r.subject||''}</div>
+        <div class="msg-preview">${r.body}</div>
+      </div>`).join('');
+  }, () => {
+    document.getElementById('replies-list').innerHTML = '<div class="empty-state"><p>Could not load replies.</p></div>';
+  });
+}
+
+// ─────────────────────────────────────
+// DASHBOARD
+// ─────────────────────────────────────
+function loadDashboard() {
+  const dbRef = ref(db, 'messages');
+  onValue(dbRef, snapshot => {
+    let total = 0;
+    const recent = [];
+    if (snapshot.exists()) {
+      snapshot.forEach(child => {
+        const m = child.val();
+        if (m.sentBy === auth.currentUser?.email) { total++; recent.push(m); }
+      });
+    }
+    document.getElementById('stat-sent').textContent = total;
+    recent.sort((a,b) => (b.sentAt||0) - (a.sentAt||0));
+    const activityList = document.getElementById('activity-list');
+    if (recent.length === 0) {
+      activityList.innerHTML = '<div class="empty-state"><p>No activity yet.</p></div>';
+    } else {
+      activityList.innerHTML = recent.slice(0,10).map(m => `
+        <div class="msg-item">
+          <div class="msg-meta">
+            <span class="msg-to">${m.type === 'broadcast' ? '📢 Broadcast → ' + m.broadcastClass : '✉ → ' + (m.childName||'')}</span>
+            <span class="msg-time">${formatTime(m.sentAt)}</span>
+          </div>
+          <div class="msg-subject">${m.subject}</div>
+        </div>`).join('');
+    }
+  });
+}
+
+// ─────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────
+function formatTime(ts) {
+  if (!ts) return '';
+  const d = new Date(ts);
+  const now = new Date();
+  const diff = Math.floor((now - d) / 1000);
+  if (diff < 60) return 'Just now';
+  if (diff < 3600) return Math.floor(diff/60) + 'm ago';
+  if (diff < 86400) return Math.floor(diff/3600) + 'h ago';
+  return d.toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'});
+}
+
+window.showToast = function(msg, type='success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'show ' + type;
+  setTimeout(() => { t.className = ''; }, 3500);
+};
+
+</script>
+</body>
+</html>
