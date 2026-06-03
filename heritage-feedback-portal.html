@@ -184,8 +184,8 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
           <input class="f-input" type="text" id="parentName">
         </div>
         <div class="info-field" style="grid-column:span 2;">
-          <label>Contact Number (optional)</label>
-          <input class="f-input" type="text" id="contactNumber">
+          <label>Contact Number <span style="color:var(--error);">*</span></label>
+          <input class="f-input" type="text" id="contactNumber" placeholder="e.g. 0300-1234567" required>
         </div>
       </div>
 
@@ -592,6 +592,8 @@ function resetStatusBar() {
 window.submitFeedback = async function() {
   const name = document.getElementById('childName').value.trim();
   if (!name) { alert('Please enter the child\'s name before submitting.'); return; }
+  const contact = document.getElementById('contactNumber').value.trim();
+  if (!contact) { alert('Please enter a contact number — it is needed to notify you when the school responds.'); return; }
   const key         = childKey(name);
   const growthAreas = [...document.querySelectorAll('#growthChips .chip.on')].map(c=>c.textContent.trim());
   const homeSkills  = [...document.querySelectorAll('#homeSkillChips .chip.on')].map(c=>c.textContent.trim());
