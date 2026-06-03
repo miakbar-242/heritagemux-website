@@ -18,6 +18,8 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
 .banner h1 { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:600; }
 .banner p { font-size:10px; letter-spacing:2.5px; text-transform:uppercase; color:rgba(255,255,255,0.55); margin-top:2px; }
 .banner-badge { background:var(--gold); color:var(--forest); font-size:9.5px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; padding:5px 12px; border-radius:2px; }
+
+/* LOGIN */
 .login-box { background:var(--cream); padding:52px; box-shadow:0 8px 48px rgba(0,0,0,0.15); text-align:center; }
 .login-box h2 { font-family:'Cormorant Garamond',serif; font-size:24px; color:var(--forest); margin-bottom:8px; }
 .login-box p { font-size:12.5px; color:var(--muted); margin-bottom:28px; line-height:1.6; }
@@ -26,6 +28,8 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
 .pin-input:focus { border-color:var(--gold); }
 .login-error { color:var(--error); font-size:11.5px; margin-top:10px; display:none; }
 .pin-hint { font-size:10.5px; color:var(--muted); margin-top:14px; font-style:italic; }
+
+/* BUTTONS */
 .btn { padding:11px 26px; font-family:'Jost',sans-serif; font-size:11.5px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; border:none; transition:background 0.2s; border-radius:2px; }
 .btn-primary { background:var(--forest); color:white; }
 .btn-primary:hover { background:var(--gold); }
@@ -39,6 +43,8 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
 .btn-keep.kept { background:var(--forest); color:white; }
 .btn-keep:hover { background:var(--forest); color:white; }
 .btn-sm { padding:7px 16px; font-size:10.5px; letter-spacing:1px; }
+
+/* SUMMARY BAR */
 .summary-bar { background:var(--cream); padding:18px 32px; box-shadow:0 2px 12px rgba(0,0,0,0.08); border-bottom:2px solid var(--tan); display:flex; gap:0; flex-wrap:wrap; }
 .summary-card { flex:1; min-width:100px; padding:8px 20px 8px 0; border-right:1px solid var(--line); margin-right:20px; }
 .summary-card:last-child { border-right:none; margin-right:0; }
@@ -47,6 +53,8 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
 .summary-card.new-badge .summary-num { color:var(--gold); }
 .summary-card.pending-badge .summary-num { color:#8a6020; }
 .summary-card.responded-badge .summary-num { color:var(--success); }
+
+/* NOTIFICATION AREA */
 .notif-area { display:none; background:#fffbf0; border-bottom:2px solid var(--gold); padding:14px 32px; }
 .notif-area.has-new { display:block; animation:slideDown 0.3s ease; }
 @keyframes slideDown { from{opacity:0;transform:translateY(-8px);} to{opacity:1;transform:translateY(0);} }
@@ -57,6 +65,8 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
 .notif-chip { background:white; border:1.5px solid var(--gold); padding:6px 14px; font-size:11.5px; color:var(--ink); border-radius:2px; cursor:pointer; display:flex; align-items:center; gap:8px; transition:background 0.15s; }
 .notif-chip:hover { background:var(--tan); }
 .notif-chip-badge { background:var(--gold); color:var(--forest); font-size:8.5px; font-weight:700; padding:2px 6px; border-radius:10px; }
+
+/* SEARCH */
 .search-section { background:var(--cream); padding:18px 32px; box-shadow:0 1px 6px rgba(0,0,0,0.06); border-bottom:1px solid var(--tan); display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
 .search-input { flex:1; min-width:200px; border:1.5px solid var(--line); background:var(--parchment); font-family:'Jost',sans-serif; font-size:13px; color:var(--ink); padding:9px 14px; outline:none; }
 .search-input:focus { border-color:var(--gold); }
@@ -66,12 +76,16 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
 .filter-btn.active { background:var(--forest); border-color:var(--forest); color:white; }
 .filter-count { background:rgba(255,255,255,0.3); font-size:9px; padding:1px 5px; border-radius:10px; }
 .filter-btn:not(.active) .filter-count { background:var(--line); color:var(--muted); }
+
+/* SUBMISSIONS */
 .submissions-area { background:var(--cream); padding:28px 32px; box-shadow:0 8px 48px rgba(0,0,0,0.12); min-height:300px; }
 .submissions-title { font-family:'Cormorant Garamond',serif; font-size:17px; font-weight:600; color:var(--forest); margin-bottom:18px; padding-bottom:10px; border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; }
 .sub-count { font-family:'Jost',sans-serif; font-size:11px; font-weight:400; color:var(--muted); }
 .empty-state { text-align:center; padding:48px 20px; color:var(--muted); }
 .empty-state .ei { font-size:36px; opacity:0.3; margin-bottom:12px; }
 .empty-state p { font-size:13px; line-height:1.6; }
+
+/* CARD */
 .sub-card { border:1.5px solid var(--line); margin-bottom:14px; overflow:hidden; transition:box-shadow 0.2s; position:relative; }
 .sub-card:hover { box-shadow:0 2px 16px rgba(0,0,0,0.08); }
 .sub-card.is-new { border-color:var(--gold); }
@@ -88,11 +102,14 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
 .b-general { background:#e8edf5; color:#2d4070; }
 .b-pending { background:#fdf3e3; color:#8a6020; }
 .b-responded { background:#e8f5ec; color:var(--success); }
+.b-graded { background:#f0e8f5; color:#6a2d8a; }
 .b-new { background:var(--gold); color:white; animation:newPulse 2s ease infinite; }
 @keyframes newPulse { 0%,100%{opacity:1;} 50%{opacity:0.7;} }
 .b-kept { background:#e8f0e8; color:var(--sage); border:1px solid var(--sage); }
 .chevron { font-size:12px; color:var(--muted); transition:transform 0.2s; }
 .chevron.open { transform:rotate(180deg); }
+
+/* CARD BODY */
 .card-body { display:none; padding:20px 20px 20px 24px; }
 .card-body.open { display:block; }
 .detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px 20px; margin-bottom:16px; background:var(--parchment); padding:14px 16px; border-left:3px solid var(--gold); }
@@ -103,8 +120,12 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
 .section-block-content { font-size:12.5px; color:var(--ink); line-height:1.65; padding:8px 12px; background:var(--cream); border-left:2px solid var(--line); }
 .chip-pills { display:flex; flex-wrap:wrap; gap:5px; }
 .chip-pill { background:var(--forest); color:white; font-size:10.5px; padding:3px 10px; border-radius:2px; }
+
+/* CARD ACTIONS */
 .card-actions { display:flex; gap:8px; align-items:center; padding:10px 16px 14px 24px; border-top:1px solid var(--tan); background:var(--cream); flex-wrap:wrap; }
 .card-action-label { font-size:9.5px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-right:4px; }
+
+/* RESPONSE COMPOSER */
 .response-composer { margin-top:20px; border-top:1.5px solid var(--line); padding-top:20px; }
 .composer-title { font-family:'Cormorant Garamond',serif; font-size:15px; font-weight:600; color:var(--forest); margin-bottom:14px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
 .ctag { font-family:'Jost',sans-serif; font-size:9px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; background:var(--gold); color:var(--forest); padding:2px 8px; border-radius:2px; }
@@ -124,6 +145,8 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
 .saved-ok { font-size:11px; color:var(--success); font-weight:500; display:none; margin-left:8px; }
 .spinner { display:inline-block; width:14px; height:14px; border:2px solid var(--line); border-top-color:var(--forest); border-radius:50%; animation:spin 0.7s linear infinite; vertical-align:middle; margin-right:4px; }
 @keyframes spin { to{transform:rotate(360deg);} }
+
+/* NOTIFY PARENT BLOCK */
 .notify-parent-block { display:none; margin-top:16px; background:#f0f7f0; border:1.5px solid #b0d4b0; padding:16px 18px; }
 .notify-parent-block.show { display:block; animation:fadeIn 0.4s ease; }
 @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
@@ -136,19 +159,58 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
 .notify-btn-wa { background:#25D366; color:white; }
 .notify-btn-copy { background:var(--parchment); color:var(--forest); border:1.5px solid var(--line); }
 .notify-no-contact { font-size:11.5px; color:var(--muted); font-style:italic; background:var(--parchment); padding:10px 14px; border-left:3px solid var(--line); }
+
+/* FOOTER */
 .panel-footer { background:var(--parchment); display:flex; align-items:center; justify-content:space-between; padding:14px 32px; flex-wrap:wrap; gap:8px; }
 .panel-footer span { font-size:9.5px; color:rgba(0,0,0,0.35); letter-spacing:1px; text-transform:uppercase; }
 .logout-btn { font-size:10.5px; color:var(--muted); cursor:pointer; background:none; border:none; font-family:'Jost',sans-serif; text-decoration:underline; }
 .logout-btn:hover { color:var(--error); }
+
+/* TOAST */
 .toast { position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(100px); background:var(--forest); color:white; padding:13px 28px; font-size:13px; font-weight:500; border-radius:2px; box-shadow:0 4px 24px rgba(0,0,0,0.25); transition:transform 0.4s ease; z-index:9999; white-space:nowrap; }
 .toast.show { transform:translateX(-50%) translateY(0); }
+
+/* LIVE DOT */
 .live-dot { display:inline-block; width:8px; height:8px; background:#2ecc71; border-radius:50%; margin-right:6px; animation:pulse 1.5s infinite; }
+
+/* MODAL */
 .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center; }
 .modal-overlay.show { display:flex; }
 .modal-box { background:var(--cream); padding:36px 40px; max-width:420px; width:90%; box-shadow:0 16px 64px rgba(0,0,0,0.25); }
 .modal-box h3 { font-family:'Cormorant Garamond',serif; font-size:20px; color:var(--forest); margin-bottom:10px; }
 .modal-box p { font-size:12.5px; color:var(--muted); line-height:1.65; margin-bottom:24px; }
 .modal-btns { display:flex; gap:10px; flex-wrap:wrap; }
+
+/* PRINT BUTTON */
+.btn-print { background:#f5f5ee; color:var(--muted); border:1.5px solid var(--line); }
+.btn-print:hover { background:var(--tan); color:var(--ink); border-color:var(--muted); }
+.btn-print-all { background:var(--parchment); color:var(--forest); border:1.5px solid var(--gold); }
+.btn-print-all:hover { background:var(--gold); color:var(--forest); }
+
+/* PRINT STYLES */
+@media print {
+  body { background:white !important; padding:0 !important; font-size:11pt; }
+  .portal { max-width:100% !important; }
+  .banner, .login-box, .summary-bar, .notif-area, .search-section,
+  .card-actions, .response-composer, .panel-footer, .modal-overlay,
+  .toast, .notify-parent-block, .hints-box, .chevron { display:none !important; }
+  .submissions-area { box-shadow:none !important; padding:0 !important; background:white !important; }
+  .submissions-title .sub-count { display:none; }
+  .btn-print-all { display:none !important; }
+  .sub-card { border:1px solid #ccc !important; margin-bottom:24px !important;
+    page-break-inside:avoid; box-shadow:none !important; break-inside:avoid; }
+  .sub-card.print-hide { display:none !important; }
+  .card-body { display:block !important; padding:14px !important; }
+  .card-header { background:#f2ece0 !important; }
+  .card-header:hover { background:#f2ece0 !important; }
+  .detail-grid { background:#f2ece0 !important; }
+  .print-header { display:block !important; }
+}
+
+/* Print header — hidden on screen, shown on print */
+.print-header { display:none; text-align:center; margin-bottom:24px; padding-bottom:14px; border-bottom:2px solid #2d4a2d; }
+.print-header h2 { font-family:'Cormorant Garamond',serif; font-size:20px; color:#2d4a2d; font-weight:600; }
+.print-header p { font-size:10px; color:#6e6456; margin-top:5px; letter-spacing:1.5px; text-transform:uppercase; }
 </style>
 </head>
 <body>
@@ -168,8 +230,8 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
     <h2>Staff Access Only</h2>
     <p>This panel is for Heritage Montessori staff to review parent feedback<br>and post official school responses. Enter your staff PIN to continue.</p>
     <div class="login-row">
-      <input class="pin-input" type="password" id="pinInput" maxlength="6" placeholder="· · · · · ·">
-      <button class="btn btn-primary" id="pinBtn">Enter →</button>
+      <input class="pin-input" type="password" id="pinInput" maxlength="6" placeholder="· · · · · ·" onkeydown="if(event.key==='Enter')checkPin()">
+      <button class="btn btn-primary" onclick="checkPin()">Enter →</button>
     </div>
     <div class="login-error" id="loginError">⚠ Incorrect PIN. Please try again.</div>
     <div class="pin-hint">Contact the school administrator if you have forgotten your PIN.</div>
@@ -178,6 +240,7 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
   <!-- MAIN PANEL -->
   <div id="mainPanel" style="display:none;">
 
+    <!-- SUMMARY BAR -->
     <div class="summary-bar">
       <div class="summary-card">
         <div class="summary-num" id="statTotal">—</div>
@@ -201,6 +264,7 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
       </div>
     </div>
 
+    <!-- NOTIFICATION AREA -->
     <div class="notif-area" id="notifArea">
       <div class="notif-title">
         <span class="notif-dot"></span>
@@ -209,21 +273,31 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
       <div class="notif-list" id="notifList"></div>
     </div>
 
+    <!-- SEARCH & FILTER -->
     <div class="search-section">
-      <input class="search-input" type="text" id="searchInput" placeholder="Search by child's name, class, or parent…">
+      <input class="search-input" type="text" id="searchInput" placeholder="Search by child's name, class, or parent…" oninput="filterCards()">
       <div class="filter-btns">
-        <button class="filter-btn active" data-filter="all">All <span class="filter-count" id="fc-all">0</span></button>
-        <button class="filter-btn" data-filter="new">New <span class="filter-count" id="fc-new">0</span></button>
-        <button class="filter-btn" data-filter="pending">Pending <span class="filter-count" id="fc-pending">0</span></button>
-        <button class="filter-btn" data-filter="responded">Responded <span class="filter-count" id="fc-responded">0</span></button>
-        <button class="filter-btn" data-filter="kept">📌 Kept <span class="filter-count" id="fc-kept">0</span></button>
+        <button class="filter-btn active" onclick="setFilter('all',this)">All <span class="filter-count" id="fc-all">0</span></button>
+        <button class="filter-btn" onclick="setFilter('new',this)">New <span class="filter-count" id="fc-new">0</span></button>
+        <button class="filter-btn" onclick="setFilter('pending',this)">Pending <span class="filter-count" id="fc-pending">0</span></button>
+        <button class="filter-btn" onclick="setFilter('responded',this)">Responded <span class="filter-count" id="fc-responded">0</span></button>
+        <button class="filter-btn" onclick="setFilter('kept',this)">📌 Kept <span class="filter-count" id="fc-kept">0</span></button>
       </div>
     </div>
 
+    <!-- SUBMISSIONS LIST -->
     <div class="submissions-area">
       <div class="submissions-title">
         <span><span class="live-dot"></span>Live Submissions</span>
-        <span class="sub-count" id="subCountLabel">Loading…</span>
+        <span style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+          <span class="sub-count" id="subCountLabel">Loading…</span>
+          <button class="btn btn-print-all btn-sm" onclick="printAll()" title="Print all currently visible submissions">🖨 Print All</button>
+        </span>
+      </div>
+      <!-- Shown only when printing -->
+      <div class="print-header" id="printHeader">
+        <h2>Heritage Montessori &amp; School — Parent Feedback</h2>
+        <p id="printMeta">Staff Panel Report</p>
       </div>
       <div id="submissionsList">
         <div class="empty-state"><div class="ei">⏳</div><p>Loading submissions…</p></div>
@@ -232,20 +306,20 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
 
     <div class="panel-footer">
       <span><span class="live-dot"></span>Heritage Montessori · Staff Portal · Live via Firebase</span>
-      <button class="logout-btn" id="logoutBtn">Log out</button>
+      <button class="logout-btn" onclick="logout()">Log out</button>
     </div>
 
-  </div>
-</div>
+  </div><!-- /mainPanel -->
+</div><!-- /portal -->
 
-<!-- DELETE MODAL -->
+<!-- DELETE CONFIRM MODAL -->
 <div class="modal-overlay" id="deleteModal">
   <div class="modal-box">
     <h3>Delete this submission?</h3>
     <p>This will permanently remove the feedback from the panel. This action cannot be undone.</p>
     <div class="modal-btns">
-      <button class="btn btn-danger" id="confirmDeleteBtn">Yes, Delete</button>
-      <button class="btn btn-outline" id="cancelDeleteBtn">Cancel</button>
+      <button class="btn btn-danger" onclick="confirmDelete()">Yes, Delete</button>
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
     </div>
   </div>
 </div>
@@ -258,7 +332,7 @@ import { getDatabase, ref, onValue, update }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAtB9d9zEr-ES-lRI_Pf9fWJmaJ8o8ghvQ",
+  apiKey: "AIzaSyAtB9d9zEr-ES-"+"lRI_Pf9fWJmaJ8o8ghvQ",
   authDomain: "my-hms42.firebaseapp.com",
   databaseURL: "https://my-hms42-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "my-hms42",
@@ -270,15 +344,16 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db  = getDatabase(app);
 
-const STAFF_PIN    = "2442";
-const SEEN_KEY     = "hm_staff_seen_ids";
-let allSubs        = [];
-let currentFilter  = "all";
+// ── STATE ──
+const STAFF_PIN   = "2442";
+const SEEN_KEY    = "hm_staff_seen_ids";
+let allSubs       = [];
+let currentFilter = "all";
 let deleteTargetId = null;
 
-// ── HELPERS ──────────────────────────────────────────────────────────────
-function getSeenIds() { try { return new Set(JSON.parse(localStorage.getItem(SEEN_KEY)||'[]')); } catch{return new Set();} }
-function markSeen(id) { const s=getSeenIds(); s.add(id); localStorage.setItem(SEEN_KEY,JSON.stringify([...s])); }
+// ── HELPERS ──
+function getSeenIds()  { try { return new Set(JSON.parse(localStorage.getItem(SEEN_KEY)||'[]')); } catch{return new Set();} }
+function markSeen(id)  { const s=getSeenIds(); s.add(id); localStorage.setItem(SEEN_KEY,JSON.stringify([...s])); }
 
 function showToast(msg, dur=3000) {
   const t=document.getElementById('toast');
@@ -287,23 +362,27 @@ function showToast(msg, dur=3000) {
 }
 
 function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-function starLabel(n){ return ['','😟 Very Poor','😕 Poor','😐 Okay','😊 Good','🌟 Excellent'][n]||''; }
+
+function starLabel(n){
+  return ['','😟 Very Poor','😕 Poor','😐 Okay','😊 Good','🌟 Excellent'][n]||'';
+}
+
 function fmtDate(ts){
   if(!ts) return '—';
-  if(typeof ts==='string') return ts;
-  const d=ts.toDate?ts.toDate():new Date(ts);
+  if(typeof ts === 'string') return ts;
+  const d = ts.toDate ? ts.toDate() : new Date(ts);
   return d.toLocaleDateString('en-PK',{day:'2-digit',month:'short',year:'numeric'});
 }
 
 function buildWAMessage(sub) {
-  const name   = sub.childName  || 'your child';
+  const name   = sub.childName || 'your child';
   const parent = sub.parentName || 'Parent';
   const msg = `Assalam o Alaikum ${parent},\n\nHeritage Montessori has reviewed your feedback for *${name}* and posted an official response.\n\nPlease visit the Feedback Portal to read the school's response:\nhttps://www.heritagemux.com/heritage-feedback-portal\n\nJazakAllah Khairan,\nHeritage Montessori & School`;
   return encodeURIComponent(msg);
 }
 
-// ── LOGIN ─────────────────────────────────────────────────────────────────
-function checkPin() {
+// ── PIN ──
+window.checkPin = function() {
   const v = document.getElementById('pinInput').value.trim();
   if(v === STAFF_PIN) {
     document.getElementById('loginBox').style.display='none';
@@ -313,78 +392,46 @@ function checkPin() {
     document.getElementById('loginError').style.display='block';
     document.getElementById('pinInput').value='';
   }
-}
+};
 
-function logout() {
+window.logout = function() {
   document.getElementById('mainPanel').style.display='none';
   document.getElementById('loginBox').style.display='block';
   document.getElementById('pinInput').value='';
-}
+};
 
-document.getElementById('pinBtn').addEventListener('click', checkPin);
-document.getElementById('pinInput').addEventListener('keydown', e => { if(e.key==='Enter') checkPin(); });
-document.getElementById('logoutBtn').addEventListener('click', logout);
-
-// ── FILTER BUTTONS ────────────────────────────────────────────────────────
-document.querySelectorAll('.filter-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    currentFilter = btn.dataset.filter;
-    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    renderFiltered();
-  });
-});
-
-document.getElementById('searchInput').addEventListener('input', renderFiltered);
-
-// ── MODAL ─────────────────────────────────────────────────────────────────
-document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
-  if(!deleteTargetId) return;
-  try {
-    await update(ref(db, `feedback/${deleteTargetId}`), { deleted: true });
-    showToast('Submission removed from panel.');
-  } catch(err) { showToast('Error deleting. Try again.'); }
-  document.getElementById('deleteModal').classList.remove('show');
-  deleteTargetId = null;
-});
-
-document.getElementById('cancelDeleteBtn').addEventListener('click', () => {
-  document.getElementById('deleteModal').classList.remove('show');
-  deleteTargetId = null;
-});
-
-// ── FIREBASE ──────────────────────────────────────────────────────────────
+// ── FIREBASE LISTENER ──
 function startListen() {
   onValue(ref(db, 'feedback'), snap => {
     allSubs = [];
-    if(snap.exists()) {
+    if (snap.exists()) {
       snap.forEach(child => {
         const d = child.val();
-        if(!d.deleted) {
+        if (!d.deleted) {
           allSubs.push({
-            id:                  child.key,
-            childName:           d.childName,
-            className:           d.grade,
-            parentName:          d.parentName,
-            contactNumber:       d.contactNumber,
-            purpose:             d.mode,
-            submittedAt:         d.submittedOn,
-            positiveChanges:     d.positiveChanges,
-            priorities:          d.growthAreas,
-            homeSkills:          d.homeSkills,
-            skillWorking:        d.homeSkillOther,
-            newActivity:         d.suggestion,
-            schoolAppreciation:  d.schoolStrength,
+            id:               child.key,
+            childName:        d.childName,
+            className:        d.grade,
+            parentName:       d.parentName,
+            contactNumber:    d.contactNumber,
+            purpose:          d.mode,
+            submittedAt:      d.submittedOn,
+            positiveChanges:  d.positiveChanges,
+            priorities:       d.growthAreas,
+            homeSkills:       d.homeSkills,
+            skillWorking:     d.homeSkillOther,
+            newActivity:      d.suggestion,
+            schoolAppreciation: d.schoolStrength,
             teacherAppreciation: d.appreciation,
-            questionForSchool:   d.questionRaised,
-            satTeacher:          d.ratingTeacher,
-            satSchool:           d.ratingSchool,
-            classTeacher:        d.classTeacher,
-            subjectTeacher:      d.subjectTeacher,
-            schoolResponse:      d.schoolResponse     || null,
-            respondedAt:         d.schoolResponseDate || null,
-            parentGrade:         d.responseGrade      || 0,
-            kept:                d.kept               || false,
+            questionForSchool: d.questionRaised,
+            satTeacher:       d.ratingTeacher,
+            satSchool:        d.ratingSchool,
+            classTeacher:     d.classTeacher,
+            subjectTeacher:   d.subjectTeacher,
+            schoolResponse:   d.schoolResponse   || null,
+            respondedAt:      d.schoolResponseDate || null,
+            parentGrade:      d.responseGrade    || 0,
+            kept:             d.kept             || false,
           });
         }
       });
@@ -394,15 +441,16 @@ function startListen() {
   });
 }
 
-// ── RENDER ────────────────────────────────────────────────────────────────
+// ── RENDER ──
 function renderAll() {
   const seen     = getSeenIds();
-  const newIds   = allSubs.filter(s=>!seen.has(s.id)).map(s=>s.id);
-  const total    = allSubs.length;
-  const newCount = newIds.length;
-  const pending  = allSubs.filter(s=>!s.schoolResponse).length;
-  const responded= allSubs.filter(s=>!!s.schoolResponse).length;
-  const kept     = allSubs.filter(s=>s.kept).length;
+  const newIds   = allSubs.filter(s => !seen.has(s.id)).map(s=>s.id);
+
+  const total     = allSubs.length;
+  const newCount  = newIds.length;
+  const pending   = allSubs.filter(s=>!s.schoolResponse).length;
+  const responded = allSubs.filter(s=>!!s.schoolResponse).length;
+  const kept      = allSubs.filter(s=>s.kept).length;
 
   document.getElementById('statTotal').textContent     = total;
   document.getElementById('statNew').textContent       = newCount;
@@ -422,14 +470,11 @@ function renderAll() {
     notifList.innerHTML = newIds.map(id => {
       const s = allSubs.find(x=>x.id===id);
       if(!s) return '';
-      return `<div class="notif-chip" data-jump="${id}">
+      return `<div class="notif-chip" onclick="jumpToCard('${id}')">
         <span>${escHtml(s.childName||'Unknown')}</span>
         <span class="notif-chip-badge">NEW</span>
       </div>`;
     }).join('');
-    notifList.querySelectorAll('.notif-chip').forEach(chip => {
-      chip.addEventListener('click', () => jumpToCard(chip.dataset.jump));
-    });
   } else {
     notifArea.classList.remove('has-new');
   }
@@ -440,7 +485,7 @@ function renderAll() {
 function renderFiltered() {
   const seen   = getSeenIds();
   const search = document.getElementById('searchInput').value.toLowerCase();
-  const filtered = allSubs.filter(s => {
+  let filtered = allSubs.filter(s => {
     const matchSearch = !search ||
       (s.childName||'').toLowerCase().includes(search) ||
       (s.className||'').toLowerCase().includes(search) ||
@@ -462,62 +507,27 @@ function renderFiltered() {
     return;
   }
   list.innerHTML = filtered.map(s => buildCard(s, seen)).join('');
-
-  // Wire up all dynamic event listeners after rendering
-  filtered.forEach(s => {
-    const id = s.id;
-
-    // Card toggle
-    document.getElementById('header-'+id)?.addEventListener('click', () => toggleCard(id));
-
-    // Response textarea char count
-    document.getElementById('resp-'+id)?.addEventListener('input', () => {
-      const ta = document.getElementById('resp-'+id);
-      document.getElementById('cc-'+id).textContent = (ta?.value?.length||0)+' chars';
-    });
-
-    // Save response
-    document.getElementById('saveBtn-'+id)?.addEventListener('click', () => saveResponse(id));
-
-    // Keep
-    document.getElementById('keepBtn-'+id)?.addEventListener('click', () => toggleKeep(id));
-
-    // Delete
-    document.getElementById('deleteBtn-'+id)?.addEventListener('click', () => {
-      deleteTargetId = id;
-      document.getElementById('deleteModal').classList.add('show');
-    });
-
-    // Copy WA message
-    document.getElementById('copyBtn-'+id)?.addEventListener('click', () => {
-      const sub = allSubs.find(s=>s.id===id);
-      if(!sub) return;
-      navigator.clipboard.writeText(decodeURIComponent(buildWAMessage(sub)))
-        .then(()=>showToast('Message copied to clipboard.'));
-    });
-  });
 }
 
-// ── BUILD CARD HTML ───────────────────────────────────────────────────────
 function buildCard(s, seen) {
-  const isNew   = !seen.has(s.id);
-  const hasResp = !!s.schoolResponse;
-  const isKept  = !!s.kept;
-  const id      = s.id;
-
+  const isNew     = !seen.has(s.id);
+  const hasResp   = !!s.schoolResponse;
+  const isKept    = !!s.kept;
   const purposeBadge = s.purpose==='ptm'
     ? `<span class="badge b-ptm">🤝 PTM</span>`
     : `<span class="badge b-general">📋 General</span>`;
   const statusBadge = hasResp
     ? `<span class="badge b-responded">✓ Responded</span>`
     : `<span class="badge b-pending">⏳ Pending</span>`;
-  const newBadge  = isNew  ? `<span class="badge b-new">📦 New</span>` : '';
-  const keptBadge = isKept ? `<span class="badge b-kept">📌 Kept</span>` : '';
-  const indicator = isNew  ? `<div class="new-indicator"></div>`
-                  : isKept ? `<div class="kept-indicator"></div>` : '';
+  const newBadge    = isNew ? `<span class="badge b-new">📦 New</span>` : '';
+  const keptBadge   = isKept ? `<span class="badge b-kept">📌 Kept</span>` : '';
+  const indicator   = isNew ? `<div class="new-indicator"></div>` : (isKept ? `<div class="kept-indicator"></div>` : '');
 
-  const priorities = (s.priorities||[]).map(p=>`<span class="chip-pill">${escHtml(p)}</span>`).join('');
-  const homeSkills = (s.homeSkills||[]).map(p=>`<span class="chip-pill">${escHtml(p)}</span>`).join('');
+  const priorities  = (s.priorities||[]).map(p=>`<span class="chip-pill">${escHtml(p)}</span>`).join('');
+  const homeSkills  = (s.homeSkills||[]).map(p=>`<span class="chip-pill">${escHtml(p)}</span>`).join('');
+
+  const teacherRow = `<div><div class="d-label">Class Teacher</div><div class="d-value">${escHtml(s.classTeacher||'—')}</div></div>
+    <div><div class="d-label">Subject Teacher</div><div class="d-value">${escHtml(s.subjectTeacher||'—')}</div></div>`;
 
   let respBlock = '';
   if(hasResp) {
@@ -541,103 +551,117 @@ function buildCard(s, seen) {
     const waMsg = buildWAMessage(s);
     const waNum = contactNum.replace(/\D/g,'');
     const waUrl = waNum ? `https://wa.me/92${waNum.replace(/^0/,'')}?text=${waMsg}` : null;
-    notifyBlock = `<div class="notify-parent-block show" id="notify-${id}">
+    notifyBlock = `<div class="notify-parent-block show" id="notify-${s.id}">
       <div class="notify-parent-title">Response saved — notify the parent</div>
-      <div class="notify-parent-desc">The parent will not know a reply exists unless you notify them. Use the button below.</div>
-      ${contactNum
-        ? `<div class="notify-btns">
-            ${waUrl ? `<a href="${waUrl}" target="_blank" class="notify-btn notify-btn-wa">💬 WhatsApp Parent</a>` : ''}
-            <button class="notify-btn notify-btn-copy" id="copyBtn-${id}">📋 Copy Message</button>
-           </div>`
-        : `<div class="notify-no-contact">No contact number provided. Notify through WhatsApp group.</div>`}
+      <div class="notify-parent-desc">The parent will not know unless you notify them. Use the button below.</div>
+      ${contactNum ? `<div class="notify-btns">
+        ${waUrl ? `<a href="${waUrl}" target="_blank" class="notify-btn notify-btn-wa">💬 WhatsApp Parent</a>` : ''}
+        <button class="notify-btn notify-btn-copy" onclick="copyMsg('${s.id}')">📋 Copy Message</button>
+      </div>` : `<div class="notify-no-contact">No contact number provided. Notify through WhatsApp group.</div>`}
     </div>`;
   }
 
   const hints = [
-    s.positiveChanges  ? `<strong>Positive changes:</strong> "${escHtml(s.positiveChanges)}"` : '',
-    priorities         ? `<strong>Priority areas:</strong> ${(s.priorities||[]).join(', ')}` : '',
-    s.newActivity      ? `<strong>Suggested activity:</strong> ${escHtml(s.newActivity)}` : '',
-    s.questionForSchool? `<strong>Question raised:</strong> ${escHtml(s.questionForSchool)}` : '',
+    s.positiveChanges ? `<strong>Positive changes:</strong> "${escHtml(s.positiveChanges)}"` : '',
+    priorities ? `<strong>Priority areas:</strong> ${(s.priorities||[]).join(', ')}` : '',
+    s.newActivity ? `<strong>Suggested activity:</strong> ${escHtml(s.newActivity)}` : '',
+    s.questionForSchool ? `<strong>Question raised:</strong> ${escHtml(s.questionForSchool)}` : '',
   ].filter(Boolean).join('<br>');
 
   return `
-  <div class="sub-card${isNew?' is-new':''}${isKept?' is-kept':''}" id="card-${id}">
+  <div class="sub-card${isNew?' is-new':''}${isKept?' is-kept':''}" id="card-${s.id}" data-id="${s.id}">
     ${indicator}
-    <div class="card-header" id="header-${id}">
+    <div class="card-header" onclick="toggleCard('${s.id}')">
       <div>
         <div class="card-name">${escHtml(s.childName||'Unknown Child')}</div>
         <div class="card-meta">${escHtml(s.className||'—')} · ${fmtDate(s.submittedAt)} · ${escHtml(s.parentName||'—')}</div>
       </div>
       <div class="badges">
         ${newBadge}${purposeBadge}${statusBadge}${keptBadge}
-        <span class="chevron" id="chev-${id}">▼</span>
+        <span class="chevron" id="chev-${s.id}">▼</span>
       </div>
     </div>
 
-    <div class="card-body" id="body-${id}">
+    <div class="card-body" id="body-${s.id}">
       <div class="detail-grid">
         <div><div class="d-label">Child</div><div class="d-value">${escHtml(s.childName||'—')}</div></div>
         <div><div class="d-label">Class</div><div class="d-value">${escHtml(s.className||'—')}</div></div>
         <div><div class="d-label">Parent / Guardian</div><div class="d-value">${escHtml(s.parentName||'—')}</div></div>
-        <div><div class="d-label">Contact</div><div class="d-value">${escHtml(contactNum||'Not provided')}</div></div>
-        <div><div class="d-label">Class Teacher</div><div class="d-value">${escHtml(s.classTeacher||'—')}</div></div>
-        <div><div class="d-label">Subject Teacher</div><div class="d-value">${escHtml(s.subjectTeacher||'—')}</div></div>
+        <div><div class="d-label">Contact</div><div class="d-value">${escHtml(s.contactNumber||'Not provided')}</div></div>
+        ${teacherRow}
         <div><div class="d-label">Submission Date</div><div class="d-value">${fmtDate(s.submittedAt)}</div></div>
         <div><div class="d-label">Type</div><div class="d-value">${s.purpose==='ptm'?'Parent-Teacher Meeting':'General Observation'}</div></div>
         <div><div class="d-label">Teacher Satisfaction</div><div class="d-value">${s.satTeacher||'—'}/5 ${s.satTeacher?starLabel(s.satTeacher):''}</div></div>
         <div><div class="d-label">School Satisfaction</div><div class="d-value">${s.satSchool||'—'}/5 ${s.satSchool?starLabel(s.satSchool):''}</div></div>
       </div>
 
-      <div class="section-block"><div class="section-block-title">Positive Changes Noticed</div>
-        <div class="section-block-content">${escHtml(s.positiveChanges||'—')}</div></div>
-      <div class="section-block"><div class="section-block-title">Priority Growth Areas</div>
-        <div class="section-block-content"><div class="chip-pills">${priorities||'—'}</div></div></div>
-      <div class="section-block"><div class="section-block-title">Skill Being Practiced at Home</div>
-        <div class="section-block-content">${escHtml(s.skillWorking||'—')}${homeSkills?`<div class="chip-pills" style="margin-top:6px">${homeSkills}</div>`:''}</div></div>
-      <div class="section-block"><div class="section-block-title">Suggested New Activity</div>
-        <div class="section-block-content">${escHtml(s.newActivity||'—')}</div></div>
-      <div class="section-block"><div class="section-block-title">What Heritage Is Doing Wonderfully</div>
-        <div class="section-block-content">${escHtml(s.schoolAppreciation||'—')}</div></div>
-      <div class="section-block"><div class="section-block-title">Appreciation for Teacher / Staff</div>
-        <div class="section-block-content">${escHtml(s.teacherAppreciation||'—')}</div></div>
-      <div class="section-block"><div class="section-block-title">Question / Topic for the School</div>
-        <div class="section-block-content">${escHtml(s.questionForSchool||'—')}</div></div>
+      <div class="section-block">
+        <div class="section-block-title">Positive Changes Noticed</div>
+        <div class="section-block-content">${escHtml(s.positiveChanges||'—')}</div>
+      </div>
+      <div class="section-block">
+        <div class="section-block-title">Priority Growth Areas</div>
+        <div class="section-block-content"><div class="chip-pills">${priorities||'—'}</div></div>
+      </div>
+      <div class="section-block">
+        <div class="section-block-title">Skill Being Practiced at Home</div>
+        <div class="section-block-content">${escHtml(s.skillWorking||'—')} ${homeSkills ? `<div class="chip-pills" style="margin-top:6px">${homeSkills}</div>` : ''}</div>
+      </div>
+      <div class="section-block">
+        <div class="section-block-title">Suggested New Activity</div>
+        <div class="section-block-content">${escHtml(s.newActivity||'—')}</div>
+      </div>
+      <div class="section-block">
+        <div class="section-block-title">What Heritage Is Doing Wonderfully</div>
+        <div class="section-block-content">${escHtml(s.schoolAppreciation||'—')}</div>
+      </div>
+      <div class="section-block">
+        <div class="section-block-title">Appreciation for Teacher / Staff</div>
+        <div class="section-block-content">${escHtml(s.teacherAppreciation||'—')}</div>
+      </div>
+      <div class="section-block">
+        <div class="section-block-title">Question / Topic for the School</div>
+        <div class="section-block-content">${escHtml(s.questionForSchool||'—')}</div>
+      </div>
 
+      <!-- Response Composer -->
       <div class="response-composer">
         <div class="composer-title">
           School's Official Response
-          ${hasResp
-            ? '<span class="ctag">Responded</span>'
-            : '<span class="ctag" style="background:var(--error);color:white;">Pending</span>'}
+          ${hasResp ? '<span class="ctag">Responded</span>' : '<span class="ctag" style="background:var(--error);color:white;">Pending</span>'}
         </div>
         ${respBlock}
         ${notifyBlock}
         ${hints ? `<div class="hints-box"><strong>Key points from this feedback:</strong><br>${hints}</div>` : ''}
-        <textarea class="response-textarea" id="resp-${id}"
-          placeholder="Type the school's official response here…">${escHtml(hasResp ? s.schoolResponse : '')}</textarea>
+        <textarea class="response-textarea" id="resp-${s.id}"
+          placeholder="Type the school's official response here…"
+          oninput="updateChar('${s.id}')">${escHtml(hasResp ? s.schoolResponse : '')}</textarea>
         <div class="composer-actions">
-          <button class="btn btn-success btn-sm" id="saveBtn-${id}">
-            <span id="spin-${id}" style="display:none"><span class="spinner"></span></span>
+          <button class="btn btn-success btn-sm" onclick="saveResponse('${s.id}')">
+            <span id="spin-${s.id}" style="display:none"><span class="spinner"></span></span>
             ${hasResp ? 'Update Response' : 'Save & Send Response'}
           </button>
-          <span class="saved-ok" id="ok-${id}">✓ Saved</span>
-          <span class="char-count" id="cc-${id}">${hasResp?s.schoolResponse.length:0} chars</span>
+          <span class="saved-ok" id="ok-${s.id}">✓ Saved</span>
+          <span class="char-count" id="cc-${s.id}">${(hasResp?s.schoolResponse.length:0)} chars</span>
         </div>
       </div>
-    </div>
+    </div><!-- /card-body -->
 
+    <!-- Card Actions -->
     <div class="card-actions">
       <span class="card-action-label">Actions:</span>
-      <button class="btn btn-keep btn-sm${isKept?' kept':''}" id="keepBtn-${id}">
+      <button class="btn btn-keep btn-sm${isKept?' kept':''}" id="keepBtn-${s.id}" onclick="toggleKeep('${s.id}')">
         ${isKept ? '📌 Kept' : '📌 Keep'}
       </button>
-      <button class="btn btn-danger btn-sm" id="deleteBtn-${id}">🗑 Delete</button>
+      <button class="btn btn-print btn-sm" onclick="printCard('${s.id}')" title="Print this feedback">🖨 Print</button>
+      <button class="btn btn-danger btn-sm" onclick="askDelete('${s.id}')">🗑 Delete</button>
     </div>
+
   </div>`;
 }
 
-// ── CARD TOGGLE ───────────────────────────────────────────────────────────
-function toggleCard(id) {
+// ── CARD TOGGLE ──
+window.toggleCard = function(id) {
   const body = document.getElementById('body-'+id);
   const chev = document.getElementById('chev-'+id);
   const open = body.classList.toggle('open');
@@ -645,33 +669,54 @@ function toggleCard(id) {
   if(open) {
     markSeen(id);
     const card = document.getElementById('card-'+id);
-    card?.classList.remove('is-new');
-    card?.querySelector('.new-indicator')?.remove();
-    card?.querySelector('.badge.b-new')?.remove();
-    document.querySelector(`[data-jump="${id}"]`)?.remove();
+    if(card) {
+      card.classList.remove('is-new');
+      const ind = card.querySelector('.new-indicator'); if(ind) ind.remove();
+      const badge = card.querySelector('.badge.b-new'); if(badge) badge.remove();
+    }
+    const chip = document.getElementById('notifList').querySelector(`[onclick="jumpToCard('${id}')"]`);
+    if(chip) chip.remove();
     const newCount = parseInt(document.getElementById('statNew').textContent)||0;
     if(newCount>0) document.getElementById('statNew').textContent = newCount-1;
     const fcNew = parseInt(document.getElementById('fc-new').textContent)||0;
     if(fcNew>0) document.getElementById('fc-new').textContent = fcNew-1;
   }
-}
+};
 
-function jumpToCard(id) {
+window.jumpToCard = function(id) {
   const card = document.getElementById('card-'+id);
   if(!card) return;
   card.scrollIntoView({behavior:'smooth', block:'start'});
   const body = document.getElementById('body-'+id);
   if(!body.classList.contains('open')) toggleCard(id);
-}
+};
 
-// ── SAVE RESPONSE ─────────────────────────────────────────────────────────
-async function saveResponse(id) {
+// ── FILTER ──
+window.setFilter = function(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderFiltered();
+};
+
+window.filterCards = function() { renderFiltered(); };
+
+// ── CHAR COUNT ──
+window.updateChar = function(id) {
+  const ta = document.getElementById('resp-'+id);
+  document.getElementById('cc-'+id).textContent = (ta?.value?.length||0)+' chars';
+};
+
+// ── SAVE RESPONSE ──
+window.saveResponse = async function(id) {
   const ta   = document.getElementById('resp-'+id);
   const text = ta?.value?.trim();
   if(!text) { showToast('Please type a response first.'); return; }
+
   const spin = document.getElementById('spin-'+id);
   const ok   = document.getElementById('ok-'+id);
   if(spin) spin.style.display='inline';
+
   try {
     await update(ref(db, `feedback/${id}`), {
       schoolResponse: text,
@@ -681,24 +726,102 @@ async function saveResponse(id) {
     if(spin) spin.style.display='none';
     if(ok)  { ok.style.display='inline'; setTimeout(()=>ok.style.display='none',3000); }
     showToast('✓ Response saved. Notify the parent below.');
-    document.getElementById('notify-'+id)?.classList.add('show');
+    const nb = document.getElementById('notify-'+id);
+    if(nb) nb.classList.add('show');
   } catch(err) {
     if(spin) spin.style.display='none';
     showToast('Error saving. Check console.', 4000);
     console.error(err);
   }
-}
+};
 
-// ── KEEP ──────────────────────────────────────────────────────────────────
-async function toggleKeep(id) {
-  const sub = allSubs.find(s=>s.id===id);
+// ── KEEP / DELETE ──
+window.toggleKeep = async function(id) {
+  const sub  = allSubs.find(s=>s.id===id);
   if(!sub) return;
   const kept = !sub.kept;
   try {
     await update(ref(db, `feedback/${id}`), { kept });
     showToast(kept ? '📌 Submission kept.' : 'Removed from kept.');
   } catch(err) { showToast('Error. Try again.'); }
-}
+};
+
+window.askDelete = function(id) {
+  deleteTargetId = id;
+  document.getElementById('deleteModal').classList.add('show');
+};
+
+window.confirmDelete = async function() {
+  if(!deleteTargetId) return;
+  try {
+    await update(ref(db, `feedback/${deleteTargetId}`), { deleted: true });
+    showToast('Submission removed from panel.');
+  } catch(err) { showToast('Error deleting. Try again.'); }
+  closeModal();
+};
+
+window.closeModal = function() {
+  document.getElementById('deleteModal').classList.remove('show');
+  deleteTargetId = null;
+};
+
+// ── COPY MESSAGE ──
+window.copyMsg = function(id) {
+  const sub = allSubs.find(s=>s.id===id);
+  if(!sub) return;
+  const msg = decodeURIComponent(buildWAMessage(sub));
+  navigator.clipboard.writeText(msg).then(()=>showToast('Message copied to clipboard.'));
+};
+
+// ── PRINT SINGLE CARD ──
+window.printCard = function(id) {
+  // Ensure the card body is open so content is visible when printing
+  const body = document.getElementById('body-'+id);
+  const wasOpen = body.classList.contains('open');
+  body.classList.add('open');
+  // Hide all other cards
+  document.querySelectorAll('.sub-card').forEach(card => {
+    if(card.id !== 'card-'+id) card.classList.add('print-hide');
+  });
+  // Set print header
+  const sub = allSubs.find(s=>s.id===id);
+  const name = sub ? (sub.childName || 'Unknown') : '';
+  document.getElementById('printMeta').textContent =
+    'Feedback for: ' + name + ' · Printed: ' +
+    new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+  window.print();
+  // Restore everything
+  document.querySelectorAll('.sub-card').forEach(c => c.classList.remove('print-hide'));
+  if(!wasOpen) body.classList.remove('open');
+};
+
+// ── PRINT ALL VISIBLE (respects active filter) ──
+window.printAll = function() {
+  const cards = document.querySelectorAll('#submissionsList .sub-card');
+  if(!cards.length) { showToast('No submissions to print.'); return; }
+  // Open all card bodies for print
+  const openState = {};
+  cards.forEach(card => {
+    const id = card.dataset.id;
+    const body = document.getElementById('body-'+id);
+    openState[id] = body.classList.contains('open');
+    body.classList.add('open');
+  });
+  // Set print header with filter label
+  const activeFilter = document.querySelector('.filter-btn.active');
+  const filterLabel = activeFilter ? activeFilter.textContent.replace(/\d+/g,'').trim() : 'All';
+  const count = cards.length;
+  document.getElementById('printMeta').textContent =
+    'Filter: ' + filterLabel + ' · ' + count + ' submission' + (count!==1?'s':'') +
+    ' · Printed: ' + new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+  window.print();
+  // Restore open states
+  cards.forEach(card => {
+    const id = card.dataset.id;
+    const body = document.getElementById('body-'+id);
+    if(!openState[id]) body.classList.remove('open');
+  });
+};
 
 </script>
 </body>
