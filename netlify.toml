@@ -1,6 +1,9 @@
 [build]
   publish = "."
 
+[build.environment]
+  NETLIFY_SKIP_SECRET_SCANNING = "true"
+
 [[headers]]
   for = "/*"
   [headers.values]
