@@ -18,6 +18,8 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
 .banner h1 { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:600; }
 .banner p { font-size:10px; letter-spacing:2.5px; text-transform:uppercase; color:rgba(255,255,255,0.55); margin-top:2px; }
 .banner-badge { background:var(--gold); color:var(--forest); font-size:9.5px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; padding:5px 12px; border-radius:2px; }
+.btn-qr { background:transparent; color:rgba(255,255,255,0.75); border:1.5px solid rgba(255,255,255,0.25); font-family:'Jost',sans-serif; font-size:9.5px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; padding:5px 12px; border-radius:2px; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:6px; transition:all 0.2s; }
+.btn-qr:hover { background:rgba(255,255,255,0.1); border-color:var(--gold); color:var(--gold); }
 
 /* LOGIN */
 .login-box { background:var(--cream); padding:52px; box-shadow:0 8px 48px rgba(0,0,0,0.15); text-align:center; }
@@ -190,7 +192,10 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
       <h1>Heritage Montessori &amp; School</h1>
       <p>Nurturing Young Minds · Est. 2007</p>
     </div>
-    <div class="banner-badge">Staff Response Panel</div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <a href="/heritage-qr-poster" target="_blank" class="btn-qr">🖨 Print QR Poster</a>
+      <div class="banner-badge">Staff Response Panel</div>
+    </div>
   </div>
 
   <!-- LOGIN -->
@@ -340,19 +345,6 @@ function buildWAMessage(sub) {
   const parent = sub.parentName || 'Parent';
   const msg = `Assalam o Alaikum ${parent},\n\nHeritage Montessori has reviewed your feedback for *${name}* and posted an official response.\n\nPlease visit the Feedback Portal to read the school's response:\nhttps://www.heritagemux.com/heritage-feedback-portal\n\nJazakAllah Khairan,\nHeritage Montessori & School`;
   return encodeURIComponent(msg);
-}
-
-function cleanWANumber(raw) {
-  // Remove everything except digits
-  let num = (raw || '').replace(/\D/g, '');
-  // Remove leading 00 (international prefix)
-  if (num.startsWith('00')) num = num.slice(2);
-  // Remove leading 92 (already has country code)
-  if (num.startsWith('92') && num.length >= 12) num = num.slice(2);
-  // Remove leading 0 (local format like 0300...)
-  if (num.startsWith('0')) num = num.slice(1);
-  // Now num should be 10 digits — add 92 prefix
-  return num.length >= 9 ? '92' + num : null;
 }
 
 // ── PIN ──
@@ -523,8 +515,8 @@ function buildCard(s, seen) {
   let notifyBlock = '';
   if(hasResp) {
     const waMsg = buildWAMessage(s);
-    const waNum = cleanWANumber(contactNum);
-    const waUrl = waNum ? `https://wa.me/${waNum}?text=${waMsg}` : null;
+    const waNum = contactNum.replace(/\D/g,'');
+    const waUrl = waNum ? `https://wa.me/92${waNum.replace(/^0/,'')}?text=${waMsg}` : null;
     notifyBlock = `<div class="notify-parent-block show" id="notify-${s.id}">
       <div class="notify-parent-title">Response saved — notify the parent</div>
       <div class="notify-parent-desc">The parent will not know unless you notify them. Use the button below.</div>
