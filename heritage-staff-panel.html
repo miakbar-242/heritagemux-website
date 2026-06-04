@@ -180,33 +180,6 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
 .modal-box h3 { font-family:'Cormorant Garamond',serif; font-size:20px; color:var(--forest); margin-bottom:10px; }
 .modal-box p { font-size:12.5px; color:var(--muted); line-height:1.65; margin-bottom:24px; }
 .modal-btns { display:flex; gap:10px; flex-wrap:wrap; }
-
-/* PRINT BUTTON */
-.btn-print { background:#f5f5ee; color:var(--muted); border:1.5px solid var(--line); }
-.btn-print:hover { background:var(--tan); color:var(--ink); border-color:var(--muted); }
-.btn-print-all { background:var(--parchment); color:var(--forest); border:1.5px solid var(--gold); }
-.btn-print-all:hover { background:var(--gold); color:var(--forest); }
-
-/* PRINT STYLES */
-@media print {
-  body { background:white !important; padding:0 !important; }
-  .portal { max-width:100% !important; }
-  .banner, .login-box, .summary-bar, .notif-area, .search-section,
-  .card-actions, .response-composer, .panel-footer, .modal-overlay,
-  .toast, .notify-parent-block, .hints-box, .chevron { display:none !important; }
-  .submissions-area { box-shadow:none !important; padding:0 !important; background:white !important; }
-  .submissions-title { display:none !important; }
-  .sub-card { border:1px solid #ccc !important; margin-bottom:24px !important;
-    page-break-inside:avoid; box-shadow:none !important; break-inside:avoid; }
-  .sub-card.print-hide { display:none !important; }
-  .card-body { display:block !important; padding:14px !important; }
-  .card-header { background:#f2ece0 !important; }
-  .detail-grid { background:#f2ece0 !important; }
-  .print-header { display:block !important; }
-}
-.print-header { display:none; text-align:center; margin-bottom:24px; padding-bottom:14px; border-bottom:2px solid #2d4a2d; }
-.print-header h2 { font-family:'Cormorant Garamond',serif; font-size:20px; color:#2d4a2d; font-weight:600; }
-.print-header p { font-size:10px; color:#6e6456; margin-top:5px; letter-spacing:1.5px; text-transform:uppercase; }
 </style>
 </head>
 <body>
@@ -285,15 +258,7 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
     <div class="submissions-area">
       <div class="submissions-title">
         <span><span class="live-dot"></span>Live Submissions</span>
-        <span style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-          <span class="sub-count" id="subCountLabel">Loading…</span>
-          <button class="btn btn-print-all btn-sm" onclick="printAll()" title="Print all currently visible submissions">🖨 Print All</button>
-        </span>
-      </div>
-      <!-- Shown only when printing -->
-      <div class="print-header" id="printHeader">
-        <h2>Heritage Montessori &amp; School — Parent Feedback</h2>
-        <p id="printMeta">Staff Panel Report</p>
+        <span class="sub-count" id="subCountLabel">Loading…</span>
       </div>
       <div id="submissionsList">
         <div class="empty-state"><div class="ei">⏳</div><p>Loading submissions…</p></div>
@@ -542,23 +507,17 @@ function buildCard(s, seen) {
   }
 
   const contactNum = s.contactNumber||'';
-  let notifyBlock = '';
-  if(hasResp) {
-    const waMsg = buildWAMessage(s);
-    const waNum = contactNum.replace(/\D/g,'');
-    const waUrl = waNum ? `https://wa.me/92${waNum.replace(/^0/,'')}?text=${waMsg}` : null;
-    notifyBlock = `<div class="notify-parent-block show" id="notify-${s.id}">
-      <div class="notify-parent-title">Notify the parent about this response</div>
-      <div class="notify-parent-desc">The parent will not know a response has been posted unless you notify them via WhatsApp.</div>
-      ${waUrl ? `<div class="notify-btns">
-        <a href="${waUrl}" target="_blank" class="notify-btn notify-btn-wa">💬 WhatsApp Parent</a>
-        <button class="notify-btn notify-btn-copy" onclick="copyMsg('${s.id}')">📋 Copy Message</button>
-      </div>` : `<div class="notify-no-contact">
-        ⚠ No contact number on file — notify this parent through the class WhatsApp group.
-        <button class="notify-btn notify-btn-copy" style="margin-top:10px;display:inline-flex;" onclick="copyMsg('${s.id}')">📋 Copy Message</button>
-      </div>`}
-    </div>`;
-  }
+  const waMsg = buildWAMessage(s);
+  const waNum = contactNum.replace(/\D/g,'');
+  const waUrl = waNum ? `https://wa.me/92${waNum.replace(/^0/,'')}?text=${waMsg}` : null;
+  const notifyBlock = `<div class="notify-parent-block${hasResp?' show':''}" id="notify-${s.id}">
+    <div class="notify-parent-title">Notify the parent about this response</div>
+    <div class="notify-parent-desc">The parent will not know a response has been posted unless you notify them via WhatsApp.</div>
+    ${waUrl ? `<div class="notify-btns">
+      <a href="${waUrl}" target="_blank" class="notify-btn notify-btn-wa">💬 WhatsApp Parent</a>
+      <button class="notify-btn notify-btn-copy" onclick="copyMsg('${s.id}')">📋 Copy Message</button>
+    </div>` : `<div class="notify-no-contact">⚠ No contact number on file — notify this parent through the class WhatsApp group.<br><button class="notify-btn notify-btn-copy" style="margin-top:10px;display:inline-flex;" onclick="copyMsg('${s.id}')">📋 Copy Message</button></div>`}
+  </div>`;
 
   const hints = [
     s.positiveChanges ? `<strong>Positive changes:</strong> "${escHtml(s.positiveChanges)}"` : '',
@@ -652,7 +611,6 @@ function buildCard(s, seen) {
       <button class="btn btn-keep btn-sm${isKept?' kept':''}" id="keepBtn-${s.id}" onclick="toggleKeep('${s.id}')">
         ${isKept ? '📌 Kept' : '📌 Keep'}
       </button>
-      <button class="btn btn-print btn-sm" onclick="printCard('${s.id}')" title="Print this feedback">🖨 Print</button>
       <button class="btn btn-danger btn-sm" onclick="askDelete('${s.id}')">🗑 Delete</button>
     </div>
 
@@ -725,8 +683,18 @@ window.saveResponse = async function(id) {
     if(spin) spin.style.display='none';
     if(ok)  { ok.style.display='inline'; setTimeout(()=>ok.style.display='none',3000); }
     showToast('✓ Response saved. Notify the parent below.');
-    const nb = document.getElementById('notify-'+id);
-    if(nb) nb.classList.add('show');
+    // Wait briefly for Firebase onValue to re-render the card, then show notify block
+    setTimeout(() => {
+      const nb = document.getElementById('notify-'+id);
+      if(nb) nb.classList.add('show');
+      // Also re-open the card body if it closed during re-render
+      const body = document.getElementById('body-'+id);
+      if(body && !body.classList.contains('open')) {
+        body.classList.add('open');
+        const chev = document.getElementById('chev-'+id);
+        if(chev) chev.classList.add('open');
+      }
+    }, 800);
   } catch(err) {
     if(spin) spin.style.display='none';
     showToast('Error saving. Check console.', 4000);
@@ -770,49 +738,6 @@ window.copyMsg = function(id) {
   if(!sub) return;
   const msg = decodeURIComponent(buildWAMessage(sub));
   navigator.clipboard.writeText(msg).then(()=>showToast('Message copied to clipboard.'));
-};
-
-// ── PRINT SINGLE CARD ──
-window.printCard = function(id) {
-  const body = document.getElementById('body-'+id);
-  const wasOpen = body.classList.contains('open');
-  body.classList.add('open');
-  document.querySelectorAll('.sub-card').forEach(card => {
-    if(card.id !== 'card-'+id) card.classList.add('print-hide');
-  });
-  const sub = allSubs.find(s=>s.id===id);
-  const name = sub ? (sub.childName||'Unknown') : '';
-  document.getElementById('printMeta').textContent =
-    'Feedback for: ' + name + ' · Printed: ' +
-    new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
-  window.print();
-  document.querySelectorAll('.sub-card').forEach(c => c.classList.remove('print-hide'));
-  if(!wasOpen) body.classList.remove('open');
-};
-
-// ── PRINT ALL VISIBLE (respects active filter) ──
-window.printAll = function() {
-  const cards = document.querySelectorAll('#submissionsList .sub-card');
-  if(!cards.length) { showToast('No submissions to print.'); return; }
-  const openState = {};
-  cards.forEach(card => {
-    const id = card.dataset.id;
-    const body = document.getElementById('body-'+id);
-    openState[id] = body.classList.contains('open');
-    body.classList.add('open');
-  });
-  const activeFilter = document.querySelector('.filter-btn.active');
-  const filterLabel = activeFilter ? activeFilter.textContent.replace(/[0-9]/g,'').trim() : 'All';
-  const count = cards.length;
-  document.getElementById('printMeta').textContent =
-    'Filter: ' + filterLabel + ' · ' + count + ' submission' + (count!==1?'s':'') +
-    ' · Printed: ' + new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
-  window.print();
-  cards.forEach(card => {
-    const id = card.dataset.id;
-    const body = document.getElementById('body-'+id);
-    if(!openState[id]) body.classList.remove('open');
-  });
 };
 
 </script>
