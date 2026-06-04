@@ -342,6 +342,19 @@ function buildWAMessage(sub) {
   return encodeURIComponent(msg);
 }
 
+function cleanWANumber(raw) {
+  // Remove everything except digits
+  let num = (raw || '').replace(/\D/g, '');
+  // Remove leading 00 (international prefix)
+  if (num.startsWith('00')) num = num.slice(2);
+  // Remove leading 92 (already has country code)
+  if (num.startsWith('92') && num.length >= 12) num = num.slice(2);
+  // Remove leading 0 (local format like 0300...)
+  if (num.startsWith('0')) num = num.slice(1);
+  // Now num should be 10 digits — add 92 prefix
+  return num.length >= 9 ? '92' + num : null;
+}
+
 // ── PIN ──
 window.checkPin = function() {
   const v = document.getElementById('pinInput').value.trim();
@@ -507,17 +520,20 @@ function buildCard(s, seen) {
   }
 
   const contactNum = s.contactNumber||'';
-  const waMsg = buildWAMessage(s);
-  const waNum = contactNum.replace(/\D/g,'');
-  const waUrl = waNum ? `https://wa.me/92${waNum.replace(/^0/,'')}?text=${waMsg}` : null;
-  const notifyBlock = `<div class="notify-parent-block${hasResp?' show':''}" id="notify-${s.id}">
-    <div class="notify-parent-title">Notify the parent about this response</div>
-    <div class="notify-parent-desc">The parent will not know a response has been posted unless you notify them via WhatsApp.</div>
-    ${waUrl ? `<div class="notify-btns">
-      <a href="${waUrl}" target="_blank" class="notify-btn notify-btn-wa">💬 WhatsApp Parent</a>
-      <button class="notify-btn notify-btn-copy" onclick="copyMsg('${s.id}')">📋 Copy Message</button>
-    </div>` : `<div class="notify-no-contact">⚠ No contact number on file — notify this parent through the class WhatsApp group.<br><button class="notify-btn notify-btn-copy" style="margin-top:10px;display:inline-flex;" onclick="copyMsg('${s.id}')">📋 Copy Message</button></div>`}
-  </div>`;
+  let notifyBlock = '';
+  if(hasResp) {
+    const waMsg = buildWAMessage(s);
+    const waNum = cleanWANumber(contactNum);
+    const waUrl = waNum ? `https://wa.me/${waNum}?text=${waMsg}` : null;
+    notifyBlock = `<div class="notify-parent-block show" id="notify-${s.id}">
+      <div class="notify-parent-title">Response saved — notify the parent</div>
+      <div class="notify-parent-desc">The parent will not know unless you notify them. Use the button below.</div>
+      ${contactNum ? `<div class="notify-btns">
+        ${waUrl ? `<a href="${waUrl}" target="_blank" class="notify-btn notify-btn-wa">💬 WhatsApp Parent</a>` : ''}
+        <button class="notify-btn notify-btn-copy" onclick="copyMsg('${s.id}')">📋 Copy Message</button>
+      </div>` : `<div class="notify-no-contact">No contact number provided. Notify through WhatsApp group.</div>`}
+    </div>`;
+  }
 
   const hints = [
     s.positiveChanges ? `<strong>Positive changes:</strong> "${escHtml(s.positiveChanges)}"` : '',
@@ -683,18 +699,8 @@ window.saveResponse = async function(id) {
     if(spin) spin.style.display='none';
     if(ok)  { ok.style.display='inline'; setTimeout(()=>ok.style.display='none',3000); }
     showToast('✓ Response saved. Notify the parent below.');
-    // Wait briefly for Firebase onValue to re-render the card, then show notify block
-    setTimeout(() => {
-      const nb = document.getElementById('notify-'+id);
-      if(nb) nb.classList.add('show');
-      // Also re-open the card body if it closed during re-render
-      const body = document.getElementById('body-'+id);
-      if(body && !body.classList.contains('open')) {
-        body.classList.add('open');
-        const chev = document.getElementById('chev-'+id);
-        if(chev) chev.classList.add('open');
-      }
-    }, 800);
+    const nb = document.getElementById('notify-'+id);
+    if(nb) nb.classList.add('show');
   } catch(err) {
     if(spin) spin.style.display='none';
     showToast('Error saving. Check console.', 4000);
