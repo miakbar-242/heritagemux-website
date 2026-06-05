@@ -250,6 +250,21 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
     <!-- SEARCH & FILTER -->
     <div class="search-section">
       <input class="search-input" type="text" id="searchInput" placeholder="Search by child's name, class, or parent…" oninput="filterCards()">
+      <select class="search-input" id="classFilter" onchange="filterCards()" style="max-width:140px;cursor:pointer;">
+        <option value="">All Classes</option>
+        <option>Mont 1</option>
+        <option>Mont 2</option>
+        <option>Mont 3</option>
+        <option>Class 1</option>
+        <option>Class 2</option>
+        <option>Class 3</option>
+        <option>Class 4</option>
+        <option>Class 5</option>
+      </select>
+      <select class="search-input" id="monthFilter" onchange="filterCards()" style="max-width:150px;cursor:pointer;">
+        <option value="">All Months</option>
+      </select>
+      <button class="btn btn-outline btn-sm" onclick="resetFilters()" title="Clear all filters" style="white-space:nowrap;">✕ Reset</button>
       <div class="filter-btns">
         <button class="filter-btn active" onclick="setFilter('all',this)">All <span class="filter-count" id="fc-all">0</span></button>
         <button class="filter-btn" onclick="setFilter('new',this)">New <span class="filter-count" id="fc-new">0</span></button>
@@ -318,8 +333,33 @@ let currentFilter = "all";
 let deleteTargetId = null;
 
 // ── HELPERS ──
-function getSeenIds()  { try { return new Set(JSON.parse(localStorage.getItem(SEEN_KEY)||'[]')); } catch{return new Set();} }
-function markSeen(id)  { const s=getSeenIds(); s.add(id); localStorage.setItem(SEEN_KEY,JSON.stringify([...s])); }
+let _seenCache = null;
+
+function getSeenIds() {
+  if (_seenCache) return _seenCache;
+  try { return new Set(JSON.parse(localStorage.getItem(SEEN_KEY)||'[]')); } catch { return new Set(); }
+}
+
+function markSeen(id) {
+  // Save to localStorage (device fallback)
+  const s = getSeenIds(); s.add(id);
+  localStorage.setItem(SEEN_KEY, JSON.stringify([...s]));
+  _seenCache = s;
+  // Also save to Firebase so it persists across devices
+  update(ref(db, `staffPanel/seen`), { [id]: true });
+}
+
+function loadSeenFromFirebase() {
+  onValue(ref(db, 'staffPanel/seen'), snap => {
+    const firebaseIds = snap.exists() ? new Set(Object.keys(snap.val())) : new Set();
+    // Merge with localStorage
+    const localIds = (() => { try { return new Set(JSON.parse(localStorage.getItem(SEEN_KEY)||'[]')); } catch { return new Set(); }})();
+    _seenCache = new Set([...firebaseIds, ...localIds]);
+    // Sync merged set back to localStorage
+    localStorage.setItem(SEEN_KEY, JSON.stringify([..._seenCache]));
+    renderAll();
+  });
+}
 
 function showToast(msg, dur=3000) {
   const t=document.getElementById('toast');
@@ -368,6 +408,7 @@ window.logout = function() {
 
 // ── FIREBASE LISTENER ──
 function startListen() {
+  loadSeenFromFirebase(); // Load seen IDs from Firebase across devices
   onValue(ref(db, 'feedback'), snap => {
     allSubs = [];
     if (snap.exists()) {
@@ -445,18 +486,48 @@ function renderAll() {
     notifArea.classList.remove('has-new');
   }
 
+  // Populate month dropdown from actual submission dates
+  const monthSel = document.getElementById('monthFilter');
+  const currentMonth = monthSel.value;
+  const months = [...new Set(allSubs.map(s => {
+    if (!s.submittedAt) return null;
+    const d = new Date(s.submittedAt);
+    if (isNaN(d)) return null;
+    return d.toLocaleDateString('en-GB', {month:'long', year:'numeric'});
+  }).filter(Boolean))];
+  monthSel.innerHTML = '<option value="">All Months</option>' +
+    months.map(m => `<option value="${m}"${m===currentMonth?' selected':''}>${m}</option>`).join('');
+
   renderFiltered();
 }
 
 function renderFiltered() {
   const seen   = getSeenIds();
   const search = document.getElementById('searchInput').value.toLowerCase();
+  const classF = document.getElementById('classFilter').value;
+  const monthF = document.getElementById('monthFilter').value;
+
   let filtered = allSubs.filter(s => {
+    // Search filter
     const matchSearch = !search ||
       (s.childName||'').toLowerCase().includes(search) ||
       (s.className||'').toLowerCase().includes(search) ||
       (s.parentName||'').toLowerCase().includes(search);
     if(!matchSearch) return false;
+
+    // Class filter
+    if(classF && (s.className||'').trim() !== classF) return false;
+
+    // Month filter
+    if(monthF) {
+      if(!s.submittedAt) return false;
+      const d = new Date(s.submittedAt);
+      if(isNaN(d)) return false;
+      const subMonth = d.toLocaleDateString('en-GB', {month:'long', year:'numeric'});
+      if(subMonth !== monthF) return false;
+    }
+
+    // Status filter
     if(currentFilter==='all')       return true;
     if(currentFilter==='new')       return !seen.has(s.id);
     if(currentFilter==='pending')   return !s.schoolResponse;
@@ -665,6 +736,16 @@ window.setFilter = function(f, btn) {
 };
 
 window.filterCards = function() { renderFiltered(); };
+
+window.resetFilters = function() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('classFilter').value = '';
+  document.getElementById('monthFilter').value = '';
+  currentFilter = 'all';
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector('.filter-btn').classList.add('active');
+  renderFiltered();
+};
 
 // ── CHAR COUNT ──
 window.updateChar = function(id) {
