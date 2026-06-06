@@ -1,10 +1,9 @@
-[build]
-  publish = "."
-
-[build.environment]
-  NETLIFY_SKIP_SECRET_SCANNING = "true"
-
 [[headers]]
   for = "/*"
   [headers.values]
     X-Frame-Options = "DENY"
+
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Content-Type = "text/html; charset=UTF-8"
