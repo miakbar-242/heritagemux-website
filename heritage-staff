@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heritage Montessori · Staff Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --forest:#2d4a2d; --gold:#b8962e; --cream:#faf7f2; --parchment:#f2ece0;
+  --tan:#e8dfc8; --line:#d9cebc; --ink:#1e1e1e; --muted:#6e6456;
+  --sage:#5a7a5a; --error:#c0392b; --success:#2d7a4a;
+}
+body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padding:30px 16px 50px; color:var(--ink); }
+.portal { max-width:900px; margin:0 auto; }
+.banner { background:var(--forest); color:white; padding:18px 32px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+.banner h1 { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:600; }
+.banner p { font-size:10px; letter-spacing:2.5px; text-transform:uppercase; color:rgba(255,255,255,0.55); margin-top:2px; }
+.banner-badge { background:var(--gold); color:var(--forest); font-size:9.5px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; padding:5px 12px; border-radius:2px; }
+
+/* LOGIN */
+.login-box { background:var(--cream); padding:52px; box-shadow:0 8px 48px rgba(0,0,0,0.15); text-align:center; }
+.login-box h2 { font-family:'Cormorant Garamond',serif; font-size:24px; color:var(--forest); margin-bottom:8px; }
+.login-box p { font-size:12.5px; color:var(--muted); margin-bottom:28px; line-height:1.6; }
+.login-row { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+.pin-input { border:1.5px solid var(--line); background:var(--parchment); font-family:'Jost',sans-serif; font-size:22px; font-weight:500; letter-spacing:8px; text-align:center; padding:10px 18px; width:170px; outline:none; color:var(--forest); }
+.pin-input:focus { border-color:var(--gold); }
+.login-error { color:var(--error); font-size:11.5px; margin-top:10px; display:none; }
+.pin-hint { font-size:10.5px; color:var(--muted); margin-top:14px; font-style:italic; }
+
+/* BUTTONS */
+.btn { padding:11px 26px; font-family:'Jost',sans-serif; font-size:11.5px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; border:none; transition:background 0.2s; border-radius:2px; }
+.btn-primary { background:var(--forest); color:white; }
+.btn-primary:hover { background:var(--gold); }
+.btn-outline { background:transparent; color:var(--muted); border:1.5px solid var(--line); }
+.btn-outline:hover { border-color:var(--muted); color:var(--ink); }
+.btn-success { background:var(--success); color:white; }
+.btn-success:hover { opacity:0.85; }
+.btn-danger { background:var(--error); color:white; }
+.btn-danger:hover { opacity:0.85; }
+.btn-keep { background:#e8f0e8; color:var(--forest); border:1.5px solid #b8d4b8; }
+.btn-keep.kept { background:var(--forest); color:white; }
+.btn-keep:hover { background:var(--forest); color:white; }
+.btn-sm { padding:7px 16px; font-size:10.5px; letter-spacing:1px; }
+
+/* SUMMARY BAR */
+.summary-bar { background:var(--cream); padding:18px 32px; box-shadow:0 2px 12px rgba(0,0,0,0.08); border-bottom:2px solid var(--tan); display:flex; gap:0; flex-wrap:wrap; }
+.summary-card { flex:1; min-width:100px; padding:8px 20px 8px 0; border-right:1px solid var(--line); margin-right:20px; }
+.summary-card:last-child { border-right:none; margin-right:0; }
+.summary-num { font-family:'Cormorant Garamond',serif; font-size:32px; font-weight:700; color:var(--forest); line-height:1; }
+.summary-label { font-size:9.5px; font-weight:500; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-top:4px; }
+.summary-card.new-badge .summary-num { color:var(--gold); }
+.summary-card.pending-badge .summary-num { color:#8a6020; }
+.summary-card.responded-badge .summary-num { color:var(--success); }
+
+/* NOTIFICATION AREA */
+.notif-area { display:none; background:#fffbf0; border-bottom:2px solid var(--gold); padding:14px 32px; }
+.notif-area.has-new { display:block; animation:slideDown 0.3s ease; }
+@keyframes slideDown { from{opacity:0;transform:translateY(-8px);} to{opacity:1;transform:translateY(0);} }
+.notif-title { font-size:10px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+.notif-dot { width:8px; height:8px; background:var(--gold); border-radius:50%; animation:pulse 1.5s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+.notif-list { display:flex; flex-wrap:wrap; gap:8px; }
+.notif-chip { background:white; border:1.5px solid var(--gold); padding:6px 14px; font-size:11.5px; color:var(--ink); border-radius:2px; cursor:pointer; display:flex; align-items:center; gap:8px; transition:background 0.15s; }
+.notif-chip:hover { background:var(--tan); }
+.notif-chip-badge { background:var(--gold); color:var(--forest); font-size:8.5px; font-weight:700; padding:2px 6px; border-radius:10px; }
+
+/* SEARCH */
+.search-section { background:var(--cream); padding:18px 32px; box-shadow:0 1px 6px rgba(0,0,0,0.06); border-bottom:1px solid var(--tan); display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+.search-input { flex:1; min-width:200px; border:1.5px solid var(--line); background:var(--parchment); font-family:'Jost',sans-serif; font-size:13px; color:var(--ink); padding:9px 14px; outline:none; }
+.search-input:focus { border-color:var(--gold); }
+.search-input::placeholder { color:#c0b8ab; }
+.filter-btns { display:flex; gap:6px; flex-wrap:wrap; }
+.filter-btn { padding:7px 14px; font-family:'Jost',sans-serif; font-size:10.5px; font-weight:500; letter-spacing:1px; text-transform:uppercase; cursor:pointer; border:1.5px solid var(--line); background:transparent; color:var(--muted); border-radius:2px; transition:all 0.15s; display:flex; align-items:center; gap:5px; }
+.filter-btn.active { background:var(--forest); border-color:var(--forest); color:white; }
+.filter-count { background:rgba(255,255,255,0.3); font-size:9px; padding:1px 5px; border-radius:10px; }
+.filter-btn:not(.active) .filter-count { background:var(--line); color:var(--muted); }
+
+/* SUBMISSIONS */
+.submissions-area { background:var(--cream); padding:28px 32px; box-shadow:0 8px 48px rgba(0,0,0,0.12); min-height:300px; }
+.submissions-title { font-family:'Cormorant Garamond',serif; font-size:17px; font-weight:600; color:var(--forest); margin-bottom:18px; padding-bottom:10px; border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+.sub-count { font-family:'Jost',sans-serif; font-size:11px; font-weight:400; color:var(--muted); }
+.empty-state { text-align:center; padding:48px 20px; color:var(--muted); }
+.empty-state .ei { font-size:36px; opacity:0.3; margin-bottom:12px; }
+.empty-state p { font-size:13px; line-height:1.6; }
+
+/* CARD */
+.sub-card { border:1.5px solid var(--line); margin-bottom:14px; overflow:hidden; transition:box-shadow 0.2s; position:relative; }
+.sub-card:hover { box-shadow:0 2px 16px rgba(0,0,0,0.08); }
+.sub-card.is-new { border-color:var(--gold); }
+.sub-card.is-kept { border-color:var(--sage); }
+.new-indicator { position:absolute; top:0; left:0; width:4px; height:100%; background:var(--gold); }
+.kept-indicator { position:absolute; top:0; left:0; width:4px; height:100%; background:var(--sage); }
+.card-header { background:var(--parchment); padding:12px 16px 12px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; cursor:pointer; user-select:none; }
+.card-header:hover { background:var(--tan); }
+.card-name { font-family:'Cormorant Garamond',serif; font-size:16px; font-weight:600; color:var(--forest); }
+.card-meta { font-size:11px; color:var(--muted); margin-top:2px; }
+.badges { display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
+.badge { font-size:9px; font-weight:600; letter-spacing:1px; text-transform:uppercase; padding:3px 8px; border-radius:2px; }
+.b-ptm { background:#e8f0e8; color:var(--forest); }
+.b-general { background:#e8edf5; color:#2d4070; }
+.b-pending { background:#fdf3e3; color:#8a6020; }
+.b-responded { background:#e8f5ec; color:var(--success); }
+.b-graded { background:#f0e8f5; color:#6a2d8a; }
+.b-new { background:var(--gold); color:white; animation:newPulse 2s ease infinite; }
+@keyframes newPulse { 0%,100%{opacity:1;} 50%{opacity:0.7;} }
+.b-kept { background:#e8f0e8; color:var(--sage); border:1px solid var(--sage); }
+.chevron { font-size:12px; color:var(--muted); transition:transform 0.2s; }
+.chevron.open { transform:rotate(180deg); }
+
+/* CARD BODY */
+.card-body { display:none; padding:20px 20px 20px 24px; }
+.card-body.open { display:block; }
+.detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px 20px; margin-bottom:16px; background:var(--parchment); padding:14px 16px; border-left:3px solid var(--gold); }
+.d-label { font-size:8.5px; font-weight:500; letter-spacing:2px; text-transform:uppercase; color:var(--sage); margin-bottom:3px; }
+.d-value { font-size:12.5px; color:var(--ink); line-height:1.5; }
+.section-block { margin-bottom:14px; }
+.section-block-title { font-size:9px; font-weight:500; letter-spacing:2px; text-transform:uppercase; color:var(--forest); margin-bottom:6px; padding-bottom:4px; border-bottom:1px dashed var(--line); }
+.section-block-content { font-size:12.5px; color:var(--ink); line-height:1.65; padding:8px 12px; background:var(--cream); border-left:2px solid var(--line); }
+.chip-pills { display:flex; flex-wrap:wrap; gap:5px; }
+.chip-pill { background:var(--forest); color:white; font-size:10.5px; padding:3px 10px; border-radius:2px; }
+
+/* CARD ACTIONS */
+.card-actions { display:flex; gap:8px; align-items:center; padding:10px 16px 14px 24px; border-top:1px solid var(--tan); background:var(--cream); flex-wrap:wrap; }
+.card-action-label { font-size:9.5px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-right:4px; }
+
+/* RESPONSE COMPOSER */
+.response-composer { margin-top:20px; border-top:1.5px solid var(--line); padding-top:20px; }
+.composer-title { font-family:'Cormorant Garamond',serif; font-size:15px; font-weight:600; color:var(--forest); margin-bottom:14px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.ctag { font-family:'Jost',sans-serif; font-size:9px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; background:var(--gold); color:var(--forest); padding:2px 8px; border-radius:2px; }
+.existing-response { background:var(--parchment); border-left:3px solid var(--success); padding:14px 16px; margin-bottom:14px; font-size:12.5px; color:var(--ink); line-height:1.65; font-style:italic; white-space:pre-wrap; }
+.existing-meta { font-size:10px; color:var(--sage); font-style:normal; margin-bottom:8px; font-weight:500; }
+.parent-grade-box { background:#f0e8f5; border-left:3px solid #9b59b6; padding:10px 14px; margin-bottom:14px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.pg-label { font-size:11px; font-weight:500; color:#6a2d8a; }
+.pg-stars { color:var(--gold); font-size:18px; letter-spacing:2px; }
+.pg-desc { font-size:11px; color:var(--muted); font-style:italic; }
+.hints-box { background:#f0f5f0; border-left:3px solid var(--sage); padding:10px 14px; margin:10px 0; font-size:11.5px; color:var(--sage); line-height:1.65; }
+.hints-box strong { color:var(--forest); }
+.response-textarea { width:100%; min-height:130px; border:1.5px solid var(--line); background:var(--parchment); font-family:'Jost',sans-serif; font-size:13px; color:var(--ink); padding:12px 14px; outline:none; resize:vertical; line-height:1.7; }
+.response-textarea:focus { border-color:var(--gold); }
+.response-textarea::placeholder { color:#c0b8ab; font-size:12px; }
+.composer-actions { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:12px; }
+.char-count { font-size:10.5px; color:var(--muted); margin-left:auto; }
+.saved-ok { font-size:11px; color:var(--success); font-weight:500; display:none; margin-left:8px; }
+.spinner { display:inline-block; width:14px; height:14px; border:2px solid var(--line); border-top-color:var(--forest); border-radius:50%; animation:spin 0.7s linear infinite; vertical-align:middle; margin-right:4px; }
+@keyframes spin { to{transform:rotate(360deg);} }
+
+/* NOTIFY PARENT BLOCK */
+.notify-parent-block { display:none; margin-top:16px; background:#f0f7f0; border:1.5px solid #b0d4b0; padding:16px 18px; }
+.notify-parent-block.show { display:block; animation:fadeIn 0.4s ease; }
+@keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+.notify-parent-title { font-size:10px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--success); margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+.notify-parent-title::before { content:'✓'; background:var(--success); color:white; width:18px; height:18px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; }
+.notify-parent-desc { font-size:12px; color:var(--muted); margin-bottom:12px; line-height:1.6; }
+.notify-btns { display:flex; gap:10px; flex-wrap:wrap; }
+.notify-btn { display:flex; align-items:center; gap:8px; padding:10px 20px; font-family:'Jost',sans-serif; font-size:11.5px; font-weight:500; letter-spacing:1px; text-transform:uppercase; text-decoration:none; border-radius:2px; cursor:pointer; border:none; transition:opacity 0.2s; }
+.notify-btn:hover { opacity:0.85; }
+.notify-btn-wa { background:#25D366; color:white; }
+.notify-btn-copy { background:var(--parchment); color:var(--forest); border:1.5px solid var(--line); }
+.notify-no-contact { font-size:11.5px; color:var(--muted); font-style:italic; background:var(--parchment); padding:10px 14px; border-left:3px solid var(--line); }
+
+/* FOOTER */
+.panel-footer { background:var(--parchment); display:flex; align-items:center; justify-content:space-between; padding:14px 32px; flex-wrap:wrap; gap:8px; }
+.panel-footer span { font-size:9.5px; color:rgba(0,0,0,0.35); letter-spacing:1px; text-transform:uppercase; }
+.logout-btn { font-size:10.5px; color:var(--muted); cursor:pointer; background:none; border:none; font-family:'Jost',sans-serif; text-decoration:underline; }
+.logout-btn:hover { color:var(--error); }
+
+/* TOAST */
+.toast { position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(100px); background:var(--forest); color:white; padding:13px 28px; font-size:13px; font-weight:500; border-radius:2px; box-shadow:0 4px 24px rgba(0,0,0,0.25); transition:transform 0.4s ease; z-index:9999; white-space:nowrap; }
+.toast.show { transform:translateX(-50%) translateY(0); }
+
+/* LIVE DOT */
+.live-dot { display:inline-block; width:8px; height:8px; background:#2ecc71; border-radius:50%; margin-right:6px; animation:pulse 1.5s infinite; }
+
+/* MODAL */
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center; }
+.modal-overlay.show { display:flex; }
+.modal-box { background:var(--cream); padding:36px 40px; max-width:420px; width:90%; box-shadow:0 16px 64px rgba(0,0,0,0.25); }
+.modal-box h3 { font-family:'Cormorant Garamond',serif; font-size:20px; color:var(--forest); margin-bottom:10px; }
+.modal-box p { font-size:12.5px; color:var(--muted); line-height:1.65; margin-bottom:24px; }
+.modal-btns { display:flex; gap:10px; flex-wrap:wrap; }
+
+/* ── TABS ── */
+.panel-tabs { background:var(--parchment); border-bottom:2px solid var(--line); display:flex; gap:0; }
+.panel-tab { padding:13px 26px; font-family:'Jost',sans-serif; font-size:10.5px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); cursor:pointer; border:none; border-bottom:2.5px solid transparent; margin-bottom:-2px; background:none; transition:all 0.2s; display:flex; align-items:center; gap:7px; }
+.panel-tab:hover { color:var(--forest); }
+.panel-tab.active { color:var(--forest); border-bottom-color:var(--gold); font-weight:600; }
+
+/* ── BANNER BUTTONS ── */
+.btn-qr { background:transparent; color:rgba(255,255,255,0.75); border:1.5px solid rgba(255,255,255,0.25); font-family:'Jost',sans-serif; font-size:9.5px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; padding:5px 12px; border-radius:2px; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:6px; transition:all 0.2s; }
+.btn-qr:hover { background:rgba(255,255,255,0.1); border-color:var(--gold); color:var(--gold); }
+
+/* ── PRINT ── */
+.btn-print { background:#f5f5ee; color:var(--muted); border:1.5px solid var(--line); }
+.btn-print:hover { background:var(--tan); color:var(--ink); }
+.btn-print-all { background:var(--parchment); color:var(--forest); border:1.5px solid var(--gold); }
+.btn-print-all:hover { background:var(--gold); color:var(--forest); }
+@media print {
+  body { background:white !important; padding:0 !important; }
+  .portal { max-width:100% !important; }
+  .banner, .login-box, .summary-bar, .notif-area, .search-section,
+  .card-actions, .response-composer, .panel-footer, .modal-overlay,
+  .toast, .notify-parent-block, .hints-box, .chevron, .panel-tabs { display:none !important; }
+  .submissions-area { box-shadow:none !important; padding:0 !important; background:white !important; }
+  .submissions-title { display:none !important; }
+  .sub-card { border:1px solid #ccc !important; margin-bottom:24px !important; page-break-inside:avoid; box-shadow:none !important; }
+  .sub-card.print-hide { display:none !important; }
+  .card-body { display:block !important; padding:14px !important; }
+  .card-header { background:#f2ece0 !important; }
+  .detail-grid { background:#f2ece0 !important; }
+  .print-header { display:block !important; }
+  /* Document print */
+  .doc-form-section { box-shadow:none !important; border:none !important; }
+  .doc-form-header, .doc-nav, .doc-back-btn, .doc-print-btn, .form-actions { display:none !important; }
+  .doc-form-body { padding:0 !important; }
+}
+.print-header { display:none; text-align:center; margin-bottom:24px; padding-bottom:14px; border-bottom:2px solid #2d4a2d; }
+.print-header h2 { font-family:'Cormorant Garamond',serif; font-size:20px; color:#2d4a2d; font-weight:600; }
+.print-header p { font-size:10px; color:#6e6456; margin-top:5px; letter-spacing:1.5px; text-transform:uppercase; }
+
+/* ── DOCUMENTS TAB ── */
+.docs-panel { background:var(--cream); padding:28px 32px; min-height:400px; display:none; }
+.docs-panel.active { display:block; }
+.docs-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; margin-top:20px; }
+.doc-card { background:var(--cream); border:1.5px solid var(--line); padding:20px; cursor:pointer; transition:all 0.2s; position:relative; }
+.doc-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--gold); opacity:0; transition:opacity 0.2s; }
+.doc-card:hover { border-color:var(--gold); box-shadow:0 4px 20px rgba(0,0,0,0.08); }
+.doc-card:hover::before { opacity:1; }
+.doc-icon { font-size:26px; margin-bottom:10px; }
+.doc-title { font-family:'Cormorant Garamond',serif; font-size:16px; font-weight:600; color:var(--forest); margin-bottom:4px; }
+.doc-desc { font-size:11px; color:var(--muted); line-height:1.6; margin-bottom:14px; }
+.doc-open-btn { display:inline-flex; align-items:center; gap:6px; background:var(--forest); color:white; font-family:'Jost',sans-serif; font-size:10px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; padding:8px 16px; border:none; cursor:pointer; border-radius:2px; transition:background 0.2s; }
+.doc-open-btn:hover { background:var(--gold); color:var(--forest); }
+
+/* ── DOCUMENT FORM VIEW ── */
+.doc-form-section { display:none; background:white; }
+.doc-form-section.active { display:block; }
+.doc-nav { background:var(--parchment); border-bottom:1px solid var(--line); padding:12px 28px; display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+.doc-back-btn { background:none; border:1.5px solid var(--line); color:var(--muted); font-family:'Jost',sans-serif; font-size:10px; font-weight:500; letter-spacing:1px; text-transform:uppercase; padding:6px 14px; cursor:pointer; border-radius:2px; display:flex; align-items:center; gap:6px; }
+.doc-back-btn:hover { border-color:var(--forest); color:var(--forest); }
+.doc-print-btn { background:var(--forest); color:white; border:none; font-family:'Jost',sans-serif; font-size:10px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; padding:8px 20px; cursor:pointer; border-radius:2px; display:flex; align-items:center; gap:7px; transition:background 0.2s; }
+.doc-print-btn:hover { background:var(--gold); color:var(--forest); }
+.doc-form-body { max-width:720px; margin:0 auto; padding:36px 40px; }
+.doc-form-header { text-align:center; border-bottom:2px solid var(--forest); padding-bottom:18px; margin-bottom:28px; }
+.doc-form-header h2 { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:700; color:var(--forest); }
+.doc-form-header p { font-size:10.5px; color:var(--muted); margin-top:3px; }
+.doc-form-header .doc-ref { font-size:11px; color:var(--muted); margin-top:10px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+.field-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:14px; }
+.field-row.full { grid-template-columns:1fr; }
+.field-group { display:flex; flex-direction:column; gap:4px; }
+.field-label { font-size:9px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--sage); }
+.field-input { border:none; border-bottom:1.5px solid var(--line); background:transparent; font-family:'Jost',sans-serif; font-size:13px; color:var(--ink); padding:6px 0; outline:none; width:100%; }
+.field-input:focus { border-bottom-color:var(--gold); }
+.field-select { border:none; border-bottom:1.5px solid var(--line); background:transparent; font-family:'Jost',sans-serif; font-size:13px; color:var(--ink); padding:6px 0; outline:none; width:100%; cursor:pointer; }
+.field-select:focus { border-bottom-color:var(--gold); }
+.doc-body-text { font-size:13px; color:var(--ink); line-height:2; margin:20px 0; }
+.doc-body-text .blank { display:inline-block; min-width:160px; border-bottom:1.5px solid var(--ink); text-align:center; font-style:italic; color:var(--muted); }
+.doc-section-title { font-size:9px; font-weight:600; letter-spacing:2.5px; text-transform:uppercase; color:var(--forest); margin:22px 0 12px; padding-bottom:5px; border-bottom:1px dashed var(--line); }
+.doc-clause { font-size:12px; color:var(--ink); line-height:1.8; margin-bottom:10px; padding-left:16px; }
+.doc-clause strong { color:var(--forest); }
+.doc-sign-row { display:grid; grid-template-columns:1fr 1fr; gap:40px; margin-top:40px; }
+.doc-sign-box { border-top:1px solid var(--ink); padding-top:8px; font-size:11px; color:var(--muted); text-align:center; }
+.form-actions { display:flex; gap:10px; margin-top:24px; padding-top:16px; border-top:1px solid var(--line); }
+</style>
+</head>
+<body>
+
+<div class="portal">
+  <div class="banner">
+    <div>
+      <h1>Heritage Montessori &amp; School</h1>
+      <p>Nurturing Young Minds · Est. 2007</p>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <a href="/heritage-qr-poster" target="_blank" class="btn-qr">🖨 Print QR Poster</a>
+      <div class="banner-badge">Staff Hub</div>
+    </div>
+  </div>
+
+  <!-- LOGIN -->
+  <div class="login-box" id="loginBox">
+    <div style="font-size:40px;margin-bottom:14px;opacity:0.35;">🔐</div>
+    <h2>Staff Access Only</h2>
+    <p>This panel is for Heritage Montessori staff to review parent feedback<br>and post official school responses. Enter your staff PIN to continue.</p>
+    <div class="login-row">
+      <input class="pin-input" type="password" id="pinInput" maxlength="6" placeholder="· · · · · ·" onkeydown="if(event.key==='Enter')checkPin()">
+      <button class="btn btn-primary" onclick="checkPin()">Enter →</button>
+    </div>
+    <div class="login-error" id="loginError">⚠ Incorrect PIN. Please try again.</div>
+    <div class="pin-hint">Contact the school administrator if you have forgotten your PIN.</div>
+  </div>
+
+  <!-- MAIN PANEL -->
+  <div id="mainPanel" style="display:none;">
+
+    <!-- SUMMARY BAR -->
+    <div class="summary-bar">
+      <div class="summary-card">
+        <div class="summary-num" id="statTotal">—</div>
+        <div class="summary-label">Total Received</div>
+      </div>
+      <div class="summary-card new-badge">
+        <div class="summary-num" id="statNew">—</div>
+        <div class="summary-label">📦 New / Unread</div>
+      </div>
+      <div class="summary-card pending-badge">
+        <div class="summary-num" id="statPending">—</div>
+        <div class="summary-label">⏳ Pending Reply</div>
+      </div>
+      <div class="summary-card responded-badge">
+        <div class="summary-num" id="statResponded">—</div>
+        <div class="summary-label">✓ Responded</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-num" id="statKept">—</div>
+        <div class="summary-label">📌 Kept</div>
+      </div>
+    </div>
+
+    <!-- NOTIFICATION AREA -->
+    <div class="notif-area" id="notifArea">
+      <div class="notif-title">
+        <span class="notif-dot"></span>
+        New Messages — tap to jump
+      </div>
+      <div class="notif-list" id="notifList"></div>
+    </div>
+
+    <!-- TAB BAR -->
+    <div class="panel-tabs">
+      <button class="panel-tab active" id="tabFeedbackBtn" onclick="switchTab('feedback',this)">📋 Parent Feedback</button>
+      <button class="panel-tab" id="tabDocsBtn" onclick="switchTab('documents',this)">📄 Staff Documents</button>
+    </div>
+
+    <!-- ═══════════════ FEEDBACK TAB ═══════════════ -->
+    <div id="tabFeedback">
+
+    <!-- SEARCH & FILTER -->
+    <div class="search-section">
+      <input class="search-input" type="text" id="searchInput" placeholder="Search by child's name, class, or parent…" oninput="filterCards()">
+      <select class="search-input" id="classFilter" onchange="filterCards()" style="max-width:140px;cursor:pointer;">
+        <option value="">All Classes</option>
+        <option>Mont 1</option><option>Mont 2</option><option>Mont 3</option>
+        <option>Class 1</option><option>Class 2</option><option>Class 3</option><option>Class 4</option><option>Class 5</option>
+      </select>
+      <select class="search-input" id="monthFilter" onchange="filterCards()" style="max-width:150px;cursor:pointer;">
+        <option value="">All Months</option>
+      </select>
+      <button class="btn btn-outline btn-sm" onclick="resetFilters()" style="white-space:nowrap;">✕ Reset</button>
+      <div class="filter-btns">
+        <button class="filter-btn active" onclick="setFilter('all',this)">All <span class="filter-count" id="fc-all">0</span></button>
+        <button class="filter-btn" onclick="setFilter('new',this)">New <span class="filter-count" id="fc-new">0</span></button>
+        <button class="filter-btn" onclick="setFilter('pending',this)">Pending <span class="filter-count" id="fc-pending">0</span></button>
+        <button class="filter-btn" onclick="setFilter('responded',this)">Responded <span class="filter-count" id="fc-responded">0</span></button>
+        <button class="filter-btn" onclick="setFilter('kept',this)">📌 Kept <span class="filter-count" id="fc-kept">0</span></button>
+      </div>
+    </div>
+
+    <!-- SUBMISSIONS LIST -->
+    <div class="submissions-area">
+      <div class="submissions-title">
+        <span><span class="live-dot"></span>Live Submissions</span>
+        <span style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+          <span class="sub-count" id="subCountLabel">Loading…</span>
+          <button class="btn btn-print-all btn-sm" onclick="printAll()" title="Print all visible submissions">🖨 Print All</button>
+        </span>
+      </div>
+      <div class="print-header" id="printHeader">
+        <h2>Heritage Montessori &amp; School — Parent Feedback</h2>
+        <p id="printMeta">Staff Panel Report</p>
+      </div>
+      <div id="submissionsList">
+        <div class="empty-state"><div class="ei">⏳</div><p>Loading submissions…</p></div>
+      </div>
+    </div>
+
+    </div><!-- /tabFeedback -->
+
+    <!-- ═══════════════ DOCUMENTS TAB ═══════════════ -->
+    <div id="tabDocuments" class="docs-panel">
+
+      <!-- DOCUMENT LIST VIEW -->
+      <div id="docListView">
+        <div class="submissions-title">
+          <span>📄 Staff Document Templates</span>
+          <span class="sub-count">Fill in and print directly in browser</span>
+        </div>
+        <div class="docs-grid">
+
+          <div class="doc-card">
+            <div class="doc-icon">📝</div>
+            <div class="doc-title">Appointment Letter</div>
+            <div class="doc-desc">For newly appointed teachers. Includes designation, salary, probation period and terms.</div>
+            <button class="doc-open-btn" onclick="openDoc('appointment')">📝 Fill &amp; Print</button>
+          </div>
+
+          <div class="doc-card">
+            <div class="doc-icon">🎓</div>
+            <div class="doc-title">Bonafide Certificate</div>
+            <div class="doc-desc">Confirms a student is currently enrolled at Heritage Montessori.</div>
+            <button class="doc-open-btn" onclick="openDoc('bonafide')">📝 Fill &amp; Print</button>
+          </div>
+
+          <div class="doc-card">
+            <div class="doc-icon">🏫</div>
+            <div class="doc-title">School Leaving Certificate</div>
+            <div class="doc-desc">Issued when a student leaves the school. Includes character and clearance.</div>
+            <button class="doc-open-btn" onclick="openDoc('leaving')">📝 Fill &amp; Print</button>
+          </div>
+
+          <div class="doc-card">
+            <div class="doc-icon">👩‍🏫</div>
+            <div class="doc-title">Experience Letter</div>
+            <div class="doc-desc">For teachers and staff leaving the school. Confirms designation, tenure and performance.</div>
+            <button class="doc-open-btn" onclick="openDoc('experience')">📝 Fill &amp; Print</button>
+          </div>
+
+        </div>
+        <div style="margin-top:20px;background:var(--parchment);border:1px solid var(--line);border-left:3px solid var(--gold);padding:12px 16px;font-size:11.5px;color:var(--muted);line-height:1.7;">
+          <strong style="color:var(--forest);">How to use:</strong> Click Fill &amp; Print on any template. Fill in the fields, then click the Print button — the form prints cleanly without any panel elements. Each form is freshly filled every time.
+        </div>
+      </div>
+
+      <!-- APPOINTMENT LETTER FORM -->
+      <div id="docAppointment" class="doc-form-section">
+        <div class="doc-nav">
+          <button class="doc-back-btn" onclick="closeDoc()">← Back to Documents</button>
+          <span style="font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--forest);font-weight:600;">Appointment Letter</span>
+          <button class="doc-print-btn" onclick="printDoc()">🖨 Print</button>
+        </div>
+        <div class="doc-form-body" id="printAppointment">
+          <div class="doc-form-header">
+            <h2>Heritage Montessori and School</h2>
+            <p>Garden Town, Multan · Tel: +92 336 1515260 · info@heritagemux.com</p>
+            <div class="doc-ref">
+              <span>Date: <input class="field-input" style="width:140px;" placeholder="dd/mm/yyyy"></span>
+              <span>Ref No: <input class="field-input" style="width:100px;" placeholder="HMS/___/26"></span>
+            </div>
+          </div>
+          <div class="doc-section-title">Addressee</div>
+          <div class="field-row">
+            <div class="field-group"><div class="field-label">Full Name</div><input class="field-input" placeholder="Ms. / Mr."></div>
+            <div class="field-group"><div class="field-label">S/o · D/o · W/o</div><input class="field-input" placeholder="Father/Husband name"></div>
+          </div>
+          <div class="field-row full">
+            <div class="field-group"><div class="field-label">Address</div><input class="field-input" placeholder="Full address"></div>
+          </div>
+          <div class="doc-section-title">Appointment Details</div>
+          <div class="field-row">
+            <div class="field-group"><div class="field-label">Designation</div><input class="field-input" id="apt-designation" placeholder="e.g. Class Teacher"></div>
+            <div class="field-group"><div class="field-label">Section</div><select class="field-select" id="apt-section"><option>Montessori</option><option>Junior</option><option>Both Sections</option></select></div>
+          </div>
+          <div class="field-row">
+            <div class="field-group"><div class="field-label">Date of Joining</div><input class="field-input" id="apt-doj" placeholder="dd/mm/yyyy"></div>
+            <div class="field-group"><div class="field-label">Monthly Salary (Rs.)</div><input class="field-input" id="apt-salary" placeholder="e.g. 25,000"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-group"><div class="field-label">Working Hours (From)</div><input class="field-input" placeholder="e.g. 08:00 AM"></div>
+            <div class="field-group"><div class="field-label">Working Hours (To)</div><input class="field-input" placeholder="e.g. 02:00 PM"></div>
+          </div>
+          <div class="doc-body-text" style="margin-top:24px;">
+            Dear <input class="field-input" style="width:180px;" placeholder="Ms./Mr. Name">,<br><br>
+            With reference to your application and subsequent interview, we are pleased to appoint you as <strong><input class="field-input" style="width:180px;" placeholder="Designation"></strong> at Heritage Montessori and School, Garden Town, Multan, with effect from <strong><input class="field-input" style="width:130px;" placeholder="Date of Joining"></strong>.<br><br>
+            Your monthly salary will be <strong>Rs. <input class="field-input" style="width:100px;" placeholder="Amount"></strong> payable on the last working day of each month. You will be on probation for <strong>three (3) months</strong> from the date of joining.<br><br>
+            You are expected to maintain the highest standards of professional conduct, punctuality, and confidentiality at all times. Either party may terminate this appointment with <strong>one (1) month's</strong> written notice.<br><br>
+            Please sign and return the duplicate copy as acceptance of the above terms.
+          </div>
+          <div class="doc-sign-row" style="margin-top:48px;">
+            <div class="doc-sign-box">Principal / Administrator<br>Heritage Montessori and School</div>
+            <div class="doc-sign-box">Employee Acceptance Signature<br>Date: _______________</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BONAFIDE CERTIFICATE FORM -->
+      <div id="docBonafide" class="doc-form-section">
+        <div class="doc-nav">
+          <button class="doc-back-btn" onclick="closeDoc()">← Back to Documents</button>
+          <span style="font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--forest);font-weight:600;">Bonafide Certificate</span>
+          <button class="doc-print-btn" onclick="printDoc()">🖨 Print</button>
+        </div>
+        <div class="doc-form-body" id="printBonafide">
+          <div class="doc-form-header">
+            <h2>Heritage Montessori and School</h2>
+            <p>Garden Town, Multan · Tel: +92 336 1515260 · info@heritagemux.com</p>
+            <div class="doc-ref">
+              <span>Cert No: <input class="field-input" style="width:100px;" placeholder="HMS/B/___"></span>
+              <span>Date: <input class="field-input" style="width:140px;" placeholder="dd/mm/yyyy"></span>
+            </div>
+          </div>
+          <div style="text-align:center;font-size:15px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--forest);margin:20px 0 24px;text-decoration:underline;">BONAFIDE CERTIFICATE</div>
+          <div class="doc-section-title">Student Details</div>
+          <div class="field-row">
+            <div class="field-group"><div class="field-label">Student Name</div><input class="field-input" id="bon-name" placeholder="Master / Miss"></div>
+            <div class="field-group"><div class="field-label">Son/Daughter of</div><input class="field-input" placeholder="Father's full name"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-group"><div class="field-label">Admission No.</div><input class="field-input" placeholder="HMS-____"></div>
+            <div class="field-group"><div class="field-label">Class / Section</div><select class="field-select" id="bon-class"><option>Mont 1</option><option>Mont 2</option><option>Mont 3</option><option>Class 1</option><option>Class 2</option><option>Class 3</option><option>Class 4</option><option>Class 5</option></select></div>
+          </div>
+          <div class="field-row">
+            <div class="field-group"><div class="field-label">Academic Year</div><input class="field-input" value="2025-2026"></div>
+            <div class="field-group"><div class="field-label">Date of Birth</div><input class="field-input" placeholder="dd/mm/yyyy"></div>
+          </div>
+          <div class="field-row full">
+            <div class="field-group"><div class="field-label">Purpose of Certificate</div><input class="field-input" placeholder="e.g. Bank account opening / Passport / Visa"></div>
+          </div>
+          <div class="doc-body-text" style="margin-top:24px;">
+            This is to certify that <strong><input class="field-input" style="width:200px;" placeholder="Student Name"></strong>,
+            Son/Daughter of <strong><input class="field-input" style="width:180px;" placeholder="Parent Name"></strong>,
+            is a bonafide student of this institution. He/She is currently enrolled in
+            <strong><input class="field-input" style="width:80px;" placeholder="Class"></strong>
+            for the Academic Year <strong>2025–2026</strong>.<br><br>
+            This certificate is issued on the request of the parent/guardian for the purpose of
+            <input class="field-input" style="width:240px;" placeholder="purpose">. We wish him/her all the best.
+          </div>
+          <div class="doc-sign-row" style="margin-top:48px;">
+            <div class="doc-sign-box">Principal / Administrator<br>Heritage Montessori and School<br><br>[School Stamp]</div>
+            <div class="doc-sign-box">Date: _______________</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCHOOL LEAVING CERTIFICATE FORM -->
+      <div id="docLeaving" class="doc-form-section">
+        <div class="doc-nav">
+          <button class="doc-back-btn" onclick="closeDoc()">← Back to Documents</button>
+          <span style="font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--forest);font-weight:600;">School Leaving Certificate</span>
+          <button class="doc-print-btn" onclick="printDoc()">🖨 Print</button>
+        </div>
+        <div class="doc-form-body" id="printLeaving">
+          <div class="doc-form-header">
+            <h2>Heritage Montessori and School</h2>
+            <p>Garden Town, Multan · Tel: +92 336 1515260 · info@heritagemux.com</p>
+            <div class="doc-ref">
+              <span>Cert No: <input class="field-input" style="width:100px;" placeholder="HMS/L/___"></span>
+              <span>Date: <input class="field-input" style="width:140px;" placeholder="dd/mm/yyyy"></span>
+            </div>
+          </div>
+          <div style="text-align:center;font-size:15px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--forest);margin:20px 0 24px;text-decoration:underline;">SCHOOL LEAVING CERTIFICATE</div>
+          <div class="doc-section-title">Student Details</div>
+          <div class="field-row">
+            <div class="field-group"><div class="field-label">Student Name</div><input class="field-input" placeholder="Master / Miss"></div>
+            <div class="field-group"><div class="field-label">Son/Daughter of</div><input class="field-input" placeholder="Father's full name"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-group"><div class="field-label">Admission No.</div><input class="field-input" placeholder="HMS-____"></div>
+            <div class="field-group"><div class="field-label">Date of Birth</div><input class="field-input" placeholder="dd/mm/yyyy"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-group"><div class="field-label">Date of Admission</div><input class="field-input" placeholder="dd/mm/yyyy"></div>
+            <div class="field-group"><div class="field-label">Date of Leaving</div><input class="field-input" placeholder="dd/mm/yyyy"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-group"><div class="field-label">Last Class Attended</div><select class="field-select"><option>Mont 1</option><option>Mont 2</option><option>Mont 3</option><option>Class 1</option><option>Class 2</option><option>Class 3</option><option>Class 4</option><option>Class 5</option></select></div>
+            <div class="field-group"><div class="field-label">Academic Year</div><input class="field-input" value="2025-2026"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-group"><div class="field-label">Character</div><select class="field-select"><option>Excellent</option><option>Good</option><option>Satisfactory</option></select></div>
+            <div class="field-group"><div class="field-label">Reason for Leaving</div><input class="field-input" placeholder="e.g. Migration / Transfer"></div>
+          </div>
+          <div class="doc-body-text" style="margin-top:24px;">
+            This is to certify that the above-named student was enrolled at Heritage Montessori and School and has cleared all dues. No dues are outstanding against him/her. We wish him/her success in future endeavours.
+          </div>
+          <div style="margin-top:16px;background:#f9f5f0;border:1px solid var(--line);padding:12px 16px;font-size:11px;color:var(--muted);">
+            <strong style="color:var(--forest);">For Office Use:</strong>&nbsp;&nbsp;
+            Fee Clearance: <input class="field-input" style="width:120px;" placeholder="Verified by">&nbsp;&nbsp;
+            Date: <input class="field-input" style="width:100px;" placeholder="dd/mm/yyyy">
+          </div>
+          <div class="doc-sign-row" style="margin-top:40px;">
+            <div class="doc-sign-box">Principal / Administrator<br>Heritage Montessori and School<br><br>[School Stamp]</div>
+            <div class="doc-sign-box">Date: _______________</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EXPERIENCE LETTER FORM -->
+      <div id="docExperience" class="doc-form-section">
+        <div class="doc-nav">
+          <button class="doc-back-btn" onclick="closeDoc()">← Back to Documents</button>
+          <span style="font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--forest);font-weight:600;">Experience Letter</span>
+          <button class="doc-print-btn" onclick="printDoc()">🖨 Print</button>
+        </div>
+        <div class="doc-form-body" id="printExperience">
+          <div class="doc-form-header">
+            <h2>Heritage Montessori and School</h2>
+            <p>Garden Town, Multan · Tel: +92 336 1515260 · info@heritagemux.com</p>
+            <div class="doc-ref">
+              <span>Date: <input class="field-input" style="width:140px;" placeholder="dd/mm/yyyy"></span>
+              <span>Ref No: <input class="field-input" style="width:100px;" placeholder="HMS/E/___"></span>
+            </div>
+          </div>
+          <div style="text-align:center;font-size:15px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--forest);margin:20px 0 24px;text-decoration:underline;">EXPERIENCE LETTER</div>
+          <div class="doc-section-title">Staff Details</div>
+          <div class="field-row">
+            <div class="field-group"><div class="field-label">Full Name</div><input class="field-input" id="exp-name" placeholder="Ms. / Mr."></div>
+            <div class="field-group"><div class="field-label">S/o · D/o · W/o</div><input class="field-input" placeholder="Father/Husband name"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-group"><div class="field-label">CNIC No.</div><input class="field-input" placeholder="xxxxx-xxxxxxx-x"></div>
+            <div class="field-group"><div class="field-label">Designation</div><input class="field-input" id="exp-designation" placeholder="e.g. Class Teacher"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-group"><div class="field-label">Date of Joining</div><input class="field-input" id="exp-from" placeholder="dd/mm/yyyy"></div>
+            <div class="field-group"><div class="field-label">Date of Leaving</div><input class="field-input" id="exp-to" placeholder="dd/mm/yyyy"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-group"><div class="field-label">Performance</div><select class="field-select" id="exp-perf"><option>Excellent</option><option>Very Good</option><option>Good</option><option>Satisfactory</option></select></div>
+            <div class="field-group"><div class="field-label">Reason for Leaving</div><input class="field-input" placeholder="Own will / Other reason"></div>
+          </div>
+          <div class="doc-body-text" style="margin-top:24px;">
+            To Whom It May Concern,<br><br>
+            This is to certify that <strong><input class="field-input" style="width:200px;" placeholder="Ms./Mr. Name"></strong>,
+            served at Heritage Montessori and School, Garden Town, Multan as
+            <strong><input class="field-input" style="width:180px;" placeholder="Designation"></strong>
+            from <strong><input class="field-input" style="width:120px;" placeholder="From Date"></strong>
+            to <strong><input class="field-input" style="width:120px;" placeholder="To Date"></strong>.<br><br>
+            During his/her tenure, he/she proved to be a dedicated and hardworking member of our staff. His/Her conduct and performance were found to be
+            <strong><input class="field-input" style="width:120px;" placeholder="Excellent / Good"></strong> throughout the period of service.<br><br>
+            We wish him/her the very best in future career and endeavours.
+          </div>
+          <div class="doc-sign-row" style="margin-top:48px;">
+            <div class="doc-sign-box">Principal / Administrator<br>Heritage Montessori and School<br><br>[School Stamp]</div>
+            <div class="doc-sign-box">Date: _______________</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /tabDocuments -->
+
+    <div class="panel-footer">
+      <span><span class="live-dot"></span>Heritage Montessori · Staff Portal · Live via Firebase</span>
+      <button class="logout-btn" onclick="logout()">Log out</button>
+    </div>
+
+  </div><!-- /mainPanel -->
+</div><!-- /portal -->
+
+<!-- DELETE CONFIRM MODAL -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal-box">
+    <h3>Delete this submission?</h3>
+    <p>This will permanently remove the feedback from the panel. This action cannot be undone.</p>
+    <div class="modal-btns">
+      <button class="btn btn-danger" onclick="confirmDelete()">Yes, Delete</button>
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, onValue, update }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAtB9d9zEr-ES-"+"lRI_Pf9fWJmaJ8o8ghvQ",
+  authDomain: "my-hms42.firebaseapp.com",
+  databaseURL: "https://my-hms42-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "my-hms42",
+  storageBucket: "my-hms42.firebasestorage.app",
+  messagingSenderId: "468345935508",
+  appId: "1:468345935508:web:db42663bb9484619518681"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getDatabase(app);
+
+// ── STATE ──
+const STAFF_PIN   = "2442";
+const SEEN_KEY    = "hm_staff_seen_ids";
+let allSubs       = [];
+let currentFilter = "all";
+let deleteTargetId = null;
+
+// ── HELPERS ──
+let _seenCache = null;
+
+function getSeenIds() {
+  if(_seenCache) return _seenCache;
+  try { return new Set(JSON.parse(localStorage.getItem(SEEN_KEY)||'[]')); } catch { return new Set(); }
+}
+
+function markSeen(id) {
+  const s = getSeenIds(); s.add(id);
+  localStorage.setItem(SEEN_KEY, JSON.stringify([...s]));
+  _seenCache = s;
+  update(ref(db, 'staffPanel/seen'), { [id]: true });
+}
+
+function loadSeenFromFirebase() {
+  onValue(ref(db, 'staffPanel/seen'), snap => {
+    const fbIds = snap.exists() ? new Set(Object.keys(snap.val())) : new Set();
+    const localIds = (() => { try { return new Set(JSON.parse(localStorage.getItem(SEEN_KEY)||'[]')); } catch { return new Set(); }})();
+    _seenCache = new Set([...fbIds, ...localIds]);
+    localStorage.setItem(SEEN_KEY, JSON.stringify([..._seenCache]));
+    renderAll();
+  });
+}
+
+function showToast(msg, dur=3000) {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), dur);
+}
+
+function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function starLabel(n){
+  return ['','😟 Very Poor','😕 Poor','😐 Okay','😊 Good','🌟 Excellent'][n]||'';
+}
+
+function fmtDate(ts){
+  if(!ts) return '—';
+  if(typeof ts === 'string') return ts;
+  const d = ts.toDate ? ts.toDate() : new Date(ts);
+  return d.toLocaleDateString('en-PK',{day:'2-digit',month:'short',year:'numeric'});
+}
+
+function buildWAMessage(sub) {
+  const name   = sub.childName || 'your child';
+  const parent = sub.parentName || 'Parent';
+  const msg = `Assalam o Alaikum ${parent},\n\nHeritage Montessori has reviewed your feedback for *${name}* and posted an official response.\n\nPlease visit the Feedback Portal to read the school's response:\nhttps://www.heritagemux.com/heritage-feedback-portal\n\nJazakAllah Khairan,\nHeritage Montessori & School`;
+  return encodeURIComponent(msg);
+}
+
+// ── PIN ──
+window.checkPin = function() {
+  const v = document.getElementById('pinInput').value.trim();
+  if(v === STAFF_PIN) {
+    document.getElementById('loginBox').style.display='none';
+    document.getElementById('mainPanel').style.display='block';
+    startListen();
+  } else {
+    document.getElementById('loginError').style.display='block';
+    document.getElementById('pinInput').value='';
+  }
+};
+
+window.logout = function() {
+  document.getElementById('mainPanel').style.display='none';
+  document.getElementById('loginBox').style.display='block';
+  document.getElementById('pinInput').value='';
+};
+
+// ── FIREBASE LISTENER ──
+function startListen() {
+  loadSeenFromFirebase();
+  onValue(ref(db, 'feedback'), snap => {
+    allSubs = [];
+    if (snap.exists()) {
+      snap.forEach(child => {
+        const d = child.val();
+        if (!d.deleted) {
+          allSubs.push({
+            id:               child.key,
+            childName:        d.childName,
+            className:        d.grade,
+            parentName:       d.parentName,
+            contactNumber:    d.contactNumber,
+            purpose:          d.mode,
+            submittedAt:      d.submittedOn,
+            positiveChanges:  d.positiveChanges,
+            priorities:       d.growthAreas,
+            homeSkills:       d.homeSkills,
+            skillWorking:     d.homeSkillOther,
+            newActivity:      d.suggestion,
+            schoolAppreciation: d.schoolStrength,
+            teacherAppreciation: d.appreciation,
+            questionForSchool: d.questionRaised,
+            satTeacher:       d.ratingTeacher,
+            satSchool:        d.ratingSchool,
+            classTeacher:     d.classTeacher,
+            subjectTeacher:   d.subjectTeacher,
+            schoolResponse:   d.schoolResponse   || null,
+            respondedAt:      d.schoolResponseDate || null,
+            parentGrade:      d.responseGrade    || 0,
+            kept:             d.kept             || false,
+          });
+        }
+      });
+    }
+    allSubs.sort((a,b) => new Date(b.submittedAt||0) - new Date(a.submittedAt||0));
+    renderAll();
+  });
+}
+
+// ── RENDER ──
+function renderAll() {
+  const seen     = getSeenIds();
+  const newIds   = allSubs.filter(s => !seen.has(s.id)).map(s=>s.id);
+
+  const total     = allSubs.length;
+  const newCount  = newIds.length;
+  const pending   = allSubs.filter(s=>!s.schoolResponse).length;
+  const responded = allSubs.filter(s=>!!s.schoolResponse).length;
+  const kept      = allSubs.filter(s=>s.kept).length;
+
+  document.getElementById('statTotal').textContent     = total;
+  document.getElementById('statNew').textContent       = newCount;
+  document.getElementById('statPending').textContent   = pending;
+  document.getElementById('statResponded').textContent = responded;
+  document.getElementById('statKept').textContent      = kept;
+  document.getElementById('fc-all').textContent        = total;
+  document.getElementById('fc-new').textContent        = newCount;
+  document.getElementById('fc-pending').textContent    = pending;
+  document.getElementById('fc-responded').textContent  = responded;
+  document.getElementById('fc-kept').textContent       = kept;
+
+  const notifArea = document.getElementById('notifArea');
+  const notifList = document.getElementById('notifList');
+  if(newIds.length > 0) {
+    notifArea.classList.add('has-new');
+    notifList.innerHTML = newIds.map(id => {
+      const s = allSubs.find(x=>x.id===id);
+      if(!s) return '';
+      return `<div class="notif-chip" onclick="jumpToCard('${id}')">
+        <span>${escHtml(s.childName||'Unknown')}</span>
+        <span class="notif-chip-badge">NEW</span>
+      </div>`;
+    }).join('');
+  } else {
+    notifArea.classList.remove('has-new');
+  }
+
+  // Populate month dropdown
+  const monthSel = document.getElementById('monthFilter');
+  const currentMonth = monthSel.value;
+  const months = [...new Set(allSubs.map(s => {
+    if(!s.submittedAt) return null;
+    const d = new Date(s.submittedAt);
+    if(isNaN(d)) return null;
+    return d.toLocaleDateString('en-GB',{month:'long',year:'numeric'});
+  }).filter(Boolean))];
+  monthSel.innerHTML = '<option value="">All Months</option>' +
+    months.map(m=>`<option value="${m}"${m===currentMonth?' selected':''}>${m}</option>`).join('');
+  renderFiltered();
+}
+
+function renderFiltered() {
+  const seen   = getSeenIds();
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const classF = document.getElementById('classFilter').value;
+  const monthF = document.getElementById('monthFilter').value;
+  let filtered = allSubs.filter(s => {
+    const matchSearch = !search ||
+      (s.childName||'').toLowerCase().includes(search) ||
+      (s.className||'').toLowerCase().includes(search) ||
+      (s.parentName||'').toLowerCase().includes(search);
+    if(!matchSearch) return false;
+    if(classF && (s.className||'').trim() !== classF) return false;
+    if(monthF) {
+      if(!s.submittedAt) return false;
+      const d = new Date(s.submittedAt);
+      if(isNaN(d)) return false;
+      if(d.toLocaleDateString('en-GB',{month:'long',year:'numeric'}) !== monthF) return false;
+    }
+    if(currentFilter==='all')       return true;
+    if(currentFilter==='new')       return !seen.has(s.id);
+    if(currentFilter==='pending')   return !s.schoolResponse;
+    if(currentFilter==='responded') return !!s.schoolResponse;
+    if(currentFilter==='kept')      return !!s.kept;
+    return true;
+  });
+
+  const list = document.getElementById('submissionsList');
+  document.getElementById('subCountLabel').textContent = `${filtered.length} submission${filtered.length!==1?'s':''}`;
+
+  if(filtered.length===0) {
+    list.innerHTML = `<div class="empty-state"><div class="ei">📋</div><p>No submissions match this filter.</p></div>`;
+    return;
+  }
+  list.innerHTML = filtered.map(s => buildCard(s, seen)).join('');
+}
+
+function buildCard(s, seen) {
+  const isNew     = !seen.has(s.id);
+  const hasResp   = !!s.schoolResponse;
+  const isKept    = !!s.kept;
+  const purposeBadge = s.purpose==='ptm'
+    ? `<span class="badge b-ptm">🤝 PTM</span>`
+    : `<span class="badge b-general">📋 General</span>`;
+  const statusBadge = hasResp
+    ? `<span class="badge b-responded">✓ Responded</span>`
+    : `<span class="badge b-pending">⏳ Pending</span>`;
+  const newBadge    = isNew ? `<span class="badge b-new">📦 New</span>` : '';
+  const keptBadge   = isKept ? `<span class="badge b-kept">📌 Kept</span>` : '';
+  const indicator   = isNew ? `<div class="new-indicator"></div>` : (isKept ? `<div class="kept-indicator"></div>` : '');
+
+  const priorities  = (s.priorities||[]).map(p=>`<span class="chip-pill">${escHtml(p)}</span>`).join('');
+  const homeSkills  = (s.homeSkills||[]).map(p=>`<span class="chip-pill">${escHtml(p)}</span>`).join('');
+
+  const teacherRow = `<div><div class="d-label">Class Teacher</div><div class="d-value">${escHtml(s.classTeacher||'—')}</div></div>
+    <div><div class="d-label">Subject Teacher</div><div class="d-value">${escHtml(s.subjectTeacher||'—')}</div></div>`;
+
+  let respBlock = '';
+  if(hasResp) {
+    const gradeStars = s.parentGrade>0 ? '★'.repeat(s.parentGrade)+'☆'.repeat(5-s.parentGrade) : '—';
+    respBlock = `<div class="existing-response">
+      <div class="existing-meta">Response posted · ${fmtDate(s.respondedAt)}</div>
+      ${escHtml(s.schoolResponse)}
+    </div>`;
+    if(s.parentGrade>0) {
+      respBlock += `<div class="parent-grade-box">
+        <span class="pg-label">Parent rated this response:</span>
+        <span class="pg-stars">${gradeStars}</span>
+        <span class="pg-desc">${starLabel(s.parentGrade)}</span>
+      </div>`;
+    }
+  }
+
+  const contactNum = s.contactNumber||'';
+  let notifyBlock = '';
+  if(hasResp) {
+    const waMsg = buildWAMessage(s);
+    const waNum = cleanWANumber(contactNum);
+    const waUrl = waNum ? `https://wa.me/${waNum}?text=${waMsg}` : null;
+    notifyBlock = `<div class="notify-parent-block show" id="notify-${s.id}">
+      <div class="notify-parent-title">Response saved — notify the parent</div>
+      <div class="notify-parent-desc">The parent will not know unless you notify them. Use the button below.</div>
+      ${contactNum ? `<div class="notify-btns">
+        ${waUrl ? `<a href="${waUrl}" target="_blank" class="notify-btn notify-btn-wa">💬 WhatsApp Parent</a>` : ''}
+        <button class="notify-btn notify-btn-copy" onclick="copyMsg('${s.id}')">📋 Copy Message</button>
+      </div>` : `<div class="notify-no-contact">No contact number provided. Notify through WhatsApp group.</div>`}
+    </div>`;
+  }
+
+  const hints = [
+    s.positiveChanges ? `<strong>Positive changes:</strong> "${escHtml(s.positiveChanges)}"` : '',
+    priorities ? `<strong>Priority areas:</strong> ${(s.priorities||[]).join(', ')}` : '',
+    s.newActivity ? `<strong>Suggested activity:</strong> ${escHtml(s.newActivity)}` : '',
+    s.questionForSchool ? `<strong>Question raised:</strong> ${escHtml(s.questionForSchool)}` : '',
+  ].filter(Boolean).join('<br>');
+
+  return `
+  <div class="sub-card${isNew?' is-new':''}${isKept?' is-kept':''}" id="card-${s.id}" data-id="${s.id}">
+    ${indicator}
+    <div class="card-header" onclick="toggleCard('${s.id}')">
+      <div>
+        <div class="card-name">${escHtml(s.childName||'Unknown Child')}</div>
+        <div class="card-meta">${escHtml(s.className||'—')} · ${fmtDate(s.submittedAt)} · ${escHtml(s.parentName||'—')}</div>
+      </div>
+      <div class="badges">
+        ${newBadge}${purposeBadge}${statusBadge}${keptBadge}
+        <span class="chevron" id="chev-${s.id}">▼</span>
+      </div>
+    </div>
+
+    <div class="card-body" id="body-${s.id}">
+      <div class="detail-grid">
+        <div><div class="d-label">Child</div><div class="d-value">${escHtml(s.childName||'—')}</div></div>
+        <div><div class="d-label">Class</div><div class="d-value">${escHtml(s.className||'—')}</div></div>
+        <div><div class="d-label">Parent / Guardian</div><div class="d-value">${escHtml(s.parentName||'—')}</div></div>
+        <div><div class="d-label">Contact</div><div class="d-value">${escHtml(s.contactNumber||'Not provided')}</div></div>
+        ${teacherRow}
+        <div><div class="d-label">Submission Date</div><div class="d-value">${fmtDate(s.submittedAt)}</div></div>
+        <div><div class="d-label">Type</div><div class="d-value">${s.purpose==='ptm'?'Parent-Teacher Meeting':'General Observation'}</div></div>
+        <div><div class="d-label">Teacher Satisfaction</div><div class="d-value">${s.satTeacher||'—'}/5 ${s.satTeacher?starLabel(s.satTeacher):''}</div></div>
+        <div><div class="d-label">School Satisfaction</div><div class="d-value">${s.satSchool||'—'}/5 ${s.satSchool?starLabel(s.satSchool):''}</div></div>
+      </div>
+
+      <div class="section-block">
+        <div class="section-block-title">Positive Changes Noticed</div>
+        <div class="section-block-content">${escHtml(s.positiveChanges||'—')}</div>
+      </div>
+      <div class="section-block">
+        <div class="section-block-title">Priority Growth Areas</div>
+        <div class="section-block-content"><div class="chip-pills">${priorities||'—'}</div></div>
+      </div>
+      <div class="section-block">
+        <div class="section-block-title">Skill Being Practiced at Home</div>
+        <div class="section-block-content">${escHtml(s.skillWorking||'—')} ${homeSkills ? `<div class="chip-pills" style="margin-top:6px">${homeSkills}</div>` : ''}</div>
+      </div>
+      <div class="section-block">
+        <div class="section-block-title">Suggested New Activity</div>
+        <div class="section-block-content">${escHtml(s.newActivity||'—')}</div>
+      </div>
+      <div class="section-block">
+        <div class="section-block-title">What Heritage Is Doing Wonderfully</div>
+        <div class="section-block-content">${escHtml(s.schoolAppreciation||'—')}</div>
+      </div>
+      <div class="section-block">
+        <div class="section-block-title">Appreciation for Teacher / Staff</div>
+        <div class="section-block-content">${escHtml(s.teacherAppreciation||'—')}</div>
+      </div>
+      <div class="section-block">
+        <div class="section-block-title">Question / Topic for the School</div>
+        <div class="section-block-content">${escHtml(s.questionForSchool||'—')}</div>
+      </div>
+
+      <!-- Response Composer -->
+      <div class="response-composer">
+        <div class="composer-title">
+          School's Official Response
+          ${hasResp ? '<span class="ctag">Responded</span>' : '<span class="ctag" style="background:var(--error);color:white;">Pending</span>'}
+        </div>
+        ${respBlock}
+        ${notifyBlock}
+        ${hints ? `<div class="hints-box"><strong>Key points from this feedback:</strong><br>${hints}</div>` : ''}
+        <textarea class="response-textarea" id="resp-${s.id}"
+          placeholder="Type the school's official response here…"
+          oninput="updateChar('${s.id}')">${escHtml(hasResp ? s.schoolResponse : '')}</textarea>
+        <div class="composer-actions">
+          <button class="btn btn-success btn-sm" onclick="saveResponse('${s.id}')">
+            <span id="spin-${s.id}" style="display:none"><span class="spinner"></span></span>
+            ${hasResp ? 'Update Response' : 'Save & Send Response'}
+          </button>
+          <span class="saved-ok" id="ok-${s.id}">✓ Saved</span>
+          <span class="char-count" id="cc-${s.id}">${(hasResp?s.schoolResponse.length:0)} chars</span>
+        </div>
+      </div>
+    </div><!-- /card-body -->
+
+    <!-- Card Actions -->
+    <div class="card-actions">
+      <span class="card-action-label">Actions:</span>
+      <button class="btn btn-keep btn-sm${isKept?' kept':''}" id="keepBtn-${s.id}" onclick="toggleKeep('${s.id}')">
+        ${isKept ? '📌 Kept' : '📌 Keep'}
+      </button>
+      <button class="btn btn-print btn-sm" onclick="printCard('${s.id}')" title="Print this feedback">🖨 Print</button>
+      <button class="btn btn-danger btn-sm" onclick="askDelete('${s.id}')">🗑 Delete</button>
+    </div>
+
+  </div>`;
+}
+
+// ── CARD TOGGLE ──
+window.toggleCard = function(id) {
+  const body = document.getElementById('body-'+id);
+  const chev = document.getElementById('chev-'+id);
+  const open = body.classList.toggle('open');
+  chev.classList.toggle('open', open);
+  if(open) {
+    markSeen(id);
+    const card = document.getElementById('card-'+id);
+    if(card) {
+      card.classList.remove('is-new');
+      const ind = card.querySelector('.new-indicator'); if(ind) ind.remove();
+      const badge = card.querySelector('.badge.b-new'); if(badge) badge.remove();
+    }
+    const chip = document.getElementById('notifList').querySelector(`[onclick="jumpToCard('${id}')"]`);
+    if(chip) chip.remove();
+    const newCount = parseInt(document.getElementById('statNew').textContent)||0;
+    if(newCount>0) document.getElementById('statNew').textContent = newCount-1;
+    const fcNew = parseInt(document.getElementById('fc-new').textContent)||0;
+    if(fcNew>0) document.getElementById('fc-new').textContent = fcNew-1;
+  }
+};
+
+window.jumpToCard = function(id) {
+  const card = document.getElementById('card-'+id);
+  if(!card) return;
+  card.scrollIntoView({behavior:'smooth', block:'start'});
+  const body = document.getElementById('body-'+id);
+  if(!body.classList.contains('open')) toggleCard(id);
+};
+
+// ── FILTER ──
+window.setFilter = function(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderFiltered();
+};
+
+window.filterCards = function() { renderFiltered(); };
+
+// ── CHAR COUNT ──
+window.updateChar = function(id) {
+  const ta = document.getElementById('resp-'+id);
+  document.getElementById('cc-'+id).textContent = (ta?.value?.length||0)+' chars';
+};
+
+// ── SAVE RESPONSE ──
+window.saveResponse = async function(id) {
+  const ta   = document.getElementById('resp-'+id);
+  const text = ta?.value?.trim();
+  if(!text) { showToast('Please type a response first.'); return; }
+
+  const spin = document.getElementById('spin-'+id);
+  const ok   = document.getElementById('ok-'+id);
+  if(spin) spin.style.display='inline';
+
+  try {
+    await update(ref(db, `feedback/${id}`), {
+      schoolResponse: text,
+      schoolResponseDate: new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}),
+      status: 'responded'
+    });
+    if(spin) spin.style.display='none';
+    if(ok)  { ok.style.display='inline'; setTimeout(()=>ok.style.display='none',3000); }
+    showToast('✓ Response saved. Notify the parent below.');
+    setTimeout(() => {
+      const nb = document.getElementById('notify-'+id);
+      if(nb) nb.classList.add('show');
+      const body = document.getElementById('body-'+id);
+      if(body && !body.classList.contains('open')) {
+        body.classList.add('open');
+        const chev = document.getElementById('chev-'+id);
+        if(chev) chev.classList.add('open');
+      }
+    }, 800);
+  } catch(err) {
+    if(spin) spin.style.display='none';
+    showToast('Error saving. Check console.', 4000);
+    console.error(err);
+  }
+};
+
+// ── KEEP / DELETE ──
+window.toggleKeep = async function(id) {
+  const sub  = allSubs.find(s=>s.id===id);
+  if(!sub) return;
+  const kept = !sub.kept;
+  try {
+    await update(ref(db, `feedback/${id}`), { kept });
+    showToast(kept ? '📌 Submission kept.' : 'Removed from kept.');
+  } catch(err) { showToast('Error. Try again.'); }
+};
+
+window.askDelete = function(id) {
+  deleteTargetId = id;
+  document.getElementById('deleteModal').classList.add('show');
+};
+
+window.confirmDelete = async function() {
+  if(!deleteTargetId) return;
+  try {
+    await update(ref(db, `feedback/${deleteTargetId}`), { deleted: true });
+    showToast('Submission removed from panel.');
+  } catch(err) { showToast('Error deleting. Try again.'); }
+  closeModal();
+};
+
+window.closeModal = function() {
+  document.getElementById('deleteModal').classList.remove('show');
+  deleteTargetId = null;
+};
+
+// ── COPY MESSAGE ──
+window.copyMsg = function(id) {
+  const sub = allSubs.find(s=>s.id===id);
+  if(!sub) return;
+  const msg = decodeURIComponent(buildWAMessage(sub));
+  navigator.clipboard.writeText(msg).then(()=>showToast('Message copied to clipboard.'));
+};
+
+// ── WA NUMBER CLEANER ──
+function cleanWANumber(raw) {
+  let num = (raw||'').replace(/\D/g,'');
+  if(num.startsWith('00')) num = num.slice(2);
+  if(num.startsWith('92') && num.length >= 12) num = num.slice(2);
+  if(num.startsWith('0')) num = num.slice(1);
+  return num.length >= 9 ? '92'+num : null;
+}
+
+// ── RESET FILTERS ──
+window.resetFilters = function() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('classFilter').value = '';
+  document.getElementById('monthFilter').value = '';
+  currentFilter = 'all';
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector('.filter-btn').classList.add('active');
+  renderFiltered();
+};
+
+// ── TAB SWITCHER ──
+window.switchTab = function(tab, btn) {
+  document.querySelectorAll('.panel-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const fb = document.getElementById('tabFeedback');
+  const docs = document.getElementById('tabDocuments');
+  if(tab === 'feedback') {
+    fb.style.display = 'block';
+    docs.style.display = 'none';
+  } else {
+    fb.style.display = 'none';
+    docs.style.display = 'block';
+    closeDoc();
+  }
+};
+
+// ── DOCUMENT FUNCTIONS ──
+let currentDocId = null;
+
+window.openDoc = function(docName) {
+  document.getElementById('docListView').style.display = 'none';
+  document.querySelectorAll('.doc-form-section').forEach(d=>d.classList.remove('active'));
+  const map = {appointment:'docAppointment', bonafide:'docBonafide', leaving:'docLeaving', experience:'docExperience'};
+  const el = document.getElementById(map[docName]);
+  if(el) { el.classList.add('active'); currentDocId = map[docName]; }
+};
+
+window.closeDoc = function() {
+  document.getElementById('docListView').style.display = 'block';
+  document.querySelectorAll('.doc-form-section').forEach(d=>d.classList.remove('active'));
+  currentDocId = null;
+};
+
+window.printDoc = function() {
+  window.print();
+};
+
+// ── PRINT SINGLE CARD ──
+window.printCard = function(id) {
+  const body = document.getElementById('body-'+id);
+  const wasOpen = body.classList.contains('open');
+  body.classList.add('open');
+  document.querySelectorAll('.sub-card').forEach(card => {
+    if(card.id !== 'card-'+id) card.classList.add('print-hide');
+  });
+  const sub = allSubs.find(s=>s.id===id);
+  document.getElementById('printMeta').textContent =
+    'Feedback for: '+(sub?sub.childName:'Unknown')+' · Printed: '+
+    new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+  window.print();
+  document.querySelectorAll('.sub-card').forEach(c=>c.classList.remove('print-hide'));
+  if(!wasOpen) body.classList.remove('open');
+};
+
+// ── PRINT ALL VISIBLE ──
+window.printAll = function() {
+  const cards = document.querySelectorAll('#submissionsList .sub-card');
+  if(!cards.length) { showToast('No submissions to print.'); return; }
+  const openState = {};
+  cards.forEach(card => {
+    const id = card.dataset.id;
+    const body = document.getElementById('body-'+id);
+    openState[id] = body.classList.contains('open');
+    body.classList.add('open');
+  });
+  const activeFilter = document.querySelector('.filter-btn.active');
+  const filterLabel = activeFilter ? activeFilter.textContent.replace(/[0-9]/g,'').trim() : 'All';
+  document.getElementById('printMeta').textContent =
+    'Filter: '+filterLabel+' · '+cards.length+' submission'+(cards.length!==1?'s':'')+
+    ' · Printed: '+new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+  window.print();
+  cards.forEach(card => {
+    const id = card.dataset.id;
+    const body = document.getElementById('body-'+id);
+    if(!openState[id]) body.classList.remove('open');
+  });
+};
+
+</script>
+</body>
+</html>
