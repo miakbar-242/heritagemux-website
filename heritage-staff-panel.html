@@ -420,6 +420,34 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
         <div style="margin-top:20px;background:var(--parchment);border:1px solid var(--line);border-left:3px solid var(--gold);padding:12px 16px;font-size:11.5px;color:var(--muted);line-height:1.7;">
           <strong style="color:var(--forest);">How to use:</strong> Click Fill &amp; Print on any template. Fill in the fields, then click the Print button — the form prints cleanly without any panel elements. Each form is freshly filled every time.
         </div>
+
+        <!-- PIN GENERATOR -->
+        <div style="margin-top:20px;background:var(--cream);border:1.5px solid var(--line);padding:20px;">
+          <div style="font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--forest);font-weight:600;margin-bottom:4px;">🔑 Parent Portal PIN Generator</div>
+          <div style="font-size:11.5px;color:var(--muted);margin-bottom:14px;line-height:1.6;">Generate a one-time PIN to share with a new parent. Each PIN can only be used once to access the Parent Admission Portal.</div>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px;">
+            <div style="display:flex;flex-direction:column;gap:4px;">
+              <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--sage);font-weight:600;">PIN Valid For</div>
+              <select id="pinExpiry" class="search-input" style="max-width:140px;cursor:pointer;padding:7px 10px;">
+                <option value="4">4 Hours</option>
+                <option value="8" selected>8 Hours</option>
+                <option value="24">24 Hours</option>
+                <option value="48">48 Hours</option>
+              </select>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:4px;">
+              <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--sage);font-weight:600;">Parent Name</div>
+              <input type="text" id="pinParentName" class="search-input" style="max-width:180px;" placeholder="Parent name (optional)">
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="generateParentPin()" id="genPinBtn" style="margin-top:18px;">Generate PIN</button>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <div id="generatedPin" style="display:none;background:var(--forest);color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;letter-spacing:8px;padding:8px 20px;"></div>
+            <button id="copyPinBtn" class="btn btn-outline btn-sm" style="display:none;" onclick="copyPin()">📋 Copy PIN</button>
+            <a id="waPinBtn" href="#" target="_blank" class="btn btn-sm" style="display:none;background:#25D366;color:white;text-decoration:none;">💬 Share on WhatsApp</a>
+          </div>
+          <div id="pinGenNote" style="display:none;font-size:10.5px;color:var(--success);margin-top:10px;font-weight:500;line-height:1.6;"></div>
+        </div>
       </div>
 
       <!-- APPOINTMENT LETTER FORM -->
@@ -1193,6 +1221,77 @@ window.openDoc = function(docName) {
   const map = {appointment:'docAppointment', bonafide:'docBonafide', leaving:'docLeaving', experience:'docExperience'};
   const el = document.getElementById(map[docName]);
   if(el) { el.classList.add('active'); currentDocId = map[docName]; }
+};
+
+// ── PIN GENERATOR ──
+let _lastGeneratedPin = null;
+
+window.generateParentPin = async function() {
+  const btn = document.getElementById('genPinBtn');
+  btn.textContent = 'Generating...';
+  btn.disabled = true;
+
+  const pin = String(Math.floor(100000 + Math.random() * 900000));
+  const hours = parseInt(document.getElementById('pinExpiry').value) || 8;
+  const parentName = document.getElementById('pinParentName').value.trim();
+  const expiresAt = new Date(Date.now() + hours * 60 * 60 * 1000).toISOString();
+
+  try {
+    await update(ref(db, `parentPins/${pin}`), {
+      used: false,
+      createdAt: new Date().toISOString(),
+      expiresAt: expiresAt,
+      validHours: hours,
+      parentName: parentName || 'Not specified',
+      createdBy: 'staff'
+    });
+
+    _lastGeneratedPin = pin;
+    document.getElementById('generatedPin').textContent = pin;
+    document.getElementById('generatedPin').style.display = 'block';
+    document.getElementById('copyPinBtn').style.display = 'inline-flex';
+
+    const expiryTime = new Date(expiresAt).toLocaleTimeString('en-PK', {hour:'2-digit',minute:'2-digit'});
+    const expiryDate = new Date(expiresAt).toLocaleDateString('en-GB', {day:'numeric',month:'short'});
+    const noteEl = document.getElementById('pinGenNote');
+    noteEl.innerHTML = `✓ PIN saved. Valid for <strong>${hours} hours</strong> — expires at <strong>${expiryTime} on ${expiryDate}</strong>. Share with parent immediately.`;
+    noteEl.style.display = 'block';
+
+    const waMsg = encodeURIComponent(
+      `Assalam o Alaikum${parentName ? ' ' + parentName : ''},
+
+Your one-time PIN for the Heritage Montessori Admission Form is:
+
+*${pin}*
+
+Please visit:
+https://www.heritagemux.com/heritage-parent-portal
+
+Click "Complete Admission Form" and enter this PIN.
+
+⚠️ This PIN is valid for ${hours} hours only and expires at ${expiryTime} on ${expiryDate}.
+
+JazakAllah Khairan,
+Heritage Montessori & School`
+    );
+    document.getElementById('waPinBtn').href = `https://wa.me/?text=${waMsg}`;
+    document.getElementById('waPinBtn').style.display = 'inline-flex';
+
+    btn.textContent = 'Generate Another PIN';
+    btn.disabled = false;
+    showToast('✓ PIN generated — valid for ' + hours + ' hours.');
+
+  } catch(err) {
+    btn.textContent = 'Generate PIN';
+    btn.disabled = false;
+    showToast('Error generating PIN. Check connection.');
+    console.error(err);
+  }
+};
+
+window.copyPin = function() {
+  if(!_lastGeneratedPin) return;
+  navigator.clipboard.writeText(_lastGeneratedPin).then(() => showToast('PIN copied to clipboard.'));
 };
 
 window.closeDoc = function() {
