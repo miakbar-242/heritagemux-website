@@ -190,6 +190,7 @@ body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;padding:3
     </div>
     <div class="pin-error" id="pinError">⚠ Incorrect PIN. Please try again or contact the school.</div>
     <div id="pinUsedError" class="pin-error">⚠ This PIN has already been used. Please contact the school for a new PIN.</div>
+    <div id="pinExpiredError" class="pin-error">⚠ This PIN has expired. Please contact the school for a new PIN on +92 336 1515260.</div>
     <div class="pin-hint">Contact Heritage Montessori on +92 336 1515260 if you have not received your PIN.</div>
   </div>
 
@@ -628,13 +629,25 @@ window.checkPin = async function() {
     }
 
     const data = snap.val();
+
+    // Check if already used
     if(data.used === true) {
       document.getElementById('pinUsedError').style.display = 'block';
       document.getElementById('pinInput').value = '';
       return;
     }
 
-    // Valid unused PIN — grant access, mark as used
+    // Check if expired
+    if(data.expiresAt) {
+      const expiry = new Date(data.expiresAt);
+      if(new Date() > expiry) {
+        document.getElementById('pinExpiredError').style.display = 'block';
+        document.getElementById('pinInput').value = '';
+        return;
+      }
+    }
+
+    // Valid unused unexpired PIN — grant access, mark as used
     await update(ref(db, `parentPins/${pin}`), {
       used: true,
       usedAt: new Date().toISOString()
