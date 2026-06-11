@@ -138,17 +138,22 @@ body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;padding:3
 
 /* PRINT STYLES */
 @media print{
-  body{background:white;padding:0;}
-  .portal{max-width:100%;}
+  body{background:white!important;padding:0!important;}
+  .portal{max-width:100%!important;}
   .banner,.portal-tabs,.form-actions,.portal-footer,.toast,
   #tabRulesBtn,#tabFormBtn,.pin-screen{display:none!important;}
   .main-content{display:block!important;}
-  .rules-section,.form-section{box-shadow:none;padding:20px;}
-  #tabRules,#tabForm{display:block!important;}
+  .rules-section{box-shadow:none!important;padding:20px!important;display:block!important;}
+  .form-section{box-shadow:none!important;padding:20px!important;display:block!important;}
+  #tabRules{display:block!important;}
+  #tabForm{display:block!important;}
   .print-header{display:block!important;}
   .form-group input,.form-group select{border-bottom:1px solid #ccc;}
-  .check-item{background:white;}
-  .photo-placeholder{border:2px dashed #ccc;}
+  .form-group textarea{border:1px solid #ccc!important;}
+  .check-item{background:white!important;}
+  .photo-placeholder{border:2px dashed #ccc!important;}
+  .form-intro{display:block!important;}
+  .form-success{display:none!important;}
   @page{size:A4;margin:15mm;}
 }
 .print-header{display:none;text-align:center;margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid #2d4a2d;}
@@ -377,8 +382,8 @@ body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;padding:3
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label>CNIC Number</label>
-            <input type="text" name="motherCNIC" placeholder="xxxxx-xxxxxxx-x">
+            <label>CNIC Number <span class="req">*</span></label>
+            <input type="text" name="motherCNIC" required placeholder="xxxxx-xxxxxxx-x">
           </div>
           <div class="form-group">
             <label>Contact Number <span class="req">*</span></label>
@@ -387,8 +392,8 @@ body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;padding:3
         </div>
         <div class="form-row full">
           <div class="form-group">
-            <label>Residential Address</label>
-            <input type="text" name="motherAddress" placeholder="Full residential address">
+            <label>Residential Address <span class="req">*</span></label>
+            <input type="text" name="motherAddress" required placeholder="Full residential address">
           </div>
         </div>
         <div class="form-row">
@@ -397,8 +402,8 @@ body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;padding:3
             <input type="email" name="motherEmail" placeholder="email@example.com">
           </div>
           <div class="form-group">
-            <label>Occupation</label>
-            <input type="text" name="motherOccupation" placeholder="e.g. Teacher / Doctor / Housewife">
+            <label>Occupation <span class="req">*</span></label>
+            <input type="text" name="motherOccupation" required placeholder="e.g. Teacher / Doctor / Housewife">
           </div>
         </div>
 
@@ -678,6 +683,8 @@ window.switchPortalTab = function(tab, btn) {
   btn.classList.add('active');
   document.getElementById('tabRules').style.display = tab === 'rules' ? 'block' : 'none';
   document.getElementById('tabForm').style.display = tab === 'form' ? 'block' : 'none';
+  // Store active tab for print
+  document.body.setAttribute('data-active-tab', tab);
 };
 
 // ── FORM SUBMISSION ──
