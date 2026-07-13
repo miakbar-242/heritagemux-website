@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heritage Montessori · Parents Corner</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --forest:#2d4a2d;--forest-dark:#1e3320;--gold:#b8962e;--gold-light:#d4ae4a;
+  --cream:#faf7f2;--parchment:#f2ece0;--tan:#e8dfc8;--line:#d9cebc;
+  --ink:#1e1e1e;--muted:#6e6456;--sage:#5a7a5a;--error:#c0392b;--success:#2d7a4a;
+}
+body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;padding:0 0 60px;color:var(--ink);}
+
+/* BANNER */
+.banner{background:var(--forest);color:white;padding:18px 32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;border-bottom:3px solid var(--gold);}
+.banner h1{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;}
+.banner p{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-top:2px;}
+.banner-badge{background:var(--gold);color:var(--forest);font-size:9.5px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:5px 12px;border-radius:2px;}
+
+/* MAIN TABS */
+.main-tabs{background:var(--parchment);border-bottom:2px solid var(--line);display:flex;gap:0;max-width:100%;}
+.main-tab{padding:14px 28px;font-family:'Jost',sans-serif;font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);cursor:pointer;border:none;border-bottom:2.5px solid transparent;margin-bottom:-2px;background:none;transition:all 0.2s;display:flex;align-items:center;gap:8px;}
+.main-tab:hover{color:var(--forest);}
+.main-tab.active{color:var(--forest);border-bottom-color:var(--gold);font-weight:600;}
+
+/* PORTAL */
+.portal{max-width:860px;margin:0 auto;padding:0 16px;}
+
+/* SECTION WRAPPERS */
+.section-wrap{background:var(--cream);box-shadow:0 4px 24px rgba(0,0,0,0.08);margin-top:0;}
+
+/* FORMS GRID */
+.forms-intro{padding:28px 32px 0;}
+.forms-intro h2{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--forest);margin-bottom:6px;}
+.forms-intro p{font-size:12.5px;color:var(--muted);line-height:1.7;max-width:600px;}
+.forms-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;padding:20px 32px 32px;}
+.form-card{background:var(--cream);border:1.5px solid var(--line);padding:22px;cursor:pointer;transition:all 0.2s;position:relative;}
+.form-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gold);opacity:0;transition:opacity 0.2s;}
+.form-card:hover{border-color:var(--gold);box-shadow:0 4px 20px rgba(0,0,0,0.08);}
+.form-card:hover::before{opacity:1;}
+.form-card-icon{font-size:28px;margin-bottom:10px;}
+.form-card-title{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:700;color:var(--forest);margin-bottom:5px;}
+.form-card-desc{font-size:11.5px;color:var(--muted);line-height:1.6;margin-bottom:14px;}
+.form-card-ref{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:10px;}
+.btn-open{display:inline-flex;align-items:center;gap:6px;background:var(--forest);color:white;font-family:'Jost',sans-serif;font-size:10px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;padding:8px 16px;border:none;cursor:pointer;border-radius:2px;transition:background 0.2s;}
+.btn-open:hover{background:var(--gold);color:var(--forest);}
+
+/* FORM VIEW */
+.form-view{display:none;background:white;}
+.form-view.active{display:block;}
+.form-nav{background:var(--parchment);border-bottom:1px solid var(--line);padding:12px 28px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.btn-back{background:none;border:1.5px solid var(--line);color:var(--muted);font-family:'Jost',sans-serif;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;padding:6px 14px;cursor:pointer;border-radius:2px;display:flex;align-items:center;gap:6px;}
+.btn-back:hover{border-color:var(--forest);color:var(--forest);}
+.form-nav-title{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--forest);font-weight:600;flex:1;}
+.btn-print-form{background:var(--forest);color:white;border:none;font-family:'Jost',sans-serif;font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:8px 20px;cursor:pointer;border-radius:2px;display:flex;align-items:center;gap:7px;transition:background 0.2s;}
+.btn-print-form:hover{background:var(--gold);color:var(--forest);}
+
+/* FORM BODY */
+.form-body{max-width:680px;margin:0 auto;padding:32px 28px;}
+.form-letterhead{text-align:center;border-bottom:2px solid var(--forest);padding-bottom:16px;margin-bottom:24px;}
+.form-letterhead h2{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;color:var(--forest);}
+.form-letterhead p{font-size:10px;color:var(--muted);margin-top:3px;letter-spacing:0.5px;}
+.form-ref-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:8px;}
+.form-ref{font-size:11px;color:var(--muted);}
+.form-ref strong{color:var(--forest);font-family:'Cormorant Garamond',serif;font-size:14px;}
+.form-date{font-size:11px;color:var(--muted);}
+.form-section-title{font-size:9px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--forest);margin:20px 0 10px;padding-bottom:4px;border-bottom:1.5px solid var(--gold);}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:12px;}
+.field-row.full{grid-template-columns:1fr;}
+.field-row.three{grid-template-columns:1fr 1fr 1fr;}
+.field-group{display:flex;flex-direction:column;gap:4px;}
+.field-label{font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--sage);}
+.field-label .req{color:var(--error);}
+.field-input{border:none;border-bottom:1.5px solid var(--line);background:transparent;font-family:'Jost',sans-serif;font-size:13px;color:var(--ink);padding:7px 0;outline:none;width:100%;}
+.field-input:focus{border-bottom-color:var(--gold);}
+.field-select{border:none;border-bottom:1.5px solid var(--line);background:transparent;font-family:'Jost',sans-serif;font-size:13px;color:var(--ink);padding:7px 0;outline:none;width:100%;cursor:pointer;-webkit-appearance:none;}
+.field-select:focus{border-bottom-color:var(--gold);}
+.field-textarea{border:1.5px solid var(--line);background:var(--parchment);font-family:'Jost',sans-serif;font-size:13px;color:var(--ink);padding:8px 10px;outline:none;width:100%;resize:vertical;min-height:80px;}
+.field-textarea:focus{border-color:var(--gold);}
+
+/* UNDERTAKING / CHECK ITEMS */
+.check-item{display:flex;align-items:flex-start;gap:12px;padding:10px 14px;background:var(--parchment);border:1px solid var(--line);margin-bottom:8px;}
+.check-item input[type=checkbox]{width:18px;height:18px;accent-color:var(--forest);cursor:pointer;flex-shrink:0;margin-top:2px;}
+.check-item label{font-size:12px;color:var(--ink);line-height:1.6;cursor:pointer;}
+.check-item label strong{color:var(--forest);}
+
+/* PROOF NOTE */
+.proof-note{background:#fff8ec;border:1px solid #f0d080;border-left:3px solid var(--gold);padding:12px 16px;margin:16px 0;font-size:12px;color:var(--muted);line-height:1.7;}
+.proof-note strong{color:var(--forest);}
+
+/* BODY TEXT */
+.body-text{font-size:13px;color:var(--ink);line-height:1.9;margin:16px 0;}
+.body-text .inline-field{display:inline-block;min-width:140px;border-bottom:1.5px solid var(--ink);padding:0 4px;font-family:'Jost',sans-serif;font-size:13px;color:var(--ink);background:transparent;outline:none;vertical-align:bottom;}
+.body-text .inline-field:focus{border-bottom-color:var(--gold);}
+
+/* SIGN ROW */
+.sign-row{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:40px;padding-top:20px;border-top:1px solid var(--line);}
+.sign-box{border-top:1px solid var(--ink);padding-top:6px;font-size:11px;color:var(--muted);text-align:center;}
+
+/* FORM ACTIONS */
+.form-actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:24px;padding-top:20px;border-top:2px solid var(--line);}
+.btn{padding:11px 24px;font-family:'Jost',sans-serif;font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border:none;transition:all 0.2s;border-radius:2px;display:inline-flex;align-items:center;gap:7px;}
+.btn-primary{background:var(--forest);color:white;}
+.btn-primary:hover{background:var(--gold);color:var(--forest);}
+.btn-wa{background:#25D366;color:white;}
+.btn-wa:hover{opacity:0.85;}
+.btn-print{background:var(--parchment);color:var(--forest);border:1.5px solid var(--gold);}
+.btn-print:hover{background:var(--gold);color:var(--forest);}
+.btn-sm{padding:7px 16px;font-size:10px;}
+
+/* SUCCESS */
+.form-success{display:none;background:#e8f5ec;border:1.5px solid #b8d4b8;padding:20px 24px;margin-top:20px;border-radius:2px;}
+.form-success h3{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--success);margin-bottom:6px;}
+.form-success p{font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.7;}
+
+/* FEEDBACK SECTION */
+.feedback-wrap{padding:0;}
+
+/* TOAST */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--forest);color:white;padding:13px 28px;font-size:13px;font-weight:500;border-radius:2px;box-shadow:0 4px 24px rgba(0,0,0,0.25);transition:transform 0.4s ease;z-index:9999;white-space:nowrap;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+/* SPINNER */
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;margin-right:4px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.fade-in{animation:fadeIn 0.3s ease;}
+
+/* FOOTER */
+.portal-footer{background:var(--parchment);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;border-top:3px solid var(--gold);margin-top:0;}
+.portal-footer span{font-size:9.5px;color:rgba(0,0,0,0.35);letter-spacing:1px;text-transform:uppercase;}
+
+/* PRINT */
+@media print{
+  body{background:white!important;padding:0!important;}
+  .banner,.main-tabs,.forms-grid,.forms-intro,.form-nav,
+  .form-actions,.portal-footer,.toast,.form-success,
+  button,.btn-back,.btn-print-form{display:none!important;}
+  .form-view.active{display:block!important;}
+  .form-body{padding:10px 0!important;max-width:100%!important;}
+  .form-letterhead{border-bottom:2px solid #2d4a2d!important;}
+  .field-input,.inline-field{border-bottom:1px solid #999!important;background:transparent!important;}
+  .field-select{border-bottom:1px solid #999!important;-webkit-appearance:none!important;}
+  .field-textarea{border:1px solid #ccc!important;background:white!important;}
+  .check-item{background:white!important;border:1px solid #e0e0e0!important;}
+  .proof-note{background:#fff8ec!important;border-left:3px solid #b8962e!important;}
+  .sign-row{margin-top:48px!important;}
+  @page{size:A4;margin:15mm;}
+}
+
+@media(max-width:600px){
+  .field-row,.field-row.three{grid-template-columns:1fr;}
+  .forms-grid{grid-template-columns:1fr;}
+  .form-body{padding:20px 16px;}
+  .banner{padding:14px 20px;}
+  .main-tab{padding:12px 16px;font-size:10px;}
+}
+</style>
+</head>
+<body>
+
+<!-- BANNER -->
+<div class="banner">
+  <div>
+    <h1>Heritage Montessori &amp; School</h1>
+    <p>Nurturing Young Minds · Est. 2007</p>
+  </div>
+  <div class="banner-badge">Parents Corner</div>
+</div>
+
+<!-- MAIN TABS -->
+<div class="main-tabs">
+  <button class="main-tab active" onclick="switchMain('forms',this)">📋 Essential Forms</button>
+  <button class="main-tab" onclick="switchMain('feedback',this)">💬 Share Feedback</button>
+</div>
+
+<!-- ══════════ ESSENTIAL FORMS TAB ══════════ -->
+<div id="tabForms">
+<div class="portal">
+
+  <!-- FORMS LIST -->
+  <div id="formsListView" class="section-wrap fade-in">
+    <div class="forms-intro">
+      <h2>Essential Forms &amp; Requests</h2>
+      <p>Please fill and submit the relevant form below. The school will be notified via email and WhatsApp. Note that some requests require supporting documents to be submitted at the school office before processing can begin.</p>
+    </div>
+    <div class="forms-grid">
+
+      <div class="form-card">
+        <div class="form-card-icon">💰</div>
+        <div class="form-card-ref">HMS / FC / 2026</div>
+        <div class="form-card-title">Fee Concession Application</div>
+        <div class="form-card-desc">Apply for summer fee plan change (Standard to Monthly) or request a regular fee concession with reasons.</div>
+        <button class="btn-open" onclick="openForm('feeConc')">📝 Fill &amp; Submit</button>
+      </div>
+
+      <div class="form-card">
+        <div class="form-card-icon">🏫</div>
+        <div class="form-card-ref">HMS / SLC / 2026</div>
+        <div class="form-card-title">School Leaving Certificate Request</div>
+        <div class="form-card-desc">Request a School Leaving Certificate for your child. Please ensure all dues are cleared before submitting.</div>
+        <button class="btn-open" onclick="openForm('leaving')">📝 Fill &amp; Submit</button>
+      </div>
+
+      <div class="form-card">
+        <div class="form-card-icon">📜</div>
+        <div class="form-card-ref">HMS / ATT / 2026</div>
+        <div class="form-card-title">Bonafide / Attendance Certificate</div>
+        <div class="form-card-desc">Request a certificate confirming your child's enrollment or attendance at Heritage Montessori and School.</div>
+        <button class="btn-open" onclick="openForm('bonafide')">📝 Fill &amp; Submit</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ FEE CONCESSION FORM ══ -->
+  <div id="formFeeConc" class="form-view section-wrap">
+    <div class="form-nav">
+      <button class="btn-back" onclick="closeForm()">← Back</button>
+      <span class="form-nav-title">Fee Concession Application</span>
+      <button class="btn-print-form" onclick="window.print()">🖨 Print</button>
+    </div>
+    <div class="form-body">
+      <div class="form-letterhead">
+        <h2>Heritage Montessori and School</h2>
+        <p>11-D Garden Town, Multan · Tel: 061-6515260 · info@heritagemux.com</p>
+      </div>
+      <div class="form-ref-row">
+        <div class="form-ref">Ref: <strong id="refFeeConc">Generating…</strong></div>
+        <div class="form-date" id="dateFeeConc"></div>
+      </div>
+
+      <form id="feeConcForm" name="heritage-fee-concession" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+        <input type="hidden" name="form-name" value="heritage-fee-concession">
+        <input type="hidden" name="refNumber" id="fcRefInput">
+        <p style="display:none"><label>Skip: <input name="bot-field"></label></p>
+
+        <div class="body-text">
+          To,<br>
+          <strong>The Principal</strong><br>
+          Heritage Montessori and School<br>
+          Garden Town, Multan<br><br>
+          <strong>Subject: Application for Fee Concession / Plan Change</strong>
+        </div>
+
+        <div class="form-section-title">Type of Request</div>
+        <div class="field-row full">
+          <div class="field-group">
+            <div class="field-label">Request Type <span class="req">*</span></div>
+            <select class="field-select" name="requestType" id="fcType" required onchange="toggleFCFields()">
+              <option value="" disabled selected>Select request type</option>
+              <option value="summer">Summer Fee Plan Change — Standard to Monthly</option>
+              <option value="concession">Regular Fee Concession Request</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-section-title">Student Details</div>
+        <div class="field-row">
+          <div class="field-group">
+            <div class="field-label">Child's Full Name <span class="req">*</span></div>
+            <input class="field-input" type="text" name="childName" required placeholder="As per school record">
+          </div>
+          <div class="field-group">
+            <div class="field-label">Class <span class="req">*</span></div>
+            <select class="field-select" name="className" required>
+              <option value="" disabled selected>Select class</option>
+              <option>Mont 1</option><option>Mont 2</option><option>Mont 3</option>
+              <option>Class 1</option><option>Class 2</option><option>Class 3</option>
+              <option>Class 4</option><option>Class 5</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <div class="field-label">Parent / Guardian Name <span class="req">*</span></div>
+            <input class="field-input" type="text" name="parentName" required placeholder="Full name">
+          </div>
+          <div class="field-group">
+            <div class="field-label">Contact Number <span class="req">*</span></div>
+            <input class="field-input" type="tel" name="contactNumber" required placeholder="e.g. 0300-1234567">
+          </div>
+        </div>
+
+        <!-- SUMMER FIELDS -->
+        <div id="summerFields" style="display:none;">
+          <div class="form-section-title">Summer Plan Change Details</div>
+          <div class="field-row full">
+            <div class="field-group">
+              <div class="field-label">Month(s) Affected <span class="req">*</span></div>
+              <select class="field-select" name="summerMonths">
+                <option value="">Select months</option>
+                <option value="June 2026">June 2026</option>
+                <option value="July 2026">July 2026</option>
+                <option value="August 2026">August 2026</option>
+                <option value="June & July 2026">June &amp; July 2026</option>
+                <option value="July & August 2026">July &amp; August 2026</option>
+                <option value="June, July & August 2026">June, July &amp; August 2026</option>
+              </select>
+            </div>
+          </div>
+          <div class="field-row full">
+            <div class="field-group">
+              <div class="field-label">Reason for Requesting Monthly Plan <span class="req">*</span></div>
+              <textarea class="field-textarea" name="summerReason" placeholder="Please state the reason you are unable to follow the standard fee plan during summer months…"></textarea>
+            </div>
+          </div>
+          <div class="check-item">
+            <input type="checkbox" id="summerUndertaking" name="summerUndertaking">
+            <label for="summerUndertaking"><strong>Undertaking:</strong> I acknowledge that this is a special case approved at the school's discretion. I commit to making monthly fee payments on the dates specified by the school during the summer months. I understand that failure to make payments on time will result in cancellation of this arrangement.</label>
+          </div>
+        </div>
+
+        <!-- CONCESSION FIELDS -->
+        <div id="concessionFields" style="display:none;">
+          <div class="form-section-title">Fee Concession Details</div>
+          <div class="field-row">
+            <div class="field-group">
+              <div class="field-label">Concession Requested</div>
+              <input class="field-input" type="text" name="concessionAmount" placeholder="e.g. 20% / Rs. 2000 / Partial">
+            </div>
+            <div class="field-group">
+              <div class="field-label">Duration</div>
+              <input class="field-input" type="text" name="concessionDuration" placeholder="e.g. 3 months / Ongoing">
+            </div>
+          </div>
+          <div class="field-row full">
+            <div class="field-group">
+              <div class="field-label">Reason for Concession Request <span class="req">*</span></div>
+              <textarea class="field-textarea" name="concessionReason" placeholder="Please state the reasons for your concession request in detail…"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="proof-note">
+          <strong>Documentary Proof Required:</strong> This request will only be processed after you submit relevant supporting documents at the school office (e.g. salary slip, medical certificate, utility bill, or any document supporting your request). Please print this form and attach your documents when visiting the school.
+        </div>
+
+        <div class="sign-row">
+          <div class="sign-box">Signature of Parent / Guardian<br><br><br>Name: ___________________</div>
+          <div class="sign-box">Date: ___________________<br><br><br>Contact: ___________________</div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" id="fcSubmitBtn">
+            <span id="fcSpinner" style="display:none"><span class="spinner"></span></span>
+            📨 Submit Application
+          </button>
+          <button type="button" class="btn btn-print" onclick="window.print()">🖨 Print Form</button>
+        </div>
+      </form>
+
+      <div class="form-success" id="fcSuccess">
+        <h3>✓ Application Submitted</h3>
+        <p>Your fee concession application (<strong id="fcSuccessRef"></strong>) has been submitted to Heritage Montessori and School. Please note that this request will be processed only after you provide the required supporting documents at the school office. The school will contact you once your documents have been verified.</p>
+        <a id="fcWaBtn" href="#" target="_blank" class="btn btn-wa" style="text-decoration:none;">💬 Also Notify School on WhatsApp</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SCHOOL LEAVING CERTIFICATE REQUEST ══ -->
+  <div id="formLeaving" class="form-view section-wrap">
+    <div class="form-nav">
+      <button class="btn-back" onclick="closeForm()">← Back</button>
+      <span class="form-nav-title">School Leaving Certificate Request</span>
+      <button class="btn-print-form" onclick="window.print()">🖨 Print</button>
+    </div>
+    <div class="form-body">
+      <div class="form-letterhead">
+        <h2>Heritage Montessori and School</h2>
+        <p>11-D Garden Town, Multan · Tel: 061-6515260 · info@heritagemux.com</p>
+      </div>
+      <div class="form-ref-row">
+        <div class="form-ref">Ref: <strong id="refLeaving">Generating…</strong></div>
+        <div class="form-date" id="dateLeaving"></div>
+      </div>
+
+      <form id="leavingForm" name="heritage-leaving-request" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+        <input type="hidden" name="form-name" value="heritage-leaving-request">
+        <input type="hidden" name="refNumber" id="slcRefInput">
+        <p style="display:none"><label>Skip: <input name="bot-field"></label></p>
+
+        <div class="body-text">
+          To,<br>
+          <strong>The Principal</strong><br>
+          Heritage Montessori and School<br>
+          Garden Town, Multan<br><br>
+          <strong>Subject: Request for Issuance of School Leaving Certificate</strong>
+        </div>
+
+        <div class="form-section-title">Student Details</div>
+        <div class="field-row">
+          <div class="field-group">
+            <div class="field-label">Child's Full Name <span class="req">*</span></div>
+            <input class="field-input" type="text" name="childName" required placeholder="As per school record">
+          </div>
+          <div class="field-group">
+            <div class="field-label">Class <span class="req">*</span></div>
+            <select class="field-select" name="className" required>
+              <option value="" disabled selected>Select class</option>
+              <option>Mont 1</option><option>Mont 2</option><option>Mont 3</option>
+              <option>Class 1</option><option>Class 2</option><option>Class 3</option>
+              <option>Class 4</option><option>Class 5</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <div class="field-label">Parent / Guardian Name <span class="req">*</span></div>
+            <input class="field-input" type="text" name="parentName" required placeholder="Full name">
+          </div>
+          <div class="field-group">
+            <div class="field-label">Contact Number <span class="req">*</span></div>
+            <input class="field-input" type="tel" name="contactNumber" required placeholder="e.g. 0300-1234567">
+          </div>
+        </div>
+
+        <div class="form-section-title">Leaving Details</div>
+        <div class="field-row">
+          <div class="field-group">
+            <div class="field-label">Last Date of Attendance <span class="req">*</span></div>
+            <input class="field-input" type="date" name="lastDate" required>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Reason for Leaving <span class="req">*</span></div>
+            <select class="field-select" name="leavingReason" required>
+              <option value="" disabled selected>Select reason</option>
+              <option>Migration to another city</option>
+              <option>Transfer to another school</option>
+              <option>Family relocation abroad</option>
+              <option>Medical reasons</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-row full">
+          <div class="field-group">
+            <div class="field-label">Additional Details (if any)</div>
+            <textarea class="field-textarea" name="leavingDetails" placeholder="Any additional information…"></textarea>
+          </div>
+        </div>
+
+        <div class="form-section-title">Declarations</div>
+        <div class="check-item">
+          <input type="checkbox" id="feeDecl" name="feeDeclaration" required>
+          <label for="feeDecl"><strong>Fee Clearance:</strong> I confirm that all outstanding school dues have been cleared or will be cleared prior to collection of the School Leaving Certificate.</label>
+        </div>
+        <div class="check-item">
+          <input type="checkbox" id="duesDecl" name="duesDeclaration" required>
+          <label for="duesDecl"><strong>No Dues:</strong> I understand that the School Leaving Certificate will only be issued after verification of fee clearance and return of all school property (library books, uniform items etc.).</label>
+        </div>
+
+        <div class="proof-note">
+          <strong>Please Note:</strong> This request will be processed within 5–7 working days of submission, subject to fee clearance verification. The certificate must be collected in person from the school office with a valid CNIC.
+        </div>
+
+        <div class="sign-row">
+          <div class="sign-box">Signature of Parent / Guardian<br><br><br>Name: ___________________</div>
+          <div class="sign-box">Date: ___________________<br><br><br>Contact: ___________________</div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" id="slcSubmitBtn">
+            <span id="slcSpinner" style="display:none"><span class="spinner"></span></span>
+            📨 Submit Request
+          </button>
+          <button type="button" class="btn btn-print" onclick="window.print()">🖨 Print Form</button>
+        </div>
+      </form>
+
+      <div class="form-success" id="slcSuccess">
+        <h3>✓ Request Submitted</h3>
+        <p>Your School Leaving Certificate request (<strong id="slcSuccessRef"></strong>) has been submitted. This will be processed within 5–7 working days subject to fee clearance. The school will contact you once the certificate is ready for collection.</p>
+        <a id="slcWaBtn" href="#" target="_blank" class="btn btn-wa" style="text-decoration:none;margin-top:8px;">💬 Also Notify School on WhatsApp</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ BONAFIDE / ATTENDANCE CERTIFICATE REQUEST ══ -->
+  <div id="formBonafide" class="form-view section-wrap">
+    <div class="form-nav">
+      <button class="btn-back" onclick="closeForm()">← Back</button>
+      <span class="form-nav-title">Bonafide / Attendance Certificate Request</span>
+      <button class="btn-print-form" onclick="window.print()">🖨 Print</button>
+    </div>
+    <div class="form-body">
+      <div class="form-letterhead">
+        <h2>Heritage Montessori and School</h2>
+        <p>11-D Garden Town, Multan · Tel: 061-6515260 · info@heritagemux.com</p>
+      </div>
+      <div class="form-ref-row">
+        <div class="form-ref">Ref: <strong id="refBonafide">Generating…</strong></div>
+        <div class="form-date" id="dateBonafide"></div>
+      </div>
+
+      <form id="bonafideForm" name="heritage-bonafide-request" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+        <input type="hidden" name="form-name" value="heritage-bonafide-request">
+        <input type="hidden" name="refNumber" id="attRefInput">
+        <p style="display:none"><label>Skip: <input name="bot-field"></label></p>
+
+        <div class="body-text">
+          To,<br>
+          <strong>The Principal</strong><br>
+          Heritage Montessori and School<br>
+          Garden Town, Multan<br><br>
+          <strong>Subject: Request for Issuance of Bonafide / Attendance Certificate</strong>
+        </div>
+
+        <div class="form-section-title">Student Details</div>
+        <div class="field-row">
+          <div class="field-group">
+            <div class="field-label">Child's Full Name <span class="req">*</span></div>
+            <input class="field-input" type="text" name="childName" required placeholder="As per school record">
+          </div>
+          <div class="field-group">
+            <div class="field-label">Class <span class="req">*</span></div>
+            <select class="field-select" name="className" required>
+              <option value="" disabled selected>Select class</option>
+              <option>Mont 1</option><option>Mont 2</option><option>Mont 3</option>
+              <option>Class 1</option><option>Class 2</option><option>Class 3</option>
+              <option>Class 4</option><option>Class 5</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <div class="field-label">Parent / Guardian Name <span class="req">*</span></div>
+            <input class="field-input" type="text" name="parentName" required placeholder="Full name">
+          </div>
+          <div class="field-group">
+            <div class="field-label">Contact Number <span class="req">*</span></div>
+            <input class="field-input" type="tel" name="contactNumber" required placeholder="e.g. 0300-1234567">
+          </div>
+        </div>
+
+        <div class="form-section-title">Certificate Details</div>
+        <div class="field-row">
+          <div class="field-group">
+            <div class="field-label">Certificate Type <span class="req">*</span></div>
+            <select class="field-select" name="certType" required>
+              <option value="" disabled selected>Select type</option>
+              <option value="Bonafide Certificate">Bonafide Certificate (confirms enrollment)</option>
+              <option value="Attendance Certificate">Attendance Certificate (confirms attendance record)</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Required By Date</div>
+            <input class="field-input" type="date" name="requiredBy">
+          </div>
+        </div>
+        <div class="field-row full">
+          <div class="field-group">
+            <div class="field-label">Purpose of Certificate <span class="req">*</span></div>
+            <select class="field-select" name="purpose" required>
+              <option value="" disabled selected>Select purpose</option>
+              <option>Bank account opening</option>
+              <option>Passport application</option>
+              <option>Visa application</option>
+              <option>Court / Legal requirement</option>
+              <option>Educational institution requirement</option>
+              <option>Government department requirement</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-row full">
+          <div class="field-group">
+            <div class="field-label">Additional Details / Addressed To</div>
+            <textarea class="field-textarea" name="additionalDetails" placeholder="e.g. Please address the certificate to: Bank Al Habib, Main Branch Multan…"></textarea>
+          </div>
+        </div>
+
+        <div class="proof-note">
+          <strong>Please Note:</strong> This certificate will be ready within 2–3 working days. The certificate must be collected in person from the school office with a valid CNIC.
+        </div>
+
+        <div class="sign-row">
+          <div class="sign-box">Signature of Parent / Guardian<br><br><br>Name: ___________________</div>
+          <div class="sign-box">Date: ___________________<br><br><br>Contact: ___________________</div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" id="attSubmitBtn">
+            <span id="attSpinner" style="display:none"><span class="spinner"></span></span>
+            📨 Submit Request
+          </button>
+          <button type="button" class="btn btn-print" onclick="window.print()">🖨 Print Form</button>
+        </div>
+      </form>
+
+      <div class="form-success" id="attSuccess">
+        <h3>✓ Request Submitted</h3>
+        <p>Your certificate request (<strong id="attSuccessRef"></strong>) has been submitted. This will be ready within 2–3 working days. The school will contact you when it is ready for collection.</p>
+        <a id="attWaBtn" href="#" target="_blank" class="btn btn-wa" style="text-decoration:none;margin-top:8px;">💬 Also Notify School on WhatsApp</a>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /portal -->
+</div><!-- /tabForms -->
+
+<!-- ══════════ FEEDBACK TAB ══════════ -->
+<div id="tabFeedback" style="display:none;">
+  <div class="portal">
+    <div class="section-wrap" style="padding:0;">
+      <iframe src="/heritage-feedback-portal" style="width:100%;border:none;min-height:900px;" title="Parent Feedback Portal"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="portal-footer">
+  <span>Heritage Montessori &amp; School · Parents Corner</span>
+  <span>11-D Garden Town, Multan · 061-6515260</span>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, get, set, update, increment } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAtB9d9zEr-ES-"+"lRI_Pf9fWJmaJ8o8ghvQ",
+  authDomain: "my-hms42.firebaseapp.com",
+  databaseURL: "https://my-hms42-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "my-hms42",
+  storageBucket: "my-hms42.firebasestorage.app",
+  messagingSenderId: "468345935508",
+  appId: "1:468345935508:web:db42663bb9484619518681"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const WA = '923361515260';
+const YEAR = new Date().getFullYear();
+
+// ── TOAST ──
+function showToast(msg, dur=3500) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), dur);
+}
+
+// ── DATE ──
+function todayStr() {
+  return new Date().toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'});
+}
+
+// ── AUTO REFERENCE NUMBER ──
+async function getRefNumber(type) {
+  const counterRef = ref(db, `formCounters/${type}`);
+  const snap = await get(counterRef);
+  const current = snap.exists() ? snap.val() : 0;
+  const next = current + 1;
+  await set(counterRef, next);
+  const padded = String(next).padStart(3, '0');
+  const prefixMap = { feeConc: 'FC', leaving: 'SLC', bonafide: 'ATT' };
+  return `HMS/${prefixMap[type]}/${YEAR}/${padded}`;
+}
+
+// ── MAIN TAB SWITCH ──
+window.switchMain = function(tab, btn) {
+  document.querySelectorAll('.main-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tabForms').style.display = tab === 'forms' ? 'block' : 'none';
+  document.getElementById('tabFeedback').style.display = tab === 'feedback' ? 'block' : 'none';
+};
+
+// ── OPEN FORM ──
+window.openForm = async function(formName) {
+  document.getElementById('formsListView').style.display = 'none';
+  document.querySelectorAll('.form-view').forEach(f => f.classList.remove('active'));
+
+  const formMap = { feeConc: 'formFeeConc', leaving: 'formLeaving', bonafide: 'formBonafide' };
+  const el = document.getElementById(formMap[formName]);
+  if(el) {
+    el.classList.add('active');
+    el.classList.add('fade-in');
+  }
+
+  // Set date
+  const dateIds = { feeConc: 'dateFeeConc', leaving: 'dateLeaving', bonafide: 'dateBonafide' };
+  const dateEl = document.getElementById(dateIds[formName]);
+  if(dateEl) dateEl.textContent = todayStr();
+
+  // Generate reference number
+  try {
+    const ref = await getRefNumber(formName);
+    const refIds = { feeConc: 'refFeeConc', leaving: 'refLeaving', bonafide: 'refBonafide' };
+    const inputIds = { feeConc: 'fcRefInput', leaving: 'slcRefInput', bonafide: 'attRefInput' };
+    document.getElementById(refIds[formName]).textContent = ref;
+    document.getElementById(inputIds[formName]).value = ref;
+    window._currentRef = ref;
+    window._currentForm = formName;
+  } catch(e) {
+    console.error('Ref number error:', e);
+  }
+};
+
+// ── CLOSE FORM ──
+window.closeForm = function() {
+  document.getElementById('formsListView').style.display = 'block';
+  document.querySelectorAll('.form-view').forEach(f => f.classList.remove('active'));
+  // Reset success messages
+  ['fcSuccess','slcSuccess','attSuccess'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.style.display = 'none';
+  });
+  // Reset forms
+  ['feeConcForm','leavingForm','bonafideForm'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) { el.style.display = 'block'; el.reset(); }
+  });
+  window.scrollTo(0, 0);
+};
+
+// ── TOGGLE FC FIELDS ──
+window.toggleFCFields = function() {
+  const type = document.getElementById('fcType').value;
+  document.getElementById('summerFields').style.display = type === 'summer' ? 'block' : 'none';
+  document.getElementById('concessionFields').style.display = type === 'concession' ? 'block' : 'none';
+};
+
+// ── WA MESSAGE BUILDERS ──
+function fcWAMsg(data) {
+  return encodeURIComponent(
+    `Assalam o Alaikum,\n\nI have submitted a Fee Concession Application for my child.\n\n` +
+    `*Reference:* ${data.ref}\n*Child:* ${data.child} (${data.cls})\n*Request Type:* ${data.type}\n` +
+    `*Parent:* ${data.parent}\n*Contact:* ${data.contact}\n\n` +
+    `Kindly acknowledge receipt. I will bring the required documents to the school office.\n\nJazakAllah Khairan.`
+  );
+}
+function slcWAMsg(data) {
+  return encodeURIComponent(
+    `Assalam o Alaikum,\n\nI have submitted a School Leaving Certificate request.\n\n` +
+    `*Reference:* ${data.ref}\n*Child:* ${data.child} (${data.cls})\n` +
+    `*Parent:* ${data.parent}\n*Contact:* ${data.contact}\n\n` +
+    `Kindly acknowledge and process at your earliest. JazakAllah Khairan.`
+  );
+}
+function attWAMsg(data) {
+  return encodeURIComponent(
+    `Assalam o Alaikum,\n\nI have submitted a Bonafide/Attendance Certificate request.\n\n` +
+    `*Reference:* ${data.ref}\n*Child:* ${data.child} (${data.cls})\n` +
+    `*Purpose:* ${data.purpose}\n*Parent:* ${data.parent}\n*Contact:* ${data.contact}\n\n` +
+    `Kindly acknowledge receipt. JazakAllah Khairan.`
+  );
+}
+
+// ── SAVE TO FIREBASE ARCHIVE ──
+async function saveToArchive(type, refNum, data) {
+  const key = refNum.replace(/\//g, '-');
+  await set(ref(db, `formArchive/${type}/${key}`), {
+    ...data,
+    refNumber: refNum,
+    status: 'pending',
+    submittedAt: new Date().toISOString()
+  });
+}
+
+// ── FEE CONCESSION SUBMIT ──
+document.getElementById('feeConcForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('fcSubmitBtn');
+  const spinner = document.getElementById('fcSpinner');
+  btn.disabled = true; spinner.style.display = 'inline';
+
+  const fd = new FormData(this);
+  const refNum = window._currentRef || fd.get('refNumber');
+  const data = {
+    childName: fd.get('childName'), className: fd.get('className'),
+    parentName: fd.get('parentName'), contactNumber: fd.get('contactNumber'),
+    requestType: fd.get('requestType')
+  };
+
+  try {
+    await fetch('/', { method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body: new URLSearchParams(fd).toString()
+    });
+    await saveToArchive('feeConc', refNum, data);
+
+    spinner.style.display = 'none';
+    this.style.display = 'none';
+    const succ = document.getElementById('fcSuccess');
+    document.getElementById('fcSuccessRef').textContent = refNum;
+    succ.style.display = 'block';
+    document.getElementById('fcWaBtn').href = `https://wa.me/${WA}?text=${fcWAMsg({
+      ref:refNum, child:data.childName, cls:data.className,
+      type:data.requestType==='summer'?'Summer Fee Plan Change':'Regular Fee Concession',
+      parent:data.parentName, contact:data.contactNumber
+    })}`;
+    showToast('✓ Application submitted successfully!');
+  } catch(err) {
+    spinner.style.display = 'none'; btn.disabled = false;
+    showToast('Error submitting. Please try again.', 5000);
+  }
+});
+
+// ── SCHOOL LEAVING SUBMIT ──
+document.getElementById('leavingForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('slcSubmitBtn');
+  const spinner = document.getElementById('slcSpinner');
+  btn.disabled = true; spinner.style.display = 'inline';
+
+  const fd = new FormData(this);
+  const refNum = window._currentRef || fd.get('refNumber');
+  const data = {
+    childName: fd.get('childName'), className: fd.get('className'),
+    parentName: fd.get('parentName'), contactNumber: fd.get('contactNumber'),
+    lastDate: fd.get('lastDate'), leavingReason: fd.get('leavingReason')
+  };
+
+  try {
+    await fetch('/', { method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body: new URLSearchParams(fd).toString()
+    });
+    await saveToArchive('leaving', refNum, data);
+
+    spinner.style.display = 'none';
+    this.style.display = 'none';
+    const succ = document.getElementById('slcSuccess');
+    document.getElementById('slcSuccessRef').textContent = refNum;
+    succ.style.display = 'block';
+    document.getElementById('slcWaBtn').href = `https://wa.me/${WA}?text=${slcWAMsg({
+      ref:refNum, child:data.childName, cls:data.className,
+      parent:data.parentName, contact:data.contactNumber
+    })}`;
+    showToast('✓ Request submitted successfully!');
+  } catch(err) {
+    spinner.style.display = 'none'; btn.disabled = false;
+    showToast('Error submitting. Please try again.', 5000);
+  }
+});
+
+// ── BONAFIDE SUBMIT ──
+document.getElementById('bonafideForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('attSubmitBtn');
+  const spinner = document.getElementById('attSpinner');
+  btn.disabled = true; spinner.style.display = 'inline';
+
+  const fd = new FormData(this);
+  const refNum = window._currentRef || fd.get('refNumber');
+  const data = {
+    childName: fd.get('childName'), className: fd.get('className'),
+    parentName: fd.get('parentName'), contactNumber: fd.get('contactNumber'),
+    certType: fd.get('certType'), purpose: fd.get('purpose'),
+    requiredBy: fd.get('requiredBy')
+  };
+
+  try {
+    await fetch('/', { method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body: new URLSearchParams(fd).toString()
+    });
+    await saveToArchive('bonafide', refNum, data);
+
+    spinner.style.display = 'none';
+    this.style.display = 'none';
+    const succ = document.getElementById('attSuccess');
+    document.getElementById('attSuccessRef').textContent = refNum;
+    succ.style.display = 'block';
+    document.getElementById('attWaBtn').href = `https://wa.me/${WA}?text=${attWAMsg({
+      ref:refNum, child:data.childName, cls:data.className,
+      purpose:data.purpose, parent:data.parentName, contact:data.contactNumber
+    })}`;
+    showToast('✓ Request submitted successfully!');
+  } catch(err) {
+    spinner.style.display = 'none'; btn.disabled = false;
+    showToast('Error submitting. Please try again.', 5000);
+  }
+});
+</script>
+</body>
+</html>
