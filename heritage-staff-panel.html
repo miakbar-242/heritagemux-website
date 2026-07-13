@@ -191,6 +191,41 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
 .btn-qr { background:transparent; color:rgba(255,255,255,0.75); border:1.5px solid rgba(255,255,255,0.25); font-family:'Jost',sans-serif; font-size:9.5px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; padding:5px 12px; border-radius:2px; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:6px; transition:all 0.2s; }
 .btn-qr:hover { background:rgba(255,255,255,0.1); border-color:var(--gold); color:var(--gold); }
 
+/* ── RECORDS TAB ── */
+.records-panel { background:var(--cream); padding:28px 32px; min-height:400px; display:none; }
+.records-panel.active { display:block; }
+.records-filters { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:20px; }
+.records-filter-btn { padding:6px 14px; font-family:'Jost',sans-serif; font-size:10px; font-weight:500; letter-spacing:1px; text-transform:uppercase; border:1.5px solid var(--line); background:var(--cream); color:var(--muted); cursor:pointer; border-radius:2px; transition:all 0.2s; }
+.records-filter-btn.active { background:var(--forest); color:white; border-color:var(--forest); }
+.records-filter-btn:hover { border-color:var(--forest); color:var(--forest); }
+.record-card { background:white; border:1.5px solid var(--line); margin-bottom:10px; transition:border-color 0.2s; }
+.record-card:hover { border-color:var(--gold); }
+.record-header { display:flex; align-items:center; gap:12px; padding:12px 16px; cursor:pointer; flex-wrap:wrap; }
+.record-ref { font-family:'Cormorant Garamond',serif; font-size:15px; font-weight:700; color:var(--forest); min-width:160px; }
+.record-name { font-size:13px; font-weight:500; color:var(--ink); flex:1; }
+.record-class { font-size:11px; color:var(--muted); background:var(--parchment); padding:2px 8px; border-radius:2px; }
+.record-type { font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--gold); font-weight:600; }
+.record-date { font-size:11px; color:var(--muted); margin-left:auto; white-space:nowrap; }
+.status-badge { font-size:9px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; padding:3px 10px; border-radius:2px; }
+.status-pending { background:#fff3e0; color:#e65100; }
+.status-processing { background:#e3f2fd; color:#1565c0; }
+.status-completed { background:#e8f5ec; color:#2d7a4a; }
+.record-body { display:none; padding:14px 16px; border-top:1px solid var(--tan); background:var(--parchment); }
+.record-body.open { display:block; }
+.record-detail-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:10px; margin-bottom:14px; }
+.record-detail { display:flex; flex-direction:column; gap:2px; }
+.record-detail-label { font-size:8px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); font-weight:600; }
+.record-detail-value { font-size:12.5px; color:var(--ink); }
+.record-actions { display:flex; gap:8px; flex-wrap:wrap; align-items:center; padding-top:10px; border-top:1px dashed var(--line); }
+.btn-status { font-size:9px; font-weight:600; letter-spacing:1px; text-transform:uppercase; padding:5px 12px; border:1.5px solid; cursor:pointer; border-radius:2px; font-family:'Jost',sans-serif; transition:all 0.2s; }
+.btn-status-pending { border-color:#e65100; color:#e65100; background:transparent; }
+.btn-status-pending:hover { background:#e65100; color:white; }
+.btn-status-processing { border-color:#1565c0; color:#1565c0; background:transparent; }
+.btn-status-processing:hover { background:#1565c0; color:white; }
+.btn-status-completed { border-color:#2d7a4a; color:#2d7a4a; background:transparent; }
+.btn-status-completed:hover { background:#2d7a4a; color:white; }
+.show-archived-btn { font-size:10px; color:var(--muted); background:none; border:none; cursor:pointer; text-decoration:underline; padding:4px 0; }
+
 /* ── PRINT ── */
 .btn-print { background:#f5f5ee; color:var(--muted); border:1.5px solid var(--line); }
 .btn-print:hover { background:var(--tan); color:var(--ink); }
@@ -331,6 +366,7 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
     <div class="panel-tabs">
       <button class="panel-tab active" id="tabFeedbackBtn" onclick="switchTab('feedback',this)">📋 Parent Feedback</button>
       <button class="panel-tab" id="tabDocsBtn" onclick="switchTab('documents',this)">📄 Staff Documents</button>
+      <button class="panel-tab" id="tabRecordsBtn" onclick="switchTab('records',this)">📁 Form Records</button>
     </div>
 
     <!-- ═══════════════ FEEDBACK TAB ═══════════════ -->
@@ -656,6 +692,28 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
       </div>
 
     </div><!-- /tabDocuments -->
+
+    <!-- ═══════════════ RECORDS TAB ═══════════════ -->
+    <div id="tabRecords" class="records-panel">
+      <div class="submissions-title">
+        <span>📁 Form Records — Submitted Requests</span>
+        <span class="sub-count" id="recordsCount">Loading…</span>
+      </div>
+
+      <div class="records-filters">
+        <button class="records-filter-btn active" onclick="filterRecords('all',this)">All</button>
+        <button class="records-filter-btn" onclick="filterRecords('feeConc',this)">💰 Fee Concession</button>
+        <button class="records-filter-btn" onclick="filterRecords('leaving',this)">🏫 Leaving Cert</button>
+        <button class="records-filter-btn" onclick="filterRecords('bonafide',this)">📜 Bonafide/Att</button>
+        <button class="records-filter-btn" onclick="filterRecords('pending',this)">⏳ Pending</button>
+        <button class="records-filter-btn" onclick="filterRecords('processing',this)">🔄 Processing</button>
+        <button class="show-archived-btn" id="showArchivedBtn" onclick="toggleArchived()">Show Completed</button>
+      </div>
+
+      <div id="recordsList">
+        <div class="empty-state"><div class="ei">📁</div><p>Loading records…</p></div>
+      </div>
+    </div><!-- /tabRecords -->
 
     <div class="panel-footer">
       <span><span class="live-dot"></span>Heritage Montessori · Staff Portal · Live via Firebase</span>
@@ -1200,15 +1258,17 @@ window.resetFilters = function() {
 window.switchTab = function(tab, btn) {
   document.querySelectorAll('.panel-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  const fb = document.getElementById('tabFeedback');
-  const docs = document.getElementById('tabDocuments');
+  document.getElementById('tabFeedback').style.display = 'none';
+  document.getElementById('tabDocuments').style.display = 'none';
+  document.getElementById('tabRecords').style.display = 'none';
   if(tab === 'feedback') {
-    fb.style.display = 'block';
-    docs.style.display = 'none';
-  } else {
-    fb.style.display = 'none';
-    docs.style.display = 'block';
+    document.getElementById('tabFeedback').style.display = 'block';
+  } else if(tab === 'documents') {
+    document.getElementById('tabDocuments').style.display = 'block';
     closeDoc();
+  } else if(tab === 'records') {
+    document.getElementById('tabRecords').style.display = 'block';
+    loadRecords();
   }
 };
 
@@ -1343,6 +1403,121 @@ window.printAll = function() {
     const body = document.getElementById('body-'+id);
     if(!openState[id]) body.classList.remove('open');
   });
+};
+
+// ── RECORDS SYSTEM ──
+let allRecords = [];
+let recordsFilter = 'all';
+let showArchived = false;
+
+async function loadRecords() {
+  const { ref: fbRef, get: fbGet } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js");
+  const types = ['feeConc', 'leaving', 'bonafide'];
+  const typeLabels = { feeConc:'Fee Concession', leaving:'School Leaving Cert', bonafide:'Bonafide/Attendance' };
+  const typeIcons = { feeConc:'💰', leaving:'🏫', bonafide:'📜' };
+  allRecords = [];
+
+  for(const type of types) {
+    try {
+      const snap = await get(ref(db, `formArchive/${type}`));
+      if(snap.exists()) {
+        Object.entries(snap.val()).forEach(([key, val]) => {
+          allRecords.push({ ...val, _key: key, _type: type,
+            _typeLabel: typeLabels[type], _typeIcon: typeIcons[type] });
+        });
+      }
+    } catch(e) { console.error(e); }
+  }
+
+  allRecords.sort((a,b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+  renderRecords();
+}
+
+function renderRecords() {
+  const list = document.getElementById('recordsList');
+  let filtered = allRecords.filter(r => {
+    if(!showArchived && r.status === 'completed') return false;
+    if(recordsFilter === 'all') return true;
+    if(recordsFilter === 'pending') return r.status === 'pending';
+    if(recordsFilter === 'processing') return r.status === 'processing';
+    return r._type === recordsFilter;
+  });
+
+  document.getElementById('recordsCount').textContent =
+    `${filtered.length} record${filtered.length !== 1 ? 's' : ''}`;
+
+  if(!filtered.length) {
+    list.innerHTML = '<div class="empty-state"><div class="ei">📁</div><p>No records found.</p></div>';
+    return;
+  }
+
+  list.innerHTML = filtered.map(r => {
+    const date = r.submittedAt ? new Date(r.submittedAt).toLocaleDateString('en-GB',
+      {day:'numeric', month:'short', year:'numeric'}) : '—';
+    const statusClass = `status-${r.status||'pending'}`;
+    const statusLabel = (r.status||'pending').charAt(0).toUpperCase() + (r.status||'pending').slice(1);
+    const safeKey = r._key;
+
+    return `<div class="record-card" id="rec-${safeKey}">
+      <div class="record-header" onclick="toggleRecord('${safeKey}')">
+        <span class="record-ref">${r.refNumber||'—'}</span>
+        <span class="record-type">${r._typeIcon} ${r._typeLabel}</span>
+        <span class="record-name">${r.childName||'—'}</span>
+        <span class="record-class">${r.className||'—'}</span>
+        <span class="status-badge ${statusClass}">${statusLabel}</span>
+        <span class="record-date">${date}</span>
+      </div>
+      <div class="record-body" id="recbody-${safeKey}">
+        <div class="record-detail-grid">
+          <div class="record-detail"><span class="record-detail-label">Parent</span><span class="record-detail-value">${r.parentName||'—'}</span></div>
+          <div class="record-detail"><span class="record-detail-label">Contact</span><span class="record-detail-value">${r.contactNumber||'—'}</span></div>
+          ${r.requestType ? `<div class="record-detail"><span class="record-detail-label">Request Type</span><span class="record-detail-value">${r.requestType==='summer'?'Summer Plan Change':'Fee Concession'}</span></div>` : ''}
+          ${r.leavingReason ? `<div class="record-detail"><span class="record-detail-label">Reason</span><span class="record-detail-value">${r.leavingReason}</span></div>` : ''}
+          ${r.purpose ? `<div class="record-detail"><span class="record-detail-label">Purpose</span><span class="record-detail-value">${r.purpose}</span></div>` : ''}
+          ${r.certType ? `<div class="record-detail"><span class="record-detail-label">Certificate Type</span><span class="record-detail-value">${r.certType}</span></div>` : ''}
+          ${r.lastDate ? `<div class="record-detail"><span class="record-detail-label">Last Date</span><span class="record-detail-value">${r.lastDate}</span></div>` : ''}
+          ${r.requiredBy ? `<div class="record-detail"><span class="record-detail-label">Required By</span><span class="record-detail-value">${r.requiredBy}</span></div>` : ''}
+          <div class="record-detail"><span class="record-detail-label">Submitted</span><span class="record-detail-value">${date}</span></div>
+        </div>
+        <div class="record-actions">
+          <span style="font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-right:4px;">Mark as:</span>
+          <button class="btn-status btn-status-pending" onclick="updateRecordStatus('${r._type}','${safeKey}','pending')">⏳ Pending</button>
+          <button class="btn-status btn-status-processing" onclick="updateRecordStatus('${r._type}','${safeKey}','processing')">🔄 Processing</button>
+          <button class="btn-status btn-status-completed" onclick="updateRecordStatus('${r._type}','${safeKey}','completed')">✓ Completed</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.toggleRecord = function(key) {
+  const body = document.getElementById('recbody-'+key);
+  if(body) body.classList.toggle('open');
+};
+
+window.updateRecordStatus = async function(type, key, status) {
+  try {
+    await update(ref(db, `formArchive/${type}/${key}`), { status, updatedAt: new Date().toISOString() });
+    const rec = allRecords.find(r => r._key === key);
+    if(rec) rec.status = status;
+    renderRecords();
+    showToast(`✓ Marked as ${status}`);
+  } catch(e) {
+    showToast('Error updating status.', 4000);
+  }
+};
+
+window.filterRecords = function(filter, btn) {
+  recordsFilter = filter;
+  document.querySelectorAll('.records-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderRecords();
+};
+
+window.toggleArchived = function() {
+  showArchived = !showArchived;
+  document.getElementById('showArchivedBtn').textContent = showArchived ? 'Hide Completed' : 'Show Completed';
+  renderRecords();
 };
 
 </script>
