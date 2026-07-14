@@ -181,6 +181,24 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
 .modal-box p { font-size:12.5px; color:var(--muted); line-height:1.65; margin-bottom:24px; }
 .modal-btns { display:flex; gap:10px; flex-wrap:wrap; }
 
+/* ACTION MODAL */
+.action-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:2000; overflow-y:auto; }
+.action-modal.show { display:block; }
+.action-modal-inner { background:white; max-width:720px; margin:30px auto; padding:0; box-shadow:0 16px 64px rgba(0,0,0,0.3); }
+.action-modal-nav { background:var(--parchment); border-bottom:1px solid var(--line); padding:12px 24px; display:flex; align-items:center; gap:12px; position:sticky; top:0; z-index:10; }
+.action-modal-title { font-family:'Cormorant Garamond',serif; font-size:16px; color:var(--forest); font-weight:600; flex:1; }
+.action-modal-body { padding:32px 36px; }
+.decision-btns { display:flex; gap:12px; margin:20px 0; flex-wrap:wrap; }
+.btn-approve { background:#2d7a4a; color:white; border:none; font-family:'Jost',sans-serif; font-size:11px; font-weight:600; letter-spacing:1px; text-transform:uppercase; padding:10px 22px; cursor:pointer; border-radius:2px; transition:opacity 0.2s; }
+.btn-approve:hover { opacity:0.85; }
+.btn-reject { background:var(--error); color:white; border:none; font-family:'Jost',sans-serif; font-size:11px; font-weight:600; letter-spacing:1px; text-transform:uppercase; padding:10px 22px; cursor:pointer; border-radius:2px; transition:opacity 0.2s; }
+.btn-reject:hover { opacity:0.85; }
+.decision-note { width:100%; border:1.5px solid var(--line); background:var(--parchment); font-family:'Jost',sans-serif; font-size:12px; color:var(--ink); padding:10px 12px; resize:vertical; min-height:80px; outline:none; margin-bottom:12px; }
+.decision-note:focus { border-color:var(--gold); }
+.letter-preview { background:white; border:1px solid var(--line); padding:28px 32px; margin:16px 0; font-size:12px; line-height:2; color:var(--ink); }
+.letter-preview h3 { font-family:'Cormorant Garamond',serif; font-size:18px; color:var(--forest); text-align:center; margin-bottom:4px; }
+.letter-preview .letter-sub { text-align:center; font-size:10px; color:var(--muted); margin-bottom:20px; padding-bottom:12px; border-bottom:1px solid var(--line); }
+
 /* ── TABS ── */
 .panel-tabs { background:var(--parchment); border-bottom:2px solid var(--line); display:flex; gap:0; }
 .panel-tab { padding:13px 26px; font-family:'Jost',sans-serif; font-size:10.5px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); cursor:pointer; border:none; border-bottom:2.5px solid transparent; margin-bottom:-2px; background:none; transition:all 0.2s; display:flex; align-items:center; gap:7px; }
@@ -732,6 +750,18 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
       <button class="btn btn-danger" onclick="confirmDelete()">Yes, Delete</button>
       <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
     </div>
+  </div>
+</div>
+
+<!-- ACTION MODAL -->
+<div class="action-modal" id="actionModal">
+  <div class="action-modal-inner">
+    <div class="action-modal-nav">
+      <button class="doc-back-btn" onclick="closeActionModal()">← Close</button>
+      <span class="action-modal-title" id="actionModalTitle">Process Request</span>
+      <button class="doc-print-btn" onclick="window.print()">🖨 Print</button>
+    </div>
+    <div class="action-modal-body" id="actionModalBody"></div>
   </div>
 </div>
 
@@ -1457,6 +1487,8 @@ function renderRecords() {
     const statusLabel = (r.status||'pending').charAt(0).toUpperCase() + (r.status||'pending').slice(1);
     const safeKey = r._key;
 
+    const actionLabel = r._type==='feeConc' ? '📋 Process Decision' : r._type==='leaving' ? '📄 Issue SLC' : '📜 Issue Certificate';
+
     return `<div class="record-card" id="rec-${safeKey}">
       <div class="record-header" onclick="toggleRecord('${safeKey}')">
         <span class="record-ref">${r.refNumber||'—'}</span>
@@ -1468,18 +1500,32 @@ function renderRecords() {
       </div>
       <div class="record-body" id="recbody-${safeKey}">
         <div class="record-detail-grid">
+          <div class="record-detail"><span class="record-detail-label">Reference</span><span class="record-detail-value">${r.refNumber||'—'}</span></div>
+          <div class="record-detail"><span class="record-detail-label">Child Name</span><span class="record-detail-value">${r.childName||'—'}</span></div>
+          <div class="record-detail"><span class="record-detail-label">Class</span><span class="record-detail-value">${r.className||'—'}</span></div>
           <div class="record-detail"><span class="record-detail-label">Parent</span><span class="record-detail-value">${r.parentName||'—'}</span></div>
           <div class="record-detail"><span class="record-detail-label">Contact</span><span class="record-detail-value">${r.contactNumber||'—'}</span></div>
-          ${r.requestType ? `<div class="record-detail"><span class="record-detail-label">Request Type</span><span class="record-detail-value">${r.requestType==='summer'?'Summer Plan Change':'Fee Concession'}</span></div>` : ''}
-          ${r.leavingReason ? `<div class="record-detail"><span class="record-detail-label">Reason</span><span class="record-detail-value">${r.leavingReason}</span></div>` : ''}
-          ${r.purpose ? `<div class="record-detail"><span class="record-detail-label">Purpose</span><span class="record-detail-value">${r.purpose}</span></div>` : ''}
-          ${r.certType ? `<div class="record-detail"><span class="record-detail-label">Certificate Type</span><span class="record-detail-value">${r.certType}</span></div>` : ''}
-          ${r.lastDate ? `<div class="record-detail"><span class="record-detail-label">Last Date</span><span class="record-detail-value">${r.lastDate}</span></div>` : ''}
-          ${r.requiredBy ? `<div class="record-detail"><span class="record-detail-label">Required By</span><span class="record-detail-value">${r.requiredBy}</span></div>` : ''}
+          <div class="record-detail"><span class="record-detail-label">CNIC Last 4</span><span class="record-detail-value">${r.cnicLast4||'—'}</span></div>
+          <div class="record-detail"><span class="record-detail-label">Signed</span><span class="record-detail-value">${r.hasSignature?'✅ Yes':'❌ No'}</span></div>
           <div class="record-detail"><span class="record-detail-label">Submitted</span><span class="record-detail-value">${date}</span></div>
+          ${r.requestType ? `<div class="record-detail"><span class="record-detail-label">Request Type</span><span class="record-detail-value">${r.requestType==='summer'?'Summer Plan Change':'Regular Concession'}</span></div>` : ''}
+          ${r.summerMonths ? `<div class="record-detail"><span class="record-detail-label">Summer Months</span><span class="record-detail-value">${r.summerMonths}</span></div>` : ''}
+          ${r.concessionAmount ? `<div class="record-detail"><span class="record-detail-label">Concession Requested</span><span class="record-detail-value">${r.concessionAmount}</span></div>` : ''}
+          ${r.leavingReason ? `<div class="record-detail"><span class="record-detail-label">Reason for Leaving</span><span class="record-detail-value">${r.leavingReason}</span></div>` : ''}
+          ${r.lastDate ? `<div class="record-detail"><span class="record-detail-label">Last Date</span><span class="record-detail-value">${r.lastDate}</span></div>` : ''}
+          ${r.certType ? `<div class="record-detail"><span class="record-detail-label">Certificate Type</span><span class="record-detail-value">${r.certType}</span></div>` : ''}
+          ${r.purpose ? `<div class="record-detail"><span class="record-detail-label">Purpose</span><span class="record-detail-value">${r.purpose}</span></div>` : ''}
+          ${r.requiredBy ? `<div class="record-detail"><span class="record-detail-label">Required By</span><span class="record-detail-value">${r.requiredBy}</span></div>` : ''}
+          ${r.additionalDetails ? `<div class="record-detail" style="grid-column:1/-1"><span class="record-detail-label">Additional Details</span><span class="record-detail-value">${r.additionalDetails}</span></div>` : ''}
+          ${r.summerReason ? `<div class="record-detail" style="grid-column:1/-1"><span class="record-detail-label">Reason</span><span class="record-detail-value">${r.summerReason}</span></div>` : ''}
+          ${r.concessionReason ? `<div class="record-detail" style="grid-column:1/-1"><span class="record-detail-label">Concession Reason</span><span class="record-detail-value">${r.concessionReason}</span></div>` : ''}
+          ${r.leavingDetails ? `<div class="record-detail" style="grid-column:1/-1"><span class="record-detail-label">Additional Details</span><span class="record-detail-value">${r.leavingDetails}</span></div>` : ''}
         </div>
         <div class="record-actions">
-          <span style="font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-right:4px;">Mark as:</span>
+          <button class="btn btn-primary btn-sm" onclick="openRecordAction('${r._type}','${safeKey}',${JSON.stringify(r).replace(/'/g,"&#39;")})">
+            ${actionLabel}
+          </button>
+          <span style="font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-left:8px;">Status:</span>
           <button class="btn-status btn-status-pending" onclick="updateRecordStatus('${r._type}','${safeKey}','pending')">⏳ Pending</button>
           <button class="btn-status btn-status-processing" onclick="updateRecordStatus('${r._type}','${safeKey}','processing')">🔄 Processing</button>
           <button class="btn-status btn-status-completed" onclick="updateRecordStatus('${r._type}','${safeKey}','completed')">✓ Completed</button>
@@ -1517,6 +1563,188 @@ window.toggleArchived = function() {
   showArchived = !showArchived;
   document.getElementById('showArchivedBtn').textContent = showArchived ? 'Hide Completed' : 'Show Completed';
   renderRecords();
+};
+
+// ── ACTION MODAL ──
+const WA_SCHOOL = '923361515260';
+let _actionRecord = null;
+let _actionType = null;
+let _actionKey = null;
+let _currentDecision = null;
+
+window.openRecordAction = function(type, key, record) {
+  _actionRecord = record;
+  _actionType = type;
+  _actionKey = key;
+  _currentDecision = null;
+
+  const modal = document.getElementById('actionModal');
+  const body = document.getElementById('actionModalBody');
+  const title = document.getElementById('actionModalTitle');
+  const today = new Date().toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'});
+
+  if(type === 'feeConc') {
+    title.textContent = 'Fee Concession — Decision Letter';
+    const reqType = record.requestType === 'summer' ? 'Summer Fee Plan Change (Standard to Monthly)' : 'Regular Fee Concession';
+    body.innerHTML = `
+      <div style="margin-bottom:16px;">
+        <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Decision</div>
+        <div class="decision-btns">
+          <button class="btn-approve" onclick="setDecision('approved')">✓ Approved</button>
+          <button class="btn-reject" onclick="setDecision('rejected')">✕ Rejected</button>
+        </div>
+        <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Note / Reason (optional)</div>
+        <textarea class="decision-note" id="decisionNote" placeholder="Add any conditions, remarks or reason for rejection…"></textarea>
+      </div>
+      <div class="letter-preview" id="letterPreview">
+        <h3>Heritage Montessori and School</h3>
+        <div class="letter-sub">11-D Garden Town, Multan · Tel: 061-6515260 · info@heritagemux.com</div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:16px;font-size:11px;color:var(--muted);">
+          <span>Ref: ${record.refNumber||'—'}</span><span>${today}</span>
+        </div>
+        <p>To,<br><strong>${record.parentName||'Parent/Guardian'}</strong><br>Parent of ${record.childName||'—'} (${record.className||'—'})</p>
+        <br>
+        <p><strong>Subject: Decision on Fee Concession Application — ${reqType}</strong></p>
+        <br>
+        <p>Dear ${record.parentName||'Parent/Guardian'},</p>
+        <br>
+        <p>With reference to your application (Ref: ${record.refNumber||'—'}) dated ${new Date(record.submittedAt||Date.now()).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})} regarding ${reqType} for your child <strong>${record.childName||'—'}</strong> of <strong>${record.className||'—'}</strong>,</p>
+        <br>
+        <p id="decisionPara" style="font-weight:600;color:var(--muted);">Please select Approved or Rejected above to generate the letter.</p>
+        <br>
+        <div id="decisionNoteDisplay"></div>
+        <br>
+        <p>For any queries please contact the school office at 061-6515260.</p>
+        <br>
+        <p>Yours sincerely,</p>
+        <br><br>
+        <p>_________________________<br>Principal / Administrator<br>Heritage Montessori and School</p>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;">
+        <button class="btn btn-primary btn-sm" onclick="window.print()">🖨 Print Letter</button>
+        <a id="waDecisionBtn" href="#" target="_blank" class="btn btn-sm" style="background:#25D366;color:white;text-decoration:none;display:none;">💬 Notify Parent on WhatsApp</a>
+      </div>`;
+
+    // Update letter when note changes
+    document.getElementById('decisionNote').addEventListener('input', updateLetter);
+
+  } else if(type === 'leaving') {
+    title.textContent = 'Issue School Leaving Certificate';
+    body.innerHTML = `
+      <div style="background:var(--parchment);border-left:3px solid var(--gold);padding:12px 16px;margin-bottom:20px;font-size:12px;color:var(--muted);">
+        Fill in the details below and print the School Leaving Certificate for <strong>${record.childName||'—'}</strong>.
+      </div>
+      <div class="letter-preview">
+        <h3>Heritage Montessori and School</h3>
+        <div class="letter-sub">11-D Garden Town, Multan · Tel: 061-6515260 · info@heritagemux.com</div>
+        <div style="text-align:center;font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--forest);margin:16px 0;text-decoration:underline;">SCHOOL LEAVING CERTIFICATE</div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:14px;font-size:11px;">
+          <span>Ref: ${record.refNumber||'—'}</span><span>${today}</span>
+        </div>
+        <p>This is to certify that <strong>${record.childName||'—'}</strong>, Son/Daughter of <strong>${record.parentName||'—'}</strong>, was enrolled at Heritage Montessori and School, Garden Town, Multan.</p>
+        <br>
+        <table style="width:100%;border-collapse:collapse;font-size:12px;">
+          <tr><td style="padding:6px 0;border-bottom:1px solid #eee;width:40%;color:var(--muted);">Class Last Attended</td><td style="padding:6px 0;border-bottom:1px solid #eee;"><strong>${record.className||'—'}</strong></td></tr>
+          <tr><td style="padding:6px 0;border-bottom:1px solid #eee;color:var(--muted);">Last Date of Attendance</td><td style="padding:6px 0;border-bottom:1px solid #eee;"><strong>${record.lastDate||'—'}</strong></td></tr>
+          <tr><td style="padding:6px 0;border-bottom:1px solid #eee;color:var(--muted);">Reason for Leaving</td><td style="padding:6px 0;border-bottom:1px solid #eee;"><strong>${record.leavingReason||'—'}</strong></td></tr>
+          <tr><td style="padding:6px 0;color:var(--muted);">Character</td><td style="padding:6px 0;"><input style="border:none;border-bottom:1px solid #999;width:150px;font-size:12px;outline:none;" placeholder="Excellent / Good"></td></tr>
+        </table>
+        <br>
+        <p>He/She has cleared all dues of the school and no dues are outstanding. We wish him/her success in future endeavours.</p>
+        <br><br>
+        <p>_________________________<br>Principal / Administrator<br>Heritage Montessori and School<br><br>[School Stamp]</p>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;">
+        <button class="btn btn-primary btn-sm" onclick="window.print()">🖨 Print SLC</button>
+        <a href="https://wa.me/${WA_SCHOOL}?text=${encodeURIComponent('SLC for '+record.childName+' ('+record.className+') Ref: '+(record.refNumber||'')+ ' — Contact: '+(record.contactNumber||''))}" target="_blank" class="btn btn-sm" style="background:#25D366;color:white;text-decoration:none;">💬 Notify Parent</a>
+      </div>`;
+
+  } else if(type === 'bonafide') {
+    title.textContent = 'Issue Bonafide / Attendance Certificate';
+    body.innerHTML = `
+      <div style="background:var(--parchment);border-left:3px solid var(--gold);padding:12px 16px;margin-bottom:20px;font-size:12px;color:var(--muted);">
+        Fill in the details and print the ${record.certType||'Certificate'} for <strong>${record.childName||'—'}</strong>.
+      </div>
+      <div class="letter-preview">
+        <h3>Heritage Montessori and School</h3>
+        <div class="letter-sub">11-D Garden Town, Multan · Tel: 061-6515260 · info@heritagemux.com</div>
+        <div style="text-align:center;font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--forest);margin:16px 0;text-decoration:underline;">${(record.certType||'BONAFIDE CERTIFICATE').toUpperCase()}</div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:14px;font-size:11px;">
+          <span>Ref: ${record.refNumber||'—'}</span><span>${today}</span>
+        </div>
+        <p><strong>TO WHOM IT MAY CONCERN</strong></p><br>
+        <p>This is to certify that <strong>${record.childName||'—'}</strong>, Son/Daughter of <strong>${record.parentName||'—'}</strong>, is a bonafide student of this institution. He/She is currently enrolled in <strong>${record.className||'—'}</strong> for the Academic Year <strong>2025–2026</strong>.</p>
+        <br>
+        <table style="width:100%;border-collapse:collapse;font-size:12px;">
+          <tr><td style="padding:6px 0;border-bottom:1px solid #eee;width:40%;color:var(--muted);">Purpose</td><td style="padding:6px 0;border-bottom:1px solid #eee;"><strong>${record.purpose||'—'}</strong></td></tr>
+          ${record.additionalDetails ? `<tr><td style="padding:6px 0;border-bottom:1px solid #eee;color:var(--muted);">Addressed To</td><td style="padding:6px 0;border-bottom:1px solid #eee;">${record.additionalDetails}</td></tr>` : ''}
+          <tr><td style="padding:6px 0;color:var(--muted);">Date of Issue</td><td style="padding:6px 0;"><strong>${today}</strong></td></tr>
+        </table>
+        <br>
+        <p>This certificate is issued on the request of the parent/guardian and is valid for official purposes only.</p>
+        <br><br>
+        <p>_________________________<br>Principal / Administrator<br>Heritage Montessori and School<br><br>[School Stamp]</p>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;">
+        <button class="btn btn-primary btn-sm" onclick="window.print()">🖨 Print Certificate</button>
+        <a href="https://wa.me/${WA_SCHOOL}?text=${encodeURIComponent((record.certType||'Certificate')+' for '+(record.childName||'')+ ' ('+(record.className||'')+') Ref: '+(record.refNumber||'')+' is ready — Contact: '+(record.contactNumber||''))}" target="_blank" class="btn btn-sm" style="background:#25D366;color:white;text-decoration:none;">💬 Notify Parent</a>
+      </div>`;
+  }
+
+  modal.classList.add('show');
+  document.body.style.overflow = 'hidden';
+};
+
+function setDecision(decision) {
+  _currentDecision = decision;
+  updateLetter();
+}
+
+window.setDecision = setDecision;
+
+function updateLetter() {
+  if(!_currentDecision) return;
+  const note = document.getElementById('decisionNote')?.value || '';
+  const record = _actionRecord;
+  const waBtn = document.getElementById('waDecisionBtn');
+  const reqType = record.requestType === 'summer' ? 'Summer Fee Plan Change (Standard to Monthly)' : 'Regular Fee Concession';
+
+  let decisionText, decisionColor;
+  if(_currentDecision === 'approved') {
+    decisionText = `We are pleased to inform you that your application for <strong>${reqType}</strong> has been <strong style="color:#2d7a4a;">APPROVED</strong>.`;
+    decisionColor = '#2d7a4a';
+  } else {
+    decisionText = `After careful consideration, we regret to inform you that your application for <strong>${reqType}</strong> has been <strong style="color:#c0392b;">REJECTED</strong>.`;
+    decisionColor = '#c0392b';
+  }
+
+  document.getElementById('decisionPara').innerHTML = decisionText;
+  document.getElementById('decisionPara').style.color = decisionColor;
+  document.getElementById('decisionNoteDisplay').innerHTML = note ?
+    `<p><strong>Note:</strong> ${note}</p>` : '';
+
+  // WA button
+  if(waBtn) {
+    const waMsg = encodeURIComponent(
+      `Assalam o Alaikum ${record.parentName||''},
+
+Your Fee Concession Application (Ref: ${record.refNumber||'—'}) has been *${_currentDecision.toUpperCase()}*.
+
+${note ? 'Note: '+note+'
+
+' : ''}For any queries please contact the school office at 061-6515260.
+
+JazakAllah Khairan,
+Heritage Montessori & School`
+    );
+    waBtn.href = `https://wa.me/${record.contactNumber ? '92'+record.contactNumber.replace(/\D/g,'').replace(/^0/,'') : WA_SCHOOL}?text=${waMsg}`;
+    waBtn.style.display = 'inline-flex';
+  }
+}
+
+window.closeActionModal = function() {
+  document.getElementById('actionModal').classList.remove('show');
+  document.body.style.overflow = '';
 };
 
 </script>
