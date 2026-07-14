@@ -129,6 +129,19 @@ body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;padding:0
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
 .fade-in{animation:fadeIn 0.3s ease;}
 
+/* SIGNATURE PAD */
+.sig-wrap{border:1.5px solid var(--line);background:white;margin-top:6px;position:relative;}
+.sig-canvas{display:block;width:100%;height:130px;cursor:crosshair;touch-action:none;}
+.sig-toolbar{display:flex;justify-content:space-between;align-items:center;padding:5px 10px;background:var(--parchment);border-top:1px solid var(--line);}
+.sig-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+.sig-clear{background:none;border:1px solid var(--line);color:var(--muted);font-family:'Jost',sans-serif;font-size:9px;padding:3px 10px;cursor:pointer;border-radius:2px;}
+.sig-clear:hover{border-color:var(--error);color:var(--error);}
+.sig-placeholder{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:12px;color:#ccc;pointer-events:none;text-align:center;line-height:1.6;}
+
+/* CNIC VERIFY */
+.verify-box{background:#fff8ec;border:1px solid #f0d080;border-left:3px solid var(--gold);padding:14px 16px;margin:16px 0;}
+.verify-box-title{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:8px;}
+
 /* FOOTER */
 .portal-footer{background:var(--parchment);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;border-top:3px solid var(--gold);margin-top:0;}
 .portal-footer span{font-size:9.5px;color:rgba(0,0,0,0.35);letter-spacing:1px;text-transform:uppercase;}
@@ -339,10 +352,28 @@ body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;padding:0
           <strong>Documentary Proof Required:</strong> This request will only be processed after you submit relevant supporting documents at the school office (e.g. salary slip, medical certificate, utility bill, or any document supporting your request). Please print this form and attach your documents when visiting the school.
         </div>
 
-        <div class="sign-row">
-          <div class="sign-box">Signature of Parent / Guardian<br><br><br>Name: ___________________</div>
-          <div class="sign-box">Date: ___________________<br><br><br>Contact: ___________________</div>
+        <!-- VERIFICATION -->
+        <div class="verify-box">
+          <div class="verify-box-title">🔒 Identity Verification</div>
+          <div class="field-row">
+            <div class="field-group">
+              <div class="field-label">Last 4 digits of Parent CNIC <span class="req">*</span></div>
+              <input class="field-input" type="text" name="cnicLast4" maxlength="4" pattern="[0-9]{4}" required placeholder="e.g. 1234" style="letter-spacing:4px;font-size:16px;">
+            </div>
+          </div>
         </div>
+
+        <!-- SIGNATURE -->
+        <div class="form-section-title">Parent / Guardian Signature</div>
+        <div class="sig-wrap">
+          <canvas class="sig-canvas" id="sigFeeConc"></canvas>
+          <div class="sig-placeholder" id="sigFCPlaceholder">✍ Sign here with your finger or mouse</div>
+          <div class="sig-toolbar">
+            <span class="sig-label">Sign above</span>
+            <button type="button" class="sig-clear" onclick="clearSig('sigFeeConc','sigFCPlaceholder')">Clear</button>
+          </div>
+        </div>
+        <input type="hidden" name="signature" id="sigFCInput">
 
         <div class="form-actions">
           <button type="submit" class="btn btn-primary" id="fcSubmitBtn">
@@ -457,10 +488,28 @@ body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;padding:0
           <strong>Please Note:</strong> This request will be processed within 5–7 working days of submission, subject to fee clearance verification. The certificate must be collected in person from the school office with a valid CNIC.
         </div>
 
-        <div class="sign-row">
-          <div class="sign-box">Signature of Parent / Guardian<br><br><br>Name: ___________________</div>
-          <div class="sign-box">Date: ___________________<br><br><br>Contact: ___________________</div>
+        <!-- VERIFICATION -->
+        <div class="verify-box">
+          <div class="verify-box-title">🔒 Identity Verification</div>
+          <div class="field-row">
+            <div class="field-group">
+              <div class="field-label">Last 4 digits of Parent CNIC <span class="req">*</span></div>
+              <input class="field-input" type="text" name="cnicLast4" maxlength="4" pattern="[0-9]{4}" required placeholder="e.g. 1234" style="letter-spacing:4px;font-size:16px;">
+            </div>
+          </div>
         </div>
+
+        <!-- SIGNATURE -->
+        <div class="form-section-title">Parent / Guardian Signature</div>
+        <div class="sig-wrap">
+          <canvas class="sig-canvas" id="sigLeaving"></canvas>
+          <div class="sig-placeholder" id="sigSLCPlaceholder">✍ Sign here with your finger or mouse</div>
+          <div class="sig-toolbar">
+            <span class="sig-label">Sign above</span>
+            <button type="button" class="sig-clear" onclick="clearSig('sigLeaving','sigSLCPlaceholder')">Clear</button>
+          </div>
+        </div>
+        <input type="hidden" name="signature" id="sigSLCInput">
 
         <div class="form-actions">
           <button type="submit" class="btn btn-primary" id="slcSubmitBtn">
@@ -577,10 +626,28 @@ body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;padding:0
           <strong>Please Note:</strong> This certificate will be ready within 2–3 working days. The certificate must be collected in person from the school office with a valid CNIC.
         </div>
 
-        <div class="sign-row">
-          <div class="sign-box">Signature of Parent / Guardian<br><br><br>Name: ___________________</div>
-          <div class="sign-box">Date: ___________________<br><br><br>Contact: ___________________</div>
+        <!-- VERIFICATION -->
+        <div class="verify-box">
+          <div class="verify-box-title">🔒 Identity Verification</div>
+          <div class="field-row">
+            <div class="field-group">
+              <div class="field-label">Last 4 digits of Parent CNIC <span class="req">*</span></div>
+              <input class="field-input" type="text" name="cnicLast4" maxlength="4" pattern="[0-9]{4}" required placeholder="e.g. 1234" style="letter-spacing:4px;font-size:16px;">
+            </div>
+          </div>
         </div>
+
+        <!-- SIGNATURE -->
+        <div class="form-section-title">Parent / Guardian Signature</div>
+        <div class="sig-wrap">
+          <canvas class="sig-canvas" id="sigBonafide"></canvas>
+          <div class="sig-placeholder" id="sigATTPlaceholder">✍ Sign here with your finger or mouse</div>
+          <div class="sig-toolbar">
+            <span class="sig-label">Sign above</span>
+            <button type="button" class="sig-clear" onclick="clearSig('sigBonafide','sigATTPlaceholder')">Clear</button>
+          </div>
+        </div>
+        <input type="hidden" name="signature" id="sigATTInput">
 
         <div class="form-actions">
           <button type="submit" class="btn btn-primary" id="attSubmitBtn">
@@ -635,6 +702,103 @@ body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;padding:0
 </div>
 
 <div class="toast" id="toast"></div>
+
+<script>
+// ── SIGNATURE PAD ──
+const sigPads = {};
+
+function initSig(canvasId, placeholderId, inputId) {
+  const canvas = document.getElementById(canvasId);
+  if(!canvas || sigPads[canvasId]) return;
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth;
+  canvas.height = 130;
+  ctx.strokeStyle = '#1e1e1e';
+  ctx.lineWidth = 2.5;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  let drawing = false;
+
+  function getPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    if(e.touches) {
+      return {
+        x: (e.touches[0].clientX - rect.left) * scaleX,
+        y: (e.touches[0].clientY - rect.top) * scaleY
+      };
+    }
+    return {
+      x: (e.clientX - rect.left) * scaleX,
+      y: (e.clientY - rect.top) * scaleY
+    };
+  }
+
+  function start(e) {
+    e.preventDefault();
+    drawing = true;
+    const pos = getPos(e);
+    ctx.beginPath();
+    ctx.moveTo(pos.x, pos.y);
+    document.getElementById(placeholderId).style.display = 'none';
+  }
+  function draw(e) {
+    if(!drawing) return;
+    e.preventDefault();
+    const pos = getPos(e);
+    ctx.lineTo(pos.x, pos.y);
+    ctx.stroke();
+  }
+  function stop(e) {
+    if(!drawing) return;
+    drawing = false;
+    // Save to hidden input
+    if(inputId) {
+      document.getElementById(inputId).value = canvas.toDataURL('image/png');
+    }
+  }
+
+  canvas.addEventListener('mousedown', start);
+  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mouseup', stop);
+  canvas.addEventListener('mouseleave', stop);
+  canvas.addEventListener('touchstart', start, {passive:false});
+  canvas.addEventListener('touchmove', draw, {passive:false});
+  canvas.addEventListener('touchend', stop);
+
+  sigPads[canvasId] = {canvas, ctx, placeholderId, inputId};
+}
+
+window.clearSig = function(canvasId, placeholderId) {
+  const pad = sigPads[canvasId];
+  if(!pad) return;
+  pad.ctx.clearRect(0, 0, pad.canvas.width, pad.canvas.height);
+  document.getElementById(placeholderId).style.display = 'block';
+  const inputId = pad.inputId;
+  if(inputId) document.getElementById(inputId).value = '';
+};
+
+function getSigData(canvasId) {
+  const pad = sigPads[canvasId];
+  if(!pad) return '';
+  // Check if canvas is blank
+  const blank = document.createElement('canvas');
+  blank.width = pad.canvas.width;
+  blank.height = pad.canvas.height;
+  if(pad.canvas.toDataURL() === blank.toDataURL()) return '';
+  return pad.canvas.toDataURL('image/png');
+}
+
+// Init all signature pads when form opens
+window.initAllSigs = function() {
+  setTimeout(() => {
+    initSig('sigFeeConc', 'sigFCPlaceholder', 'sigFCInput');
+    initSig('sigLeaving', 'sigSLCPlaceholder', 'sigSLCInput');
+    initSig('sigBonafide', 'sigATTPlaceholder', 'sigATTInput');
+  }, 100);
+};
+</script>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -698,6 +862,7 @@ window.openForm = async function(formName) {
     el.classList.add('active');
     el.classList.add('fade-in');
   }
+  window.initAllSigs();
 
   // Set date
   const dateIds = { feeConc: 'dateFeeConc', leaving: 'dateLeaving', bonafide: 'dateBonafide' };
@@ -788,11 +953,16 @@ document.getElementById('feeConcForm').addEventListener('submit', async function
 
   const fd = new FormData(this);
   const refNum = window._currentRef || fd.get('refNumber');
+  const sigData = getSigData('sigFeeConc');
   const data = {
     childName: fd.get('childName'), className: fd.get('className'),
     parentName: fd.get('parentName'), contactNumber: fd.get('contactNumber'),
-    requestType: fd.get('requestType')
+    requestType: fd.get('requestType'), cnicLast4: fd.get('cnicLast4'),
+    summerMonths: fd.get('summerMonths')||'', summerReason: fd.get('summerReason')||'',
+    concessionAmount: fd.get('concessionAmount')||'', concessionReason: fd.get('concessionReason')||'',
+    hasSignature: !!sigData
   };
+  if(sigData) fd.set('signatureImage', sigData);
 
   try {
     await fetch('/', { method:'POST',
@@ -827,11 +997,15 @@ document.getElementById('leavingForm').addEventListener('submit', async function
 
   const fd = new FormData(this);
   const refNum = window._currentRef || fd.get('refNumber');
+  const sigData = getSigData('sigLeaving');
   const data = {
     childName: fd.get('childName'), className: fd.get('className'),
     parentName: fd.get('parentName'), contactNumber: fd.get('contactNumber'),
-    lastDate: fd.get('lastDate'), leavingReason: fd.get('leavingReason')
+    lastDate: fd.get('lastDate'), leavingReason: fd.get('leavingReason'),
+    leavingDetails: fd.get('leavingDetails')||'',
+    cnicLast4: fd.get('cnicLast4'), hasSignature: !!sigData
   };
+  if(sigData) fd.set('signatureImage', sigData);
 
   try {
     await fetch('/', { method:'POST',
@@ -865,12 +1039,15 @@ document.getElementById('bonafideForm').addEventListener('submit', async functio
 
   const fd = new FormData(this);
   const refNum = window._currentRef || fd.get('refNumber');
+  const sigData = getSigData('sigBonafide');
   const data = {
     childName: fd.get('childName'), className: fd.get('className'),
     parentName: fd.get('parentName'), contactNumber: fd.get('contactNumber'),
     certType: fd.get('certType'), purpose: fd.get('purpose'),
-    requiredBy: fd.get('requiredBy')
+    requiredBy: fd.get('requiredBy'), additionalDetails: fd.get('additionalDetails')||'',
+    cnicLast4: fd.get('cnicLast4'), hasSignature: !!sigData
   };
+  if(sigData) fd.set('signatureImage', sigData);
 
   try {
     await fetch('/', { method:'POST',
