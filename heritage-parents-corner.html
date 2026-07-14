@@ -638,7 +638,7 @@ body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;padding:0
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, get, set, update, increment } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getDatabase, ref as dbRef, get, set, update, increment } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAtB9d9zEr-ES-"+"lRI_Pf9fWJmaJ8o8ghvQ",
@@ -669,7 +669,7 @@ function todayStr() {
 
 // ── AUTO REFERENCE NUMBER ──
 async function getRefNumber(type) {
-  const counterRef = ref(db, `formCounters/${type}`);
+  const counterRef = dbRef(db, `formCounters/${type}`);
   const snap = await get(counterRef);
   const current = snap.exists() ? snap.val() : 0;
   const next = current + 1;
@@ -771,7 +771,7 @@ function attWAMsg(data) {
 // ── SAVE TO FIREBASE ARCHIVE ──
 async function saveToArchive(type, refNum, data) {
   const key = refNum.replace(/\//g, '-');
-  await set(ref(db, `formArchive/${type}/${key}`), {
+  await set(dbRef(db, `formArchive/${type}/${key}`), {
     ...data,
     refNumber: refNum,
     status: 'pending',
