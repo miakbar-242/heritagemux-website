@@ -1437,6 +1437,7 @@ window.printAll = function() {
 
 // ── RECORDS SYSTEM ──
 let allRecords = [];
+let recordsMap = {};
 let recordsFilter = 'all';
 let showArchived = false;
 
@@ -1451,8 +1452,10 @@ async function loadRecords() {
       const snap = await get(ref(db, `formArchive/${type}`));
       if(snap.exists()) {
         Object.entries(snap.val()).forEach(([key, val]) => {
-          allRecords.push({ ...val, _key: key, _type: type,
-            _typeLabel: typeLabels[type], _typeIcon: typeIcons[type] });
+          const rec = { ...val, _key: key, _type: type,
+            _typeLabel: typeLabels[type], _typeIcon: typeIcons[type] };
+          allRecords.push(rec);
+          recordsMap[key] = rec;
         });
       }
     } catch(e) { console.error(e); }
@@ -1522,7 +1525,7 @@ function renderRecords() {
           ${r.leavingDetails ? `<div class="record-detail" style="grid-column:1/-1"><span class="record-detail-label">Additional Details</span><span class="record-detail-value">${r.leavingDetails}</span></div>` : ''}
         </div>
         <div class="record-actions">
-          <button class="btn btn-primary btn-sm" onclick="openRecordAction('${r._type}','${safeKey}',${JSON.stringify(r).replace(/'/g,"&#39;")})">
+          <button class="btn btn-primary btn-sm" onclick="openRecordAction('${r._type}','${safeKey}')">
             ${actionLabel}
           </button>
           <span style="font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-left:8px;">Status:</span>
@@ -1584,7 +1587,9 @@ function buildATTWA(r) {
   return 'https://wa.me/' + num + '?text=' + encodeURIComponent(msg);
 }
 
-window.openRecordAction = function(type, key, record) {
+window.openRecordAction = function(type, key) {
+  const record = recordsMap[key];
+  if(!record) { showToast('Record not found. Please refresh.', 3000); return; }
   _actionRecord = record;
   _actionType = type;
   _actionKey = key;
