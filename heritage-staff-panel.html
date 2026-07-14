@@ -567,8 +567,8 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
             <h2>Heritage Montessori and School</h2>
             <p>Garden Town, Multan · Tel: +92 336 1515260 · info@heritagemux.com</p>
             <div class="doc-ref">
-              <span>Cert No: <input class="field-input" style="width:100px;" placeholder="HMS/B/___"></span>
-              <span>Date: <input class="field-input" style="width:140px;" placeholder="dd/mm/yyyy"></span>
+              <span>Cert No: <input class="field-input" id="bon-certno" style="width:100px;" placeholder="HMS/B/___"></span>
+              <span>Date: <input class="field-input" id="bon-date" style="width:140px;" placeholder="dd/mm/yyyy"></span>
             </div>
           </div>
           <div style="text-align:center;font-size:15px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--forest);margin:20px 0 24px;text-decoration:underline;">BONAFIDE CERTIFICATE</div>
@@ -616,15 +616,15 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
             <h2>Heritage Montessori and School</h2>
             <p>Garden Town, Multan · Tel: +92 336 1515260 · info@heritagemux.com</p>
             <div class="doc-ref">
-              <span>Cert No: <input class="field-input" style="width:100px;" placeholder="HMS/L/___"></span>
-              <span>Date: <input class="field-input" style="width:140px;" placeholder="dd/mm/yyyy"></span>
+              <span>Cert No: <input class="field-input" id="slc-certno" style="width:100px;" placeholder="HMS/L/___"></span>
+              <span>Date: <input class="field-input" id="slc-date" style="width:140px;" placeholder="dd/mm/yyyy"></span>
             </div>
           </div>
           <div style="text-align:center;font-size:15px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--forest);margin:20px 0 24px;text-decoration:underline;">SCHOOL LEAVING CERTIFICATE</div>
           <div class="doc-section-title">Student Details</div>
           <div class="field-row">
-            <div class="field-group"><div class="field-label">Student Name</div><input class="field-input" placeholder="Master / Miss"></div>
-            <div class="field-group"><div class="field-label">Son/Daughter of</div><input class="field-input" placeholder="Father's full name"></div>
+            <div class="field-group"><div class="field-label">Student Name</div><input class="field-input" id="slc-name" placeholder="Master / Miss"></div>
+            <div class="field-group"><div class="field-label">Son/Daughter of</div><input class="field-input" id="slc-parent" placeholder="Father's full name"></div>
           </div>
           <div class="field-row">
             <div class="field-group"><div class="field-label">Admission No.</div><input class="field-input" placeholder="HMS-____"></div>
@@ -632,10 +632,10 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
           </div>
           <div class="field-row">
             <div class="field-group"><div class="field-label">Date of Admission</div><input class="field-input" placeholder="dd/mm/yyyy"></div>
-            <div class="field-group"><div class="field-label">Date of Leaving</div><input class="field-input" placeholder="dd/mm/yyyy"></div>
+            <div class="field-group"><div class="field-label">Date of Leaving</div><input class="field-input" id="slc-lastdate" placeholder="dd/mm/yyyy"></div>
           </div>
           <div class="field-row">
-            <div class="field-group"><div class="field-label">Last Class Attended</div><select class="field-select"><option>Mont 1</option><option>Mont 2</option><option>Mont 3</option><option>Class 1</option><option>Class 2</option><option>Class 3</option><option>Class 4</option><option>Class 5</option></select></div>
+            <div class="field-group"><div class="field-label">Last Class Attended</div><select class="field-select" id="slc-class"><option>Mont 1</option><option>Mont 2</option><option>Mont 3</option><option>Class 1</option><option>Class 2</option><option>Class 3</option><option>Class 4</option><option>Class 5</option></select></div>
             <div class="field-group"><div class="field-label">Academic Year</div><input class="field-input" value="2025-2026"></div>
           </div>
           <div class="field-row">
@@ -1640,67 +1640,72 @@ window.openRecordAction = function(type, key) {
     document.getElementById('decisionNote').addEventListener('input', updateLetter);
 
   } else if(type === 'leaving') {
-    title.textContent = 'Issue School Leaving Certificate';
-    const slcWA = buildSLCWA(r);
-
-    body.innerHTML =
-      '<div style="background:var(--parchment);border-left:3px solid var(--gold);padding:12px 16px;margin-bottom:20px;font-size:12px;color:var(--muted);">' +
-        'Fill in the details below and print the School Leaving Certificate for <strong>' + (r.childName||'—') + '</strong>.' +
-      '</div>' +
-      '<div class="letter-preview">' +
-        '<h3>Heritage Montessori and School</h3>' +
-        '<div class="letter-sub">11-D Garden Town, Multan · Tel: 061-6515260 · info@heritagemux.com</div>' +
-        '<div style="text-align:center;font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--forest);margin:16px 0;text-decoration:underline;">SCHOOL LEAVING CERTIFICATE</div>' +
-        '<div style="display:flex;justify-content:space-between;margin-bottom:14px;font-size:11px;">' +
-          '<span>Ref: ' + (r.refNumber||'—') + '</span><span>' + today + '</span>' +
-        '</div>' +
-        '<p>This is to certify that <strong>' + (r.childName||'—') + '</strong>, Son/Daughter of <strong>' + (r.parentName||'—') + '</strong>, was enrolled at Heritage Montessori and School, Garden Town, Multan.</p><br>' +
-        '<table style="width:100%;border-collapse:collapse;font-size:12px;">' +
-          '<tr><td style="padding:6px 0;border-bottom:1px solid #eee;width:40%;color:var(--muted);">Class Last Attended</td><td style="padding:6px 0;border-bottom:1px solid #eee;"><strong>' + (r.className||'—') + '</strong></td></tr>' +
-          '<tr><td style="padding:6px 0;border-bottom:1px solid #eee;color:var(--muted);">Last Date of Attendance</td><td style="padding:6px 0;border-bottom:1px solid #eee;"><strong>' + (r.lastDate||'—') + '</strong></td></tr>' +
-          '<tr><td style="padding:6px 0;border-bottom:1px solid #eee;color:var(--muted);">Reason for Leaving</td><td style="padding:6px 0;border-bottom:1px solid #eee;"><strong>' + (r.leavingReason||'—') + '</strong></td></tr>' +
-          '<tr><td style="padding:6px 0;color:var(--muted);">Character</td><td style="padding:6px 0;"><input style="border:none;border-bottom:1px solid #999;width:150px;font-size:12px;outline:none;" placeholder="Excellent / Good"></td></tr>' +
-        '</table><br>' +
-        '<p>He/She has cleared all dues of the school and no dues are outstanding. We wish him/her success in future endeavours.</p><br><br>' +
-        '<p>_________________________<br>Principal / Administrator<br>Heritage Montessori and School<br><br>[School Stamp]</p>' +
-      '</div>' +
-      '<div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;">' +
-        '<button class="btn btn-primary btn-sm" onclick="window.print()">🖨 Print SLC</button>' +
-        '<a href="' + slcWA + '" target="_blank" class="btn btn-sm" style="background:#25D366;color:white;text-decoration:none;">💬 Notify Parent</a>' +
-      '</div>';
+    // Close modal, switch to Documents tab, open SLC form pre-filled
+    closeActionModal();
+    // Switch to documents tab
+    document.querySelectorAll('.panel-tab').forEach(b => b.classList.remove('active'));
+    document.getElementById('tabFeedbackBtn').classList.remove('active');
+    document.getElementById('tabDocsBtn').classList.add('active');
+    document.getElementById('tabFeedback').style.display = 'none';
+    document.getElementById('tabDocuments').style.display = 'block';
+    document.getElementById('tabRecords').style.display = 'none';
+    // Open SLC form
+    openDoc('leaving');
+    // Pre-fill fields after short delay for DOM to render
+    setTimeout(() => {
+      const today = new Date().toLocaleDateString('en-GB', {day:'2-digit', month:'2-digit', year:'numeric'});
+      const setVal = (id, val) => { const el = document.getElementById(id); if(el && val) el.value = val; };
+      setVal('slc-name', r.childName);
+      setVal('slc-parent', r.parentName);
+      setVal('slc-certno', r.refNumber);
+      setVal('slc-date', today);
+      setVal('slc-lastdate', r.lastDate);
+      // Set class dropdown
+      const classEl = document.getElementById('slc-class');
+      if(classEl && r.className) {
+        Array.from(classEl.options).forEach(opt => {
+          if(opt.value === r.className) opt.selected = true;
+        });
+      }
+      // Set reason dropdown
+      const reasonEl = document.getElementById('slc-reason');
+      if(reasonEl && r.leavingReason) {
+        Array.from(reasonEl.options).forEach(opt => {
+          if(opt.value === r.leavingReason) opt.selected = true;
+        });
+      }
+      showToast('✓ SLC form pre-filled with parent request details.');
+    }, 300);
+    return;
 
   } else if(type === 'bonafide') {
-    title.textContent = 'Issue Bonafide / Attendance Certificate';
-    const attWA = buildATTWA(r);
-    const certTitle = (r.certType||'BONAFIDE CERTIFICATE').toUpperCase();
-    const addDetails = r.additionalDetails ?
-      '<tr><td style="padding:6px 0;border-bottom:1px solid #eee;color:var(--muted);">Addressed To</td><td style="padding:6px 0;border-bottom:1px solid #eee;">' + r.additionalDetails + '</td></tr>' : '';
-
-    body.innerHTML =
-      '<div style="background:var(--parchment);border-left:3px solid var(--gold);padding:12px 16px;margin-bottom:20px;font-size:12px;color:var(--muted);">' +
-        'Fill in the details and print the ' + (r.certType||'Certificate') + ' for <strong>' + (r.childName||'—') + '</strong>.' +
-      '</div>' +
-      '<div class="letter-preview">' +
-        '<h3>Heritage Montessori and School</h3>' +
-        '<div class="letter-sub">11-D Garden Town, Multan · Tel: 061-6515260 · info@heritagemux.com</div>' +
-        '<div style="text-align:center;font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--forest);margin:16px 0;text-decoration:underline;">' + certTitle + '</div>' +
-        '<div style="display:flex;justify-content:space-between;margin-bottom:14px;font-size:11px;">' +
-          '<span>Ref: ' + (r.refNumber||'—') + '</span><span>' + today + '</span>' +
-        '</div>' +
-        '<p><strong>TO WHOM IT MAY CONCERN</strong></p><br>' +
-        '<p>This is to certify that <strong>' + (r.childName||'—') + '</strong>, Son/Daughter of <strong>' + (r.parentName||'—') + '</strong>, is a bonafide student of this institution. He/She is currently enrolled in <strong>' + (r.className||'—') + '</strong> for the Academic Year <strong>2025-2026</strong>.</p><br>' +
-        '<table style="width:100%;border-collapse:collapse;font-size:12px;">' +
-          '<tr><td style="padding:6px 0;border-bottom:1px solid #eee;width:40%;color:var(--muted);">Purpose</td><td style="padding:6px 0;border-bottom:1px solid #eee;"><strong>' + (r.purpose||'—') + '</strong></td></tr>' +
-          addDetails +
-          '<tr><td style="padding:6px 0;color:var(--muted);">Date of Issue</td><td style="padding:6px 0;"><strong>' + today + '</strong></td></tr>' +
-        '</table><br>' +
-        '<p>This certificate is issued on the request of the parent/guardian and is valid for official purposes only.</p><br><br>' +
-        '<p>_________________________<br>Principal / Administrator<br>Heritage Montessori and School<br><br>[School Stamp]</p>' +
-      '</div>' +
-      '<div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;">' +
-        '<button class="btn btn-primary btn-sm" onclick="window.print()">🖨 Print Certificate</button>' +
-        '<a href="' + attWA + '" target="_blank" class="btn btn-sm" style="background:#25D366;color:white;text-decoration:none;">💬 Notify Parent</a>' +
-      '</div>';
+    // Close modal, switch to Documents tab, open Bonafide form pre-filled
+    closeActionModal();
+    document.querySelectorAll('.panel-tab').forEach(b => b.classList.remove('active'));
+    document.getElementById('tabDocsBtn').classList.add('active');
+    document.getElementById('tabFeedback').style.display = 'none';
+    document.getElementById('tabDocuments').style.display = 'block';
+    document.getElementById('tabRecords').style.display = 'none';
+    // Open Bonafide form
+    openDoc('bonafide');
+    // Pre-fill fields
+    setTimeout(() => {
+      const today = new Date().toLocaleDateString('en-GB', {day:'2-digit', month:'2-digit', year:'numeric'});
+      const setVal = (id, val) => { const el = document.getElementById(id); if(el && val) el.value = val; };
+      setVal('bon-name', r.childName);
+      setVal('bon-certno', r.refNumber);
+      setVal('bon-date', today);
+      setVal('bon-purpose', r.purpose || '');
+      // Set class dropdown
+      const classEl = document.getElementById('bon-class');
+      if(classEl && r.className) {
+        Array.from(classEl.options).forEach(opt => {
+          if(opt.value === r.className) opt.selected = true;
+        });
+      }
+      showToast('✓ Bonafide form pre-filled with parent request details.');
+    }, 300);
+    return;
   }
 
   modal.classList.add('show');
