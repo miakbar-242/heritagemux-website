@@ -720,6 +720,7 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
 
       <div class="records-filters">
         <button class="records-filter-btn active" onclick="filterRecords('all',this)">All</button>
+        <button class="records-filter-btn" onclick="filterRecords('admission',this)">📝 Admission</button>
         <button class="records-filter-btn" onclick="filterRecords('feeConc',this)">💰 Fee Concession</button>
         <button class="records-filter-btn" onclick="filterRecords('leaving',this)">🏫 Leaving Cert</button>
         <button class="records-filter-btn" onclick="filterRecords('bonafide',this)">📜 Bonafide/Att</button>
@@ -1442,9 +1443,9 @@ let recordsFilter = 'all';
 let showArchived = false;
 
 async function loadRecords() {
-  const types = ['feeConc', 'leaving', 'bonafide'];
-  const typeLabels = { feeConc:'Fee Concession', leaving:'School Leaving Cert', bonafide:'Bonafide/Attendance' };
-  const typeIcons = { feeConc:'💰', leaving:'🏫', bonafide:'📜' };
+  const types = ['admission', 'feeConc', 'leaving', 'bonafide'];
+  const typeLabels = { admission:'Admission Form', feeConc:'Fee Concession', leaving:'School Leaving Cert', bonafide:'Bonafide/Attendance' };
+  const typeIcons = { admission:'📝', feeConc:'💰', leaving:'🏫', bonafide:'📜' };
   allRecords = [];
 
   for(const type of types) {
@@ -1490,7 +1491,7 @@ function renderRecords() {
     const statusLabel = (r.status||'pending').charAt(0).toUpperCase() + (r.status||'pending').slice(1);
     const safeKey = r._key;
 
-    const actionLabel = r._type==='feeConc' ? '📋 Process Decision' : r._type==='leaving' ? '📄 Issue SLC' : '📜 Issue Certificate';
+    const actionLabel = r._type==='admission' ? '📝 View Full Application' : r._type==='feeConc' ? '📋 Process Decision' : r._type==='leaving' ? '📄 Issue SLC' : '📜 Issue Certificate';
 
     return `<div class="record-card" id="rec-${safeKey}">
       <div class="record-header" onclick="toggleRecord('${safeKey}')">
@@ -1523,6 +1524,23 @@ function renderRecords() {
           ${r.summerReason ? `<div class="record-detail" style="grid-column:1/-1"><span class="record-detail-label">Reason</span><span class="record-detail-value">${r.summerReason}</span></div>` : ''}
           ${r.concessionReason ? `<div class="record-detail" style="grid-column:1/-1"><span class="record-detail-label">Concession Reason</span><span class="record-detail-value">${r.concessionReason}</span></div>` : ''}
           ${r.leavingDetails ? `<div class="record-detail" style="grid-column:1/-1"><span class="record-detail-label">Additional Details</span><span class="record-detail-value">${r.leavingDetails}</span></div>` : ''}
+          ${r.dob ? `<div class="record-detail"><span class="record-detail-label">Date of Birth</span><span class="record-detail-value">${r.dob}</span></div>` : ''}
+          ${r.gender ? `<div class="record-detail"><span class="record-detail-label">Gender</span><span class="record-detail-value">${r.gender}</span></div>` : ''}
+          ${r.classApplied ? `<div class="record-detail"><span class="record-detail-label">Class Applied</span><span class="record-detail-value">${r.classApplied}</span></div>` : ''}
+          ${r.previousSchool ? `<div class="record-detail" style="grid-column:1/-1"><span class="record-detail-label">Previous School</span><span class="record-detail-value">${r.previousSchool}</span></div>` : ''}
+          ${r.motherName ? `<div class="record-detail"><span class="record-detail-label">Mother's Name</span><span class="record-detail-value">${r.motherName}</span></div>` : ''}
+          ${r.motherContact ? `<div class="record-detail"><span class="record-detail-label">Mother's Contact</span><span class="record-detail-value">${r.motherContact}</span></div>` : ''}
+          ${r.motherCNIC ? `<div class="record-detail"><span class="record-detail-label">Mother's CNIC</span><span class="record-detail-value">${r.motherCNIC}</span></div>` : ''}
+          ${r.motherAddress ? `<div class="record-detail" style="grid-column:1/-1"><span class="record-detail-label">Address</span><span class="record-detail-value">${r.motherAddress}</span></div>` : ''}
+          ${r.motherOccupation ? `<div class="record-detail"><span class="record-detail-label">Mother's Occupation</span><span class="record-detail-value">${r.motherOccupation}</span></div>` : ''}
+          ${r.fatherName ? `<div class="record-detail"><span class="record-detail-label">Father's Name</span><span class="record-detail-value">${r.fatherName}</span></div>` : ''}
+          ${r.fatherContact ? `<div class="record-detail"><span class="record-detail-label">Father's Contact</span><span class="record-detail-value">${r.fatherContact}</span></div>` : ''}
+          ${r.fatherCNIC ? `<div class="record-detail"><span class="record-detail-label">Father's CNIC</span><span class="record-detail-value">${r.fatherCNIC}</span></div>` : ''}
+          ${r.fatherOccupation ? `<div class="record-detail"><span class="record-detail-label">Father's Occupation</span><span class="record-detail-value">${r.fatherOccupation}</span></div>` : ''}
+          ${r.emergency1Name ? `<div class="record-detail"><span class="record-detail-label">Emergency Contact 1</span><span class="record-detail-value">${r.emergency1Name} (${r.emergency1Relation||''}) — ${r.emergency1Contact||''}</span></div>` : ''}
+          ${r.emergency2Name ? `<div class="record-detail"><span class="record-detail-label">Emergency Contact 2</span><span class="record-detail-value">${r.emergency2Name} (${r.emergency2Relation||''}) — ${r.emergency2Contact||''}</span></div>` : ''}
+          ${r.additionalInfo ? `<div class="record-detail" style="grid-column:1/-1"><span class="record-detail-label">Additional Info</span><span class="record-detail-value">${r.additionalInfo}</span></div>` : ''}
+          ${r.hearAboutUs ? `<div class="record-detail"><span class="record-detail-label">Heard About Us</span><span class="record-detail-value">${r.hearAboutUs}</span></div>` : ''}
         </div>
         <div class="record-actions">
           <button class="btn btn-primary btn-sm" onclick="openRecordAction('${r._type}','${safeKey}')">
@@ -1601,7 +1619,57 @@ window.openRecordAction = function(type, key) {
   const today = new Date().toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'});
   const r = record;
 
-  if(type === 'feeConc') {
+  if(type === 'admission') {
+    title.textContent = 'Admission Application — ' + (r.childName||'') + ' (' + (r.classApplied||r.className||'') + ')';
+    const today = new Date().toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'});
+    const waNum = r.motherContact ? '92' + r.motherContact.replace(/\D/g,'').replace(/^0/,'') : WA_SCHOOL;
+    const waMsg = encodeURIComponent(
+      'Assalam o Alaikum ' + (r.motherName||'') + ',\n\n' +
+      'Your child\'s admission application (Ref: ' + (r.refNumber||'') + ') for ' + (r.classApplied||'') + ' has been received.\n\n' +
+      'The school will contact you shortly to confirm the next steps.\n\n' +
+      'JazakAllah Khairan,\nHeritage Montessori & School'
+    );
+    body.innerHTML =
+      '<div style="background:var(--parchment);border-left:3px solid var(--gold);padding:12px 16px;margin-bottom:20px;font-size:12px;color:var(--muted);">' +
+        'Full admission application for <strong>' + (r.childName||'—') + '</strong> — Ref: <strong>' + (r.refNumber||'—') + '</strong>' +
+      '</div>' +
+      '<div class="letter-preview">' +
+        '<h3>Heritage Montessori and School</h3>' +
+        '<div class="letter-sub">Admission Application — Academic Year 2026–27</div>' +
+        '<div style="display:flex;justify-content:space-between;margin-bottom:14px;font-size:11px;color:var(--muted);">' +
+          '<span>Ref: ' + (r.refNumber||'—') + '</span><span>Submitted: ' + (r.submittedAt ? new Date(r.submittedAt).toLocaleDateString('en-GB') : today) + '</span>' +
+        '</div>' +
+        '<table style="width:100%;border-collapse:collapse;font-size:12px;">' +
+          '<tr style="background:#f2ece0;"><td colspan="2" style="padding:6px 10px;font-weight:600;color:#2d4a2d;letter-spacing:1px;text-transform:uppercase;font-size:10px;">Student Details</td></tr>' +
+          '<tr><td style="padding:6px 10px;width:35%;color:var(--muted);border-bottom:1px solid #eee;">Full Name</td><td style="padding:6px 10px;border-bottom:1px solid #eee;font-weight:600;">' + (r.childName||'—') + '</td></tr>' +
+          '<tr><td style="padding:6px 10px;color:var(--muted);border-bottom:1px solid #eee;">Date of Birth</td><td style="padding:6px 10px;border-bottom:1px solid #eee;">' + (r.dob||'—') + '</td></tr>' +
+          '<tr><td style="padding:6px 10px;color:var(--muted);border-bottom:1px solid #eee;">Gender</td><td style="padding:6px 10px;border-bottom:1px solid #eee;">' + (r.gender||'—') + '</td></tr>' +
+          '<tr><td style="padding:6px 10px;color:var(--muted);border-bottom:1px solid #eee;">Class Applied</td><td style="padding:6px 10px;border-bottom:1px solid #eee;font-weight:600;">' + (r.classApplied||'—') + '</td></tr>' +
+          '<tr><td style="padding:6px 10px;color:var(--muted);border-bottom:1px solid #eee;">Previous School</td><td style="padding:6px 10px;border-bottom:1px solid #eee;">' + (r.previousSchool||'—') + '</td></tr>' +
+          '<tr style="background:#f2ece0;"><td colspan="2" style="padding:6px 10px;font-weight:600;color:#2d4a2d;letter-spacing:1px;text-transform:uppercase;font-size:10px;margin-top:8px;">Mother / Guardian</td></tr>' +
+          '<tr><td style="padding:6px 10px;color:var(--muted);border-bottom:1px solid #eee;">Name</td><td style="padding:6px 10px;border-bottom:1px solid #eee;">' + (r.motherName||'—') + '</td></tr>' +
+          '<tr><td style="padding:6px 10px;color:var(--muted);border-bottom:1px solid #eee;">Contact</td><td style="padding:6px 10px;border-bottom:1px solid #eee;">' + (r.motherContact||'—') + '</td></tr>' +
+          '<tr><td style="padding:6px 10px;color:var(--muted);border-bottom:1px solid #eee;">CNIC</td><td style="padding:6px 10px;border-bottom:1px solid #eee;">' + (r.motherCNIC||'—') + '</td></tr>' +
+          '<tr><td style="padding:6px 10px;color:var(--muted);border-bottom:1px solid #eee;">Address</td><td style="padding:6px 10px;border-bottom:1px solid #eee;">' + (r.motherAddress||'—') + '</td></tr>' +
+          '<tr><td style="padding:6px 10px;color:var(--muted);border-bottom:1px solid #eee;">Occupation</td><td style="padding:6px 10px;border-bottom:1px solid #eee;">' + (r.motherOccupation||'—') + '</td></tr>' +
+          (r.fatherName ? '<tr style="background:#f2ece0;"><td colspan="2" style="padding:6px 10px;font-weight:600;color:#2d4a2d;letter-spacing:1px;text-transform:uppercase;font-size:10px;">Father / Second Guardian</td></tr>' +
+          '<tr><td style="padding:6px 10px;color:var(--muted);border-bottom:1px solid #eee;">Name</td><td style="padding:6px 10px;border-bottom:1px solid #eee;">' + (r.fatherName||'—') + '</td></tr>' +
+          '<tr><td style="padding:6px 10px;color:var(--muted);border-bottom:1px solid #eee;">Contact</td><td style="padding:6px 10px;border-bottom:1px solid #eee;">' + (r.fatherContact||'—') + '</td></tr>' +
+          '<tr><td style="padding:6px 10px;color:var(--muted);border-bottom:1px solid #eee;">CNIC</td><td style="padding:6px 10px;border-bottom:1px solid #eee;">' + (r.fatherCNIC||'—') + '</td></tr>' +
+          '<tr><td style="padding:6px 10px;color:var(--muted);border-bottom:1px solid #eee;">Occupation</td><td style="padding:6px 10px;border-bottom:1px solid #eee;">' + (r.fatherOccupation||'—') + '</td></tr>' : '') +
+          (r.emergency1Name ? '<tr style="background:#f2ece0;"><td colspan="2" style="padding:6px 10px;font-weight:600;color:#2d4a2d;letter-spacing:1px;text-transform:uppercase;font-size:10px;">Emergency Contacts</td></tr>' +
+          '<tr><td style="padding:6px 10px;color:var(--muted);border-bottom:1px solid #eee;">Contact 1</td><td style="padding:6px 10px;border-bottom:1px solid #eee;">' + (r.emergency1Name||'') + ' (' + (r.emergency1Relation||'') + ') — ' + (r.emergency1Contact||'') + '</td></tr>' : '') +
+          (r.emergency2Name ? '<tr><td style="padding:6px 10px;color:var(--muted);border-bottom:1px solid #eee;">Contact 2</td><td style="padding:6px 10px;border-bottom:1px solid #eee;">' + (r.emergency2Name||'') + ' (' + (r.emergency2Relation||'') + ') — ' + (r.emergency2Contact||'') + '</td></tr>' : '') +
+          (r.additionalInfo ? '<tr style="background:#f2ece0;"><td colspan="2" style="padding:6px 10px;font-weight:600;color:#2d4a2d;letter-spacing:1px;text-transform:uppercase;font-size:10px;">Additional Information</td></tr>' +
+          '<tr><td colspan="2" style="padding:6px 10px;border-bottom:1px solid #eee;">' + r.additionalInfo + '</td></tr>' : '') +
+        '</table>' +
+      '</div>' +
+      '<div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;">' +
+        '<button class="btn btn-primary btn-sm" onclick="window.print()">🖨 Print Application</button>' +
+        '<a href="https://wa.me/' + waNum + '?text=' + waMsg + '" target="_blank" class="btn btn-sm" style="background:#25D366;color:white;text-decoration:none;">💬 Notify Parent</a>' +
+      '</div>';
+
+  } else if(type === 'feeConc') {
     title.textContent = 'Fee Concession — Decision Letter';
     const reqType = r.requestType === 'summer' ? 'Summer Fee Plan Change (Standard to Monthly)' : 'Regular Fee Concession';
     const submDate = r.submittedAt ? new Date(r.submittedAt).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}) : today;
