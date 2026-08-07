@@ -209,6 +209,15 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
 .btn-qr { background:transparent; color:rgba(255,255,255,0.75); border:1.5px solid rgba(255,255,255,0.25); font-family:'Jost',sans-serif; font-size:9.5px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; padding:5px 12px; border-radius:2px; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:6px; transition:all 0.2s; }
 .btn-qr:hover { background:rgba(255,255,255,0.1); border-color:var(--gold); color:var(--gold); }
 
+/* ── CATEGORY BUTTONS ── */
+.records-cat-btn { padding:7px 14px; font-family:'Jost',sans-serif; font-size:10.5px; font-weight:500; letter-spacing:1px; text-transform:uppercase; border:1.5px solid var(--line); background:var(--cream); color:var(--muted); cursor:pointer; border-radius:2px; transition:all 0.2s; display:inline-flex; align-items:center; gap:6px; }
+.records-cat-btn:hover { border-color:var(--forest); color:var(--forest); }
+.records-cat-btn.active { background:var(--forest); color:white; border-color:var(--forest); }
+.records-cat-btn.has-new { border-color:var(--gold); }
+.cat-badge { background:var(--line); color:var(--muted); font-size:10px; font-weight:600; padding:1px 7px; border-radius:10px; min-width:20px; text-align:center; }
+.records-cat-btn.active .cat-badge { background:rgba(255,255,255,0.25); color:white; }
+.records-cat-btn.has-new .cat-badge { background:var(--gold); color:var(--forest); }
+
 /* ── RECORDS TAB ── */
 .records-panel { background:var(--cream); padding:28px 32px; min-height:400px; display:none; }
 .records-panel.active { display:block; }
@@ -426,6 +435,25 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
         <option value="">All Months</option>
       </select>
       <button class="btn btn-outline btn-sm" onclick="resetFilters()" style="white-space:nowrap;">✕ Reset</button>
+      <!-- FEEDBACK CATEGORY BUTTONS -->
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+        <button class="records-cat-btn active" id="fcat-all" onclick="setFeedbackCat('all',this)">
+          All <span class="cat-badge" id="fcatbadge-all">0</span>
+        </button>
+        <button class="records-cat-btn" id="fcat-new" onclick="setFeedbackCat('new',this)" style="border-color:var(--gold);">
+          📦 New <span class="cat-badge" id="fcatbadge-new" style="background:var(--gold);color:var(--forest);">0</span>
+        </button>
+        <button class="records-cat-btn" id="fcat-pending" onclick="setFeedbackCat('pending',this)">
+          ⏳ Pending <span class="cat-badge" id="fcatbadge-pending">0</span>
+        </button>
+        <button class="records-cat-btn" id="fcat-responded" onclick="setFeedbackCat('responded',this)">
+          ✓ Responded <span class="cat-badge" id="fcatbadge-responded">0</span>
+        </button>
+        <button class="records-cat-btn" id="fcat-kept" onclick="setFeedbackCat('kept',this)">
+          📌 Kept <span class="cat-badge" id="fcatbadge-kept">0</span>
+        </button>
+      </div>
+
       <div class="filter-btns">
         <button class="filter-btn active" onclick="setFilter('all',this)">All <span class="filter-count" id="fc-all">0</span></button>
         <button class="filter-btn" onclick="setFilter('new',this)">New <span class="filter-count" id="fc-new">0</span></button>
@@ -742,14 +770,31 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
         <span class="sub-count" id="recordsCount">Loading…</span>
       </div>
 
+      <!-- CATEGORY BUTTONS -->
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+        <button class="records-cat-btn active" id="cat-all" onclick="setCatFilter('all',this)">
+          All <span class="cat-badge" id="catbadge-all">0</span>
+        </button>
+        <button class="records-cat-btn" id="cat-admission" onclick="setCatFilter('admission',this)">
+          📝 Admission <span class="cat-badge" id="catbadge-admission">0</span>
+        </button>
+        <button class="records-cat-btn" id="cat-feeConc" onclick="setCatFilter('feeConc',this)">
+          💰 Fee Concession <span class="cat-badge" id="catbadge-feeConc">0</span>
+        </button>
+        <button class="records-cat-btn" id="cat-leaving" onclick="setCatFilter('leaving',this)">
+          🏫 School Leaving <span class="cat-badge" id="catbadge-leaving">0</span>
+        </button>
+        <button class="records-cat-btn" id="cat-bonafide" onclick="setCatFilter('bonafide',this)">
+          📜 Bonafide/Att <span class="cat-badge" id="catbadge-bonafide">0</span>
+        </button>
+      </div>
+
+      <!-- STATUS FILTERS -->
       <div class="records-filters">
         <button class="records-filter-btn active" onclick="filterRecords('all',this)">All</button>
-        <button class="records-filter-btn" onclick="filterRecords('admission',this)">📝 Admission</button>
-        <button class="records-filter-btn" onclick="filterRecords('feeConc',this)">💰 Fee Concession</button>
-        <button class="records-filter-btn" onclick="filterRecords('leaving',this)">🏫 Leaving Cert</button>
-        <button class="records-filter-btn" onclick="filterRecords('bonafide',this)">📜 Bonafide/Att</button>
         <button class="records-filter-btn" onclick="filterRecords('pending',this)">⏳ Pending</button>
         <button class="records-filter-btn" onclick="filterRecords('processing',this)">🔄 Processing</button>
+        <button class="records-filter-btn" onclick="filterRecords('completed',this)">✓ Completed</button>
         <button class="show-archived-btn" id="showArchivedBtn" onclick="toggleArchived()">Show Completed</button>
       </div>
 
@@ -1492,12 +1537,33 @@ async function loadRecords() {
 
 function renderRecords() {
   const list = document.getElementById('recordsList');
+
+  // Update category badges
+  const cats = ['all','admission','feeConc','leaving','bonafide'];
+  cats.forEach(cat => {
+    const el = document.getElementById('catbadge-' + cat);
+    if(!el) return;
+    const count = cat === 'all'
+      ? allRecords.filter(r => !(!showArchived && r.status==='completed')).length
+      : allRecords.filter(r => r._type === cat && !(!showArchived && r.status==='completed')).length;
+    el.textContent = count;
+    const btn = document.getElementById('cat-' + cat);
+    if(btn) {
+      const hasPending = allRecords.filter(r => (cat==='all'||r._type===cat) && r.status==='pending').length > 0;
+      btn.classList.toggle('has-new', hasPending && !btn.classList.contains('active'));
+    }
+  });
+
   let filtered = allRecords.filter(r => {
     if(!showArchived && r.status === 'completed') return false;
+    // Apply category filter
+    if(recordsCatFilter !== 'all' && r._type !== recordsCatFilter) return false;
+    // Apply status filter
     if(recordsFilter === 'all') return true;
     if(recordsFilter === 'pending') return r.status === 'pending';
     if(recordsFilter === 'processing') return r.status === 'processing';
-    return r._type === recordsFilter;
+    if(recordsFilter === 'completed') return r.status === 'completed';
+    return true;
   });
 
   document.getElementById('recordsCount').textContent =
@@ -1541,6 +1607,9 @@ function renderRecords() {
           ${r.concessionAmount ? `<div class="record-detail"><span class="record-detail-label">Concession Requested</span><span class="record-detail-value">${r.concessionAmount}</span></div>` : ''}
           ${r.leavingReason ? `<div class="record-detail"><span class="record-detail-label">Reason for Leaving</span><span class="record-detail-value">${r.leavingReason}</span></div>` : ''}
           ${r.lastDate ? `<div class="record-detail"><span class="record-detail-label">Last Date</span><span class="record-detail-value">${r.lastDate}</span></div>` : ''}
+          ${r.dateOfAdmission ? `<div class="record-detail"><span class="record-detail-label">Date of Admission</span><span class="record-detail-value">${r.dateOfAdmission}</span></div>` : ''}
+          ${r.newSchool ? `<div class="record-detail"><span class="record-detail-label">New School</span><span class="record-detail-value">${r.newSchool}</span></div>` : ''}
+          ${r.whatsappNumber ? `<div class="record-detail"><span class="record-detail-label">WhatsApp</span><span class="record-detail-value">${r.whatsappNumber}</span></div>` : ''}
           ${r.certType ? `<div class="record-detail"><span class="record-detail-label">Certificate Type</span><span class="record-detail-value">${r.certType}</span></div>` : ''}
           ${r.purpose ? `<div class="record-detail"><span class="record-detail-label">Purpose</span><span class="record-detail-value">${r.purpose}</span></div>` : ''}
           ${r.requiredBy ? `<div class="record-detail"><span class="record-detail-label">Required By</span><span class="record-detail-value">${r.requiredBy}</span></div>` : ''}
@@ -1595,6 +1664,46 @@ window.updateRecordStatus = async function(type, key, status) {
   } catch(e) {
     showToast('Error updating status.', 4000);
   }
+};
+
+// ── CATEGORY FILTER STATE ──
+let recordsCatFilter = 'all';
+let feedbackCatFilter = 'all';
+
+window.setCatFilter = function(cat, btn) {
+  recordsCatFilter = cat;
+  document.querySelectorAll('[id^="cat-"]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderRecords();
+};
+
+window.setFeedbackCat = function(cat, btn) {
+  feedbackCatFilter = cat;
+  document.querySelectorAll('[id^="fcat-"]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  // Map feedback cat to existing filter
+  const mapToFilter = { all:'all', new:'new', pending:'pending', responded:'responded', kept:'kept' };
+  currentFilter = mapToFilter[cat] || 'all';
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  const matchingBtn = document.querySelector('.filter-btn[onclick*="' + currentFilter + '"]');
+  if(matchingBtn) matchingBtn.classList.add('active');
+  // Update feedback category badges
+  const seen = getSeenIds();
+  const fcats = {
+    all: allSubs.length,
+    new: allSubs.filter(s => !seen.has(s.id)).length,
+    pending: allSubs.filter(s => !s.schoolResponse).length,
+    responded: allSubs.filter(s => !!s.schoolResponse).length,
+    kept: allSubs.filter(s => !!s.kept).length
+  };
+  Object.entries(fcats).forEach(([cat, count]) => {
+    const el = document.getElementById('fcatbadge-' + cat);
+    if(el) el.textContent = count;
+    const btn = document.getElementById('fcat-' + cat);
+    if(btn) btn.classList.toggle('has-new', cat === 'new' && count > 0 && !btn.classList.contains('active'));
+  });
+
+  renderFiltered();
 };
 
 window.filterRecords = function(filter, btn) {
@@ -1852,6 +1961,9 @@ window.openRecordAction = function(type, key) {
           if(opt.value === r.className) opt.selected = true;
         });
       }
+      // Pre-fill date of admission
+      const slcAdmDate = document.querySelectorAll('#docLeaving input[placeholder="dd/mm/yyyy"]')[1];
+      if(slcAdmDate && r.dateOfAdmission) slcAdmDate.value = r.dateOfAdmission;
       // Set reason dropdown
       const reasonEl = document.getElementById('slc-reason');
       if(reasonEl && r.leavingReason) {
