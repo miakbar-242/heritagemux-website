@@ -1710,6 +1710,11 @@ window.filterRecords = function(filter, btn) {
   recordsFilter = filter;
   document.querySelectorAll('.records-filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  // Auto show completed when completed filter selected
+  if(filter === 'completed') {
+    showArchived = true;
+    document.getElementById('showArchivedBtn').textContent = 'Hide Completed';
+  }
   renderRecords();
 };
 
