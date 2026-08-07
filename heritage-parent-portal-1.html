@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heritage Montessori · Parent Admission Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --forest:#2d4a2d;--forest-dark:#1e3320;--gold:#b8962e;--gold-light:#d4ae4a;
+  --cream:#faf7f2;--parchment:#f2ece0;--tan:#e8dfc8;--line:#d9cebc;
+  --ink:#1e1e1e;--muted:#6e6456;--sage:#5a7a5a;--error:#c0392b;--success:#2d7a4a;
+}
+body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;padding:30px 16px 60px;color:var(--ink);}
+.portal{max-width:860px;margin:0 auto;}
+
+/* BANNER */
+.banner{background:var(--forest);color:white;padding:18px 32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.banner h1{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;}
+.banner p{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-top:2px;}
+.banner-badge{background:var(--gold);color:var(--forest);font-size:9.5px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:5px 12px;border-radius:2px;}
+
+/* PIN SCREEN */
+.pin-screen{background:var(--cream);padding:52px 40px;box-shadow:0 8px 48px rgba(0,0,0,0.15);text-align:center;}
+.pin-screen h2{font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--forest);margin-bottom:8px;}
+.pin-screen p{font-size:12.5px;color:var(--muted);margin-bottom:28px;line-height:1.6;max-width:400px;margin-left:auto;margin-right:auto;}
+.pin-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:10px;}
+.pin-input{border:1.5px solid var(--line);background:var(--parchment);font-family:'Jost',sans-serif;font-size:22px;font-weight:500;letter-spacing:8px;text-align:center;padding:10px 18px;width:180px;outline:none;color:var(--forest);}
+.pin-input:focus{border-color:var(--gold);}
+.pin-error{color:var(--error);font-size:11.5px;margin-top:10px;display:none;}
+.pin-hint{font-size:10.5px;color:var(--muted);margin-top:14px;font-style:italic;}
+
+/* BUTTONS */
+.btn{padding:11px 26px;font-family:'Jost',sans-serif;font-size:11.5px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border:none;transition:background 0.2s;border-radius:2px;}
+.btn-primary{background:var(--forest);color:white;}
+.btn-primary:hover{background:var(--gold);color:var(--forest);}
+.btn-success{background:var(--success);color:white;}
+.btn-success:hover{opacity:0.85;}
+.btn-outline{background:transparent;color:var(--muted);border:1.5px solid var(--line);}
+.btn-outline:hover{border-color:var(--muted);color:var(--ink);}
+.btn-wa{background:#25D366;color:white;}
+.btn-wa:hover{opacity:0.85;}
+.btn-print{background:var(--parchment);color:var(--forest);border:1.5px solid var(--gold);}
+.btn-print:hover{background:var(--gold);color:var(--forest);}
+.btn-sm{padding:7px 16px;font-size:10.5px;letter-spacing:1px;}
+
+/* MAIN CONTENT */
+.main-content{display:none;}
+
+/* TABS */
+.portal-tabs{background:var(--parchment);border-bottom:2px solid var(--line);display:flex;gap:0;}
+.portal-tab{padding:13px 26px;font-family:'Jost',sans-serif;font-size:10.5px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);cursor:pointer;border:none;border-bottom:2.5px solid transparent;margin-bottom:-2px;background:none;transition:all 0.2s;display:flex;align-items:center;gap:7px;}
+.portal-tab:hover{color:var(--forest);}
+.portal-tab.active{color:var(--forest);border-bottom-color:var(--gold);font-weight:600;}
+
+/* RULES TAB */
+.rules-section{background:var(--cream);padding:32px;box-shadow:0 4px 24px rgba(0,0,0,0.08);}
+.rules-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid var(--gold);}
+.rules-header h2{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--forest);}
+.rules-body{max-width:680px;}
+.rules-body h3{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:700;color:var(--forest);margin:22px 0 8px;padding-bottom:4px;border-bottom:1px dashed var(--line);}
+.rules-body h3:first-child{margin-top:0;}
+.rules-body p{font-size:12.5px;color:var(--ink);line-height:1.8;margin-bottom:8px;}
+.rules-body ol,.rules-body ul{padding-left:20px;margin-bottom:10px;}
+.rules-body li{font-size:12.5px;color:var(--ink);line-height:1.8;margin-bottom:4px;}
+.rules-body strong{color:var(--forest);}
+.rules-body em{color:var(--muted);}
+.rules-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:12px;}
+.rules-table th{background:var(--forest);color:white;padding:8px 12px;text-align:left;font-weight:500;font-size:11px;letter-spacing:0.5px;}
+.rules-table td{padding:8px 12px;border-bottom:1px solid var(--tan);color:var(--ink);}
+.rules-table tr:nth-child(even) td{background:var(--parchment);}
+.rule-note{background:var(--parchment);border-left:3px solid var(--gold);padding:10px 14px;margin:12px 0;font-size:12px;color:var(--muted);line-height:1.7;}
+.rule-note strong{color:var(--forest);}
+
+/* FORM TAB */
+.form-section{background:var(--cream);padding:32px;box-shadow:0 4px 24px rgba(0,0,0,0.08);}
+.form-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:6px;}
+.form-header h2{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--forest);}
+.form-intro{font-size:12px;color:var(--muted);margin-bottom:24px;line-height:1.7;background:var(--parchment);border-left:3px solid var(--gold);padding:12px 16px;}
+.form-intro strong{color:var(--forest);}
+.form-section-title{font-size:9px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--forest);margin:24px 0 14px;padding-bottom:5px;border-bottom:1.5px solid var(--gold);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.form-row.full{grid-template-columns:1fr;}
+.form-row.three{grid-template-columns:1fr 1fr 1fr;}
+.form-group{display:flex;flex-direction:column;gap:4px;}
+.form-group label{font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--sage);}
+.form-group label .req{color:var(--error);}
+.form-group input,.form-group select,.form-group textarea{border:none;border-bottom:1.5px solid var(--line);background:transparent;font-family:'Jost',sans-serif;font-size:13px;color:var(--ink);padding:7px 0;outline:none;width:100%;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-bottom-color:var(--gold);}
+.form-group textarea{resize:vertical;min-height:72px;border:1.5px solid var(--line);padding:8px;margin-top:2px;background:var(--parchment);}
+.form-group textarea:focus{border-color:var(--gold);}
+.form-group select{cursor:pointer;}
+.gender-row{display:flex;gap:20px;margin-top:6px;}
+.gender-opt{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink);cursor:pointer;}
+.gender-opt input{width:16px;height:16px;accent-color:var(--forest);cursor:pointer;}
+
+/* CHECKBOX ITEMS */
+.check-item{display:flex;align-items:flex-start;gap:12px;padding:10px 14px;background:var(--parchment);border:1px solid var(--line);margin-bottom:8px;cursor:pointer;}
+.check-item input[type=checkbox]{width:18px;height:18px;accent-color:var(--forest);cursor:pointer;flex-shrink:0;margin-top:2px;}
+.check-item label{font-size:12px;color:var(--ink);line-height:1.6;cursor:pointer;}
+.check-item label strong{color:var(--forest);}
+
+/* PHOTO PLACEHOLDER BOX */
+.photo-placeholder{border:2px dashed var(--line);background:var(--parchment);padding:24px;text-align:center;margin:8px 0;}
+.photo-placeholder .photo-icon{font-size:32px;opacity:0.3;margin-bottom:8px;}
+.photo-placeholder p{font-size:11px;color:var(--muted);line-height:1.6;}
+.photo-placeholder strong{color:var(--forest);}
+
+/* DOCUMENTS CHECKLIST */
+.doc-checklist{background:var(--parchment);border:1px solid var(--line);padding:14px 18px;margin-bottom:20px;}
+.doc-checklist-title{font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
+.doc-check-item{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px dashed var(--line);font-size:12px;color:var(--ink);}
+.doc-check-item:last-child{border-bottom:none;}
+.doc-check-item input[type=checkbox]{width:16px;height:16px;accent-color:var(--forest);cursor:pointer;flex-shrink:0;}
+
+/* FORM ACTIONS */
+.form-actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:28px;padding-top:20px;border-top:2px solid var(--line);}
+.form-note{font-size:10.5px;color:var(--muted);margin-top:8px;line-height:1.6;}
+.form-note strong{color:var(--forest);}
+
+/* SUCCESS MESSAGE */
+.form-success{display:none;background:#e8f5ec;border:1.5px solid #b8d4b8;padding:20px 24px;margin-top:20px;text-align:center;}
+.form-success h3{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--success);margin-bottom:6px;}
+.form-success p{font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6;}
+
+/* FOOTER */
+.portal-footer{background:var(--parchment);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;border-top:3px solid var(--gold);}
+.portal-footer span{font-size:9.5px;color:rgba(0,0,0,0.35);letter-spacing:1px;text-transform:uppercase;}
+
+/* TOAST */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--forest);color:white;padding:13px 28px;font-size:13px;font-weight:500;border-radius:2px;box-shadow:0 4px 24px rgba(0,0,0,0.25);transition:transform 0.4s ease;z-index:9999;white-space:nowrap;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+/* SPINNER */
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;margin-right:4px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* PRINT STYLES */
+@media print{
+  body{background:white!important;padding:0!important;font-size:10pt!important;}
+  .portal{max-width:100%!important;box-shadow:none!important;}
+
+  /* Hide all UI */
+  .banner,.portal-tabs,.pin-screen,.portal-footer,.toast,
+  .form-actions,.btn-print,.btn-print-all,
+  .form-header div,.form-success,
+  #tabRulesBtn,#tabFormBtn,
+  input[type=file],
+  #photoPreview,
+  .verify-box,
+  .sig-wrap,
+  .form-intro { display:none!important; }
+
+  /* Show everything */
+  .main-content{display:block!important;}
+  #tabRules{display:block!important;page-break-after:always;}
+  #tabForm{display:block!important;}
+  .rules-section,.form-section{box-shadow:none!important;padding:16px 0!important;background:white!important;}
+  .form-header{margin-bottom:16px!important;}
+  .form-header h2{font-size:16pt!important;color:#2d4a2d!important;}
+  .print-header{display:block!important;}
+
+  /* Show print photo box */
+  .print-photo-box{display:flex!important;flex-direction:column;align-items:flex-end;position:absolute;top:20px;right:20px;}
+
+  /* Form layout */
+  .form-section-title{font-size:8pt!important;color:#2d4a2d!important;border-bottom:1.5px solid #b8962e!important;padding-bottom:3px!important;margin:14px 0 8px!important;}
+  .form-row{display:grid!important;grid-template-columns:1fr 1fr!important;gap:10px!important;margin-bottom:8px!important;}
+  .form-row.full{grid-template-columns:1fr!important;}
+  .form-row.three{grid-template-columns:1fr 1fr 1fr!important;}
+  .form-group{display:flex!important;flex-direction:column!important;gap:2px!important;}
+  .form-group label{font-size:7.5pt!important;color:#5a7a5a!important;letter-spacing:1px!important;text-transform:uppercase!important;}
+  .form-group label .req{display:none!important;}
+  .form-group input,.form-group select{border:none!important;border-bottom:1px solid #999!important;background:transparent!important;font-size:11pt!important;padding:4px 0!important;-webkit-appearance:none!important;min-height:20pt!important;}
+  .form-group textarea{border:1px solid #ccc!important;background:transparent!important;font-size:10pt!important;min-height:40pt!important;padding:4px!important;}
+
+  /* Photo section */
+  .form-row:has(#childPhotoInput){display:none!important;}
+
+  /* Document checklist - show checkboxes clearly */
+  .form-group input[type=checkbox]{width:12px!important;height:12px!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+
+  /* Check items */
+  .check-item{background:white!important;border:1px solid #e0e0e0!important;padding:5px 8px!important;margin-bottom:3px!important;-webkit-print-color-adjust:exact!important;}
+  .check-item label{font-size:10pt!important;line-height:1.5!important;}
+
+  /* Gender row */
+  .gender-row{display:flex!important;gap:20px!important;}
+  .gender-opt{font-size:10pt!important;}
+
+  /* Sign row */
+  .sign-row{margin-top:36pt!important;display:grid!important;grid-template-columns:1fr 1fr 1fr!important;gap:24pt!important;}
+  .sign-box{font-size:9pt!important;color:#666!important;}
+
+  /* Proof note */
+  .proof-note{display:none!important;}
+  .form-intro{display:none!important;}
+
+  @page{size:A4;margin:15mm;}
+}
+.print-header{display:none;text-align:center;margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid #2d4a2d;}
+.print-header h2{font-family:'Cormorant Garamond',serif;font-size:20px;color:#2d4a2d;font-weight:700;}
+.print-header p{font-size:10px;color:#6e6456;margin-top:4px;letter-spacing:1px;}
+
+@media(max-width:600px){
+  .form-row,.form-row.three{grid-template-columns:1fr;}
+  .banner{padding:14px 20px;}
+  .rules-section,.form-section{padding:20px;}
+  .form-section{padding:20px;}
+}
+</style>
+</head>
+<body>
+
+<div class="portal">
+
+  <!-- BANNER -->
+  <div class="banner">
+    <div>
+      <h1>Heritage Montessori &amp; School</h1>
+      <p>Nurturing Young Minds · Est. 2007</p>
+    </div>
+    <div class="banner-badge">Parent Admission Portal</div>
+  </div>
+
+  <!-- PIN SCREEN -->
+  <div class="pin-screen" id="pinScreen">
+    <div style="font-size:44px;margin-bottom:16px;opacity:0.3;">🔐</div>
+    <h2>Welcome to the Parent Portal</h2>
+    <p>This portal is for parents who have been invited to complete the admission process. Please enter the one-time PIN provided to you by the school.</p>
+    <div class="pin-row">
+      <input class="pin-input" type="password" id="pinInput" maxlength="6" placeholder="· · · · · ·" onkeydown="if(event.key==='Enter')checkPin()">
+      <button class="btn btn-primary" onclick="checkPin()">
+        <span id="pinSpinner" style="display:none"><span class="spinner"></span></span>
+        Enter →
+      </button>
+    </div>
+    <div class="pin-error" id="pinError">⚠ Incorrect PIN. Please try again or contact the school.</div>
+    <div id="pinUsedError" class="pin-error">⚠ This PIN has already been used. Please contact the school for a new PIN.</div>
+    <div id="pinExpiredError" class="pin-error">⚠ This PIN has expired. Please contact the school for a new PIN on +92 336 1515260.</div>
+    <div class="pin-hint">Contact Heritage Montessori on +92 336 1515260 if you have not received your PIN.</div>
+  </div>
+
+  <!-- MAIN CONTENT (shown after PIN) -->
+  <div class="main-content" id="mainContent">
+
+    <!-- TABS -->
+    <div class="portal-tabs">
+      <button class="portal-tab active" id="tabRulesBtn" onclick="switchPortalTab('rules',this)">📋 School Rules</button>
+      <button class="portal-tab" id="tabFormBtn" onclick="switchPortalTab('form',this)">📝 Admission Form</button>
+    </div>
+
+    <!-- ══════════ SCHOOL RULES TAB ══════════ -->
+    <div id="tabRules" class="rules-section">
+      <div class="print-header">
+        <h2>Heritage Montessori and School</h2>
+        <p>11-D Garden Town, Multan · Tel: 061-6515260 · info.heritageschool@gmail.com</p>
+      </div>
+      <div class="rules-header">
+        <h2>📋 School Rules &amp; Procedures</h2>
+        <button class="btn btn-print btn-sm" onclick="window.print()">🖨 Print Rules</button>
+      </div>
+      <div class="rules-body">
+        <p>The following procedures have been formulated for a smooth and harmonious cooperation between the school and our <strong>respectable parents</strong>. In case of any query please call the school office.</p>
+
+        <h3>Attendance</h3>
+        <ol>
+          <li>Regular attendance by every pupil at school is encouraged. A <strong>written application</strong> is required to be submitted to the school before any planned absence, or you can inform through <strong>Remind</strong>.</li>
+          <li>Only leave applications signed by the <strong>parents/guardians</strong> will be acceptable.</li>
+          <li>Parents are requested to inform the school immediately by telephone in case of <strong>illness or any other emergency</strong>. In case of an emergency during school hours, parents will be informed by phone.</li>
+          <li>For <strong>leave of more than 7 days</strong>, parents are kindly requested to come in person to submit an application. Long absence directly affects the pupil's performance.</li>
+          <li><strong>Uninformed absence for more than 10 days</strong> will be liable to cancellation of admission. The child will be treated as a new admission and all admission dues must be paid again.</li>
+        </ol>
+
+        <h3>After School Child Collection</h3>
+        <ol>
+          <li>Children must be collected <strong>not later than 30 minutes</strong> after the school pack-away time.</li>
+          <li>Parents must inform the school if collection will be later than 30 minutes. This should not exceed 1 hour after school closing time.</li>
+        </ol>
+
+        <h3>Jewellery</h3>
+        <p>No jewellery of any kind is permissible in school premises. <strong>Simple studs/earrings are allowed for girls only.</strong></p>
+
+        <h3>Health</h3>
+        <p>Parents must inform the school immediately if the child is infected with a <strong>contagious or skin disease</strong>.</p>
+
+        <h3>Petty Cash</h3>
+        <p>Kindly refrain from giving petty cash to children as the school canteen facility does not currently exist. Staff have been instructed not to accept any cash from parents.</p>
+
+        <h3>School Dues</h3>
+        <p>School dues must be cleared <strong>within 10 days</strong> of receiving fee vouchers. Delay beyond the due date will incur late fee charges. Delay of one month or more will result in the student's name being struck off. Readmission will require payment of admission dues afresh.</p>
+
+        <h3>School Leaving</h3>
+        <p>Please inform the school office through a <strong>written application (hard copy) with at least one month's notice</strong> for the school leaving certificate. No dues will be refunded if the child has attended school for 5 days in any month.</p>
+
+        <h3>Uniform</h3>
+        <p>Students must wear proper school uniform throughout the week as per the schedule below:</p>
+        <table class="rules-table">
+          <thead><tr><th>Day</th><th>Uniform</th></tr></thead>
+          <tbody>
+            <tr><td>Monday, Tuesday, Thursday</td><td>School Uniform</td></tr>
+            <tr><td>Wednesday</td><td>Sports Uniform</td></tr>
+            <tr><td>Friday (Montessori only)</td><td>Open Day / Coloured Dress</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Cleanliness</h3>
+        <p>Kindly take care of your child's personal hygiene. Students must carry a <strong>hand sanitizer, hand towel and shoe shiner</strong> every day.</p>
+
+        <h3>Miscellaneous</h3>
+        <ul>
+          <li>Kindly arrange to cover your child's notebooks and books, and write the child's name on them.</li>
+          <li>Please respond to messages sent on Remind <strong>within one day</strong> of receiving them.</li>
+          <li>Please ask for an appointment before coming to meet the teacher — <strong>at least one week in advance</strong>.</li>
+        </ul>
+
+        <h3>Celebrations</h3>
+        <p><strong>Birthday:</strong> Parents will be informed two days in advance of the celebration date. Please send to school: 1 cake, birthday caps, and balloons. Only classmates and their respective teachers will attend.</p>
+        <p><strong>Special Occasions:</strong> Events like Term Ending, Eid Milan and others will be organised for students. Final venue will be communicated before each event.</p>
+
+        <h3>Parent-Teacher Meeting Schedule</h3>
+        <table class="rules-table">
+          <thead><tr><th>Day</th><th>Classes</th><th>Time</th></tr></thead>
+          <tbody>
+            <tr><td>Wednesday</td><td>Montessori Classes</td><td>12:45 PM – 01:30 PM</td></tr>
+            <tr><td>Thursday</td><td>Junior Classes</td><td>02:05 PM – 02:45 PM</td></tr>
+          </tbody>
+        </table>
+
+        <div class="rule-note">
+          <strong>For any query:</strong> Please call the school office at <strong>061-6515260</strong> or <strong>0321-6309939</strong>, or use Remind for clarification.
+        </div>
+      </div>
+    </div><!-- /tabRules -->
+
+    <!-- ══════════ ADMISSION FORM TAB ══════════ -->
+    <div id="tabForm" class="form-section" style="display:none;">
+      <div class="print-header">
+        <h2>Heritage Montessori and School</h2>
+        <p>11-D Garden Town, Multan · Tel: 061-6515260 · info.heritageschool@gmail.com</p>
+      </div>
+      <div class="form-header">
+        <h2>📝 Student Admission Form</h2>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn btn-print btn-sm" onclick="window.print()">🖨 Print Form</button>
+        </div>
+      </div>
+
+      <div class="form-intro">
+        <strong>Please provide the following documents at the time of admission (attach to printed form):</strong><br>
+        4 × Passport size photographs of the child &nbsp;·&nbsp; Birth Certificate or NADRA form &nbsp;·&nbsp;
+        School Leaving Certificate (if applicable) &nbsp;·&nbsp; Copies of CNIC for both parents
+      </div>
+
+      <form id="admissionForm" name="heritage-admission" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+        <input type="hidden" name="form-name" value="heritage-admission">
+        <p style="display:none"><label>Do not fill: <input name="bot-field"></label></p>
+
+        <!-- STUDENT DETAILS -->
+        <div class="form-section-title">Student Details</div>
+
+        <div class="form-row full">
+          <div class="form-group">
+            <label>Child's Full Name <span class="req">*</span> (Block Letters)</label>
+            <input type="text" name="childName" required placeholder="As per birth certificate" style="text-transform:uppercase;">
+          </div>
+        </div>
+
+        <div class="form-row three">
+          <div class="form-group">
+            <label>Date of Birth <span class="req">*</span></label>
+            <input type="date" name="dob" required>
+          </div>
+          <div class="form-group">
+            <label>Gender <span class="req">*</span></label>
+            <div class="gender-row" style="margin-top:8px;">
+              <label class="gender-opt"><input type="radio" name="gender" value="Boy" required> Boy</label>
+              <label class="gender-opt"><input type="radio" name="gender" value="Girl"> Girl</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Class Applied For <span class="req">*</span></label>
+            <select name="classApplied" required>
+              <option value="" disabled selected>Select class</option>
+              <option>Mont 1</option><option>Mont 2</option><option>Mont 3</option>
+              <option>Class 1</option><option>Class 2</option><option>Class 3</option>
+              <option>Class 4</option><option>Class 5</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Previous School Attended</label>
+            <input type="text" name="previousSchool" placeholder="Name of school and last class attended">
+          </div>
+          <div class="form-group">
+            <label>Intended Start Date</label>
+            <input type="date" name="startDate">
+          </div>
+        </div>
+
+        <div class="form-row full">
+          <div class="form-group">
+            <label>Child Resides With</label>
+            <input type="text" name="residesWith" placeholder="e.g. Both parents / Mother / Father / Guardian">
+          </div>
+        </div>
+
+        <!-- PHOTO SECTION -->
+        <div class="form-section-title">Child's Photograph</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Upload Photo (optional)</label>
+            <input type="file" name="childPhoto" id="childPhotoInput" accept="image/*" capture="environment"
+              style="border:1.5px solid var(--line);background:var(--parchment);padding:8px;font-size:12px;width:100%;"
+              onchange="previewPhoto(this)">
+            <div style="font-size:10px;color:var(--muted);margin-top:4px;">JPG or PNG · Max 5MB · Will be visible to school staff</div>
+          </div>
+          <div class="form-group" style="display:flex;flex-direction:column;align-items:center;justify-content:center;">
+            <div id="photoPreview" class="photo-placeholder" style="width:100%;min-height:120px;position:relative;">
+              <div class="photo-icon">📷</div>
+              <p style="font-size:11px;color:var(--muted);">Preview will appear here</p>
+            </div>
+          </div>
+        </div>
+        <!-- Print photo box -->
+        <div class="print-photo-box" style="display:none;">
+          <div style="border:2px dashed #999;width:100px;height:120px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#999;text-align:center;padding:8px;">
+            Paste child's photo here
+          </div>
+          <div style="font-size:9px;color:#666;margin-top:4px;">Passport size photograph</div>
+        </div>
+
+        <!-- MOTHER / GUARDIAN DETAILS -->
+        <div class="form-section-title">Mother / Guardian's Details</div>
+
+        <div class="form-row full">
+          <div class="form-group">
+            <label>Full Name <span class="req">*</span></label>
+            <input type="text" name="motherName" required placeholder="Mother or guardian's full name">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>CNIC Number <span class="req">*</span></label>
+            <input type="text" name="motherCNIC" required placeholder="xxxxx-xxxxxxx-x">
+          </div>
+          <div class="form-group">
+            <label>Contact Number <span class="req">*</span></label>
+            <input type="tel" name="motherContact" required placeholder="e.g. 0300-1234567">
+          </div>
+        </div>
+        <div class="form-row full">
+          <div class="form-group">
+            <label>Residential Address <span class="req">*</span></label>
+            <input type="text" name="motherAddress" required placeholder="Full residential address">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" name="motherEmail" placeholder="email@example.com">
+          </div>
+          <div class="form-group">
+            <label>Occupation <span class="req">*</span></label>
+            <input type="text" name="motherOccupation" required placeholder="e.g. Teacher / Doctor / Housewife">
+          </div>
+        </div>
+
+        <!-- FATHER / SECOND GUARDIAN DETAILS -->
+        <div class="form-section-title">Father / Second Guardian's Details</div>
+
+        <div class="form-row full">
+          <div class="form-group">
+            <label>Full Name <span class="req">*</span></label>
+            <input type="text" name="fatherName" required placeholder="Father or second guardian's full name">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>CNIC Number <span class="req">*</span></label>
+            <input type="text" name="fatherCNIC" required placeholder="xxxxx-xxxxxxx-x">
+          </div>
+          <div class="form-group">
+            <label>Contact Number <span class="req">*</span></label>
+            <input type="tel" name="fatherContact" required placeholder="e.g. 0300-1234567">
+          </div>
+        </div>
+        <div class="form-row full">
+          <div class="form-group">
+            <label>Residential Address</label>
+            <input type="text" name="fatherAddress" placeholder="If different from above">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" name="fatherEmail" placeholder="email@example.com">
+          </div>
+          <div class="form-group">
+            <label>Occupation <span class="req">*</span></label>
+            <input type="text" name="fatherOccupation" required placeholder="e.g. Engineer / Business">
+          </div>
+        </div>
+
+        <!-- EMERGENCY INFORMATION -->
+        <div class="form-section-title">Emergency Information</div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Family Doctor's Name</label>
+            <input type="text" name="doctorName" placeholder="Doctor's full name">
+          </div>
+          <div class="form-group">
+            <label>Doctor's Contact Number</label>
+            <input type="tel" name="doctorContact" placeholder="e.g. 0300-1234567">
+          </div>
+        </div>
+
+        <div style="font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--sage);margin-bottom:8px;">Emergency Contact 1 (other than parents)</div>
+        <div class="form-row three">
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" name="emergency1Name" placeholder="Full name">
+          </div>
+          <div class="form-group">
+            <label>Relation</label>
+            <input type="text" name="emergency1Relation" placeholder="e.g. Uncle / Aunt">
+          </div>
+          <div class="form-group">
+            <label>Contact Number</label>
+            <input type="tel" name="emergency1Contact" placeholder="0300-0000000">
+          </div>
+        </div>
+
+        <div style="font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--sage);margin-bottom:8px;margin-top:8px;">Emergency Contact 2</div>
+        <div class="form-row three">
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" name="emergency2Name" placeholder="Full name">
+          </div>
+          <div class="form-group">
+            <label>Relation</label>
+            <input type="text" name="emergency2Relation" placeholder="e.g. Uncle / Aunt">
+          </div>
+          <div class="form-group">
+            <label>Contact Number</label>
+            <input type="tel" name="emergency2Contact" placeholder="0300-0000000">
+          </div>
+        </div>
+
+        <!-- ADDITIONAL INFORMATION -->
+        <div class="form-section-title">Additional Information</div>
+
+        <div class="form-row full">
+          <div class="form-group">
+            <label>Any important information (academics, personal growth, special habits etc.)</label>
+            <textarea name="additionalInfo" placeholder="Please share anything you feel the school should know about your child…"></textarea>
+          </div>
+        </div>
+
+        <div class="form-row full">
+          <div class="form-group">
+            <label>Where did you hear about us?</label>
+            <input type="text" name="hearAboutUs" placeholder="e.g. Friend, Social media, Neighbour…">
+          </div>
+        </div>
+
+        <!-- DOCUMENTS CHECKLIST -->
+        <div class="form-section-title">Documents Submitted</div>
+        <div style="background:var(--parchment);border:1px solid var(--line);padding:14px 18px;margin-bottom:16px;">
+          <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:12px;">
+            Please tick the documents you are submitting with this form
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
+            <div style="display:flex;align-items:center;gap:10px;padding:9px 10px;border-bottom:1px solid var(--line);border-right:1px solid var(--line);">
+              <input type="checkbox" name="doc_photo" id="doc_photo" style="width:18px;height:18px;accent-color:var(--forest);cursor:pointer;flex-shrink:0;">
+              <label for="doc_photo" style="font-size:12px;cursor:pointer;">4 × Passport size photographs</label>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:9px 10px;border-bottom:1px solid var(--line);">
+              <input type="checkbox" name="doc_birth" id="doc_birth" style="width:18px;height:18px;accent-color:var(--forest);cursor:pointer;flex-shrink:0;">
+              <label for="doc_birth" style="font-size:12px;cursor:pointer;">Birth Certificate / NADRA Form</label>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:9px 10px;border-bottom:1px solid var(--line);border-right:1px solid var(--line);">
+              <input type="checkbox" name="doc_cnic_mother" id="doc_cnic_mother" style="width:18px;height:18px;accent-color:var(--forest);cursor:pointer;flex-shrink:0;">
+              <label for="doc_cnic_mother" style="font-size:12px;cursor:pointer;">Copy of Mother's CNIC</label>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:9px 10px;border-bottom:1px solid var(--line);">
+              <input type="checkbox" name="doc_cnic_father" id="doc_cnic_father" style="width:18px;height:18px;accent-color:var(--forest);cursor:pointer;flex-shrink:0;">
+              <label for="doc_cnic_father" style="font-size:12px;cursor:pointer;">Copy of Father's CNIC</label>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:9px 10px;border-right:1px solid var(--line);">
+              <input type="checkbox" name="doc_leaving" id="doc_leaving" style="width:18px;height:18px;accent-color:var(--forest);cursor:pointer;flex-shrink:0;">
+              <label for="doc_leaving" style="font-size:12px;cursor:pointer;">School Leaving Certificate</label>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:9px 10px;">
+              <input type="checkbox" name="doc_other" id="doc_other" style="width:18px;height:18px;accent-color:var(--forest);cursor:pointer;flex-shrink:0;">
+              <label for="doc_other" style="font-size:12px;cursor:pointer;">Other: <input type="text" name="doc_other_text" placeholder="Specify…" style="border:none;border-bottom:1px solid var(--line);font-size:11px;width:100px;outline:none;"></label>
+            </div>
+          </div>
+          <div style="margin-top:10px;font-size:10.5px;color:var(--muted);font-style:italic;">
+            ℹ️ Unticked items must be submitted to the school office before the admission can be processed.
+          </div>
+        </div>
+
+        <!-- DECLARATION -->
+        <div class="form-section-title">Declaration &amp; Consent</div>
+
+        <div class="check-item">
+          <input type="checkbox" id="decl1" name="declaration1" required>
+          <label for="decl1"><strong>I confirm</strong> that the information provided in this form is correct to the best of my knowledge. I understand and agree to abide by all school rules including discipline, payment of school dues and refund policies.</label>
+        </div>
+
+        <div class="check-item">
+          <input type="checkbox" id="decl2" name="declaration2" required>
+          <label for="decl2"><strong>I agree</strong> to indemnify, defend and hold harmless Heritage Montessori and School, its faculty, directors and employees against all losses, expenses, damages and costs, including attorney's fees, as a result of any accidental incident.</label>
+        </div>
+
+        <div class="check-item">
+          <input type="checkbox" id="decl3" name="declaration3" required>
+          <label for="decl3"><strong>I have read</strong> and understood the School Rules and Procedures and agree to abide by them in full, including the uniform policy, attendance requirements, fee payment schedule and communication guidelines.</label>
+        </div>
+
+        <div class="check-item">
+          <input type="checkbox" id="decl4" name="declaration4">
+          <label for="decl4"><strong>I consent</strong> to Heritage Montessori and School using my child's photographs taken during school activities for internal school publications, the school website, and social media, for the purpose of showcasing school activities only.</label>
+        </div>
+
+        <!-- SIGNATURE SECTION (for print) -->
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;margin-top:32px;padding-top:16px;border-top:1px solid var(--line);">
+          <div>
+            <div style="border-top:1px solid var(--ink);padding-top:6px;font-size:11px;color:var(--muted);">Signature of Parent/Guardian</div>
+          </div>
+          <div>
+            <div style="border-top:1px solid var(--ink);padding-top:6px;font-size:11px;color:var(--muted);">Name &amp; Relation with Child</div>
+          </div>
+          <div>
+            <div style="border-top:1px solid var(--ink);padding-top:6px;font-size:11px;color:var(--muted);">Date &amp; Place</div>
+          </div>
+        </div>
+
+        <!-- FORM ACTIONS -->
+        <div class="form-actions">
+          <button type="submit" class="btn btn-success" id="submitBtn">
+            <span id="submitSpinner" style="display:none"><span class="spinner"></span></span>
+            📨 Submit Form Online
+          </button>
+          <button type="button" class="btn btn-print" onclick="window.print()">🖨 Print &amp; Submit Physically</button>
+          <a id="waNotifyBtn" href="#" target="_blank" class="btn btn-wa" style="display:none;text-decoration:none;">💬 Notify School on WhatsApp</a>
+        </div>
+        <div class="form-note">
+          <strong>Online submission</strong> sends your form directly to the school at info@heritagemux.com.<br>
+          <strong>Print option</strong> — print the form, attach required documents and photographs, and bring to school.<br>
+          <strong>WhatsApp button</strong> appears after online submission to notify the school directly.
+        </div>
+
+      </form>
+
+      <!-- SUCCESS MESSAGE -->
+      <div class="form-success" id="formSuccess">
+        <h3>✓ Form Submitted Successfully</h3>
+        <p>Your admission form has been sent to Heritage Montessori and School. The school will contact you shortly to confirm your appointment. Please also bring the physical documents and photographs when you visit the school.</p>
+        <a id="waSuccessBtn" href="#" target="_blank" class="btn btn-wa" style="text-decoration:none;">💬 Also Notify School on WhatsApp</a>
+      </div>
+
+    </div><!-- /tabForm -->
+
+    <!-- FOOTER -->
+    <div class="portal-footer">
+      <span>Heritage Montessori &amp; School · Parent Admission Portal</span>
+      <span>11-D Garden Town, Multan · 061-6515260</span>
+    </div>
+
+  </div><!-- /mainContent -->
+
+</div><!-- /portal -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+window.previewPhoto = function(input) {
+  const preview = document.getElementById('photoPreview');
+  if(!preview) return;
+  if(input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      preview.innerHTML = '<img src="' + e.target.result + '" style="max-width:100%;max-height:150px;object-fit:contain;border-radius:2px;" alt="Child photo">';
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+};
+</script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref as dbRef, get, update, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAtB9d9zEr-ES-"+"lRI_Pf9fWJmaJ8o8ghvQ",
+  authDomain: "my-hms42.firebaseapp.com",
+  databaseURL: "https://my-hms42-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "my-hms42",
+  storageBucket: "my-hms42.firebasestorage.app",
+  messagingSenderId: "468345935508",
+  appId: "1:468345935508:web:db42663bb9484619518681"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+function showToast(msg, dur=3500) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), dur);
+}
+
+// ── PIN CHECK ──
+window.checkPin = async function() {
+  const pin = document.getElementById('pinInput').value.trim();
+  if(!pin || pin.length < 4) { showToast('Please enter your PIN.'); return; }
+
+  document.getElementById('pinError').style.display = 'none';
+  document.getElementById('pinUsedError').style.display = 'none';
+  document.getElementById('pinSpinner').style.display = 'inline';
+
+  try {
+    const snap = await get(dbRef(db, `parentPins/${pin}`));
+    document.getElementById('pinSpinner').style.display = 'none';
+
+    if(!snap.exists()) {
+      document.getElementById('pinError').style.display = 'block';
+      document.getElementById('pinInput').value = '';
+      return;
+    }
+
+    const data = snap.val();
+
+    // Check if already used
+    if(data.used === true) {
+      document.getElementById('pinUsedError').style.display = 'block';
+      document.getElementById('pinInput').value = '';
+      return;
+    }
+
+    // Check if expired
+    if(data.expiresAt) {
+      const expiry = new Date(data.expiresAt);
+      if(new Date() > expiry) {
+        document.getElementById('pinExpiredError').style.display = 'block';
+        document.getElementById('pinInput').value = '';
+        return;
+      }
+    }
+
+    // Valid unused unexpired PIN — grant access, mark as used
+    await update(dbRef(db, `parentPins/${pin}`), {
+      used: true,
+      usedAt: new Date().toISOString()
+    });
+
+    // Show main content
+    document.getElementById('pinScreen').style.display = 'none';
+    document.getElementById('mainContent').style.display = 'block';
+    sessionStorage.setItem('hms_parent_auth', '1');
+    showToast('Welcome! Please review the school rules and complete the admission form.');
+
+  } catch(err) {
+    document.getElementById('pinSpinner').style.display = 'none';
+    showToast('Connection error. Please try again.', 4000);
+    console.error(err);
+  }
+};
+
+// Stay authenticated within session
+if(sessionStorage.getItem('hms_parent_auth') === '1') {
+  document.getElementById('pinScreen').style.display = 'none';
+  document.getElementById('mainContent').style.display = 'block';
+}
+
+// ── TAB SWITCHER ──
+window.switchPortalTab = function(tab, btn) {
+  document.querySelectorAll('.portal-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tabRules').style.display = tab === 'rules' ? 'block' : 'none';
+  document.getElementById('tabForm').style.display = tab === 'form' ? 'block' : 'none';
+  // Store active tab for print
+  document.body.setAttribute('data-active-tab', tab);
+};
+
+// ── FORM SUBMISSION ──
+const WA_NUMBER = '923361515260';
+
+function buildWAMessage(name, className) {
+  return encodeURIComponent(
+    `Assalam o Alaikum,\n\nI have submitted the online admission form for my child *${name||''}* for *${className||''}* at Heritage Montessori and School.\n\nKindly confirm receipt and let me know the next steps.\n\nJazakAllah Khairan.`
+  );
+}
+
+document.getElementById('admissionForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  // Check required checkboxes
+  if(!document.getElementById('decl1').checked ||
+     !document.getElementById('decl2').checked ||
+     !document.getElementById('decl3').checked) {
+    showToast('Please tick all required declarations before submitting.', 4000);
+    return;
+  }
+
+  const submitBtn = document.getElementById('submitBtn');
+  const spinner = document.getElementById('submitSpinner');
+  submitBtn.disabled = true;
+  spinner.style.display = 'inline';
+
+  const form = e.target;
+  const formData = new FormData(form);
+
+  // Save to Firebase archive with auto reference number
+  try {
+    const counterSnap = await get(dbRef(db, 'formCounters/admission'));
+    const next = (counterSnap.exists() ? counterSnap.val() : 0) + 1;
+    await set(dbRef(db, 'formCounters/admission'), next);
+    const refNum = 'HMS/ADM/' + new Date().getFullYear() + '/' + String(next).padStart(3,'0');
+    const key = refNum.replace(/\//g, '-');
+    await set(dbRef(db, 'formArchive/admission/' + key), {
+      refNumber: refNum,
+      childName: formData.get('childName') || '',
+      dob: formData.get('dob') || '',
+      gender: formData.get('gender') || '',
+      classApplied: formData.get('classApplied') || '',
+      previousSchool: formData.get('previousSchool') || '',
+      motherName: formData.get('motherName') || '',
+      motherContact: formData.get('motherContact') || '',
+      motherCNIC: formData.get('motherCNIC') || '',
+      motherAddress: formData.get('motherAddress') || '',
+      motherOccupation: formData.get('motherOccupation') || '',
+      fatherName: formData.get('fatherName') || '',
+      fatherContact: formData.get('fatherContact') || '',
+      fatherCNIC: formData.get('fatherCNIC') || '',
+      fatherOccupation: formData.get('fatherOccupation') || '',
+      emergency1Name: formData.get('emergency1Name') || '',
+      emergency1Relation: formData.get('emergency1Relation') || '',
+      emergency1Contact: formData.get('emergency1Contact') || '',
+      emergency2Name: formData.get('emergency2Name') || '',
+      emergency2Relation: formData.get('emergency2Relation') || '',
+      emergency2Contact: formData.get('emergency2Contact') || '',
+      additionalInfo: formData.get('additionalInfo') || '',
+      hearAboutUs: formData.get('hearAboutUs') || '',
+      status: 'pending',
+      submittedAt: new Date().toISOString()
+    });
+    formData.set('refNumber', refNum);
+  } catch(e) {
+    console.error('Firebase save error:', e);
+  }
+
+  fetch('/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams(formData).toString()
+  }).then(() => {
+    spinner.style.display = 'none';
+    form.style.display = 'none';
+    const success = document.getElementById('formSuccess');
+    success.style.display = 'block';
+
+    // Set WhatsApp button
+    const childName = formData.get('childName') || '';
+    const className = formData.get('classApplied') || '';
+    const waUrl = `https://wa.me/${WA_NUMBER}?text=${buildWAMessage(childName, className)}`;
+    document.getElementById('waSuccessBtn').href = waUrl;
+
+    success.scrollIntoView({ behavior: 'smooth' });
+    showToast('✓ Form submitted successfully!');
+
+  }).catch(err => {
+    spinner.style.display = 'none';
+    submitBtn.disabled = false;
+    showToast('Submission error. Please try again or print and bring the form.', 5000);
+    console.error(err);
+  });
+});
+
+// Enter key on PIN input
+document.getElementById('pinInput').addEventListener('keydown', function(e) {
+  if(e.key === 'Enter') window.checkPin();
+});
+</script>
+</body>
+</html>
