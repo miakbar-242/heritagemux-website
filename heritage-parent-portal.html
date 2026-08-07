@@ -370,7 +370,7 @@ body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;padding:3
         <div class="form-row three">
           <div class="form-group">
             <label>Date of Birth <span class="req">*</span></label>
-            <input type="text" name="dob" placeholder="dd/mm/yyyy" required>
+            <input type="date" name="dob" required>
           </div>
           <div class="form-group">
             <label>Gender <span class="req">*</span></label>
@@ -397,7 +397,7 @@ body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;padding:3
           </div>
           <div class="form-group">
             <label>Intended Start Date</label>
-            <input type="text" name="startDate" placeholder="dd/mm/yyyy">
+            <input type="date" name="startDate">
           </div>
         </div>
 
@@ -408,36 +408,12 @@ body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;padding:3
           </div>
         </div>
 
-        <!-- PHOTO SECTION -->
-        <div class="form-section-title">Child's Photograph</div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Upload Photo (optional)</label>
-            <input type="file" name="childPhoto" id="childPhotoInput" accept="image/*" capture="environment"
-              style="border:1.5px solid var(--line);background:var(--parchment);padding:8px;font-size:12px;width:100%;"
-              onchange="previewPhoto(this)">
-            <div style="font-size:10px;color:var(--muted);margin-top:4px;">Passport size photograph · 35mm × 45mm · JPG or PNG · Max 5MB</div>
-          </div>
-          <div class="form-group" style="display:flex;flex-direction:column;align-items:center;justify-content:center;">
-            <div id="photoPreview" class="photo-placeholder" style="width:100%;min-height:120px;position:relative;">
-              <div class="photo-icon">📷</div>
-              <p style="font-size:11px;color:var(--muted);">Preview will appear here</p>
-            </div>
-          </div>
-        </div>
-        <!-- Print photo box -->
-        <!-- Print photo box - only visible when printing, hidden on screen -->
-        <div class="print-photo-box" style="display:none;">
-          <div style="border:2px dashed #999;width:90px;height:110px;display:flex;align-items:center;justify-content:center;font-size:8px;color:#999;text-align:center;padding:6px;line-height:1.5;">
-            Paste passport<br>size photo here<br><span style="font-size:7px;">(35mm x 45mm)</span>
-          </div>
-        </div>
-            Paste child's photo here
-          </div>
-          <div style="font-size:9px;color:#666;margin-top:4px;">Passport size photograph</div>
+                <!-- PHOTO PLACEHOLDER -->
+        <div class="photo-placeholder">
+          <div class="photo-icon">📷</div>
+          <p><strong>Child's Photograph</strong><br>Please attach a passport-size photograph of the child here on the printed form.</p>
         </div>
 
-        <!-- MOTHER / GUARDIAN DETAILS -->
         <div class="form-section-title">Mother / Guardian's Details</div>
 
         <div class="form-row full">
@@ -682,20 +658,6 @@ body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;padding:3
 </div><!-- /portal -->
 
 <div class="toast" id="toast"></div>
-
-<script>
-window.previewPhoto = function(input) {
-  const preview = document.getElementById('photoPreview');
-  if(!preview) return;
-  if(input.files && input.files[0]) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      preview.innerHTML = '<img src="' + e.target.result + '" style="max-width:100%;max-height:150px;object-fit:contain;border-radius:2px;" alt="Child photo">';
-    };
-    reader.readAsDataURL(input.files[0]);
-  }
-};
-</script>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";

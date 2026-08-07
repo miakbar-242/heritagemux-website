@@ -159,11 +159,11 @@ body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;padding:0
   #tabFeedback,.sig-toolbar,.sig-placeholder,
   button,a.btn{display:none!important;}
 
-  /* Show portal and tab content */
-  .portal,#tabForms,#formsListView{display:block!important;}
-
-  /* Hide forms list, show only active form */
+  /* Hide the forms list completely */
   #formsListView{display:none!important;}
+  #tabForms{display:block!important;}
+
+  /* Show only the active form */
   .form-view{display:none!important;}
   .form-view.active{display:block!important;}
 
