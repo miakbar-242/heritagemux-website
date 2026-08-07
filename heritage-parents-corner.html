@@ -148,19 +148,55 @@ body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;padding:0
 
 /* PRINT */
 @media print{
-  body{background:white!important;padding:0!important;}
-  .banner,.main-tabs,.forms-grid,.forms-intro,.form-nav,
-  .form-actions,.portal-footer,.toast,.form-success,
-  button,.btn-back,.btn-print-form{display:none!important;}
+  body{background:white!important;padding:0!important;font-size:10pt!important;}
+  .portal{max-width:100%!important;box-shadow:none!important;}
+
+  /* Hide everything by default */
+  .banner,.main-tabs,.forms-intro,.forms-grid,.portal-footer,
+  .toast,.form-nav,.form-actions,.verify-box,.sig-wrap,
+  .proof-note,.body-text,.form-intro,
+  #tabFeedback{display:none!important;}
+
+  /* Show active form view */
   .form-view.active{display:block!important;}
-  .form-body{padding:10px 0!important;max-width:100%!important;}
-  .form-letterhead{border-bottom:2px solid #2d4a2d!important;}
-  .field-input,.inline-field{border-bottom:1px solid #999!important;background:transparent!important;}
-  .field-select{border-bottom:1px solid #999!important;-webkit-appearance:none!important;}
-  .field-textarea{border:1px solid #ccc!important;background:white!important;}
-  .check-item{background:white!important;border:1px solid #e0e0e0!important;}
-  .proof-note{background:#fff8ec!important;border-left:3px solid #b8962e!important;}
-  .sign-row{margin-top:48px!important;}
+  .form-view{display:none!important;}
+
+  /* Letterhead */
+  .form-letterhead{border-bottom:2px solid #2d4a2d!important;padding-bottom:12px!important;margin-bottom:16px!important;text-align:center!important;}
+  .form-letterhead h2{font-size:16pt!important;color:#2d4a2d!important;}
+  .form-letterhead p{font-size:9pt!important;color:#6e6456!important;}
+
+  /* Ref row */
+  .form-ref-row{display:flex!important;justify-content:space-between!important;margin-bottom:14px!important;font-size:10pt!important;}
+
+  /* Section title */
+  .form-section-title{font-size:8pt!important;color:#2d4a2d!important;border-bottom:1.5px solid #b8962e!important;padding-bottom:3px!important;margin:14px 0 8px!important;}
+
+  /* Fields */
+  .field-row{display:grid!important;grid-template-columns:1fr 1fr!important;gap:12px!important;margin-bottom:8px!important;}
+  .field-row.full{grid-template-columns:1fr!important;}
+  .field-group{display:flex!important;flex-direction:column!important;gap:2px!important;}
+  .field-label{font-size:7.5pt!important;color:#5a7a5a!important;letter-spacing:1px!important;text-transform:uppercase!important;}
+  .field-label .req{display:none!important;}
+  .field-input{border:none!important;border-bottom:1px solid #999!important;background:transparent!important;font-size:11pt!important;padding:4px 0!important;min-height:18pt!important;}
+  .field-select{border:none!important;border-bottom:1px solid #999!important;background:transparent!important;font-size:11pt!important;padding:4px 0!important;-webkit-appearance:none!important;}
+  .field-textarea{border:1px solid #ccc!important;background:transparent!important;font-size:10pt!important;min-height:40pt!important;padding:4px!important;}
+
+  /* Check items */
+  .check-item{background:white!important;border:1px solid #e0e0e0!important;padding:5px 8px!important;margin-bottom:3px!important;}
+  .check-item label{font-size:10pt!important;}
+  .check-item input[type=checkbox]{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+
+  /* Proof note */
+  .proof-note{background:#fff8ec!important;border-left:3px solid #b8962e!important;padding:8px!important;font-size:9pt!important;}
+
+  /* Sign row */
+  .sign-row{display:grid!important;grid-template-columns:1fr 1fr!important;gap:24pt!important;margin-top:36pt!important;}
+  .sign-box{font-size:9pt!important;color:#666!important;}
+
+  /* Form success hidden */
+  .form-success{display:none!important;}
+
   @page{size:A4;margin:15mm;}
 }
 
@@ -429,7 +465,33 @@ body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;padding:0
             <input class="field-input" type="text" name="childName" required placeholder="As per school record">
           </div>
           <div class="field-group">
-            <div class="field-label">Class <span class="req">*</span></div>
+            <div class="field-label">Son / Daughter of <span class="req">*</span></div>
+            <input class="field-input" type="text" name="parentName" required placeholder="Father's full name">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <div class="field-label">Admission Number</div>
+            <input class="field-input" type="text" name="admissionNo" placeholder="e.g. HMS-001">
+          </div>
+          <div class="field-group">
+            <div class="field-label">Date of Birth <span class="req">*</span></div>
+            <input class="field-input" type="date" name="dob" required>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <div class="field-label">Date of Admission</div>
+            <input class="field-input" type="date" name="dateOfAdmission">
+          </div>
+          <div class="field-group">
+            <div class="field-label">Last Date of Attendance <span class="req">*</span></div>
+            <input class="field-input" type="date" name="lastDate" required>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <div class="field-label">Last Class Attended <span class="req">*</span></div>
             <select class="field-select" name="className" required>
               <option value="" disabled selected>Select class</option>
               <option>Mont 1</option><option>Mont 2</option><option>Mont 3</option>
@@ -437,24 +499,26 @@ body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;padding:0
               <option>Class 4</option><option>Class 5</option>
             </select>
           </div>
-        </div>
-        <div class="field-row">
           <div class="field-group">
-            <div class="field-label">Parent / Guardian Name <span class="req">*</span></div>
-            <input class="field-input" type="text" name="parentName" required placeholder="Full name">
+            <div class="field-label">Academic Year</div>
+            <input class="field-input" type="text" name="academicYear" value="2025-2026">
           </div>
+        </div>
+
+        <div class="form-section-title">Contact Details</div>
+        <div class="field-row">
           <div class="field-group">
             <div class="field-label">Contact Number <span class="req">*</span></div>
             <input class="field-input" type="tel" name="contactNumber" required placeholder="e.g. 0300-1234567">
+          </div>
+          <div class="field-group">
+            <div class="field-label">WhatsApp Number</div>
+            <input class="field-input" type="tel" name="whatsappNumber" placeholder="If different from above">
           </div>
         </div>
 
         <div class="form-section-title">Leaving Details</div>
         <div class="field-row">
-          <div class="field-group">
-            <div class="field-label">Last Date of Attendance <span class="req">*</span></div>
-            <input class="field-input" type="date" name="lastDate" required>
-          </div>
           <div class="field-group">
             <div class="field-label">Reason for Leaving <span class="req">*</span></div>
             <select class="field-select" name="leavingReason" required>
@@ -465,6 +529,10 @@ body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;padding:0
               <option>Medical reasons</option>
               <option>Other</option>
             </select>
+          </div>
+          <div class="field-group">
+            <div class="field-label">New School (if applicable)</div>
+            <input class="field-input" type="text" name="newSchool" placeholder="Name of new school">
           </div>
         </div>
         <div class="field-row full">
@@ -565,7 +633,23 @@ body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;padding:0
             <input class="field-input" type="text" name="childName" required placeholder="As per school record">
           </div>
           <div class="field-group">
-            <div class="field-label">Class <span class="req">*</span></div>
+            <div class="field-label">Son / Daughter of <span class="req">*</span></div>
+            <input class="field-input" type="text" name="parentName" required placeholder="Father's full name">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <div class="field-label">Admission Number</div>
+            <input class="field-input" type="text" name="admissionNo" placeholder="e.g. HMS-001">
+          </div>
+          <div class="field-group">
+            <div class="field-label">Date of Birth</div>
+            <input class="field-input" type="date" name="dob">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <div class="field-label">Class / Section <span class="req">*</span></div>
             <select class="field-select" name="className" required>
               <option value="" disabled selected>Select class</option>
               <option>Mont 1</option><option>Mont 2</option><option>Mont 3</option>
@@ -573,15 +657,19 @@ body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;padding:0
               <option>Class 4</option><option>Class 5</option>
             </select>
           </div>
+          <div class="field-group">
+            <div class="field-label">Academic Year</div>
+            <input class="field-input" type="text" name="academicYear" value="2025-2026">
+          </div>
         </div>
         <div class="field-row">
           <div class="field-group">
-            <div class="field-label">Parent / Guardian Name <span class="req">*</span></div>
-            <input class="field-input" type="text" name="parentName" required placeholder="Full name">
-          </div>
-          <div class="field-group">
             <div class="field-label">Contact Number <span class="req">*</span></div>
             <input class="field-input" type="tel" name="contactNumber" required placeholder="e.g. 0300-1234567">
+          </div>
+          <div class="field-group">
+            <div class="field-label">WhatsApp Number</div>
+            <input class="field-input" type="tel" name="whatsappNumber" placeholder="If different from above">
           </div>
         </div>
 
@@ -999,9 +1087,13 @@ document.getElementById('leavingForm').addEventListener('submit', async function
   const refNum = window._currentRef || fd.get('refNumber');
   const sigData = getSigData('sigLeaving');
   const data = {
-    childName: fd.get('childName'), className: fd.get('className'),
-    parentName: fd.get('parentName'), contactNumber: fd.get('contactNumber'),
+    childName: fd.get('childName'), parentName: fd.get('parentName'),
+    admissionNo: fd.get('admissionNo')||'', dob: fd.get('dob')||'',
+    dateOfAdmission: fd.get('dateOfAdmission')||'',
+    className: fd.get('className'), academicYear: fd.get('academicYear')||'2025-2026',
+    contactNumber: fd.get('contactNumber'), whatsappNumber: fd.get('whatsappNumber')||'',
     lastDate: fd.get('lastDate'), leavingReason: fd.get('leavingReason'),
+    newSchool: fd.get('newSchool')||'',
     leavingDetails: fd.get('leavingDetails')||'',
     cnicLast4: fd.get('cnicLast4'), hasSignature: !!sigData
   };
@@ -1041,8 +1133,10 @@ document.getElementById('bonafideForm').addEventListener('submit', async functio
   const refNum = window._currentRef || fd.get('refNumber');
   const sigData = getSigData('sigBonafide');
   const data = {
-    childName: fd.get('childName'), className: fd.get('className'),
-    parentName: fd.get('parentName'), contactNumber: fd.get('contactNumber'),
+    childName: fd.get('childName'), parentName: fd.get('parentName'),
+    admissionNo: fd.get('admissionNo')||'', dob: fd.get('dob')||'',
+    className: fd.get('className'), academicYear: fd.get('academicYear')||'2025-2026',
+    contactNumber: fd.get('contactNumber'), whatsappNumber: fd.get('whatsappNumber')||'',
     certType: fd.get('certType'), purpose: fd.get('purpose'),
     requiredBy: fd.get('requiredBy'), additionalDetails: fd.get('additionalDetails')||'',
     cnicLast4: fd.get('cnicLast4'), hasSignature: !!sigData

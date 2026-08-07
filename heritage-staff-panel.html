@@ -599,7 +599,7 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
           <div class="doc-section-title">Student Details</div>
           <div class="field-row">
             <div class="field-group"><div class="field-label">Student Name</div><input class="field-input" id="bon-name" placeholder="Master / Miss"></div>
-            <div class="field-group"><div class="field-label">Son/Daughter of</div><input class="field-input" placeholder="Father's full name"></div>
+            <div class="field-group"><div class="field-label">Son/Daughter of</div><input class="field-input" placeholder="Fathers full name"></div>
           </div>
           <div class="field-row">
             <div class="field-group"><div class="field-label">Admission No.</div><input class="field-input" placeholder="HMS-____"></div>
@@ -1838,6 +1838,13 @@ window.openRecordAction = function(type, key) {
       setVal('slc-certno', r.refNumber);
       setVal('slc-date', today);
       setVal('slc-lastdate', r.lastDate);
+      // Pre-fill new fields
+      const slcAdmNo = document.querySelector('#docLeaving input[placeholder="HMS-____"]');
+      if(slcAdmNo && r.admissionNo) slcAdmNo.value = r.admissionNo;
+      const slcDob = document.querySelector('#docLeaving input[placeholder="dd/mm/yyyy"]');
+      if(slcDob && r.dob) slcDob.value = r.dob;
+      const slcYear = document.querySelector('#docLeaving input[value="2025-2026"]');
+      if(slcYear && r.academicYear) slcYear.value = r.academicYear;
       // Set class dropdown
       const classEl = document.getElementById('slc-class');
       if(classEl && r.className) {
@@ -1874,6 +1881,15 @@ window.openRecordAction = function(type, key) {
       setVal('bon-certno', r.refNumber);
       setVal('bon-date', today);
       setVal('bon-purpose', r.purpose || '');
+      // Pre-fill new fields
+      const bonParent = document.querySelector('#docBonafide input[placeholder="Fathers full name"]');
+      if(bonParent && r.parentName) bonParent.value = r.parentName;
+      const bonAdmNo = document.querySelector('#docBonafide input[placeholder="HMS-____"]');
+      if(bonAdmNo && r.admissionNo) bonAdmNo.value = r.admissionNo;
+      const bonDob = document.querySelector('#docBonafide input[placeholder="dd/mm/yyyy"]');
+      if(bonDob && r.dob) bonDob.value = r.dob;
+      const bonYear = document.querySelector('#docBonafide input[value="2025-2026"]');
+      if(bonYear && r.academicYear) bonYear.value = r.academicYear;
       // Set class dropdown
       const classEl = document.getElementById('bon-class');
       if(classEl && r.className) {
