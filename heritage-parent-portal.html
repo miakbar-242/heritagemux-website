@@ -138,119 +138,64 @@ body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;padding:3
 
 /* PRINT STYLES */
 @media print{
-  /* Hide all UI elements */
-  body{background:white!important;padding:0!important;font-size:11pt!important;}
+  body{background:white!important;padding:0!important;font-size:10pt!important;}
   .portal{max-width:100%!important;box-shadow:none!important;}
-  .banner,
-  .portal-tabs,
-  .pin-screen,
-  .portal-footer,
-  .toast,
-  .form-actions,
-  .btn-print,
-  .btn-print-all,
-  button,
-  .rules-header button,
-  .form-header div,
-  .form-success,
-  #tabRulesBtn,
-  #tabFormBtn { display:none!important; }
 
-  /* Show main content always */
+  /* Hide all UI */
+  .banner,.portal-tabs,.pin-screen,.portal-footer,.toast,
+  .form-actions,.btn-print,.btn-print-all,
+  .form-header div,.form-success,
+  #tabRulesBtn,#tabFormBtn,
+  input[type=file],
+  #photoPreview,
+  .verify-box,
+  .sig-wrap,
+  .form-intro { display:none!important; }
+
+  /* Show everything */
   .main-content{display:block!important;}
-
-  /* School rules section */
   #tabRules{display:block!important;page-break-after:always;}
-  .rules-section{
-    box-shadow:none!important;
-    padding:16px 0!important;
-    background:white!important;
-  }
-  .rules-header{border-bottom:2px solid #2d4a2d!important;}
-  .rules-header h2{font-size:16pt!important;}
-  .rules-body h3{font-size:12pt!important;color:#2d4a2d!important;}
-  .rules-body li,.rules-body p{font-size:10pt!important;}
-  .rules-table{width:100%!important;border-collapse:collapse!important;}
-  .rules-table th,.rules-table td{border:1px solid #ccc!important;padding:5px 8px!important;font-size:10pt!important;}
-  .rule-note{border-left:3px solid #b8962e!important;padding:8px 12px!important;background:#f5edd6!important;}
-
-  /* Admission form section */
   #tabForm{display:block!important;}
-  .form-section{
-    box-shadow:none!important;
-    padding:16px 0!important;
-    background:white!important;
-  }
-  .form-header{margin-bottom:12px!important;}
+  .rules-section,.form-section{box-shadow:none!important;padding:16px 0!important;background:white!important;}
+  .form-header{margin-bottom:16px!important;}
   .form-header h2{font-size:16pt!important;color:#2d4a2d!important;}
-  .form-intro{
-    display:block!important;
-    background:#f5edd6!important;
-    border-left:3px solid #b8962e!important;
-    padding:8px 12px!important;
-    font-size:9pt!important;
-    margin-bottom:12px!important;
-  }
-  .form-section-title{
-    font-size:9pt!important;
-    color:#2d4a2d!important;
-    border-bottom:1.5px solid #b8962e!important;
-    padding-bottom:3px!important;
-    margin:14px 0 8px!important;
-  }
+  .print-header{display:block!important;}
+
+  /* Show print photo box */
+  .print-photo-box{display:flex!important;flex-direction:column;align-items:flex-end;position:absolute;top:20px;right:20px;}
+
+  /* Form layout */
+  .form-section-title{font-size:8pt!important;color:#2d4a2d!important;border-bottom:1.5px solid #b8962e!important;padding-bottom:3px!important;margin:14px 0 8px!important;}
   .form-row{display:grid!important;grid-template-columns:1fr 1fr!important;gap:10px!important;margin-bottom:8px!important;}
   .form-row.full{grid-template-columns:1fr!important;}
   .form-row.three{grid-template-columns:1fr 1fr 1fr!important;}
   .form-group{display:flex!important;flex-direction:column!important;gap:2px!important;}
-  .form-group label{font-size:8pt!important;color:#5a7a5a!important;letter-spacing:1px!important;text-transform:uppercase!important;}
-  .form-group input,
-  .form-group select{
-    border:none!important;
-    border-bottom:1px solid #999!important;
-    background:transparent!important;
-    font-size:11pt!important;
-    padding:4px 0!important;
-    -webkit-appearance:none!important;
-    height:22px!important;
-  }
-  .form-group textarea{
-    border:1px solid #ccc!important;
-    background:transparent!important;
-    font-size:10pt!important;
-    min-height:50pt!important;
-    padding:4px!important;
-  }
+  .form-group label{font-size:7.5pt!important;color:#5a7a5a!important;letter-spacing:1px!important;text-transform:uppercase!important;}
+  .form-group label .req{display:none!important;}
+  .form-group input,.form-group select{border:none!important;border-bottom:1px solid #999!important;background:transparent!important;font-size:11pt!important;padding:4px 0!important;-webkit-appearance:none!important;min-height:20pt!important;}
+  .form-group textarea{border:1px solid #ccc!important;background:transparent!important;font-size:10pt!important;min-height:40pt!important;padding:4px!important;}
+
+  /* Photo section */
+  .form-row:has(#childPhotoInput){display:none!important;}
+
+  /* Document checklist - show checkboxes clearly */
+  .form-group input[type=checkbox]{width:12px!important;height:12px!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+
+  /* Check items */
+  .check-item{background:white!important;border:1px solid #e0e0e0!important;padding:5px 8px!important;margin-bottom:3px!important;-webkit-print-color-adjust:exact!important;}
+  .check-item label{font-size:10pt!important;line-height:1.5!important;}
+
+  /* Gender row */
   .gender-row{display:flex!important;gap:20px!important;}
   .gender-opt{font-size:10pt!important;}
-  .photo-placeholder{
-    border:1.5px dashed #999!important;
-    padding:16px!important;
-    text-align:center!important;
-    background:white!important;
-    min-height:80pt!important;
-  }
-  .photo-placeholder p{font-size:9pt!important;color:#666!important;}
-  .doc-checklist{
-    background:#f9f9f9!important;
-    border:1px solid #ccc!important;
-    padding:8px 12px!important;
-  }
-  .doc-checklist-title{font-size:8pt!important;color:#b8962e!important;}
-  .doc-check-item{font-size:10pt!important;padding:4px 0!important;}
-  .check-item{
-    background:white!important;
-    border:1px solid #e0e0e0!important;
-    padding:6px 10px!important;
-    margin-bottom:4px!important;
-  }
-  .check-item label{font-size:10pt!important;line-height:1.5!important;}
-  .doc-sign-row{margin-top:28px!important;}
-  .doc-sign-box{font-size:9pt!important;color:#666!important;}
-  .print-header{display:block!important;}
 
-  /* Print header styling */
-  .print-header h2{font-size:16pt!important;color:#2d4a2d!important;}
-  .print-header p{font-size:9pt!important;color:#666!important;}
+  /* Sign row */
+  .sign-row{margin-top:36pt!important;display:grid!important;grid-template-columns:1fr 1fr 1fr!important;gap:24pt!important;}
+  .sign-box{font-size:9pt!important;color:#666!important;}
+
+  /* Proof note */
+  .proof-note{display:none!important;}
+  .form-intro{display:none!important;}
 
   @page{size:A4;margin:15mm;}
 }
@@ -425,7 +370,7 @@ body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;padding:3
         <div class="form-row three">
           <div class="form-group">
             <label>Date of Birth <span class="req">*</span></label>
-            <input type="date" name="dob" required>
+            <input type="text" name="dob" placeholder="dd/mm/yyyy" required>
           </div>
           <div class="form-group">
             <label>Gender <span class="req">*</span></label>
@@ -452,7 +397,7 @@ body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;padding:3
           </div>
           <div class="form-group">
             <label>Intended Start Date</label>
-            <input type="date" name="startDate">
+            <input type="text" name="startDate" placeholder="dd/mm/yyyy">
           </div>
         </div>
 
@@ -463,10 +408,33 @@ body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;padding:3
           </div>
         </div>
 
-        <!-- PHOTO PLACEHOLDER -->
-        <div class="photo-placeholder">
-          <div class="photo-icon">📷</div>
-          <p><strong>Child's Photograph</strong><br>Please attach a passport-size photograph of the child here on the printed form.</p>
+        <!-- PHOTO SECTION -->
+        <div class="form-section-title">Child's Photograph</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Upload Photo (optional)</label>
+            <input type="file" name="childPhoto" id="childPhotoInput" accept="image/*" capture="environment"
+              style="border:1.5px solid var(--line);background:var(--parchment);padding:8px;font-size:12px;width:100%;"
+              onchange="previewPhoto(this)">
+            <div style="font-size:10px;color:var(--muted);margin-top:4px;">Passport size photograph · 35mm × 45mm · JPG or PNG · Max 5MB</div>
+          </div>
+          <div class="form-group" style="display:flex;flex-direction:column;align-items:center;justify-content:center;">
+            <div id="photoPreview" class="photo-placeholder" style="width:100%;min-height:120px;position:relative;">
+              <div class="photo-icon">📷</div>
+              <p style="font-size:11px;color:var(--muted);">Preview will appear here</p>
+            </div>
+          </div>
+        </div>
+        <!-- Print photo box -->
+        <!-- Print photo box - only visible when printing, hidden on screen -->
+        <div class="print-photo-box" style="display:none;">
+          <div style="border:2px dashed #999;width:90px;height:110px;display:flex;align-items:center;justify-content:center;font-size:8px;color:#999;text-align:center;padding:6px;line-height:1.5;">
+            Paste passport<br>size photo here<br><span style="font-size:7px;">(35mm x 45mm)</span>
+          </div>
+        </div>
+            Paste child's photo here
+          </div>
+          <div style="font-size:9px;color:#666;margin-top:4px;">Passport size photograph</div>
         </div>
 
         <!-- MOTHER / GUARDIAN DETAILS -->
@@ -510,18 +478,18 @@ body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;padding:3
 
         <div class="form-row full">
           <div class="form-group">
-            <label>Full Name</label>
-            <input type="text" name="fatherName" placeholder="Father or second guardian's full name">
+            <label>Full Name <span class="req">*</span></label>
+            <input type="text" name="fatherName" required placeholder="Father or second guardian's full name">
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label>CNIC Number</label>
-            <input type="text" name="fatherCNIC" placeholder="xxxxx-xxxxxxx-x">
+            <label>CNIC Number <span class="req">*</span></label>
+            <input type="text" name="fatherCNIC" required placeholder="xxxxx-xxxxxxx-x">
           </div>
           <div class="form-group">
-            <label>Contact Number</label>
-            <input type="tel" name="fatherContact" placeholder="e.g. 0300-1234567">
+            <label>Contact Number <span class="req">*</span></label>
+            <input type="tel" name="fatherContact" required placeholder="e.g. 0300-1234567">
           </div>
         </div>
         <div class="form-row full">
@@ -536,8 +504,8 @@ body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;padding:3
             <input type="email" name="fatherEmail" placeholder="email@example.com">
           </div>
           <div class="form-group">
-            <label>Occupation</label>
-            <input type="text" name="fatherOccupation" placeholder="e.g. Engineer / Business">
+            <label>Occupation <span class="req">*</span></label>
+            <input type="text" name="fatherOccupation" required placeholder="e.g. Engineer / Business">
           </div>
         </div>
 
@@ -604,15 +572,41 @@ body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;padding:3
           </div>
         </div>
 
-        <!-- DOCUMENTS CHECKLIST (print helper) -->
-        <div class="form-section-title">Documents to Attach (print &amp; attach)</div>
-        <div class="doc-checklist">
-          <div class="doc-checklist-title">Please tick what you are attaching to the printed form</div>
-          <div class="doc-check-item"><input type="checkbox" name="doc_photo"> 4 × Passport size photographs of the child</div>
-          <div class="doc-check-item"><input type="checkbox" name="doc_birth"> Birth Certificate or NADRA Form</div>
-          <div class="doc-check-item"><input type="checkbox" name="doc_leaving"> School Leaving Certificate (previous school, if applicable)</div>
-          <div class="doc-check-item"><input type="checkbox" name="doc_cnic_mother"> Copy of Mother's CNIC</div>
-          <div class="doc-check-item"><input type="checkbox" name="doc_cnic_father"> Copy of Father's CNIC</div>
+        <!-- DOCUMENTS CHECKLIST -->
+        <div class="form-section-title">Documents Submitted</div>
+        <div style="background:var(--parchment);border:1px solid var(--line);padding:14px 18px;margin-bottom:16px;">
+          <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:12px;">
+            Please tick the documents you are submitting with this form
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
+            <div style="display:flex;align-items:center;gap:10px;padding:9px 10px;border-bottom:1px solid var(--line);border-right:1px solid var(--line);">
+              <input type="checkbox" name="doc_photo" id="doc_photo" style="width:18px;height:18px;accent-color:var(--forest);cursor:pointer;flex-shrink:0;">
+              <label for="doc_photo" style="font-size:12px;cursor:pointer;">4 × Passport size photographs</label>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:9px 10px;border-bottom:1px solid var(--line);">
+              <input type="checkbox" name="doc_birth" id="doc_birth" style="width:18px;height:18px;accent-color:var(--forest);cursor:pointer;flex-shrink:0;">
+              <label for="doc_birth" style="font-size:12px;cursor:pointer;">Birth Certificate / NADRA Form</label>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:9px 10px;border-bottom:1px solid var(--line);border-right:1px solid var(--line);">
+              <input type="checkbox" name="doc_cnic_mother" id="doc_cnic_mother" style="width:18px;height:18px;accent-color:var(--forest);cursor:pointer;flex-shrink:0;">
+              <label for="doc_cnic_mother" style="font-size:12px;cursor:pointer;">Copy of Mother's CNIC</label>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:9px 10px;border-bottom:1px solid var(--line);">
+              <input type="checkbox" name="doc_cnic_father" id="doc_cnic_father" style="width:18px;height:18px;accent-color:var(--forest);cursor:pointer;flex-shrink:0;">
+              <label for="doc_cnic_father" style="font-size:12px;cursor:pointer;">Copy of Father's CNIC</label>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:9px 10px;border-right:1px solid var(--line);">
+              <input type="checkbox" name="doc_leaving" id="doc_leaving" style="width:18px;height:18px;accent-color:var(--forest);cursor:pointer;flex-shrink:0;">
+              <label for="doc_leaving" style="font-size:12px;cursor:pointer;">School Leaving Certificate</label>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:9px 10px;">
+              <input type="checkbox" name="doc_other" id="doc_other" style="width:18px;height:18px;accent-color:var(--forest);cursor:pointer;flex-shrink:0;">
+              <label for="doc_other" style="font-size:12px;cursor:pointer;">Other: <input type="text" name="doc_other_text" placeholder="Specify…" style="border:none;border-bottom:1px solid var(--line);font-size:11px;width:100px;outline:none;"></label>
+            </div>
+          </div>
+          <div style="margin-top:10px;font-size:10.5px;color:var(--muted);font-style:italic;">
+            ℹ️ Unticked items must be submitted to the school office before the admission can be processed.
+          </div>
         </div>
 
         <!-- DECLARATION -->
@@ -688,6 +682,20 @@ body{background:#cfc9bc;font-family:'Jost',sans-serif;min-height:100vh;padding:3
 </div><!-- /portal -->
 
 <div class="toast" id="toast"></div>
+
+<script>
+window.previewPhoto = function(input) {
+  const preview = document.getElementById('photoPreview');
+  if(!preview) return;
+  if(input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      preview.innerHTML = '<img src="' + e.target.result + '" style="max-width:100%;max-height:150px;object-fit:contain;border-radius:2px;" alt="Child photo">';
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+};
+</script>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
