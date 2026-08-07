@@ -1643,6 +1643,7 @@ function renderRecords() {
           <button class="btn-status btn-status-pending" onclick="updateRecordStatus('${r._type}','${safeKey}','pending')">⏳ Pending</button>
           <button class="btn-status btn-status-processing" onclick="updateRecordStatus('${r._type}','${safeKey}','processing')">🔄 Processing</button>
           <button class="btn-status btn-status-completed" onclick="updateRecordStatus('${r._type}','${safeKey}','completed')">✓ Completed</button>
+          <button class="btn-status" onclick="deleteRecord('${r._type}','${safeKey}')" style="border-color:#c0392b;color:#c0392b;margin-left:8px;">🗑 Delete</button>
         </div>
       </div>
     </div>`;
@@ -1716,6 +1717,21 @@ window.filterRecords = function(filter, btn) {
     document.getElementById('showArchivedBtn').textContent = 'Hide Completed';
   }
   renderRecords();
+};
+
+window.deleteRecord = async function(type, key) {
+  if(!confirm('Permanently delete this record? This cannot be undone.')) return;
+  try {
+    const { ref: dbRef, remove } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js");
+    await remove(ref(db, 'formArchive/' + type + '/' + key));
+    allRecords = allRecords.filter(r => r._key !== key);
+    delete recordsMap[key];
+    renderRecords();
+    showToast('✓ Record deleted.');
+  } catch(e) {
+    showToast('Error deleting record.', 4000);
+    console.error(e);
+  }
 };
 
 window.toggleArchived = function() {
