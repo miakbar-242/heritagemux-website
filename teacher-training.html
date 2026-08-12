@@ -689,7 +689,8 @@ if(sessionStorage.getItem('hms_auth')==='1'){
   document.getElementById('main-content').style.display='block';
   document.body.classList.remove('locked');
 }
-function doLogout(){sessionStorage.clear();location.reload();}
+// LOGOUT: only clears portal auth, not class auth
+function doLogout(){sessionStorage.removeItem('hms_auth');sessionStorage.removeItem('hms_class_auth');location.reload();}
 
 // ══ PORTAL TABS ══
 function switchTab(id,el){
@@ -702,14 +703,12 @@ function switchTab(id,el){
 // ══ CLASS PINS ══
 const CLASS_PINS={mont1:'111',mont2:'22',mont3:'333',class1:'121',class2:'221',class3:'321',class4:'421',class5:'521',admin:'2442'};
 let selectedClassForPin=null;
-
 function selectClass(key,btnEl){
   selectedClassForPin=key;
   document.querySelectorAll('.class-btn').forEach(b=>b.classList.remove('selected'));
   if(btnEl)btnEl.classList.add('selected');
-  const card=document.getElementById('pin-form-card');
-  card.classList.add('visible');
-  document.getElementById('pin-form-label').textContent=key==='admin'?'Enter Admin PIN (access all classes)':`Enter PIN for ${CLASSES[key]?.label||key}`;
+  const card=document.getElementById('pin-form-card');card.classList.add('visible');
+  document.getElementById('pin-form-label').textContent=key==='admin'?'Enter Admin PIN (all classes)':`Enter PIN for ${CLASSES[key]?.label||key}`;
   document.getElementById('class-pin-input').value='';
   document.getElementById('pin-error').style.display='none';
   setTimeout(()=>document.getElementById('class-pin-input').focus(),100);
@@ -726,6 +725,7 @@ function checkClassPin(){
     document.getElementById('class-pin-input').focus();
   }
 }
+// FIX: lockRecord only locks the RECORD TAB — does NOT log out of portal
 function lockRecord(){
   currentRole=null;currentClass=null;
   sessionStorage.removeItem('hms_class_auth');
@@ -735,6 +735,7 @@ function lockRecord(){
   document.getElementById('pin-form-card').classList.remove('visible');
   document.getElementById('class-pin-input').value='';
   document.getElementById('user-label').textContent='Staff';
+  // Portal stays open — no page reload, no portal logout
 }
 function launchRecordApp(role){
   currentRole=role;
@@ -753,44 +754,211 @@ window.addEventListener('load',()=>{
   if(saved&&sessionStorage.getItem('hms_auth')==='1')setTimeout(()=>launchRecordApp(saved),150);
 });
 
-// ══ CLASS DATA ══
+// ══ CLASS DATA WITH QUANTITIES ══
+// Each item: {name, qty} — qty is the required quantity
 const CLASSES={
   mont1:{label:'Mont 1',section:'Montessori',
-    books:['Pre-Primary Mathematics A1–A4 (OUP)','Colour and Craft Book A (Sunrise)','All About Islam Year 1 (Bookmark)'],
-    stationery:['Black ring folder (1)','Apron (1)','Plain White file cover Hard (2)','Lead pencils (2 packs)','Pencil eraser (4)','Pencil sharpener (4)','Poster colours Pack of 6 (1)','Colour pencils 12-long (4 packs)','Crayons 12 (1 pack)','Oil Pastels (1 pack)','Paper ream (1 pack)','Card paper 10 sheets','Fomic Sheets A4 (5)','A4 Colour Papers (10 sheets)','Ice Cream Sticks (1 pack)','Scotch Tape (1)','Paint brush size 12 (1)','Glazed paper 10 sheets','Clear bag (2)','Scissors round edged (1 pair)','UHU Glue Stick Medium (3)','Play Dough (2)']},
+    books:[
+      {name:'Pre-Primary Mathematics A1–A4 (OUP)',qty:4},
+      {name:'Colour and Craft Book A (Sunrise)',qty:1},
+      {name:'All About Islam Year 1 (Bookmark)',qty:1}],
+    stationery:[
+      {name:'Black ring folder',qty:1},{name:'Apron',qty:1},{name:'Plain White file cover Hard',qty:2},
+      {name:'Lead pencils',qty:2},{name:'Pencil eraser',qty:4},{name:'Pencil sharpener',qty:4},
+      {name:'Poster colours Pack of 6',qty:1},{name:'Colour pencils 12-long',qty:4},
+      {name:'Crayons 12',qty:1},{name:'Oil Pastels',qty:1},{name:'Paper ream',qty:1},
+      {name:'Card paper (sheets)',qty:10},{name:'Fomic Sheets A4',qty:5},
+      {name:'A4 Colour Papers (sheets)',qty:10},{name:'Ice Cream Sticks (pack)',qty:1},
+      {name:'Scotch Tape',qty:1},{name:'Paint brush size 12',qty:1},
+      {name:'Glazed paper (sheets)',qty:10},{name:'Clear bag',qty:2},
+      {name:'Scissors round edged (pair)',qty:1},{name:'UHU Glue Stick Medium',qty:3},{name:'Play Dough',qty:2}]},
   mont2:{label:'Mont 2',section:'Montessori',
-    books:['Jolly Readers Red Level Nonfiction','Handwriting Skills Builder Pre Nursery (OUP)','Pre-Primary Mathematics B1–B4 (OUP)','All About Islam Year 2 (Bookmark)','Bachon ki Saathi Nursery (Bookmark)','Urdu Readers – Tohfa (OUP)','Colour and Craft Book B (Sunrise)','Notebooks: 1 English 4-line, 1 Urdu, 1 Maths medium square'],
-    stationery:['Black ring folder (1)','Apron (1)','Plain White file cover Hard (2)','Lead pencils (2 packs)','Pencil eraser (4)','Pencil sharpener (4)','Poster colours Pack of 6 (1)','Colour pencils 12-long (4 packs)','Crayons 12 (1 pack)','Oil Pastels (1 pack)','Paper ream (1 pack)','Card paper 10 sheets','Fomic Sheets A4 (5)','A4 Colour Papers (10 sheets)','Ice Cream Sticks (1 pack)','Scotch Tape (1)','Paint brush size 12 (1)','Glazed paper 10 sheets','Clear bag (1)','Scissors round edged (1 pair)','UHU Glue Stick Medium (3)','Play Dough (2)']},
+    books:[
+      {name:'Jolly Readers Red Level Nonfiction',qty:1},
+      {name:'Handwriting Skills Builder Pre Nursery (OUP)',qty:1},
+      {name:'Pre-Primary Mathematics B1–B4 (OUP)',qty:4},
+      {name:'All About Islam Year 2 (Bookmark)',qty:1},
+      {name:'Bachon ki Saathi Nursery (Bookmark)',qty:1},
+      {name:'Urdu Readers – Tohfa (OUP)',qty:1},
+      {name:'Colour and Craft Book B (Sunrise)',qty:1},
+      {name:'English 4-line Notebook',qty:1},{name:'Urdu Notebook',qty:1},{name:'Maths medium square Notebook',qty:1}],
+    stationery:[
+      {name:'Black ring folder',qty:1},{name:'Apron',qty:1},{name:'Plain White file cover Hard',qty:2},
+      {name:'Lead pencils',qty:2},{name:'Pencil eraser',qty:4},{name:'Pencil sharpener',qty:4},
+      {name:'Poster colours Pack of 6',qty:1},{name:'Colour pencils 12-long',qty:4},
+      {name:'Crayons 12',qty:1},{name:'Oil Pastels',qty:1},{name:'Paper ream',qty:1},
+      {name:'Card paper (sheets)',qty:10},{name:'Fomic Sheets A4',qty:5},
+      {name:'A4 Colour Papers (sheets)',qty:10},{name:'Ice Cream Sticks (pack)',qty:1},
+      {name:'Scotch Tape',qty:1},{name:'Paint brush size 12',qty:1},
+      {name:'Glazed paper (sheets)',qty:10},{name:'Clear bag',qty:1},
+      {name:'Scissors round edged (pair)',qty:1},{name:'UHU Glue Stick Medium',qty:3},{name:'Play Dough',qty:2}]},
   mont3:{label:'Mont 3',section:'Montessori',
-    books:['Jolly Readers Red Level General Fiction & Yellow Nonfiction','Handwriting Skills Builder Nursery (OUP)','LITERACY Interactive English Introductory Book (Sunrise)','Pre-Primary Mathematics C1–C4 (OUP)','All About Islam Year 3 (Bookmark)','Bachon ki Saathi KG2 (Bookmark)','Urdu Khushkhati Silsila Book 2 (OUP)','Urdu Readers – Ghubaray (OUP)','Colour and Craft Book C (Sunrise)','Notebooks: 2 English 4-line, 2 Urdu, 2 Maths small square'],
-    stationery:['Black ring folder (1)','Apron (1)','Plain White file cover Hard (2)','Lead pencils (2 packs)','Pencil eraser (4)','Pencil sharpener (4)','Poster colours Pack of 6 (1)','Colour pencils 12-long (4 packs)','Crayons 12 (1 pack)','Oil Pastels (1 pack)','Paper ream (1 pack)','Card paper 10 sheets','Fomic Sheets A4 (5)','A4 Colour Papers (10 sheets)','Ice Cream Sticks (1 pack)','Scotch Tape (1)','Paint brush size 12 (1)','Glazed paper 10 sheets','Clear bag (1)','Scissors round edged (1 pair)','UHU Glue Stick Medium (1)','Pencil Pouch (1)','Play Dough (2)']},
+    books:[
+      {name:'Jolly Readers Red Level General Fiction',qty:1},{name:'Jolly Readers Yellow Nonfiction',qty:1},
+      {name:'Handwriting Skills Builder Nursery (OUP)',qty:1},
+      {name:'LITERACY Interactive English Introductory Book (Sunrise)',qty:1},
+      {name:'Pre-Primary Mathematics C1–C4 (OUP)',qty:4},
+      {name:'All About Islam Year 3 (Bookmark)',qty:1},{name:'Bachon ki Saathi KG2 (Bookmark)',qty:1},
+      {name:'Urdu Khushkhati Silsila Book 2 (OUP)',qty:1},{name:'Urdu Readers – Ghubaray (OUP)',qty:1},
+      {name:'Colour and Craft Book C (Sunrise)',qty:1},
+      {name:'English 4-line Notebook',qty:2},{name:'Urdu Notebook',qty:2},{name:'Maths small square Notebook',qty:2}],
+    stationery:[
+      {name:'Black ring folder',qty:1},{name:'Apron',qty:1},{name:'Plain White file cover Hard',qty:2},
+      {name:'Lead pencils',qty:2},{name:'Pencil eraser',qty:4},{name:'Pencil sharpener',qty:4},
+      {name:'Poster colours Pack of 6',qty:1},{name:'Colour pencils 12-long',qty:4},
+      {name:'Crayons 12',qty:1},{name:'Oil Pastels',qty:1},{name:'Paper ream',qty:1},
+      {name:'Card paper (sheets)',qty:10},{name:'Fomic Sheets A4',qty:5},
+      {name:'A4 Colour Papers (sheets)',qty:10},{name:'Ice Cream Sticks (pack)',qty:1},
+      {name:'Scotch Tape',qty:1},{name:'Paint brush size 12',qty:1},
+      {name:'Glazed paper (sheets)',qty:10},{name:'Clear bag',qty:1},
+      {name:'Scissors round edged (pair)',qty:1},{name:'UHU Glue Stick Medium',qty:1},
+      {name:'Pencil Pouch',qty:1},{name:'Play Dough',qty:2}]},
   class1:{label:'Class 1',section:'Juniors',
-    books:['Oxford International Primary English 1 Student + Workbook (OUP)','Oxford Reading Tree Stage 5 Pack of 6 Readers (OUP)','Oxford Essential Dictionary (OUP)','Handwriting Skills Builder Kindergarten (OUP)','Primary Mathematics 1 Textbook + Workbooks 1A & 1B (OUP)','UKG Motia Textbook – Urdu (OUP)','Nardban e Urdu Workbook 1 (OUP)','UKG Phool Reader – Urdu (OUP)','Urdu Khushkhati Silsila Book 3 (OUP)','Colour and Craft Book 1 (Sunrise)','Islamic Studies Grade 1 (Bookmark)','The Science Factor 1 Textbook + Workbook (OUP)','Notebooks: 3 English 4-line, 2 Urdu, 1 Maths small square, 1 Science interleaf'],
-    stationery:['Black ring folder (1)','Lead pencils (2 packs)','Pencil eraser (2)','Pencil sharpener (2)','Plastic scale 6 inch (1)','Poster colours: white, blue, green, yellow, red (5)','Colour pencils 12-long (2 packs)','Crayons 12 (1 pack)','Card paper 10 sheets','Paint brush size 12 (2)','Glazed paper (10 sheets)','Scissors round edged (1 pair)','Glue stick UHU Large (2)','Paper ream (1 pack)','A4 Colour Papers (10 sheets)','Pencil Pouch (1)','Apron (1)','Clear Bag (1)']},
+    books:[
+      {name:'Oxford International Primary English 1 Student + Workbook (OUP)',qty:2},
+      {name:'Oxford Reading Tree Stage 5 Pack of 6 Readers (OUP)',qty:6},
+      {name:'Oxford Essential Dictionary (OUP)',qty:1},
+      {name:'Handwriting Skills Builder Kindergarten (OUP)',qty:1},
+      {name:'Primary Mathematics 1 Textbook + Workbooks 1A & 1B (OUP)',qty:3},
+      {name:'UKG Motia Textbook – Urdu (OUP)',qty:1},{name:'Nardban e Urdu Workbook 1 (OUP)',qty:1},
+      {name:'UKG Phool Reader – Urdu (OUP)',qty:1},{name:'Urdu Khushkhati Silsila Book 3 (OUP)',qty:1},
+      {name:'Colour and Craft Book 1 (Sunrise)',qty:1},{name:'Islamic Studies Grade 1 (Bookmark)',qty:1},
+      {name:'The Science Factor 1 Textbook + Workbook (OUP)',qty:2},
+      {name:'English 4-line Notebook',qty:3},{name:'Urdu Notebook',qty:2},
+      {name:'Maths small square Notebook',qty:1},{name:'Science interleaf Notebook',qty:1}],
+    stationery:[
+      {name:'Black ring folder',qty:1},{name:'Lead pencils (pack)',qty:2},{name:'Pencil eraser',qty:2},
+      {name:'Pencil sharpener',qty:2},{name:'Plastic scale 6 inch',qty:1},
+      {name:'Poster colours (5 colours)',qty:5},{name:'Colour pencils 12-long (pack)',qty:2},
+      {name:'Crayons 12',qty:1},{name:'Card paper (sheets)',qty:10},
+      {name:'Paint brush size 12',qty:2},{name:'Glazed paper (sheets)',qty:10},
+      {name:'Scissors round edged (pair)',qty:1},{name:'Glue stick UHU Large',qty:2},
+      {name:'Paper ream',qty:1},{name:'A4 Colour Papers (sheets)',qty:10},
+      {name:'Pencil Pouch',qty:1},{name:'Apron',qty:1},{name:'Clear Bag',qty:1}]},
   class2:{label:'Class 2',section:'Juniors',
-    books:['Oxford International Primary English 2 Student + Workbook (OUP)','Oxford Reading Tree Stage 6 Pack of 6 Readers (OUP)','Oxford Essential Dictionary (OUP)','Handwriting Skills Builder Grade 1 (OUP)','Primary Mathematics 2 Textbook + Workbooks 2A & 2B (OUP)','UKG Gainda Textbook – Urdu (OUP)','Nardban e Urdu Workbook 2 (OUP)','UKG Kiran Reader – Urdu (OUP)','Urdu Khushkhati Silsila Book 4 (OUP)','Colour and Craft Book 2 (Sunrise)','Islamic Studies Grade 2 (Bookmark)','The Science Factor 2 Textbook + Workbook (OUP)','Notebooks: 3 English 4-line, 2 Urdu, 1 Maths small square, 1 Science interleaf'],
-    stationery:['Black ring folder (1)','Lead pencils (2 packs)','Pencil eraser (2)','Pencil sharpener (2)','Plastic scale 6 inch (1)','Colour pencils 12-long (2 packs)','Crayons 12 (1 pack)','Card paper 10 sheets','Paint brush size 12 (2)','Glazed paper (10 sheets)','Scissors round edged (1 pair)','Glue stick UHU Large (2)','Paper ream (1 pack)','A4 Colour Papers (10 sheets)','Pencil Pouch (1)','Apron (1)','Clear Bag (2)']},
+    books:[
+      {name:'Oxford International Primary English 2 Student + Workbook (OUP)',qty:2},
+      {name:'Oxford Reading Tree Stage 6 Pack of 6 Readers (OUP)',qty:6},
+      {name:'Oxford Essential Dictionary (OUP)',qty:1},
+      {name:'Handwriting Skills Builder Grade 1 (OUP)',qty:1},
+      {name:'Primary Mathematics 2 Textbook + Workbooks 2A & 2B (OUP)',qty:3},
+      {name:'UKG Gainda Textbook – Urdu (OUP)',qty:1},{name:'Nardban e Urdu Workbook 2 (OUP)',qty:1},
+      {name:'UKG Kiran Reader – Urdu (OUP)',qty:1},{name:'Urdu Khushkhati Silsila Book 4 (OUP)',qty:1},
+      {name:'Colour and Craft Book 2 (Sunrise)',qty:1},{name:'Islamic Studies Grade 2 (Bookmark)',qty:1},
+      {name:'The Science Factor 2 Textbook + Workbook (OUP)',qty:2},
+      {name:'English 4-line Notebook',qty:3},{name:'Urdu Notebook',qty:2},
+      {name:'Maths small square Notebook',qty:1},{name:'Science interleaf Notebook',qty:1}],
+    stationery:[
+      {name:'Black ring folder',qty:1},{name:'Lead pencils (pack)',qty:2},{name:'Pencil eraser',qty:2},
+      {name:'Pencil sharpener',qty:2},{name:'Plastic scale 6 inch',qty:1},
+      {name:'Colour pencils 12-long (pack)',qty:2},{name:'Crayons 12',qty:1},
+      {name:'Card paper (sheets)',qty:10},{name:'Paint brush size 12',qty:2},
+      {name:'Glazed paper (sheets)',qty:10},{name:'Scissors round edged (pair)',qty:1},
+      {name:'Glue stick UHU Large',qty:2},{name:'Paper ream',qty:1},
+      {name:'A4 Colour Papers (sheets)',qty:10},{name:'Pencil Pouch',qty:1},
+      {name:'Apron',qty:1},{name:'Clear Bag',qty:2}]},
   class3:{label:'Class 3',section:'Juniors',
-    books:['Oxford International Primary English 3 Student + Workbook (OUP)','Oxford Essential Dictionary (OUP)','Oxford Reading Tree Stage 7 Pack of 6 Readers (OUP)','Handwriting Skills Builder Grade 2 (OUP)','Primary Mathematics 3 Textbook + Workbooks 3A & 3B (OUP)','UKG Sadabahar Textbook – Urdu (OUP)','Nardban e Urdu Workbook 3 (OUP)','Chand Reader – Urdu (OUP)','Urdu Khushkhati Silsila Book 5 (OUP)','Islamic Studies Grade 3 (Bookmark)','Colour and Craft Book 3 (Sunrise)','The Science Factor 3 Textbook + Workbook (OUP)','Notebooks: 3 English 4-line, 2 Urdu, 1 Maths small square, 1 Science interleaf'],
-    stationery:['Black ring folder (1)','Lead pencils (2 packs)','Pencil eraser (2)','Pencil sharpener (2)','Plastic scale 6 inch (1)','Poster colours: white, blue, green, yellow, red (5)','Colour pencils 12-long (2 packs)','Crayons 12 (1 pack)','Card paper 10 sheets','Paint brush size 12 (2)','Glazed paper (10 sheets)','Scissors round edged (1 pair)','Glue stick UHU Large (2)','Paper ream (1 pack)','A4 Colour Papers (10 sheets)','Pencil Pouch (1)','Apron (1)','Clear Bag (1)']},
+    books:[
+      {name:'Oxford International Primary English 3 Student + Workbook (OUP)',qty:2},
+      {name:'Oxford Essential Dictionary (OUP)',qty:1},
+      {name:'Oxford Reading Tree Stage 7 Pack of 6 Readers (OUP)',qty:6},
+      {name:'Handwriting Skills Builder Grade 2 (OUP)',qty:1},
+      {name:'Primary Mathematics 3 Textbook + Workbooks 3A & 3B (OUP)',qty:3},
+      {name:'UKG Sadabahar Textbook – Urdu (OUP)',qty:1},{name:'Nardban e Urdu Workbook 3 (OUP)',qty:1},
+      {name:'Chand Reader – Urdu (OUP)',qty:1},{name:'Urdu Khushkhati Silsila Book 5 (OUP)',qty:1},
+      {name:'Islamic Studies Grade 3 (Bookmark)',qty:1},{name:'Colour and Craft Book 3 (Sunrise)',qty:1},
+      {name:'The Science Factor 3 Textbook + Workbook (OUP)',qty:2},
+      {name:'English 4-line Notebook',qty:3},{name:'Urdu Notebook',qty:2},
+      {name:'Maths small square Notebook',qty:1},{name:'Science interleaf Notebook',qty:1}],
+    stationery:[
+      {name:'Black ring folder',qty:1},{name:'Lead pencils (pack)',qty:2},{name:'Pencil eraser',qty:2},
+      {name:'Pencil sharpener',qty:2},{name:'Plastic scale 6 inch',qty:1},
+      {name:'Poster colours (5 colours)',qty:5},{name:'Colour pencils 12-long (pack)',qty:2},
+      {name:'Crayons 12',qty:1},{name:'Card paper (sheets)',qty:10},
+      {name:'Paint brush size 12',qty:2},{name:'Glazed paper (sheets)',qty:10},
+      {name:'Scissors round edged (pair)',qty:1},{name:'Glue stick UHU Large',qty:2},
+      {name:'Paper ream',qty:1},{name:'A4 Colour Papers (sheets)',qty:10},
+      {name:'Pencil Pouch',qty:1},{name:'Apron',qty:1},{name:'Clear Bag',qty:1}]},
   class4:{label:'Class 4',section:'Juniors',
-    books:['Oxford International Primary English 4 Student + Workbook (OUP)','Oxford Reading Tree Stage 8 Pack of 6 Readers (OUP)','Oxford Essential Dictionary (OUP)','Primary Mathematics 4 Textbook + Workbooks 4A & 4B (OUP)','The Science Factor 4 Textbook + Workbook (OUP)','Nargis Textbook – Urdu (OUP)','Nardban e Urdu Workbook 4 (OUP)','Barish Reader – Urdu (OUP)','Urdu Khushkhati Silsila Book 6 (OUP)','Islamic Studies Grade 4 (Bookmark)','Colour and Craft Book 4 (Sunrise)','New Oxford Social Studies for Pakistan Book 4 (OUP)','Notebooks: 3 English 4-line, 2 Urdu, 1 Maths small square, 2 Science interleaf'],
-    stationery:['Black ring folder (1)','Lead pencils (2 packs)','Pencil eraser (2)','Pencil sharpener (2)','Plastic scale 6 inch (1)','Poster colours: white, blue, green, yellow, red (5)','Colour pencils 12-long (2 packs)','Crayons 12 (1 pack)','Card paper 10 sheets','Paint brush size 12 (2)','Glazed paper (10 sheets)','Scissors round edged (1 pair)','Glue stick UHU Large (2)','Paper ream (1 pack)','A4 Colour Papers (10 sheets)','Pencil Pouch (1)','Apron (1)','Clear Bag (1)']},
+    books:[
+      {name:'Oxford International Primary English 4 Student + Workbook (OUP)',qty:2},
+      {name:'Oxford Reading Tree Stage 8 Pack of 6 Readers (OUP)',qty:6},
+      {name:'Oxford Essential Dictionary (OUP)',qty:1},
+      {name:'Primary Mathematics 4 Textbook + Workbooks 4A & 4B (OUP)',qty:3},
+      {name:'The Science Factor 4 Textbook + Workbook (OUP)',qty:2},
+      {name:'Nargis Textbook – Urdu (OUP)',qty:1},{name:'Nardban e Urdu Workbook 4 (OUP)',qty:1},
+      {name:'Barish Reader – Urdu (OUP)',qty:1},{name:'Urdu Khushkhati Silsila Book 6 (OUP)',qty:1},
+      {name:'Islamic Studies Grade 4 (Bookmark)',qty:1},{name:'Colour and Craft Book 4 (Sunrise)',qty:1},
+      {name:'New Oxford Social Studies for Pakistan Book 4 (OUP)',qty:1},
+      {name:'English 4-line Notebook',qty:3},{name:'Urdu Notebook',qty:2},
+      {name:'Maths small square Notebook',qty:1},{name:'Science interleaf Notebook',qty:2}],
+    stationery:[
+      {name:'Black ring folder',qty:1},{name:'Lead pencils (pack)',qty:2},{name:'Pencil eraser',qty:2},
+      {name:'Pencil sharpener',qty:2},{name:'Plastic scale 6 inch',qty:1},
+      {name:'Poster colours (5 colours)',qty:5},{name:'Colour pencils 12-long (pack)',qty:2},
+      {name:'Crayons 12',qty:1},{name:'Card paper (sheets)',qty:10},
+      {name:'Paint brush size 12',qty:2},{name:'Glazed paper (sheets)',qty:10},
+      {name:'Scissors round edged (pair)',qty:1},{name:'Glue stick UHU Large',qty:2},
+      {name:'Paper ream',qty:1},{name:'A4 Colour Papers (sheets)',qty:10},
+      {name:'Pencil Pouch',qty:1},{name:'Apron',qty:1},{name:'Clear Bag',qty:1}]},
   class5:{label:'Class 5',section:'Juniors',
-    books:['Oxford International Primary English 5 Student + Workbook (OUP)','Oxford Reading Tree Stage 9 Pack of 6 Readers (OUP)','Oxford Essential Dictionary (OUP)','Primary Mathematics 5 Textbook + Workbooks 5A & 5B (OUP)','The Science Factor 5 Textbook + Workbook (OUP)','Gul-e-Lala Textbook – Urdu (OUP)','Dhanak Reader – Urdu (OUP)','Nardban e Urdu Workbook 5 (OUP)','Urdu Khushkhati Silsila Book 7 (OUP)','Islamic Studies Grade 5 (Bookmark)','Colour and Craft Book 5 (Sunrise)','New Oxford Social Studies for Pakistan Book 5 (OUP)','Notebooks: 3 English 4-line, 2 Urdu, 1 Maths small square, 2 Science interleaf'],
-    stationery:['Black ring folder (1)','Lead pencils (2 packs)','Pencil eraser (2)','Pencil sharpener (2)','Plastic scale 6 inch (1)','Poster colours: white, blue, green, yellow, red (5)','Colour pencils 12-long (2 packs)','Crayons 12 (1 pack)','Card paper 10 sheets','Paint brush size 12 (2)','Glazed paper (10 sheets)','Scissors round edged (1 pair)','Glue stick UHU Large (2)','Paper ream (1 pack)','A4 Colour Papers (10 sheets)','Pencil Pouch (1)','Apron (1)','Clear Bag (1)']}
+    books:[
+      {name:'Oxford International Primary English 5 Student + Workbook (OUP)',qty:2},
+      {name:'Oxford Reading Tree Stage 9 Pack of 6 Readers (OUP)',qty:6},
+      {name:'Oxford Essential Dictionary (OUP)',qty:1},
+      {name:'Primary Mathematics 5 Textbook + Workbooks 5A & 5B (OUP)',qty:3},
+      {name:'The Science Factor 5 Textbook + Workbook (OUP)',qty:2},
+      {name:'Gul-e-Lala Textbook – Urdu (OUP)',qty:1},{name:'Dhanak Reader – Urdu (OUP)',qty:1},
+      {name:'Nardban e Urdu Workbook 5 (OUP)',qty:1},{name:'Urdu Khushkhati Silsila Book 7 (OUP)',qty:1},
+      {name:'Islamic Studies Grade 5 (Bookmark)',qty:1},{name:'Colour and Craft Book 5 (Sunrise)',qty:1},
+      {name:'New Oxford Social Studies for Pakistan Book 5 (OUP)',qty:1},
+      {name:'English 4-line Notebook',qty:3},{name:'Urdu Notebook',qty:2},
+      {name:'Maths small square Notebook',qty:1},{name:'Science interleaf Notebook',qty:2}],
+    stationery:[
+      {name:'Black ring folder',qty:1},{name:'Lead pencils (pack)',qty:2},{name:'Pencil eraser',qty:2},
+      {name:'Pencil sharpener',qty:2},{name:'Plastic scale 6 inch',qty:1},
+      {name:'Poster colours (5 colours)',qty:5},{name:'Colour pencils 12-long (pack)',qty:2},
+      {name:'Crayons 12',qty:1},{name:'Card paper (sheets)',qty:10},
+      {name:'Paint brush size 12',qty:2},{name:'Glazed paper (sheets)',qty:10},
+      {name:'Scissors round edged (pair)',qty:1},{name:'Glue stick UHU Large',qty:2},
+      {name:'Paper ream',qty:1},{name:'A4 Colour Papers (sheets)',qty:10},
+      {name:'Pencil Pouch',qty:1},{name:'Apron',qty:1},{name:'Clear Bag',qty:1}]}
 };
 
 // ══ STATE ══
-let students=JSON.parse(localStorage.getItem('hms_students_v2')||'[]');
+let students=JSON.parse(localStorage.getItem('hms_v3')||'[]');
 let editingId=null,currentClass=null,currentRole=null;
-function saveData(){localStorage.setItem('hms_students_v2',JSON.stringify(students));updateBadges();if(currentRole==='admin')updateDashboard();}
+function saveData(){localStorage.setItem('hms_v3',JSON.stringify(students));updateBadges();if(currentRole==='admin')updateDashboard();}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2);}
+
+// ══ HELPERS ══
+// brought[i] = {checked:bool, qty:number}
+function getItemBalance(item, brought){
+  if(!brought||!brought.checked) return item.qty; // nothing brought
+  const b=Number(brought.qty)||0;
+  return Math.max(0, item.qty - b);
+}
+function itemComplete(item, brought){return brought&&brought.checked&&getItemBalance(item,brought)===0;}
+function itemPartial(item, brought){return brought&&brought.checked&&getItemBalance(item,brought)>0;}
+function itemMissing(item, brought){return !brought||!brought.checked;}
+
+function calcPctNew(items, broughtMap){
+  if(!items.length)return 100;
+  // complete = balance 0 and checked
+  const done=items.filter((it,i)=>itemComplete(it,broughtMap[i])).length;
+  return Math.round((done/items.length)*100);
+}
+function getStatusNew(s,key){
+  const cls=CLASSES[key];
+  const bp=calcPctNew(cls.books,s.books||{});
+  const sp=calcPctNew(cls.stationery,s.stationery||{});
+  const avg=(bp+sp)/2;
+  return avg>=100?'complete':avg>0?'partial':'pending';
+}
 
 // ══ SIDEBAR ══
 function buildSidebar(role){
-  const isAdmin=role==='admin';
-  const sb=document.getElementById('rec-sidebar');
+  const isAdmin=role==='admin',sb=document.getElementById('rec-sidebar');
   let h='';
   if(isAdmin){
     h+=`<div class="rs-section"><div class="rs-label">Overview</div><div class="rs-item" id="rs-dashboard" onclick="showRPanel('dashboard',this)">📊 Dashboard</div></div>`;
@@ -798,18 +966,17 @@ function buildSidebar(role){
     ['mont1','mont2','mont3'].forEach(k=>h+=`<div class="rs-item" id="rs-${k}" onclick="showRPanel('${k}',this)">${CLASSES[k].label} <span class="rs-badge" id="cnt-${k}">0</span></div>`);
     h+=`</div><div class="rs-section"><div class="rs-label">Juniors</div>`;
     ['class1','class2','class3','class4','class5'].forEach(k=>h+=`<div class="rs-item" id="rs-${k}" onclick="showRPanel('${k}',this)">${CLASSES[k].label} <span class="rs-badge" id="cnt-${k}">0</span></div>`);
-    h+=`</div><div class="rs-section"><div class="rs-label">Reports</div><div class="rs-item" id="rs-missing" onclick="showRPanel('missing',this)">⚠ Missing Items</div><div class="rs-item" id="rs-allstudents" onclick="showRPanel('allstudents',this)">👥 All Students</div></div>`;
+    h+=`</div><div class="rs-section"><div class="rs-label">Reports</div><div class="rs-item" id="rs-missing" onclick="showRPanel('missing',this)">⚠ Missing / Short</div><div class="rs-item" id="rs-allstudents" onclick="showRPanel('allstudents',this)">👥 All Students</div></div>`;
   } else {
     h+=`<div class="rs-section"><div class="rs-label">${CLASSES[role].section}</div><div class="rs-item" id="rs-${role}" onclick="showRPanel('${role}',this)">${CLASSES[role].label} <span class="rs-badge" id="cnt-${role}">0</span></div></div>`;
-    h+=`<div class="rs-section"><div class="rs-label">My Reports</div><div class="rs-item" id="rs-missing" onclick="showRPanel('missing',this)">⚠ Missing Items</div></div>`;
+    h+=`<div class="rs-section"><div class="rs-label">Reports</div><div class="rs-item" id="rs-missing" onclick="showRPanel('missing',this)">⚠ Missing / Short</div></div>`;
   }
   sb.innerHTML=h;
 }
 
 // ══ PANELS ══
 function buildPanels(role){
-  const isAdmin=role==='admin';
-  const keys=isAdmin?Object.keys(CLASSES):[role];
+  const isAdmin=role==='admin',keys=isAdmin?Object.keys(CLASSES):[role];
   let h='';
   if(isAdmin) h+=`<div class="r-panel" id="rp-dashboard"><div class="r-page-title">📊 Dashboard</div><div class="r-page-sub">Session 2026–27 — All Classes</div><div class="r-stats" id="dash-stats"></div><div class="dash-grid" id="dash-grid"></div></div>`;
   keys.forEach(key=>{
@@ -821,19 +988,32 @@ function buildPanels(role){
       <div class="r-table-wrap">
         <div class="r-toolbar">
           <input class="r-search" placeholder="Search student..." id="search-${key}" oninput="renderClassPanel('${key}')">
-          <select class="r-filter" id="filter-${key}" onchange="renderClassPanel('${key}')"><option value="">All statuses</option><option value="complete">Complete</option><option value="partial">Partial</option><option value="pending">Pending</option></select>
+          <select class="r-filter" id="filter-${key}" onchange="renderClassPanel('${key}')">
+            <option value="">All statuses</option><option value="complete">✓ Complete</option>
+            <option value="partial">⚠ Partial</option><option value="pending">✕ Pending</option>
+          </select>
         </div>
-        <table class="r-table"><thead><tr><th>Roll #</th><th>Student Name</th><th>Books</th><th>Stationery</th><th>Overall</th><th>Actions</th></tr></thead><tbody id="tbody-${key}"></tbody></table>
-        <div id="empty-${key}" class="no-res" style="display:none;">No students yet. Click "+ Add Student" to begin.</div>
+        <table class="r-table"><thead><tr><th>Roll #</th><th>Student Name</th><th>Books</th><th>Stationery</th><th>Overall</th><th>Actions</th></tr></thead>
+        <tbody id="tbody-${key}"></tbody></table>
+        <div id="empty-${key}" class="no-res" style="display:none;">No students yet. Click "+ Add Student".</div>
       </div></div>`;
   });
+  // Missing/Short panel
   h+=`<div class="r-panel" id="rp-missing">
-    <div class="r-page-title">⚠ Missing Items</div>
-    <div class="r-page-sub">Students with incomplete books or stationery${!isAdmin?' — '+CLASSES[role]?.label:''}</div>
+    <div class="r-page-title">⚠ Missing &amp; Short Items</div>
+    <div class="r-page-sub">Students with items not brought or quantity short${!isAdmin?' — '+CLASSES[role]?.label:''}</div>
     <div class="r-toolbar" style="background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);margin-bottom:12px;">
       <input class="r-search" placeholder="Search student..." id="miss-search" oninput="renderMissing()">
       ${isAdmin?`<select class="r-filter" id="miss-class" onchange="renderMissing()"><option value="">All classes</option>${Object.values(CLASSES).map(c=>`<option>${c.label}</option>`).join('')}</select>`:''}
-      <select class="r-filter" id="miss-type" onchange="renderMissing()"><option value="">Books & Stationery</option><option value="book">Books only</option><option value="stationery">Stationery only</option></select>
+      <select class="r-filter" id="miss-type" onchange="renderMissing()">
+        <option value="">Books &amp; Stationery</option>
+        <option value="book">Books only</option><option value="stationery">Stationery only</option>
+      </select>
+      <select class="r-filter" id="miss-severity" onchange="renderMissing()">
+        <option value="">Missing &amp; Short</option>
+        <option value="missing">Not brought at all</option>
+        <option value="short">Brought but short</option>
+      </select>
     </div>
     <div id="missing-wrap"></div></div>`;
   if(isAdmin) h+=`<div class="r-panel" id="rp-allstudents">
@@ -844,7 +1024,8 @@ function buildPanels(role){
         <select class="r-filter" id="all-class" onchange="renderAllStudents()"><option value="">All classes</option>${Object.values(CLASSES).map(c=>`<option>${c.label}</option>`).join('')}</select>
         <select class="r-filter" id="all-status" onchange="renderAllStudents()"><option value="">All statuses</option><option value="complete">Complete</option><option value="partial">Partial</option><option value="pending">Pending</option></select>
       </div>
-      <table class="r-table"><thead><tr><th>Roll #</th><th>Name</th><th>Class</th><th>Books</th><th>Stationery</th><th>Overall</th><th>Actions</th></tr></thead><tbody id="all-tbody"></tbody></table>
+      <table class="r-table"><thead><tr><th>Roll #</th><th>Name</th><th>Class</th><th>Books</th><th>Stationery</th><th>Overall</th><th>Actions</th></tr></thead>
+      <tbody id="all-tbody"></tbody></table>
       <div id="all-empty" class="no-res" style="display:none;">No students match.</div>
     </div></div>`;
   document.getElementById('r-panels').innerHTML=h;
@@ -861,64 +1042,210 @@ function showRPanel(id,el){
   else if(CLASSES[id]){currentClass=id;renderClassPanel(id);}
 }
 
-// ══ RENDER CLASS ══
+// ══ RENDER CLASS TABLE ══
 function renderClassPanel(key){
   const cls=CLASSES[key];
   const allRows=students.filter(s=>s.classKey===key);
   const search=(document.getElementById('search-'+key)?.value||'').toLowerCase();
   const filter=document.getElementById('filter-'+key)?.value||'';
-  const total=allRows.length,complete=allRows.filter(s=>getStatus(s,key)==='complete').length;
-  const partial=allRows.filter(s=>getStatus(s,key)==='partial').length,pending=allRows.filter(s=>getStatus(s,key)==='pending').length;
+  const total=allRows.length;
+  const complete=allRows.filter(s=>getStatusNew(s,key)==='complete').length;
+  const partial=allRows.filter(s=>getStatusNew(s,key)==='partial').length;
+  const pending=allRows.filter(s=>getStatusNew(s,key)==='pending').length;
   const se=document.getElementById('stats-'+key);
-  if(se)se.innerHTML=`<div class="r-stat"><div class="v">${total}</div><div class="l">Students</div></div><div class="r-stat"><div class="v">${complete}</div><div class="l">Complete</div></div><div class="r-stat warn"><div class="v">${partial}</div><div class="l">Partial</div></div><div class="r-stat danger"><div class="v">${pending}</div><div class="l">Pending</div></div>`;
+  if(se)se.innerHTML=`<div class="r-stat"><div class="v">${total}</div><div class="l">Students</div></div><div class="r-stat"><div class="v">${complete}</div><div class="l">Complete</div></div><div class="r-stat warn"><div class="v">${partial}</div><div class="l">Partial/Short</div></div><div class="r-stat danger"><div class="v">${pending}</div><div class="l">Pending</div></div>`;
   let rows=[...allRows];
-  if(filter)rows=rows.filter(s=>getStatus(s,key)===filter);
+  if(filter)rows=rows.filter(s=>getStatusNew(s,key)===filter);
   if(search)rows=rows.filter(s=>s.name.toLowerCase().includes(search)||(s.roll||'').includes(search));
   const tbody=document.getElementById('tbody-'+key),empty=document.getElementById('empty-'+key);
   if(!tbody)return;
   if(rows.length===0){tbody.innerHTML='';if(empty)empty.style.display='block';return;}
   if(empty)empty.style.display='none';
   tbody.innerHTML=rows.map(s=>{
-    const bp=calcPct(s.books||{},cls.books.length),sp=calcPct(s.stationery||{},cls.stationery.length),ov=Math.round((bp+sp)/2);
-    return `<tr><td><span style="font-family:'DM Mono',monospace;font-size:11px;">${s.roll||'—'}</span></td><td><strong>${s.name}</strong></td><td>${progCell(bp)}</td><td>${progCell(sp)}</td><td>${progCell(ov)}</td>
-    <td style="white-space:nowrap;"><button class="lbtn" onclick="openEditModal('${s.id}')">Edit</button> &nbsp;<button class="lbtn danger" onclick="deleteStudent('${s.id}')">Delete</button></td></tr>`;
+    const bp=calcPctNew(cls.books,s.books||{});
+    const sp=calcPctNew(cls.stationery,s.stationery||{});
+    const ov=Math.round((bp+sp)/2);
+    // Count short items
+    const shortBooks=cls.books.filter((it,i)=>itemPartial(it,(s.books||{})[i])).length;
+    const shortStat=cls.stationery.filter((it,i)=>itemPartial(it,(s.stationery||{})[i])).length;
+    const shortTag=(shortBooks+shortStat)>0?`<span style="font-size:10px;background:var(--warn-light);color:var(--warn);border-radius:4px;padding:1px 6px;margin-left:4px;">⚡ ${shortBooks+shortStat} short</span>`:'';
+    return `<tr>
+      <td><span style="font-family:'DM Mono',monospace;font-size:11px;">${s.roll||'—'}</span></td>
+      <td><strong>${s.name}</strong>${shortTag}</td>
+      <td>${progCell(bp)}</td><td>${progCell(sp)}</td><td>${progCell(ov)}</td>
+      <td style="white-space:nowrap;">
+        <button class="lbtn" onclick="openEditModal('${s.id}')">Edit</button>
+        &nbsp;<button class="lbtn danger" onclick="deleteStudent('${s.id}')">Delete</button>
+      </td></tr>`;
   }).join('');
 }
-function progCell(pct){
-  const c=pct>=90?'':pct>=50?'mid':'low',col=pct>=90?'var(--accent)':pct>=50?'var(--warn)':'var(--danger)';
-  return `<div class="prog-wrap"><div class="prog-bar"><div class="prog-fill ${c}" style="width:${pct}%"></div></div><span class="prog-pct" style="color:${col}">${pct}%</span></div>`;
-}
-function calcPct(checked,total){if(!total)return 100;return Math.round((Object.values(checked).filter(Boolean).length/total)*100);}
-function getStatus(s,key){const cls=CLASSES[key];const avg=(calcPct(s.books||{},cls.books.length)+calcPct(s.stationery||{},cls.stationery.length))/2;return avg>=100?'complete':avg>0?'partial':'pending';}
 
-// ══ MODAL ══
+function progCell(pct){
+  const c=pct>=100?'':pct>=50?'mid':'low',col=pct>=100?'var(--accent)':pct>=50?'var(--warn)':'var(--danger)';
+  return `<div class="prog-wrap"><div class="prog-bar"><div class="prog-fill ${c}" style="width:${Math.min(pct,100)}%"></div></div><span class="prog-pct" style="color:${col}">${pct}%</span></div>`;
+}
+
+// ══ MODAL WITH QUANTITY FIELDS ══
 function openAddModal(k){editingId=null;currentClass=k;document.getElementById('modal-title').textContent=`Add Student — ${CLASSES[k].label}`;renderModalBody(k,null);document.getElementById('entry-modal').classList.add('open');}
 function openEditModal(id){const s=students.find(x=>x.id===id);if(!s)return;editingId=id;currentClass=s.classKey;document.getElementById('modal-title').textContent=`Edit — ${s.name}`;renderModalBody(s.classKey,s);document.getElementById('entry-modal').classList.add('open');}
 function closeModal(){document.getElementById('entry-modal').classList.remove('open');editingId=null;}
-function renderModalBody(classKey,student){
-  const cls=CLASSES[classKey],books=student?.books||{},stat=student?.stationery||{};
+
+function renderModalBody(classKey, student){
+  const cls=CLASSES[classKey];
+  const books=student?.books||{}, stat=student?.stationery||{};
+  // Inline style for qty modal items
+  const qStyle=`style="display:grid;grid-template-columns:1fr auto auto auto;gap:0;align-items:center;background:var(--bg);border:1px solid var(--border2);border-radius:6px;overflow:hidden;transition:all .12s;"`;
   document.getElementById('modal-body').innerHTML=`
-    <div class="frow"><div class="fg"><label>Roll #</label><input type="text" id="m-roll" value="${student?.roll||''}" placeholder="e.g. 01"></div><div class="fg" style="flex:2;"><label>Student Name *</label><input type="text" id="m-name" value="${student?.name||''}" placeholder="Full name"></div></div>
-    <div class="frow"><div class="fg"><label>Date Checked</label><input type="date" id="m-date" value="${student?.date||new Date().toISOString().slice(0,10)}"></div><div class="fg"><label>Notes</label><input type="text" id="m-notes" value="${student?.notes||''}" placeholder="Any remarks..."></div></div>
-    <div class="sec-row"><span class="sec-tag-sm">📚 Books</span><div class="sec-div"></div><span style="font-size:11px;color:#9C9590;">${cls.books.length} items</span><button class="btn btn-secondary btn-sm" onclick="toggleAll('book',true)">All ✓</button><button class="btn btn-secondary btn-sm" onclick="toggleAll('book',false)">Clear</button></div>
-    <div class="chk-grid">${cls.books.map((b,i)=>chkItem('book',i,b,!!books[i])).join('')}</div>
-    <div class="sec-row" style="margin-top:16px;"><span class="sec-tag-sm green">✏️ Stationery</span><div class="sec-div"></div><span style="font-size:11px;color:#9C9590;">${cls.stationery.length} items</span><button class="btn btn-secondary btn-sm" onclick="toggleAll('stat',true)">All ✓</button><button class="btn btn-secondary btn-sm" onclick="toggleAll('stat',false)">Clear</button></div>
-    <div class="chk-grid">${cls.stationery.map((s2,i)=>chkItem('stat',i,s2,!!stat[i])).join('')}</div>`;
+    <div class="frow">
+      <div class="fg"><label>Roll #</label><input type="text" id="m-roll" value="${student?.roll||''}" placeholder="e.g. 01"></div>
+      <div class="fg" style="flex:2;"><label>Student Name *</label><input type="text" id="m-name" value="${student?.name||''}" placeholder="Full name"></div>
+    </div>
+    <div class="frow">
+      <div class="fg"><label>Date Checked</label><input type="date" id="m-date" value="${student?.date||new Date().toISOString().slice(0,10)}"></div>
+      <div class="fg"><label>Notes</label><input type="text" id="m-notes" value="${student?.notes||''}" placeholder="Any remarks..."></div>
+    </div>
+    <div class="sec-row">
+      <span class="sec-tag-sm">📚 Books</span><div class="sec-div"></div>
+      <span style="font-size:11px;color:#9C9590;">${cls.books.length} items</span>
+      <button class="btn btn-secondary btn-sm" onclick="checkAllItems('book',true)">All ✓</button>
+      <button class="btn btn-secondary btn-sm" onclick="checkAllItems('book',false)">Clear</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px;">
+      ${cls.books.map((it,i)=>qtyRow('book',i,it,books[i])).join('')}
+    </div>
+    <div class="sec-row" style="margin-top:16px;">
+      <span class="sec-tag-sm green">✏️ Stationery</span><div class="sec-div"></div>
+      <span style="font-size:11px;color:#9C9590;">${cls.stationery.length} items</span>
+      <button class="btn btn-secondary btn-sm" onclick="checkAllItems('stat',true)">All ✓</button>
+      <button class="btn btn-secondary btn-sm" onclick="checkAllItems('stat',false)">Clear</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px;">
+      ${cls.stationery.map((it,i)=>qtyRow('stat',i,it,stat[i])).join('')}
+    </div>`;
 }
-function chkItem(type,idx,label,checked){const id=`chk-${type}-${idx}`;return `<div class="chk-item ${checked?'checked':''}" id="${id}" onclick="toggleChk('${type}',${idx},'${id}')"><div class="chk-icon">${checked?'✓':''}</div><div class="chk-text">${label}</div></div>`;}
-function toggleChk(type,idx,domId){const el=document.getElementById(domId);const was=el.classList.contains('checked');el.classList.toggle('checked',!was);el.querySelector('.chk-icon').textContent=!was?'✓':'';}
-function toggleAll(type,state){document.querySelectorAll(`[id^="chk-${type}-"]`).forEach(el=>{el.classList.toggle('checked',state);el.querySelector('.chk-icon').textContent=state?'✓':'';}); }
+
+function qtyRow(type,idx,item,brought){
+  const checked=brought?.checked||false;
+  const broughtQty=brought?.qty!==undefined?brought.qty:item.qty;
+  const bal=checked?Math.max(0,item.qty-Number(broughtQty)):item.qty;
+  const balColor=bal===0?'var(--accent)':bal>0?'var(--danger)':'var(--accent)';
+  const balText=bal===0?'✓ Complete':`Balance: <strong style="color:${balColor};">${bal}</strong>`;
+  const rowBg=checked?(bal===0?'var(--accent-light)':'var(--warn-light)'):'var(--bg)';
+  const rowBorder=checked?(bal===0?'var(--accent)':'var(--warn)'):'var(--border2)';
+  return `<div id="qrow-${type}-${idx}" style="display:grid;grid-template-columns:32px 1fr 90px 110px;gap:0;align-items:center;background:${rowBg};border:1px solid ${rowBorder};border-radius:6px;overflow:hidden;transition:all .12s;">
+    <div style="display:flex;align-items:center;justify-content:center;padding:8px 0;cursor:pointer;" onclick="toggleQRow('${type}',${idx})">
+      <div id="qchk-${type}-${idx}" style="width:18px;height:18px;border:2px solid ${checked?'var(--accent)':'var(--border2)'};border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;background:${checked?'var(--accent)':'white'};color:white;transition:all .12s;">${checked?'✓':''}</div>
+    </div>
+    <div style="padding:7px 8px;font-size:12px;line-height:1.3;cursor:pointer;" onclick="toggleQRow('${type}',${idx})">
+      <div style="font-weight:500;">${item.name}</div>
+      <div style="font-size:10px;color:#9C9590;">Required: <strong>${item.qty}</strong></div>
+    </div>
+    <div style="padding:6px 8px;border-left:1px solid var(--border2);">
+      <div style="font-size:9px;color:#9C9590;margin-bottom:2px;text-transform:uppercase;letter-spacing:.05em;">Brought</div>
+      <input type="number" id="qval-${type}-${idx}" value="${checked?broughtQty:''}" min="0" max="${item.qty*2}"
+        style="width:100%;border:none;background:transparent;font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:var(--text-dark);outline:none;padding:0;"
+        placeholder="0" ${!checked?'disabled':''}
+        oninput="updateBalance('${type}',${idx},${item.qty})">
+    </div>
+    <div style="padding:6px 10px;border-left:1px solid var(--border2);font-size:11px;" id="qbal-${type}-${idx}">
+      <div style="font-size:9px;color:#9C9590;margin-bottom:2px;text-transform:uppercase;letter-spacing:.05em;">Balance</div>
+      ${balText}
+    </div>
+  </div>`;
+}
+
+function toggleQRow(type,idx){
+  const chk=document.getElementById(`qchk-${type}-${idx}`);
+  const row=document.getElementById(`qrow-${type}-${idx}`);
+  const inp=document.getElementById(`qval-${type}-${idx}`);
+  const isChecked=chk.textContent==='✓';
+  const newChecked=!isChecked;
+  chk.textContent=newChecked?'✓':'';
+  chk.style.background=newChecked?'var(--accent)':'white';
+  chk.style.borderColor=newChecked?'var(--accent)':'var(--border2)';
+  inp.disabled=!newChecked;
+  if(newChecked&&!inp.value){
+    // default to required qty when checking
+    const cls=CLASSES[currentClass];
+    const items=type==='book'?cls.books:cls.stationery;
+    inp.value=items[idx].qty;
+  }
+  if(!newChecked)inp.value='';
+  updateBalance(type,idx,getRequiredQty(type,idx));
+}
+
+function getRequiredQty(type,idx){
+  const cls=CLASSES[currentClass];
+  return (type==='book'?cls.books:cls.stationery)[idx].qty;
+}
+
+function updateBalance(type,idx,required){
+  const chk=document.getElementById(`qchk-${type}-${idx}`);
+  const inp=document.getElementById(`qval-${type}-${idx}`);
+  const balEl=document.getElementById(`qbal-${type}-${idx}`);
+  const row=document.getElementById(`qrow-${type}-${idx}`);
+  const isChecked=chk.textContent==='✓';
+  const brought=Number(inp.value)||0;
+  const bal=isChecked?Math.max(0,required-brought):required;
+  const balColor=bal===0?'var(--accent)':'var(--danger)';
+  const balText=bal===0?'✓ Complete':`Balance: <strong style="color:${balColor};">${bal}</strong>`;
+  balEl.innerHTML=`<div style="font-size:9px;color:#9C9590;margin-bottom:2px;text-transform:uppercase;letter-spacing:.05em;">Balance</div>${balText}`;
+  if(isChecked){
+    row.style.background=bal===0?'var(--accent-light)':'var(--warn-light)';
+    row.style.borderColor=bal===0?'var(--accent)':'var(--warn)';
+  } else {
+    row.style.background='var(--bg)';
+    row.style.borderColor='var(--border2)';
+  }
+}
+
+function checkAllItems(type,state){
+  const cls=CLASSES[currentClass];
+  const items=type==='book'?cls.books:cls.stationery;
+  items.forEach((it,i)=>{
+    const chk=document.getElementById(`qchk-${type}-${i}`);
+    const inp=document.getElementById(`qval-${type}-${i}`);
+    if(!chk||!inp)return;
+    if(state){
+      chk.textContent='✓';chk.style.background='var(--accent)';chk.style.borderColor='var(--accent)';
+      inp.disabled=false;inp.value=it.qty;
+    } else {
+      chk.textContent='';chk.style.background='white';chk.style.borderColor='var(--border2)';
+      inp.disabled=true;inp.value='';
+    }
+    updateBalance(type,i,it.qty);
+  });
+}
+
 function saveStudent(){
   const name=document.getElementById('m-name').value.trim();
   if(!name){showToastR('Please enter a student name.');return;}
-  const cls=CLASSES[currentClass],books={},stationery={};
-  cls.books.forEach((b,i)=>books[i]=!!document.getElementById(`chk-book-${i}`)?.classList.contains('checked'));
-  cls.stationery.forEach((s,i)=>stationery[i]=!!document.getElementById(`chk-stat-${i}`)?.classList.contains('checked'));
-  const rec={id:editingId||uid(),classKey:currentClass,roll:document.getElementById('m-roll').value.trim(),name,date:document.getElementById('m-date').value,notes:document.getElementById('m-notes').value.trim(),books,stationery};
-  if(editingId){const idx=students.findIndex(s=>s.id===editingId);if(idx!==-1)students[idx]=rec;}else students.push(rec);
+  const cls=CLASSES[currentClass];
+  const books={},stationery={};
+  cls.books.forEach((it,i)=>{
+    const chk=document.getElementById(`qchk-book-${i}`);
+    const inp=document.getElementById(`qval-book-${i}`);
+    books[i]={checked:chk?.textContent==='✓',qty:Number(inp?.value)||0};
+  });
+  cls.stationery.forEach((it,i)=>{
+    const chk=document.getElementById(`qchk-stat-${i}`);
+    const inp=document.getElementById(`qval-stat-${i}`);
+    stationery[i]={checked:chk?.textContent==='✓',qty:Number(inp?.value)||0};
+  });
+  const rec={id:editingId||uid(),classKey:currentClass,
+    roll:document.getElementById('m-roll').value.trim(),name,
+    date:document.getElementById('m-date').value,
+    notes:document.getElementById('m-notes').value.trim(),books,stationery};
+  if(editingId){const idx=students.findIndex(s=>s.id===editingId);if(idx!==-1)students[idx]=rec;}
+  else students.push(rec);
   saveData();closeModal();renderClassPanel(currentClass);showToastR(editingId?'Record updated.':'Student added.');
 }
-function deleteStudent(id){if(!confirm('Delete this student record?'))return;students=students.filter(s=>s.id!==id);saveData();if(currentClass)renderClassPanel(currentClass);showToastR('Deleted.');}
+
+function deleteStudent(id){
+  if(!confirm('Delete this student record?'))return;
+  students=students.filter(s=>s.id!==id);
+  saveData();if(currentClass)renderClassPanel(currentClass);showToastR('Deleted.');
+}
 
 // ══ BADGES ══
 function updateBadges(){Object.keys(CLASSES).forEach(key=>{const el=document.getElementById('cnt-'+key);if(el)el.textContent=students.filter(s=>s.classKey===key).length;});}
@@ -926,46 +1253,88 @@ function updateBadges(){Object.keys(CLASSES).forEach(key=>{const el=document.get
 // ══ DASHBOARD ══
 function updateDashboard(){
   const total=students.length;let complete=0,partial=0,missing=0;
-  students.forEach(s=>{const st=getStatus(s,s.classKey);if(st==='complete')complete++;else if(st==='partial')partial++;else missing++;});
+  students.forEach(s=>{const st=getStatusNew(s,s.classKey);if(st==='complete')complete++;else if(st==='partial')partial++;else missing++;});
   const dse=document.getElementById('dash-stats');
-  if(dse)dse.innerHTML=`<div class="r-stat"><div class="v">${total}</div><div class="l">Total Students</div></div><div class="r-stat"><div class="v">${complete}</div><div class="l">Complete</div></div><div class="r-stat warn"><div class="v">${partial}</div><div class="l">Partial</div></div><div class="r-stat danger"><div class="v">${missing}</div><div class="l">Pending</div></div>`;
+  if(dse)dse.innerHTML=`<div class="r-stat"><div class="v">${total}</div><div class="l">Total Students</div></div><div class="r-stat"><div class="v">${complete}</div><div class="l">Complete</div></div><div class="r-stat warn"><div class="v">${partial}</div><div class="l">Partial/Short</div></div><div class="r-stat danger"><div class="v">${missing}</div><div class="l">Pending</div></div>`;
   const grid=document.getElementById('dash-grid');if(!grid)return;
   grid.innerHTML=Object.keys(CLASSES).map(key=>{
     const cls=CLASSES[key],rows=students.filter(s=>s.classKey===key),n=rows.length;
-    const bp=n?Math.round(rows.reduce((a,s)=>a+calcPct(s.books||{},cls.books.length),0)/n):0;
-    const sp=n?Math.round(rows.reduce((a,s)=>a+calcPct(s.stationery||{},cls.stationery.length),0)/n):0;
+    const bp=n?Math.round(rows.reduce((a,s)=>a+calcPctNew(cls.books,s.books||{}),0)/n):0;
+    const sp=n?Math.round(rows.reduce((a,s)=>a+calcPctNew(cls.stationery,s.stationery||{}),0)/n):0;
     return `<div class="cls-sum"><div class="cs-name"><span class="class-pill ${cls.section==='Montessori'?'pill-mont':'pill-jun'}">${cls.section}</span><strong>${cls.label}</strong><span style="margin-left:auto;font-size:11px;color:#9C9590;">${n} students</span></div>
-      <div class="cs-bar-wrap"><div class="cs-lbl"><span>Books</span><span>${bp}%</span></div><div class="prog-bar" style="height:7px;"><div class="prog-fill ${bp<50?'low':bp<90?'mid':''}" style="width:${bp}%"></div></div></div>
-      <div class="cs-bar-wrap" style="margin-top:5px;"><div class="cs-lbl"><span>Stationery</span><span>${sp}%</span></div><div class="prog-bar" style="height:7px;"><div class="prog-fill ${sp<50?'low':sp<90?'mid':''}" style="width:${sp}%"></div></div></div>
+      <div class="cs-bar-wrap"><div class="cs-lbl"><span>Books</span><span>${bp}%</span></div><div class="prog-bar" style="height:7px;"><div class="prog-fill ${bp<50?'low':bp<100?'mid':''}" style="width:${bp}%"></div></div></div>
+      <div class="cs-bar-wrap" style="margin-top:5px;"><div class="cs-lbl"><span>Stationery</span><span>${sp}%</span></div><div class="prog-bar" style="height:7px;"><div class="prog-fill ${sp<50?'low':sp<100?'mid':''}" style="width:${sp}%"></div></div></div>
       ${n===0?'<div style="margin-top:7px;font-size:11px;color:#9C9590;">No students recorded yet.</div>':''}</div>`;
   }).join('');
 }
 
-// ══ MISSING REPORT ══
+// ══ MISSING / SHORT REPORT ══
 function renderMissing(){
   const isAdmin=currentRole==='admin';
   const search=(document.getElementById('miss-search')?.value||'').toLowerCase();
   const classFilter=isAdmin?(document.getElementById('miss-class')?.value||''):'';
   const typeFilter=document.getElementById('miss-type')?.value||'';
+  const severity=document.getElementById('miss-severity')?.value||'';
   const allowed=isAdmin?Object.keys(CLASSES):[currentRole];
   let rows=students.filter(s=>{
     if(!allowed.includes(s.classKey))return false;
     const cls=CLASSES[s.classKey];
-    const bp=calcPct(s.books||{},cls.books.length),sp=calcPct(s.stationery||{},cls.stationery.length);
-    if(typeFilter==='book')return bp<100;if(typeFilter==='stationery')return sp<100;return bp<100||sp<100;
+    const hasBookIssue=cls.books.some((it,i)=>!itemComplete(it,(s.books||{})[i]));
+    const hasStatIssue=cls.stationery.some((it,i)=>!itemComplete(it,(s.stationery||{})[i]));
+    if(typeFilter==='book')return hasBookIssue;
+    if(typeFilter==='stationery')return hasStatIssue;
+    return hasBookIssue||hasStatIssue;
   });
   if(classFilter)rows=rows.filter(s=>CLASSES[s.classKey]?.label===classFilter);
   if(search)rows=rows.filter(s=>s.name.toLowerCase().includes(search));
   const wrap=document.getElementById('missing-wrap');if(!wrap)return;
-  if(rows.length===0){wrap.innerHTML='<div style="text-align:center;padding:48px;color:#9C9590;font-size:13px;">✅ No missing items found!</div>';return;}
+  if(rows.length===0){wrap.innerHTML='<div style="text-align:center;padding:48px;color:#9C9590;font-size:13px;">✅ No missing or short items!</div>';return;}
   wrap.innerHTML=rows.map(s=>{
     const cls=CLASSES[s.classKey];
-    const mb=(!typeFilter||typeFilter==='book')?cls.books.filter((b,i)=>!s.books?.[i]):[];
-    const ms=(!typeFilter||typeFilter==='stationery')?cls.stationery.filter((st,i)=>!s.stationery?.[i]):[];
-    if(!mb.length&&!ms.length)return'';
-    return `<div class="miss-card"><div class="miss-head"><div><span class="class-pill ${cls.section==='Montessori'?'pill-mont':'pill-jun'}">${cls.label}</span><strong style="margin-left:8px;">${s.name}</strong>${s.roll?`<span style="font-size:11px;color:#9C9590;margin-left:6px;">Roll ${s.roll}</span>`:''}</div><button class="lbtn" onclick="openEditModal('${s.id}')">Update →</button></div>
-    <div class="miss-list">${mb.map(b=>`<div class="miss-row"><span style="color:var(--danger);font-size:13px;">✕</span><span style="flex:1;font-size:12px;">${b}</span><span class="sec-tag-sm" style="font-size:9px;">Book</span></div>`).join('')}${ms.map(st=>`<div class="miss-row"><span style="color:var(--warn);font-size:13px;">○</span><span style="flex:1;font-size:12px;">${st}</span><span class="sec-tag-sm green" style="font-size:9px;">Stat.</span></div>`).join('')}</div></div>`;
+    const showB=!typeFilter||typeFilter==='book';
+    const showS=!typeFilter||typeFilter==='stationery';
+    // Build issue lines for books
+    const bookIssues=showB?cls.books.map((it,i)=>{
+      const b=(s.books||{})[i];
+      if(itemComplete(it,b))return'';
+      if(severity==='missing'&&!itemMissing(it,b))return'';
+      if(severity==='short'&&!itemPartial(it,b))return'';
+      const bal=getItemBalance(it,b);
+      const isMissing=itemMissing(it,b);
+      const tag=isMissing?`<span style="font-size:9px;background:var(--danger-light);color:var(--danger);border-radius:4px;padding:1px 5px;margin-left:4px;">Not brought</span>`
+        :`<span style="font-size:9px;background:var(--warn-light);color:var(--warn);border-radius:4px;padding:1px 5px;margin-left:4px;">Short by ${bal}</span>`;
+      const brought=b?.checked?`Brought: ${b.qty||0}`:'-';
+      return `<div class="miss-row"><span style="color:${isMissing?'var(--danger)':'var(--warn)'};font-size:13px;">${isMissing?'✕':'⚡'}</span>
+        <span style="flex:1;font-size:12px;">${it.name}</span>
+        <span style="font-size:11px;font-family:'DM Mono',monospace;color:#9C9590;margin-right:6px;">Req:${it.qty} / ${brought}</span>
+        ${tag}<span class="sec-tag-sm" style="font-size:9px;margin-left:4px;">Book</span></div>`;
+    }).filter(Boolean):[];
+    const statIssues=showS?cls.stationery.map((it,i)=>{
+      const b=(s.stationery||{})[i];
+      if(itemComplete(it,b))return'';
+      if(severity==='missing'&&!itemMissing(it,b))return'';
+      if(severity==='short'&&!itemPartial(it,b))return'';
+      const bal=getItemBalance(it,b);
+      const isMissing=itemMissing(it,b);
+      const tag=isMissing?`<span style="font-size:9px;background:var(--danger-light);color:var(--danger);border-radius:4px;padding:1px 5px;margin-left:4px;">Not brought</span>`
+        :`<span style="font-size:9px;background:var(--warn-light);color:var(--warn);border-radius:4px;padding:1px 5px;margin-left:4px;">Short by ${bal}</span>`;
+      const brought=b?.checked?`Brought: ${b.qty||0}`:'-';
+      return `<div class="miss-row"><span style="color:${isMissing?'var(--danger)':'var(--warn)'};font-size:13px;">${isMissing?'✕':'⚡'}</span>
+        <span style="flex:1;font-size:12px;">${it.name}</span>
+        <span style="font-size:11px;font-family:'DM Mono',monospace;color:#9C9590;margin-right:6px;">Req:${it.qty} / ${brought}</span>
+        ${tag}<span class="sec-tag-sm green" style="font-size:9px;margin-left:4px;">Stat.</span></div>`;
+    }).filter(Boolean):[];
+    if(!bookIssues.length&&!statIssues.length)return'';
+    const totalIssues=bookIssues.length+statIssues.length;
+    return `<div class="miss-card"><div class="miss-head">
+      <div><span class="class-pill ${cls.section==='Montessori'?'pill-mont':'pill-jun'}">${cls.label}</span>
+      <strong style="margin-left:8px;">${s.name}</strong>${s.roll?`<span style="font-size:11px;color:#9C9590;margin-left:6px;">Roll ${s.roll}</span>`:''}
+      <span style="font-size:11px;color:var(--warn);margin-left:8px;">${totalIssues} item${totalIssues>1?'s':''} pending</span></div>
+      <button class="lbtn" onclick="openEditModal('${s.id}')">Update →</button>
+    </div>
+    <div class="miss-list">${bookIssues.join('')}${statIssues.join('')}</div></div>`;
   }).filter(Boolean).join('');
+  if(!wrap.innerHTML.trim())wrap.innerHTML='<div style="text-align:center;padding:48px;color:#9C9590;font-size:13px;">✅ No items match this filter.</div>';
 }
 
 // ══ ALL STUDENTS ══
@@ -975,14 +1344,19 @@ function renderAllStudents(){
   const statusFilter=document.getElementById('all-status')?.value||'';
   let rows=[...students];
   if(classFilter)rows=rows.filter(s=>CLASSES[s.classKey]?.label===classFilter);
-  if(statusFilter)rows=rows.filter(s=>getStatus(s,s.classKey)===statusFilter);
+  if(statusFilter)rows=rows.filter(s=>getStatusNew(s,s.classKey)===statusFilter);
   if(search)rows=rows.filter(s=>s.name.toLowerCase().includes(search)||(s.roll||'').includes(search));
   const tbody=document.getElementById('all-tbody'),empty=document.getElementById('all-empty');if(!tbody)return;
   if(rows.length===0){tbody.innerHTML='';empty.style.display='block';return;}
   empty.style.display='none';
   tbody.innerHTML=rows.map(s=>{
-    const cls=CLASSES[s.classKey],bp=calcPct(s.books||{},cls.books.length),sp=calcPct(s.stationery||{},cls.stationery.length),ov=Math.round((bp+sp)/2);
-    return `<tr><td><span style="font-family:'DM Mono',monospace;font-size:11px;">${s.roll||'—'}</span></td><td><strong>${s.name}</strong>${s.notes?`<span style="display:block;font-size:11px;color:#9C9590;">${s.notes}</span>`:''}</td><td><span class="class-pill ${cls.section==='Montessori'?'pill-mont':'pill-jun'}">${cls.label}</span></td><td>${progCell(bp)}</td><td>${progCell(sp)}</td><td>${progCell(ov)}</td><td><button class="lbtn" onclick="openEditModal('${s.id}')">Edit</button></td></tr>`;
+    const cls=CLASSES[s.classKey];
+    const bp=calcPctNew(cls.books,s.books||{}),sp=calcPctNew(cls.stationery,s.stationery||{}),ov=Math.round((bp+sp)/2);
+    return `<tr><td><span style="font-family:'DM Mono',monospace;font-size:11px;">${s.roll||'—'}</span></td>
+      <td><strong>${s.name}</strong>${s.notes?`<span style="display:block;font-size:11px;color:#9C9590;">${s.notes}</span>`:''}</td>
+      <td><span class="class-pill ${cls.section==='Montessori'?'pill-mont':'pill-jun'}">${cls.label}</span></td>
+      <td>${progCell(bp)}</td><td>${progCell(sp)}</td><td>${progCell(ov)}</td>
+      <td><button class="lbtn" onclick="openEditModal('${s.id}')">Edit</button></td></tr>`;
   }).join('');
 }
 
@@ -990,10 +1364,13 @@ function renderAllStudents(){
 function exportCSV(){
   const isAdmin=currentRole==='admin';
   const allowed=isAdmin?Object.keys(CLASSES):[currentRole];
-  const rows=[['Roll','Name','Class','Section','Date','Books %','Stationery %','Overall %','Notes']];
+  const rows=[['Roll','Name','Class','Section','Date','Books %','Stationery %','Overall %','Short Items','Notes']];
   students.filter(s=>allowed.includes(s.classKey)).forEach(s=>{
-    const cls=CLASSES[s.classKey],bp=calcPct(s.books||{},cls.books.length),sp=calcPct(s.stationery||{},cls.stationery.length);
-    rows.push([s.roll||'',s.name,cls.label,cls.section,s.date||'',bp+'%',sp+'%',Math.round((bp+sp)/2)+'%',s.notes||'']);
+    const cls=CLASSES[s.classKey];
+    const bp=calcPctNew(cls.books,s.books||{}),sp=calcPctNew(cls.stationery,s.stationery||{});
+    const shortCount=cls.books.filter((it,i)=>itemPartial(it,(s.books||{})[i])).length+
+      cls.stationery.filter((it,i)=>itemPartial(it,(s.stationery||{})[i])).length;
+    rows.push([s.roll||'',s.name,cls.label,cls.section,s.date||'',bp+'%',sp+'%',Math.round((bp+sp)/2)+'%',shortCount,s.notes||'']);
   });
   const csv=rows.map(r=>r.map(c=>`"${c}"`).join(',')).join('\n');
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
@@ -1016,31 +1393,34 @@ function doPrint(){
   if(!val){showToastR('Select a class.');return;}
   const keys=val==='all'?Object.keys(CLASSES):[val];
   closePrintModal();
-  let html='';
   const today=new Date().toLocaleDateString('en-PK',{day:'2-digit',month:'short',year:'numeric'});
+  let html='';
   keys.forEach(key=>{
     const cls=CLASSES[key],rows=students.filter(s=>s.classKey===key);
-    const total=rows.length,complete=rows.filter(s=>getStatus(s,key)==='complete').length;
-    const partial=rows.filter(s=>getStatus(s,key)==='partial').length,pending=rows.filter(s=>getStatus(s,key)==='pending').length;
+    const total=rows.length,complete=rows.filter(s=>getStatusNew(s,key)==='complete').length;
+    const partial=rows.filter(s=>getStatusNew(s,key)==='partial').length,pending=rows.filter(s=>getStatusNew(s,key)==='pending').length;
+    const hdr=`<div class="ph-row" style="display:flex;"><div><div style="font-size:16px;font-weight:700;">Heritage Montessori and School</div><div style="font-size:11px;color:#555;">Book & Stationery Record — Session 2026–27 | ${cls.label} | ${today}</div></div><div style="font-size:13px;font-weight:600;text-align:right;margin-left:auto;">HMS<br><span style="font-size:10px;font-weight:400;">Garden Town, Multan</span></div></div>`;
+    const ftr=`<div style="font-size:9px;color:#aaa;margin-top:8px;border-top:1px solid #eee;padding-top:5px;">Heritage Montessori and School · 11-D Garden Town, Multan · 061-6515260</div>`;
     const bodyRows=rows.length?rows.map(s=>{
-      const bp=calcPct(s.books||{},cls.books.length),sp=calcPct(s.stationery||{},cls.stationery.length),ov=Math.round((bp+sp)/2);
+      const bp=calcPctNew(cls.books,s.books||{}),sp=calcPctNew(cls.stationery,s.stationery||{}),ov=Math.round((bp+sp)/2);
+      const shortCount=cls.books.filter((it,i)=>itemPartial(it,(s.books||{})[i])).length+
+        cls.stationery.filter((it,i)=>itemPartial(it,(s.stationery||{})[i])).length;
       const sc=ov>=100?'#2B6A4F':ov>0?'#D4850A':'#C0392B';
-      return `<tr><td>${s.roll||'—'}</td><td><strong>${s.name}</strong></td><td style="text-align:center;">${bp}%</td><td style="text-align:center;">${sp}%</td><td style="text-align:center;font-weight:700;">${ov}%</td><td style="color:${sc};font-weight:600;">${ov>=100?'✓ Complete':ov>0?'⚠ Partial':'✕ Pending'}</td><td style="font-size:10px;color:#888;">${s.notes||''}</td></tr>`;
+      return `<tr><td>${s.roll||'—'}</td><td><strong>${s.name}</strong></td><td style="text-align:center;">${bp}%</td><td style="text-align:center;">${sp}%</td><td style="text-align:center;font-weight:700;">${ov}%</td><td style="color:${sc};font-weight:600;">${ov>=100?'✓ Complete':ov>0?'⚠ Partial':'✕ Pending'}</td><td style="text-align:center;color:${shortCount>0?'#D4850A':'#2B6A4F'}">${shortCount>0?shortCount:'—'}</td></tr>`;
     }).join(''):`<tr><td colspan="7" style="text-align:center;color:#999;padding:16px;">No students recorded.</td></tr>`;
-    html+=`<div class="print-page"><div class="ph-row" style="display:flex;"><div><div style="font-size:16px;font-weight:700;">Heritage Montessori and School</div><div style="font-size:11px;color:#555;">Book & Stationery Record — Session 2026–27 | ${cls.label} | Printed: ${today}</div></div><div style="font-size:13px;font-weight:600;text-align:right;margin-left:auto;">HMS<br><span style="font-size:10px;font-weight:400;">Garden Town, Multan</span></div></div>
-    <div style="margin-bottom:8px;display:flex;gap:18px;font-size:11px;"><span>Total: <strong>${total}</strong></span><span style="color:#2B6A4F;">Complete: <strong>${complete}</strong></span><span style="color:#D4850A;">Partial: <strong>${partial}</strong></span><span style="color:#C0392B;">Pending: <strong>${pending}</strong></span></div>
-    <table class="sec-sum-table"><thead><tr><th style="width:50px;">Roll #</th><th>Student Name</th><th style="width:65px;text-align:center;">Books</th><th style="width:75px;text-align:center;">Stationery</th><th style="width:65px;text-align:center;">Overall</th><th style="width:80px;">Status</th><th>Notes</th></tr></thead><tbody>${bodyRows}</tbody></table>
-    <div style="font-size:9px;color:#aaa;margin-top:8px;border-top:1px solid #eee;padding-top:5px;">Heritage Montessori and School · 11-D Garden Town, Multan · 061-6515260</div></div>`;
-    const withMissing=rows.filter(s=>{return calcPct(s.books||{},cls.books.length)<100||calcPct(s.stationery||{},cls.stationery.length)<100;});
-    if(withMissing.length>0){
-      const mHTML=withMissing.map(s=>{
-        const mb=cls.books.filter((b,i)=>!s.books?.[i]),ms=cls.stationery.filter((st,i)=>!s.stationery?.[i]);
-        if(!mb.length&&!ms.length)return'';
-        const bp=calcPct(s.books||{},cls.books.length),sp=calcPct(s.stationery||{},cls.stationery.length);
-        return `<div style="border:1px solid #ccc;margin-bottom:8px;break-inside:avoid;border-radius:6px;overflow:hidden;"><div style="padding:7px 12px;background:#f5f5f5;border-bottom:1px solid #ddd;display:flex;justify-content:space-between;"><span><strong>${s.name}</strong>${s.roll?` <span style="font-size:10px;color:#888;">Roll ${s.roll}</span>`:''}</span><span style="font-size:10px;color:#666;">Books: ${bp}% | Stationery: ${sp}%</span></div>
-        <div style="padding:7px 12px;display:flex;gap:20px;flex-wrap:wrap;">${mb.length?`<div style="flex:1;min-width:180px;"><div style="font-size:10px;font-weight:700;color:#C0392B;margin-bottom:3px;text-transform:uppercase;">Missing Books (${mb.length})</div>${mb.map(b=>`<div style="font-size:10px;padding:2px 0;border-bottom:1px solid #f0f0f0;">✕ ${b}</div>`).join('')}</div>`:''}${ms.length?`<div style="flex:1;min-width:180px;"><div style="font-size:10px;font-weight:700;color:#D4850A;margin-bottom:3px;text-transform:uppercase;">Missing Stationery (${ms.length})</div>${ms.map(st=>`<div style="font-size:10px;padding:2px 0;border-bottom:1px solid #f0f0f0;">○ ${st}</div>`).join('')}</div>`:''}</div></div>`;
+    html+=`<div class="print-page">${hdr}<div style="margin-bottom:8px;display:flex;gap:18px;font-size:11px;"><span>Total: <strong>${total}</strong></span><span style="color:#2B6A4F;">Complete: <strong>${complete}</strong></span><span style="color:#D4850A;">Partial: <strong>${partial}</strong></span><span style="color:#C0392B;">Pending: <strong>${pending}</strong></span></div>
+    <table class="sec-sum-table"><thead><tr><th>Roll #</th><th>Student Name</th><th style="text-align:center;">Books</th><th style="text-align:center;">Stationery</th><th style="text-align:center;">Overall</th><th>Status</th><th style="text-align:center;">Short Items</th></tr></thead><tbody>${bodyRows}</tbody></table>${ftr}</div>`;
+    // Missing/short detail page
+    const withIssues=rows.filter(s=>getStatusNew(s,key)!=='complete');
+    if(withIssues.length>0){
+      const mHTML=withIssues.map(s=>{
+        const bIssues=cls.books.map((it,i)=>{const b=(s.books||{})[i];if(itemComplete(it,b))return'';const bal=getItemBalance(it,b);const miss=itemMissing(it,b);return `<div style="font-size:10px;padding:2px 0;border-bottom:1px solid #f0f0f0;display:flex;gap:8px;"><span>${miss?'✕':'⚡'}</span><span style="flex:1;">${it.name}</span><span style="color:#888;">Req:${it.qty} | Brought:${miss?0:b.qty||0} | Bal:<strong style="color:${miss?'#C0392B':'#D4850A'}">${bal}</strong></span></div>`;}).filter(Boolean);
+        const sIssues=cls.stationery.map((it,i)=>{const b=(s.stationery||{})[i];if(itemComplete(it,b))return'';const bal=getItemBalance(it,b);const miss=itemMissing(it,b);return `<div style="font-size:10px;padding:2px 0;border-bottom:1px solid #f0f0f0;display:flex;gap:8px;"><span>${miss?'✕':'⚡'}</span><span style="flex:1;">${it.name}</span><span style="color:#888;">Req:${it.qty} | Brought:${miss?0:b.qty||0} | Bal:<strong style="color:${miss?'#C0392B':'#D4850A'}">${bal}</strong></span></div>`;}).filter(Boolean);
+        if(!bIssues.length&&!sIssues.length)return'';
+        return `<div style="border:1px solid #ccc;margin-bottom:8px;break-inside:avoid;border-radius:6px;overflow:hidden;"><div style="padding:7px 12px;background:#f5f5f5;border-bottom:1px solid #ddd;display:flex;justify-content:space-between;"><span><strong>${s.name}</strong>${s.roll?` Roll ${s.roll}`:''}</span><span style="font-size:10px;color:#666;">${bIssues.length} book issues · ${sIssues.length} stationery issues</span></div>
+          <div style="padding:7px 12px;display:flex;gap:20px;flex-wrap:wrap;">${bIssues.length?`<div style="flex:1;min-width:200px;"><div style="font-size:10px;font-weight:700;color:#C0392B;margin-bottom:3px;text-transform:uppercase;">Books</div>${bIssues.join('')}</div>`:''}${sIssues.length?`<div style="flex:1;min-width:200px;"><div style="font-size:10px;font-weight:700;color:#D4850A;margin-bottom:3px;text-transform:uppercase;">Stationery</div>${sIssues.join('')}</div>`:''}</div></div>`;
       }).filter(Boolean).join('');
-      html+=`<div class="print-page"><div class="ph-row" style="display:flex;"><div><div style="font-size:16px;font-weight:700;">Heritage Montessori and School</div><div style="font-size:11px;color:#555;">Missing Items Detail — ${cls.label} | ${withMissing.length} student(s) pending</div></div><div style="font-size:13px;font-weight:600;text-align:right;margin-left:auto;">HMS<br><span style="font-size:10px;font-weight:400;">Garden Town, Multan</span></div></div>${mHTML}<div style="font-size:9px;color:#aaa;margin-top:8px;border-top:1px solid #eee;padding-top:5px;">Heritage Montessori and School · 11-D Garden Town, Multan · 061-6515260</div></div>`;
+      if(mHTML)html+=`<div class="print-page">${hdr}<div style="font-size:12px;font-weight:700;margin-bottom:10px;color:#C0392B;">Missing &amp; Short Items Detail — ${cls.label} (${withIssues.length} students)</div>${mHTML}${ftr}</div>`;
     }
   });
   const root=document.getElementById('print-root');root.innerHTML=html;root.style.display='block';
@@ -1053,15 +1433,8 @@ function showToastR(msg){const t=document.getElementById('r-toast');t.textConten
 
 // ══ GC GUIDE ══
 function togglePhase(head){const phase=head.closest('.phase'),isOpen=phase.classList.contains('open');head.closest('.phases').querySelectorAll('.phase').forEach(p=>p.classList.remove('open'));if(!isOpen)phase.classList.add('open');}
-
-document.querySelectorAll('.pnav a').forEach(link=>{
-  link.addEventListener('click',function(e){e.preventDefault();const t=document.querySelector(this.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'});});
-});
-
-// Close modals on overlay click
-['entry-modal','print-modal'].forEach(id=>{
-  document.getElementById(id).addEventListener('click',function(e){if(e.target===this){if(id==='entry-modal')closeModal();else closePrintModal();}});
-});
+document.querySelectorAll('.pnav a').forEach(link=>{link.addEventListener('click',function(e){e.preventDefault();const t=document.querySelector(this.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'});});});
+['entry-modal','print-modal'].forEach(id=>{document.getElementById(id).addEventListener('click',function(e){if(e.target===this){if(id==='entry-modal')closeModal();else closePrintModal();}});});
 </script>
 </body>
 </html>
