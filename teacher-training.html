@@ -218,10 +218,8 @@ table.r-table tr:hover td{background:var(--surface2);}
 .tc-badge.active-badge{background:var(--green-pale);color:var(--green);}
 
 /* GC GUIDE */
-.pnav{background:var(--warm-white);border-bottom:1.5px solid var(--border);display:flex;overflow-x:auto;padding:0 20px;scrollbar-width:none;}
-.pnav::-webkit-scrollbar{display:none;}
-.pnav a{font-size:0.82rem;font-weight:600;color:var(--text-light);padding:13px 16px;text-decoration:none;white-space:nowrap;border-bottom:2.5px solid transparent;transition:all .2s;display:flex;align-items:center;gap:6px;}
-.pnav a:hover,.pnav a.active{color:var(--teal);border-bottom-color:var(--rust);}
+/* pnav hidden — portal already has 3 main tabs at the top */
+.pnav{display:none;}
 .hero{background:linear-gradient(150deg,var(--green-dark) 0%,var(--green) 60%,#4caf72 100%);padding:56px 24px 72px;text-align:center;position:relative;overflow:hidden;}
 .hero::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:48px;background:var(--cream);clip-path:ellipse(55% 100% at 50% 100%);}
 .hero-in{position:relative;z-index:1;max-width:640px;margin:0 auto;}
@@ -678,6 +676,9 @@ function checkPassword(){
     document.getElementById('main-content').style.display='block';
     document.body.classList.remove('locked');
     sessionStorage.setItem('hms_auth','1');
+    // Seed history so back button stays within portal
+    history.replaceState({portalTab:'tab-classroom'},'',location.pathname);
+    history.pushState({portalTab:'tab-classroom'},'',location.pathname);
   } else {
     document.getElementById('lock-error').style.display='block';
     document.getElementById('pwd-input').value='';
@@ -689,16 +690,51 @@ if(sessionStorage.getItem('hms_auth')==='1'){
   document.getElementById('main-content').style.display='block';
   document.body.classList.remove('locked');
 }
-// LOGOUT: only clears portal auth, not class auth
-function doLogout(){sessionStorage.removeItem('hms_auth');sessionStorage.removeItem('hms_class_auth');location.reload();}
+// LOGOUT: if inside a class record → go back to portal tab home (not password screen)
+// If at portal home → go to password screen
+function doLogout(){
+  if(currentRole){
+    // Inside stationery record — lock it and stay in portal
+    lockRecord();
+    return;
+  }
+  // At portal level — clear auth and show password screen
+  sessionStorage.removeItem('hms_auth');
+  sessionStorage.removeItem('hms_class_auth');
+  document.getElementById('main-content').style.display='none';
+  document.getElementById('lock-screen').style.display='flex';
+  document.body.classList.add('locked');
+  document.getElementById('pwd-input').value='';
+  document.getElementById('lock-error').style.display='none';
+}
 
 // ══ PORTAL TABS ══
+// Push a history entry each time we switch tabs so back button works within portal
 function switchTab(id,el){
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.ptab').forEach(b=>b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   if(el)el.classList.add('active');
+  // Push state so browser back = tab back, not website back
+  history.pushState({portalTab:id},'',location.pathname);
 }
+
+// Intercept browser back button — navigate within portal, never exit to website
+window.addEventListener('popstate',function(e){
+  // If we have a portal state, stay inside portal
+  if(sessionStorage.getItem('hms_auth')==='1'){
+    // If inside a class record, go back to class PIN screen
+    if(currentRole){
+      lockRecord();
+    } else {
+      // Go back to first tab (Classroom Guide)
+      const firstTab=document.querySelector('.ptab');
+      switchTab('tab-classroom', firstTab);
+    }
+    // Push a replacement state so there's always something to catch
+    history.pushState({portalTab:'tab-classroom'},'',location.pathname);
+  }
+});
 
 // ══ CLASS PINS ══
 const CLASS_PINS={mont1:'111',mont2:'22',mont3:'333',class1:'121',class2:'221',class3:'321',class4:'421',class5:'521',admin:'2442'};
@@ -752,6 +788,11 @@ function launchRecordApp(role){
 window.addEventListener('load',()=>{
   const saved=sessionStorage.getItem('hms_class_auth');
   if(saved&&sessionStorage.getItem('hms_auth')==='1')setTimeout(()=>launchRecordApp(saved),150);
+  // Seed history so the back button is always caught within the portal
+  if(sessionStorage.getItem('hms_auth')==='1'){
+    history.replaceState({portalTab:'tab-classroom'},'',location.pathname);
+    history.pushState({portalTab:'tab-classroom'},'',location.pathname);
+  }
 });
 
 // ══ CLASS DATA WITH QUANTITIES ══
