@@ -1174,7 +1174,7 @@ function qtyRow(type,idx,item,brought){
 const isNum=!isNaN(Number(broughtNote))&&broughtNote!=='';const balText=!checked?'—':isNum&&bal===0?'✓ Complete':isNum&&bal>0?`<span style="color:var(--danger);font-size:10px;">Balance: <strong>${bal}</strong> missing</span>`:broughtNote?`<span style="color:var(--accent);font-size:10px;">✓ ${broughtNote}</span><br><span style="color:var(--danger);font-size:10px;">Missing rest</span>`:'✓ Complete';
   const rowBg=checked?(bal===0?'var(--accent-light)':'var(--warn-light)'):'var(--bg)';
   const rowBorder=checked?(bal===0?'var(--accent)':'var(--warn)'):'var(--border2)';
-  return `<div id="qrow-${type}-${idx}" style="display:grid;grid-template-columns:32px 1fr 90px 110px;gap:0;align-items:center;background:${rowBg};border:1px solid ${rowBorder};border-radius:6px;overflow:hidden;transition:all .12s;">
+  return `<div id="qrow-${type}-${idx}" style=display:grid;grid-template-columns:32px 1fr 140px 110px;gap:0;align-items:center;background:${rowBg};border:1px solid ${rowBorder};border-radius:6px;overflow:hidden;transition:all .12s;">
     <div style="display:flex;align-items:center;justify-content:center;padding:8px 0;cursor:pointer;" onclick="toggleQRow('${type}',${idx})">
       <div id="qchk-${type}-${idx}" style="width:18px;height:18px;border:2px solid ${checked?'var(--accent)':'var(--border2)'};border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;background:${checked?'var(--accent)':'white'};color:white;transition:all .12s;">${checked?'✓':''}</div>
     </div>
