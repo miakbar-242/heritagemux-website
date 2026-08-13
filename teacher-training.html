@@ -1171,7 +1171,7 @@ function qtyRow(type,idx,item,brought){
   const bal=checked?Math.max(0,item.qty-Number(broughtQty)):item.qty;
   const balColor=bal===0?'var(--accent)':bal>0?'var(--danger)':'var(--accent)';
   const broughtNote=checked?(broughtQty||''):'';
-const balText=checked&&broughtNote?`<span style="color:var(--accent);font-size:10px;">✓ ${broughtNote}</span><br><span style="color:var(--danger);font-size:10px;">Missing rest</span>`:checked?'✓ Complete':'—';
+const isNum=!isNaN(Number(broughtNote))&&broughtNote!=='';const balText=!checked?'—':isNum&&bal===0?'✓ Complete':isNum&&bal>0?`<span style="color:var(--danger);font-size:10px;">Balance: <strong>${bal}</strong> missing</span>`:broughtNote?`<span style="color:var(--accent);font-size:10px;">✓ ${broughtNote}</span><br><span style="color:var(--danger);font-size:10px;">Missing rest</span>`:'✓ Complete';
   const rowBg=checked?(bal===0?'var(--accent-light)':'var(--warn-light)'):'var(--bg)';
   const rowBorder=checked?(bal===0?'var(--accent)':'var(--warn)'):'var(--border2)';
   return `<div id="qrow-${type}-${idx}" style="display:grid;grid-template-columns:32px 1fr 90px 110px;gap:0;align-items:center;background:${rowBg};border:1px solid ${rowBorder};border-radius:6px;overflow:hidden;transition:all .12s;">
@@ -1232,7 +1232,7 @@ function updateBalance(type,idx,required){
   const balColor=bal===0?'var(--accent)':'var(--danger)';
   const inp2=document.getElementById(`qval-${type}-${idx}`);
 const note=inp2?.value?.trim()||'';
-const balText=isChecked&&note?`<span style="color:var(--accent);font-size:10px;">✓ ${note}</span><br><span style="color:var(--danger);font-size:10px;">Missing rest</span>`:isChecked?'✓ Complete':'—';
+const isNum2=!isNaN(Number(note))&&note!=='';const balText=!isChecked?'—':isNum2&&bal===0?'✓ Complete':isNum2&&bal>0?`<span style="color:var(--danger);font-size:10px;">Balance: <strong>${bal}</strong> missing</span>`:note?`<span style="color:var(--accent);font-size:10px;">✓ ${note}</span><br><span style="color:var(--danger);font-size:10px;">Missing rest</span>`:'✓ Complete';
   balEl.innerHTML=`<div style="font-size:9px;color:#9C9590;margin-bottom:2px;text-transform:uppercase;letter-spacing:.05em;">Balance</div>${balText}`;
   if(isChecked){
     row.style.background=bal===0?'var(--accent-light)':'var(--warn-light)';
