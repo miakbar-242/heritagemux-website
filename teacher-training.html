@@ -1169,6 +1169,42 @@ function qtyRow(type,idx,item,brought){
   const checked=brought?.checked||false;
   const broughtQty=brought?.qty!==undefined?brought.qty:'';
   const missingNote=brought?.missing||'';
+  const bal=checked&&broughtQty!==''?Math.max(0,item.qty-Number(broughtQty)):item.qty;
+  const balColor=bal===0?'var(--accent)':'var(--danger)';
+  const isNum=broughtQty!==''&&!isNaN(Number(broughtQty));
+  const balText=!checked?'—':isNum&&bal===0?'<span style="color:var(--accent);font-weight:600;">✓ Complete</span>':isNum&&bal>0?`<span style="color:var(--danger);font-size:11px;">Balance: <strong>${bal}</strong> still missing</span>`:'✓ Noted';
+  const rowBg=checked?(bal===0?'var(--accent-light)':'var(--warn-light)'):'var(--bg)';
+  const rowBorder=checked?(bal===0?'var(--accent)':'var(--warn)'):'var(--border2)';
+  return `<div id="qrow-${type}-${idx}" style="display:grid;grid-template-columns:32px 1fr 130px 130px;align-items:start;border-bottom:1px solid var(--border2);background:${rowBg};border-left:3px solid ${rowBorder};transition:all .2s;">
+    <div style="padding:8px 6px;display:flex;align-items:flex-start;justify-content:center;padding-top:10px;">
+      <div id="qchk-${type}-${idx}" onclick="toggleQRow('${type}',${idx})"
+        style="width:18px;height:18px;border:2px solid var(--border2);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer;background:${checked?'var(--accent)':'white'};border-color:${checked?'var(--accent)':'var(--border2)'};color:white;font-weight:700;flex-shrink:0;">
+        ${checked?'✓':''}
+      </div>
+    </div>
+    <div style="padding:8px 10px;font-size:12px;color:var(--text-dark);line-height:1.4;">
+      ${item.name}${item.qty>1?`<span style="font-size:10px;color:#9C9590;margin-left:4px;">× ${item.qty} required</span>`:''}
+    </div>
+    <div style="padding:6px 10px;border-left:1px solid var(--border2);">
+      <div style="font-size:9px;color:#9C9590;margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em;">Brought</div>
+      <input type="text" id="qval-${type}-${idx}" value="${checked?broughtQty:''}"
+        style="width:100%;border:none;background:transparent;font-family:'DM Mono',monospace;font-size:12px;font-weight:700;color:var(--text-dark);outline:none;padding:0;"
+        placeholder="${type==='book'?'e.g. A2,A3':'qty'}" ${!checked?'disabled':''}
+        oninput="updateBalance('${type}',${idx},${item.qty})">
+      ${type==='book'?`<div style="font-size:9px;color:var(--danger);margin-top:5px;border-top:1px dashed var(--border2);padding-top:4px;">Missing:</div>
+      <input type="text" id="qmiss-${type}-${idx}" value="${missingNote}"
+        style="width:100%;border:none;background:transparent;font-size:11px;color:var(--danger);outline:none;padding:0;font-style:italic;"
+        placeholder="e.g. A1, A4" ${!checked?'disabled':''}>`:''}
+    </div>
+    <div style="padding:6px 10px;border-left:1px solid var(--border2);font-size:11px;" id="qbal-${type}-${idx}">
+      <div style="font-size:9px;color:#9C9590;margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em;">Status</div>
+      ${balText}
+    </div>
+  </div>`;
+}
+  const checked=brought?.checked||false;
+  const broughtQty=brought?.qty!==undefined?brought.qty:'';
+  const missingNote=brought?.missing||'';
   const bal=checked&&!isNaN(Number(broughtQty))&&broughtQty!==''?Math.max(0,item.qty-Number(broughtQty)):item.qty;
   const balColor=bal===0?'var(--accent)':bal>0?'var(--danger)':'var(--accent)';
   const broughtNote=checked?(broughtQty||''):'';
@@ -1219,7 +1255,8 @@ function toggleQRow(type,idx){
     const items=type==='book'?cls.books:cls.stationery;
     inp.value=items[idx].qty;
   }
-  if(!newChecked)inp.value='';
+  if(!newChecked){inp.value='';const mf=document.getElementById(`qmiss-book-${idx}`);if(mf){mf.value='';mf.disabled=true;}}
+if(newChecked){const mf=document.getElementById(`qmiss-book-${idx}`);if(mf)mf.disabled=false;}
   updateBalance(type,idx,getRequiredQty(type,idx));
 }
 
@@ -1276,7 +1313,7 @@ function saveStudent(){
   cls.books.forEach((it,i)=>{
     const chk=document.getElementById(`qchk-book-${i}`);
     const inp=document.getElementById(`qval-book-${i}`);
-    books[i]={checked:chk?.textContent==='✓',qty:inp?.value||0};
+    const missInp=document.getElementById(`qmiss-book-${i}`);books[i]={checked:chk?.textContent==='✓',qty:inp?.value||0,missing:missInp?.value?.trim()||''};
   });
   cls.stationery.forEach((it,i)=>{
     const chk=document.getElementById(`qchk-stat-${i}`);
