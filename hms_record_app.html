@@ -1,0 +1,1754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HMS — Book & Stationery Record</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #F7F5F0;
+    --surface: #FFFFFF;
+    --surface2: #F0EDE7;
+    --border: #DDD9D0;
+    --text: #1A1714;
+    --text2: #6B6560;
+    --text3: #9C9590;
+    --accent: #2B6A4F;
+    --accent-light: #E8F2ED;
+    --accent2: #C4611A;
+    --accent2-light: #FDF0E6;
+    --danger: #C0392B;
+    --danger-light: #FDECEA;
+    --warn: #D4850A;
+    --warn-light: #FEF6E4;
+    --ok: #2B6A4F;
+    --ok-light: #E8F2ED;
+    --radius: 10px;
+    --shadow: 0 1px 4px rgba(0,0,0,0.07), 0 4px 16px rgba(0,0,0,0.04);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* ── Header ── */
+  .app-header {
+    background: var(--accent);
+    color: #fff;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    height: 56px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  }
+  .app-header h1 {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+  .app-header .sub { font-size: 11px; opacity: 0.72; font-weight: 400; margin-top: 1px; }
+  .header-right { display: flex; gap: 8px; align-items: center; }
+  .btn-ghost {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #fff;
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-family: inherit;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.15s;
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,0.25); }
+
+  /* ── Layout ── */
+  .layout { display: flex; height: calc(100vh - 56px); overflow: hidden; }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: 240px;
+    flex-shrink: 0;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 16px 0;
+  }
+  .sidebar-section { margin-bottom: 4px; }
+  .sidebar-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--text3);
+    text-transform: uppercase;
+    padding: 4px 16px 6px;
+  }
+  .sidebar-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 0;
+    transition: background 0.1s;
+    font-size: 13px;
+    color: var(--text2);
+    border-left: 3px solid transparent;
+  }
+  .sidebar-item:hover { background: var(--surface2); color: var(--text); }
+  .sidebar-item.active {
+    background: var(--accent-light);
+    color: var(--accent);
+    border-left-color: var(--accent);
+    font-weight: 600;
+  }
+  .sidebar-badge {
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    background: var(--surface2);
+    border-radius: 20px;
+    padding: 1px 6px;
+    color: var(--text3);
+  }
+  .sidebar-item.active .sidebar-badge {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  /* ── Main content ── */
+  .main { flex: 1; overflow-y: auto; padding: 24px; }
+
+  /* ── Panels ── */
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* ── Page title ── */
+  .page-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .page-sub {
+    font-size: 13px;
+    color: var(--text2);
+    margin-bottom: 20px;
+  }
+
+  /* ── Stats bar ── */
+  .stats-bar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 18px;
+    flex: 1;
+    min-width: 120px;
+    box-shadow: var(--shadow);
+  }
+  .stat-card .val {
+    font-size: 24px;
+    font-weight: 700;
+    font-family: 'DM Mono', monospace;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .stat-card .lbl { font-size: 11px; color: var(--text3); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .stat-card.warn .val { color: var(--warn); }
+  .stat-card.danger .val { color: var(--danger); }
+
+  /* ── Student entry form ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+  }
+  .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .form-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .form-group { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 140px; }
+  .form-group label { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.05em; }
+  .form-group input, .form-group select {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-family: inherit;
+    font-size: 13px;
+    background: var(--bg);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .form-group input:focus, .form-group select:focus { border-color: var(--accent); background: #fff; }
+
+  /* ── Checklist ── */
+  .checklist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.12s;
+    user-select: none;
+  }
+  .check-item:hover { border-color: var(--accent); background: var(--accent-light); }
+  .check-item.checked { background: var(--accent-light); border-color: var(--accent); }
+  .check-item.partial { background: var(--warn-light); border-color: var(--warn); }
+  .check-icon {
+    width: 18px; height: 18px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    background: #fff;
+    transition: all 0.12s;
+  }
+  .check-item.checked .check-icon { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .check-item.partial .check-icon { background: var(--warn); border-color: var(--warn); color: #fff; }
+  .check-text { font-size: 12px; flex: 1; color: var(--text); line-height: 1.3; }
+  .check-req { font-size: 10px; color: var(--text3); display: block; font-family: 'DM Mono', monospace; }
+
+  /* ── Parts field (for set books) ── */
+  .check-item.has-parts { flex-wrap: wrap; align-items: flex-start; }
+  .check-item.has-parts .check-icon { margin-top: 2px; }
+  .check-item.has-parts .check-text { flex-basis: calc(100% - 28px); }
+  .parts-field-wrap { flex-basis: 100%; padding-left: 27px; margin-top: 5px; }
+  .parts-input {
+    width: 100%; border: 1px solid var(--border);
+    border-radius: 5px; padding: 4px 8px;
+    font-size: 11px; font-family: inherit;
+    background: rgba(255,255,255,0.8); color: var(--text);
+    outline: none; transition: border-color 0.15s;
+  }
+  .parts-input:focus { border-color: var(--accent); background: #fff; }
+  .check-item.checked .parts-input { background: rgba(255,255,255,0.7); border-color: rgba(43,106,79,0.3); }
+  .parts-hint { font-size: 10px; color: var(--text3); margin-bottom: 3px; }
+
+  .section-header-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 16px 0 8px;
+  }
+  .section-tag {
+    background: var(--accent2-light);
+    color: var(--accent2);
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .section-tag.stat-tag { background: var(--accent-light); color: var(--accent); }
+  .section-divider { flex: 1; height: 1px; background: var(--border); }
+
+  /* ── Buttons ── */
+  .btn {
+    border-radius: 6px;
+    padding: 9px 18px;
+    font-size: 13px;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.15s, box-shadow 0.15s;
+  }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { opacity: 0.88; }
+  .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+  .btn-secondary:hover { background: var(--border); }
+  .btn-danger { background: var(--danger-light); color: var(--danger); border: 1px solid #f0c0bb; }
+  .btn-danger:hover { background: #f5d0cc; }
+  .btn-sm { padding: 5px 12px; font-size: 12px; }
+
+  .action-row { display: flex; gap: 8px; margin-top: 16px; }
+
+  /* ── Students table ── */
+  .table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .table-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .search-input {
+    flex: 1; min-width: 180px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 7px 12px;
+    font-family: inherit;
+    font-size: 13px;
+    background: var(--bg);
+    outline: none;
+  }
+  .search-input:focus { border-color: var(--accent); background: #fff; }
+  .filter-select {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-family: inherit;
+    font-size: 12px;
+    background: var(--bg);
+    outline: none;
+    cursor: pointer;
+  }
+
+  table { width: 100%; border-collapse: collapse; }
+  thead tr { background: var(--surface2); }
+  th {
+    text-align: left;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    vertical-align: middle;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--surface2); }
+
+  .progress-wrap { display: flex; align-items: center; gap: 8px; }
+  .progress-bar {
+    flex: 1; height: 6px;
+    background: var(--surface2);
+    border-radius: 3px;
+    overflow: hidden;
+    min-width: 60px;
+  }
+  .progress-fill { height: 100%; border-radius: 3px; background: var(--accent); transition: width 0.3s; }
+  .progress-fill.mid { background: var(--warn); }
+  .progress-fill.low { background: var(--danger); }
+  .progress-pct { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--text2); min-width: 30px; }
+
+  .status-dot {
+    display: inline-block;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    margin-right: 5px;
+    vertical-align: middle;
+  }
+  .dot-ok { background: var(--ok); }
+  .dot-warn { background: var(--warn); }
+  .dot-danger { background: var(--danger); }
+
+  .class-pill {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 20px;
+    background: var(--surface2);
+    color: var(--text2);
+  }
+  .pill-mont { background: #E8EEF8; color: #3355AA; }
+  .pill-jun { background: #F0EDE7; color: #7A6040; }
+
+  .link-btn {
+    background: none; border: none;
+    color: var(--accent);
+    font-size: 12px;
+    font-family: inherit;
+    cursor: pointer;
+    font-weight: 600;
+    text-decoration: underline;
+    padding: 0;
+  }
+  .link-btn:hover { opacity: 0.7; }
+
+  /* ── Missing items view ── */
+  .missing-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .missing-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+  }
+  .missing-card-head .name { font-size: 14px; font-weight: 600; }
+  .missing-list { padding: 10px 16px; }
+  .missing-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 0;
+    font-size: 12px;
+    border-bottom: 1px solid var(--surface2);
+  }
+  .missing-row:last-child { border-bottom: none; }
+  .missing-icon { color: var(--danger); font-size: 14px; flex-shrink: 0; }
+  .partial-icon { color: var(--warn); font-size: 14px; flex-shrink: 0; }
+
+  /* ── Modal ── */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface);
+    border-radius: 12px;
+    width: 100%;
+    max-width: 680px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.22);
+  }
+  .modal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--surface);
+    z-index: 1;
+  }
+  .modal-head h2 { font-size: 16px; font-weight: 700; }
+  .modal-close {
+    background: var(--surface2);
+    border: none;
+    border-radius: 6px;
+    width: 28px; height: 28px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text2);
+  }
+  .modal-close:hover { background: var(--border); }
+  .modal-body { padding: 20px; }
+  .modal-foot {
+    padding: 14px 20px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    position: sticky;
+    bottom: 0;
+    background: var(--surface);
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 48px 20px;
+    color: var(--text3);
+  }
+  .empty-state .icon { font-size: 36px; margin-bottom: 12px; }
+  .empty-state .msg { font-size: 14px; }
+
+  /* ── Toast ── */
+  .toast {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    background: var(--text);
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    z-index: 500;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.2s, transform 0.2s;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  /* ── Dashboard ── */
+  .dash-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .class-summary {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    box-shadow: var(--shadow);
+  }
+  .class-summary .cs-name { font-size: 13px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+  .cs-bar-wrap { margin-bottom: 6px; }
+  .cs-label { font-size: 11px; color: var(--text2); margin-bottom: 3px; display: flex; justify-content: space-between; }
+
+  @media (max-width: 600px) {
+    .sidebar { display: none; }
+    .main { padding: 12px; }
+  }
+  .no-results { text-align: center; padding: 32px; color: var(--text3); font-size: 13px; }
+
+  /* ── Print Styles ── */
+  @media print {
+    @page { size: A4; margin: 15mm 12mm; }
+    body { background: #fff; font-size: 11px; }
+    .app-header, .sidebar, .layout > .main > .panel:not(.print-active),
+    .table-toolbar, .action-row, .link-btn, .btn, .modal-overlay,
+    .stats-bar { display: none !important; }
+    .layout { display: block; height: auto; overflow: visible; }
+    .main { padding: 0; overflow: visible; }
+    .panel.print-active { display: block !important; }
+    .print-page { page-break-after: always; padding: 0; }
+    .print-page:last-child { page-break-after: avoid; }
+    .print-header { display: flex !important; }
+    .print-only { display: block !important; }
+    table { width: 100%; border-collapse: collapse; font-size: 10px; }
+    th, td { border: 1px solid #ccc; padding: 4px 7px; }
+    thead tr { background: #f0f0f0 !important; -webkit-print-color-adjust: exact; }
+    .progress-bar { display: none; }
+    .progress-pct { font-size: 11px; }
+    .missing-card { border: 1px solid #ccc; margin-bottom: 8px; break-inside: avoid; }
+    .missing-card-head { background: #f5f5f5 !important; -webkit-print-color-adjust: exact; }
+    .class-pill { border: 1px solid #ccc; }
+    .section-summary-table th { background: #e8e8e8 !important; -webkit-print-color-adjust: exact; }
+  }
+  .print-header {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #333;
+  }
+  .print-header .ph-title { font-size: 16px; font-weight: 700; }
+  .print-header .ph-sub { font-size: 11px; color: #555; }
+  .print-header .ph-logo { font-size: 13px; font-weight: 600; text-align: right; }
+  .print-only { display: none; }
+  .section-summary-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+  .section-summary-table th, .section-summary-table td { border: 1px solid var(--border); padding: 7px 10px; font-size: 12px; }
+  .section-summary-table thead tr { background: var(--surface2); }
+  .section-summary-table tbody tr:hover { background: var(--surface2); }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div>
+    <div class="app-header h1" style="font-size:15px;font-weight:600;">Heritage Montessori & School</div>
+    <div class="sub">Book & Stationery Record — Session 2026–27</div>
+  </div>
+  <div class="header-right">
+    <button class="btn-ghost" onclick="exportCSV()">⬇ Export CSV</button>
+    <button class="btn-ghost" onclick="showPrintMenu()" id="print-btn">🖨 Print Class</button>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Overview</div>
+      <div class="sidebar-item active" onclick="showPanel('dashboard',this)">
+        📊 Dashboard
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Montessori</div>
+      <div class="sidebar-item" onclick="showPanel('mont1',this)">Mont 1 <span class="sidebar-badge" id="cnt-mont1">0</span></div>
+      <div class="sidebar-item" onclick="showPanel('mont2',this)">Mont 2 <span class="sidebar-badge" id="cnt-mont2">0</span></div>
+      <div class="sidebar-item" onclick="showPanel('mont3',this)">Mont 3 <span class="sidebar-badge" id="cnt-mont3">0</span></div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Juniors</div>
+      <div class="sidebar-item" onclick="showPanel('class1',this)">Class 1 <span class="sidebar-badge" id="cnt-class1">0</span></div>
+      <div class="sidebar-item" onclick="showPanel('class2',this)">Class 2 <span class="sidebar-badge" id="cnt-class2">0</span></div>
+      <div class="sidebar-item" onclick="showPanel('class3',this)">Class 3 <span class="sidebar-badge" id="cnt-class3">0</span></div>
+      <div class="sidebar-item" onclick="showPanel('class4',this)">Class 4 <span class="sidebar-badge" id="cnt-class4">0</span></div>
+      <div class="sidebar-item" onclick="showPanel('class5',this)">Class 5 <span class="sidebar-badge" id="cnt-class5">0</span></div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Reports</div>
+      <div class="sidebar-item" onclick="showPanel('missing',this)">⚠ Missing Items</div>
+      <div class="sidebar-item" onclick="showPanel('allstudents',this)">👥 All Students</div>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <!-- DASHBOARD -->
+    <div class="panel active" id="panel-dashboard">
+      <div class="page-title">Dashboard</div>
+      <div class="page-sub">Session 2026–27 overview across all classes</div>
+      <div class="stats-bar">
+        <div class="stat-card"><div class="val" id="dash-total">0</div><div class="lbl">Total Students</div></div>
+        <div class="stat-card"><div class="val" id="dash-complete">0</div><div class="lbl">Fully Complete</div></div>
+        <div class="stat-card warn"><div class="val" id="dash-partial">0</div><div class="lbl">Partial</div></div>
+        <div class="stat-card danger"><div class="val" id="dash-missing">0</div><div class="lbl">Pending / None</div></div>
+      </div>
+      <div class="dash-grid" id="dash-class-grid"></div>
+    </div>
+
+    <!-- CLASS PANELS (generated) -->
+    <div id="class-panels"></div>
+
+    <!-- MISSING ITEMS REPORT -->
+    <div class="panel" id="panel-missing">
+      <div class="page-title">⚠ Missing Items Report</div>
+      <div class="page-sub">Students with incomplete books or stationery</div>
+      <div class="table-toolbar">
+        <input class="search-input" placeholder="Search student..." id="miss-search" oninput="renderMissing()">
+        <select class="filter-select" id="miss-class" onchange="renderMissing()">
+          <option value="">All classes</option>
+          <option>Mont 1</option><option>Mont 2</option><option>Mont 3</option>
+          <option>Class 1</option><option>Class 2</option><option>Class 3</option>
+          <option>Class 4</option><option>Class 5</option>
+        </select>
+        <select class="filter-select" id="miss-type" onchange="renderMissing()">
+          <option value="">Books & Stationery</option>
+          <option value="book">Books only</option>
+          <option value="stationery">Stationery only</option>
+        </select>
+      </div>
+      <div id="missing-list-wrap"></div>
+    </div>
+
+    <!-- ALL STUDENTS -->
+    <div class="panel" id="panel-allstudents">
+      <div class="page-title">👥 All Students</div>
+      <div class="page-sub">Complete student roster with completion status</div>
+      <div class="table-wrap">
+        <div class="table-toolbar">
+          <input class="search-input" placeholder="Search by name or roll..." id="all-search" oninput="renderAllStudents()">
+          <select class="filter-select" id="all-class" onchange="renderAllStudents()">
+            <option value="">All classes</option>
+            <option>Mont 1</option><option>Mont 2</option><option>Mont 3</option>
+            <option>Class 1</option><option>Class 2</option><option>Class 3</option>
+            <option>Class 4</option><option>Class 5</option>
+          </select>
+          <select class="filter-select" id="all-status" onchange="renderAllStudents()">
+            <option value="">All statuses</option>
+            <option value="complete">Complete</option>
+            <option value="partial">Partial</option>
+            <option value="pending">Pending</option>
+          </select>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Roll #</th><th>Student Name</th><th>Class</th>
+              <th>Books</th><th>Stationery</th><th>Overall</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="all-students-tbody"></tbody>
+        </table>
+        <div id="all-empty" class="no-results" style="display:none;">No students match your search.</div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- PRINT PANEL (hidden, shown only during print) -->
+<div id="print-root" style="display:none;"></div>
+
+<!-- PRINT MODAL -->
+<div class="modal-overlay" id="print-modal">
+  <div class="modal" style="max-width:420px;">
+    <div class="modal-head">
+      <h2>🖨 Print Class Report</h2>
+      <button class="modal-close" onclick="document.getElementById('print-modal').classList.remove('open')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group" style="margin-bottom:16px;">
+        <label>Select Class</label>
+        <select class="filter-select" id="print-class-select" style="width:100%;padding:9px 12px;font-size:13px;">
+          <option value="">— choose a class —</option>
+          <option value="mont1">Mont 1</option>
+          <option value="mont2">Mont 2</option>
+          <option value="mont3">Mont 3</option>
+          <option value="class1">Class 1</option>
+          <option value="class2">Class 2</option>
+          <option value="class3">Class 3</option>
+          <option value="class4">Class 4</option>
+          <option value="class5">Class 5</option>
+          <option value="all">All Classes</option>
+        </select>
+      </div>
+      <div style="background:var(--surface2);border-radius:8px;padding:14px;font-size:12px;color:var(--text2);line-height:1.7;">
+        <strong>The printout will include:</strong><br>
+        ① Summary table — roll, name, books %, stationery %<br>
+        ② Detailed missing items per student<br>
+        ③ HMS header on every page
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" onclick="document.getElementById('print-modal').classList.remove('open')">Cancel</button>
+      <button class="btn btn-primary" onclick="doPrint()">Print Now</button>
+    </div>
+  </div>
+</div>
+
+<!-- ENTRY MODAL -->
+<div class="modal-overlay" id="entry-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="modal-title">Add Student</h2>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveStudent()">Save Record</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── DATA DEFINITIONS ───────────────────────────────────────────────
+
+const CLASSES = {
+  'mont1': {
+    label: 'Mont 1', section: 'Montessori',
+    books: [
+      'Pre-Primary Mathematics A1–A4 (OUP)',
+      'Colour and Craft Book A (Sunrise)',
+      'All About Islam Year 1 (Bookmark)',
+    ],
+    stationery: [
+      'Black ring folder (1)',
+      'Apron (1)',
+      'Plain White file cover Hard (2)',
+      'Lead pencils (2 packs)',
+      'Pencil eraser (4)',
+      'Pencil sharpener (4)',
+      'Poster colours Pack of 6 (1)',
+      'Colour pencils 12-long (4 packs)',
+      'Crayons 12 (1 pack)',
+      'Oil Pastels (1 pack)',
+      'Paper ream (1 pack)',
+      'Card paper 10 sheets',
+      'Fomic Sheets A4 (5)',
+      'A4 Colour Papers (10 sheets)',
+      'Ice Cream Sticks (1 pack)',
+      'Scotch Tape (1)',
+      'Paint brush size 12 (1)',
+      'Glazed paper 10 sheets',
+      'Clear bag (2)',
+      'Scissors round edged (1 pair)',
+      'UHU Glue Stick Medium (3)',
+      'Play Dough (2)',
+    ]
+  },
+  'mont2': {
+    label: 'Mont 2', section: 'Montessori',
+    books: [
+      'Jolly Readers Red Level Nonfiction',
+      'Handwriting Skills Builder Pre Nursery (OUP)',
+      'Pre-Primary Mathematics B1–B4 (OUP)',
+      'All About Islam Year 2 (Bookmark)',
+      'Bachon ki Saathi Nursery (Bookmark)',
+      'Urdu Readers – Tohfa (OUP)',
+      'Colour and Craft Book B (Sunrise)',
+      'Notebooks: 1 English 4-line, 1 Urdu, 1 Maths medium square',
+    ],
+    stationery: [
+      'Black ring folder (1)',
+      'Apron (1)',
+      'Plain White file cover Hard (2)',
+      'Lead pencils (2 packs)',
+      'Pencil eraser (4)',
+      'Pencil sharpener (4)',
+      'Poster colours Pack of 6 (1)',
+      'Colour pencils 12-long (4 packs)',
+      'Crayons 12 (1 pack)',
+      'Oil Pastels (1 pack)',
+      'Paper ream (1 pack)',
+      'Card paper 10 sheets',
+      'Fomic Sheets A4 (5)',
+      'A4 Colour Papers (10 sheets)',
+      'Ice Cream Sticks (1 pack)',
+      'Scotch Tape (1)',
+      'Paint brush size 12 (1)',
+      'Glazed paper 10 sheets',
+      'Clear bag (1)',
+      'Scissors round edged (1 pair)',
+      'UHU Glue Stick Medium (3)',
+      'Play Dough (2)',
+    ]
+  },
+  'mont3': {
+    label: 'Mont 3', section: 'Montessori',
+    books: [
+      'Jolly Readers Red Level General Fiction & Yellow Nonfiction',
+      'Handwriting Skills Builder Nursery (OUP)',
+      'LITERACY Interactive English Introductory Book (Sunrise)',
+      'Pre-Primary Mathematics C1–C4 (OUP)',
+      'All About Islam Year 3 (Bookmark)',
+      'Bachon ki Saathi KG2 (Bookmark)',
+      'Urdu Khushkhati Silsila Book 2 (OUP)',
+      'Urdu Readers – Ghubaray (OUP)',
+      'Colour and Craft Book C (Sunrise)',
+      'Notebooks: 2 English 4-line, 2 Urdu, 2 Maths small square',
+    ],
+    stationery: [
+      'Black ring folder (1)',
+      'Apron (1)',
+      'Plain White file cover Hard (2)',
+      'Lead pencils (2 packs)',
+      'Pencil eraser (4)',
+      'Pencil sharpener (4)',
+      'Poster colours Pack of 6 (1)',
+      'Colour pencils 12-long (4 packs)',
+      'Crayons 12 (1 pack)',
+      'Oil Pastels (1 pack)',
+      'Paper ream (1 pack)',
+      'Card paper 10 sheets',
+      'Fomic Sheets A4 (5)',
+      'A4 Colour Papers (10 sheets)',
+      'Ice Cream Sticks (1 pack)',
+      'Scotch Tape (1)',
+      'Paint brush size 12 (1)',
+      'Glazed paper 10 sheets',
+      'Clear bag (1)',
+      'Scissors round edged (1 pair)',
+      'UHU Glue Stick Medium (1)',
+      'Pencil Pouch (1)',
+      'Play Dough (2)',
+    ]
+  },
+  'class1': {
+    label: 'Class 1', section: 'Juniors',
+    books: [
+      'Oxford International Primary English 1 Student + Workbook (OUP)',
+      'Oxford Reading Tree Stage 5 Pack of 6 Readers (OUP)',
+      'Oxford Essential Dictionary (OUP)',
+      'Handwriting Skills Builder Kindergarten (OUP)',
+      'Primary Mathematics 1 Textbook + Workbooks 1A & 1B (OUP)',
+      'UKG Motia Textbook – Urdu (OUP)',
+      'Nardban e Urdu Workbook 1 (OUP)',
+      'UKG Phool Reader – Urdu (OUP)',
+      'Urdu Khushkhati Silsila Book 3 (OUP)',
+      'Colour and Craft Book 1 (Sunrise)',
+      'Islamic Studies Grade 1 (Bookmark)',
+      'The Science Factor 1 Textbook + Workbook (OUP)',
+      'Notebooks: 3 English 4-line, 2 Urdu, 1 Maths small square, 1 Science interleaf',
+    ],
+    stationery: [
+      'Black ring folder (1)',
+      'Lead pencils (2 packs)',
+      'Pencil eraser (2)',
+      'Pencil sharpener (2)',
+      'Plastic scale 6 inch (1)',
+      'Poster colours: white, blue, green, yellow, red (5)',
+      'Colour pencils 12-long (2 packs)',
+      'Crayons 12 (1 pack)',
+      'Card paper 10 sheets',
+      'Paint brush size 12 (2)',
+      'Glazed paper (10 sheets)',
+      'Scissors round edged (1 pair)',
+      'Glue stick UHU Large (2)',
+      'Paper ream (1 pack)',
+      'A4 Colour Papers (10 sheets)',
+      'Pencil Pouch (1)',
+      'Apron (1)',
+      'Clear Bag (1)',
+    ]
+  },
+  'class2': {
+    label: 'Class 2', section: 'Juniors',
+    books: [
+      'Oxford International Primary English 2 Student + Workbook (OUP)',
+      'Oxford Reading Tree Stage 6 Pack of 6 Readers (OUP)',
+      'Oxford Essential Dictionary (OUP)',
+      'Handwriting Skills Builder Grade 1 (OUP)',
+      'Primary Mathematics 2 Textbook + Workbooks 2A & 2B (OUP)',
+      'UKG Gainda Textbook – Urdu (OUP)',
+      'Nardban e Urdu Workbook 2 (OUP)',
+      'UKG Kiran Reader – Urdu (OUP)',
+      'Urdu Khushkhati Silsila Book 4 (OUP)',
+      'Colour and Craft Book 2 (Sunrise)',
+      'Islamic Studies Grade 2 (Bookmark)',
+      'The Science Factor 2 Textbook + Workbook (OUP)',
+      'Notebooks: 3 English 4-line, 2 Urdu, 1 Maths small square, 1 Science interleaf',
+    ],
+    stationery: [
+      'Black ring folder (1)',
+      'Lead pencils (2 packs)',
+      'Pencil eraser (2)',
+      'Pencil sharpener (2)',
+      'Plastic scale 6 inch (1)',
+      'Colour pencils 12-long (2 packs)',
+      'Crayons 12 (1 pack)',
+      'Card paper 10 sheets',
+      'Paint brush size 12 (2)',
+      'Glazed paper (10 sheets)',
+      'Scissors round edged (1 pair)',
+      'Glue stick UHU Large (2)',
+      'Paper ream (1 pack)',
+      'A4 Colour Papers (10 sheets)',
+      'Pencil Pouch (1)',
+      'Apron (1)',
+      'Clear Bag (2)',
+    ]
+  },
+  'class3': {
+    label: 'Class 3', section: 'Juniors',
+    books: [
+      'Oxford International Primary English 3 Student + Workbook (OUP)',
+      'Oxford Essential Dictionary (OUP)',
+      'Oxford Reading Tree Stage 7 Pack of 6 Readers (OUP)',
+      'Handwriting Skills Builder Grade 2 (OUP)',
+      'Primary Mathematics 3 Textbook + Workbooks 3A & 3B (OUP)',
+      'UKG Sadabahar Textbook – Urdu (OUP)',
+      'Nardban e Urdu Workbook 3 (OUP)',
+      'Chand Reader – Urdu (OUP)',
+      'Urdu Khushkhati Silsila Book 5 (OUP)',
+      'Islamic Studies Grade 3 (Bookmark)',
+      'Colour and Craft Book 3 (Sunrise)',
+      'The Science Factor 3 Textbook + Workbook (OUP)',
+      'Notebooks: 3 English 4-line, 2 Urdu, 1 Maths small square, 1 Science interleaf',
+    ],
+    stationery: [
+      'Black ring folder (1)',
+      'Lead pencils (2 packs)',
+      'Pencil eraser (2)',
+      'Pencil sharpener (2)',
+      'Plastic scale 6 inch (1)',
+      'Poster colours: white, blue, green, yellow, red (5)',
+      'Colour pencils 12-long (2 packs)',
+      'Crayons 12 (1 pack)',
+      'Card paper 10 sheets',
+      'Paint brush size 12 (2)',
+      'Glazed paper (10 sheets)',
+      'Scissors round edged (1 pair)',
+      'Glue stick UHU Large (2)',
+      'Paper ream (1 pack)',
+      'A4 Colour Papers (10 sheets)',
+      'Pencil Pouch (1)',
+      'Apron (1)',
+      'Clear Bag (1)',
+    ]
+  },
+  'class4': {
+    label: 'Class 4', section: 'Juniors',
+    books: [
+      'Oxford International Primary English 4 Student + Workbook (OUP)',
+      'Oxford Reading Tree Stage 8 Pack of 6 Readers (OUP)',
+      'Oxford Essential Dictionary (OUP)',
+      'Primary Mathematics 4 Textbook + Workbooks 4A & 4B (OUP)',
+      'The Science Factor 4 Textbook + Workbook (OUP)',
+      'Nargis Textbook – Urdu (OUP)',
+      'Nardban e Urdu Workbook 4 (OUP)',
+      'Barish Reader – Urdu (OUP)',
+      'Urdu Khushkhati Silsila Book 6 (OUP)',
+      'Islamic Studies Grade 4 (Bookmark)',
+      'Colour and Craft Book 4 (Sunrise)',
+      'New Oxford Social Studies for Pakistan Book 4 (OUP)',
+      'Notebooks: 3 English 4-line, 2 Urdu, 1 Maths small square, 2 Science interleaf',
+    ],
+    stationery: [
+      'Black ring folder (1)',
+      'Lead pencils (2 packs)',
+      'Pencil eraser (2)',
+      'Pencil sharpener (2)',
+      'Plastic scale 6 inch (1)',
+      'Poster colours: white, blue, green, yellow, red (5)',
+      'Colour pencils 12-long (2 packs)',
+      'Crayons 12 (1 pack)',
+      'Card paper 10 sheets',
+      'Paint brush size 12 (2)',
+      'Glazed paper (10 sheets)',
+      'Scissors round edged (1 pair)',
+      'Glue stick UHU Large (2)',
+      'Paper ream (1 pack)',
+      'A4 Colour Papers (10 sheets)',
+      'Pencil Pouch (1)',
+      'Apron (1)',
+      'Clear Bag (1)',
+    ]
+  },
+  'class5': {
+    label: 'Class 5', section: 'Juniors',
+    books: [
+      'Oxford International Primary English 5 Student + Workbook (OUP)',
+      'Oxford Reading Tree Stage 9 Pack of 6 Readers (OUP)',
+      'Oxford Essential Dictionary (OUP)',
+      'Primary Mathematics 5 Textbook + Workbooks 5A & 5B (OUP)',
+      'The Science Factor 5 Textbook + Workbook (OUP)',
+      'Gul-e-Lala Textbook – Urdu (OUP)',
+      'Dhanak Reader – Urdu (OUP)',
+      'Nardban e Urdu Workbook 5 (OUP)',
+      'Urdu Khushkhati Silsila Book 7 (OUP)',
+      'Islamic Studies Grade 5 (Bookmark)',
+      'Colour and Craft Book 5 (Sunrise)',
+      'New Oxford Social Studies for Pakistan Book 5 (OUP)',
+      'Notebooks: 3 English 4-line, 2 Urdu, 1 Maths small square, 2 Science interleaf',
+    ],
+    stationery: [
+      'Black ring folder (1)',
+      'Lead pencils (2 packs)',
+      'Pencil eraser (2)',
+      'Pencil sharpener (2)',
+      'Plastic scale 6 inch (1)',
+      'Poster colours: white, blue, green, yellow, red (5)',
+      'Colour pencils 12-long (2 packs)',
+      'Crayons 12 (1 pack)',
+      'Card paper 10 sheets',
+      'Paint brush size 12 (2)',
+      'Glazed paper (10 sheets)',
+      'Scissors round edged (1 pair)',
+      'Glue stick UHU Large (2)',
+      'Paper ream (1 pack)',
+      'A4 Colour Papers (10 sheets)',
+      'Pencil Pouch (1)',
+      'Apron (1)',
+      'Clear Bag (1)',
+    ]
+  },
+};
+
+// ─── STATE ───────────────────────────────────────────────────────────
+let students = JSON.parse(localStorage.getItem('hms_students') || '[]');
+let editingId = null;
+let currentClass = null;
+
+function save() {
+  localStorage.setItem('hms_students', JSON.stringify(students));
+  updateBadges();
+  updateDashboard();
+}
+
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
+
+// ─── PANEL NAV ───────────────────────────────────────────────────────
+function showPanel(id, el) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
+  const panel = document.getElementById('panel-' + id);
+  if (panel) panel.classList.add('active');
+  if (el) el.classList.add('active');
+
+  if (id === 'missing') renderMissing();
+  if (id === 'allstudents') renderAllStudents();
+  if (id === 'dashboard') updateDashboard();
+  if (CLASSES[id]) { currentClass = id; renderClassPanel(id); }
+}
+
+// ─── BUILD CLASS PANELS ───────────────────────────────────────────────
+function buildClassPanels() {
+  const container = document.getElementById('class-panels');
+  Object.keys(CLASSES).forEach(key => {
+    const cls = CLASSES[key];
+    const div = document.createElement('div');
+    div.className = 'panel';
+    div.id = 'panel-' + key;
+    div.innerHTML = `
+      <div class="page-title">${cls.label}</div>
+      <div class="page-sub">${cls.section} — Session 2026–27</div>
+      <div class="stats-bar" id="stats-${key}"></div>
+      <div style="margin-bottom:12px;display:flex;gap:8px;">
+        <button class="btn btn-primary" onclick="openAddModal('${key}')">+ Add Student</button>
+      </div>
+      <div class="table-wrap" id="table-${key}">
+        <div class="table-toolbar">
+          <input class="search-input" placeholder="Search student..." id="search-${key}" oninput="renderClassPanel('${key}')">
+          <select class="filter-select" id="filter-${key}" onchange="renderClassPanel('${key}')">
+            <option value="">All statuses</option>
+            <option value="complete">Complete</option>
+            <option value="partial">Partial</option>
+            <option value="pending">Pending</option>
+          </select>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Roll #</th><th>Student Name</th>
+              <th>Books</th><th>Stationery</th><th>Overall</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-${key}"></tbody>
+        </table>
+        <div id="empty-${key}" class="no-results" style="display:none;">No students added yet. Click "+ Add Student" to begin.</div>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function renderClassPanel(key) {
+  const cls = CLASSES[key];
+  const search = (document.getElementById('search-' + key)?.value || '').toLowerCase();
+  const filter = document.getElementById('filter-' + key)?.value || '';
+  let rows = students.filter(s => s.classKey === key);
+
+  const total = rows.length;
+  const complete = rows.filter(s => getStatus(s, key) === 'complete').length;
+  const partial = rows.filter(s => getStatus(s, key) === 'partial').length;
+  const pending = rows.filter(s => getStatus(s, key) === 'pending').length;
+
+  const statsEl = document.getElementById('stats-' + key);
+  if (statsEl) {
+    statsEl.innerHTML = `
+      <div class="stat-card"><div class="val">${total}</div><div class="lbl">Students</div></div>
+      <div class="stat-card"><div class="val">${complete}</div><div class="lbl">Complete</div></div>
+      <div class="stat-card warn"><div class="val">${partial}</div><div class="lbl">Partial</div></div>
+      <div class="stat-card danger"><div class="val">${pending}</div><div class="lbl">Pending</div></div>
+    `;
+  }
+
+  if (filter) rows = rows.filter(s => getStatus(s, key) === filter);
+  if (search) rows = rows.filter(s => s.name.toLowerCase().includes(search) || (s.roll||'').includes(search));
+
+  const tbody = document.getElementById('tbody-' + key);
+  const empty = document.getElementById('empty-' + key);
+  if (!tbody) return;
+
+  if (rows.length === 0) {
+    tbody.innerHTML = '';
+    if (empty) empty.style.display = 'block';
+    return;
+  }
+  if (empty) empty.style.display = 'none';
+
+  tbody.innerHTML = rows.map(s => {
+    const bookPct = calcPct(s.books || {}, cls.books.length);
+    const statPct = calcPct(s.stationery || {}, cls.stationery.length);
+    const overall = Math.round((bookPct + statPct) / 2);
+    return `<tr>
+      <td><span style="font-family:'DM Mono',monospace;font-size:12px;">${s.roll || '—'}</span></td>
+      <td><strong>${s.name}</strong></td>
+      <td>${progressCell(bookPct)}</td>
+      <td>${progressCell(statPct)}</td>
+      <td>${progressCell(overall)}</td>
+      <td style="white-space:nowrap;">
+        <button class="link-btn" onclick="openEditModal('${s.id}')">Edit</button>
+        &nbsp;
+        <button class="link-btn" style="color:var(--danger)" onclick="deleteStudent('${s.id}')">Delete</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function progressCell(pct) {
+  const cls = pct >= 90 ? '' : pct >= 50 ? 'mid' : 'low';
+  const color = pct >= 90 ? 'var(--ok)' : pct >= 50 ? 'var(--warn)' : 'var(--danger)';
+  const dotCls = pct >= 90 ? 'dot-ok' : pct >= 50 ? 'dot-warn' : 'dot-danger';
+  return `<div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill ${cls}" style="width:${pct}%"></div></div>
+    <span class="progress-pct" style="color:${color}">${pct}%</span>
+  </div>`;
+}
+
+function calcPct(checked, total) {
+  if (!total) return 100;
+  const cnt = Object.values(checked).filter(Boolean).length;
+  return Math.round((cnt / total) * 100);
+}
+
+function getStatus(s, key) {
+  const cls = CLASSES[key];
+  const bp = calcPct(s.books || {}, cls.books.length);
+  const sp = calcPct(s.stationery || {}, cls.stationery.length);
+  const avg = (bp + sp) / 2;
+  // If any set-book is checked but has a parts note, it's partial regardless of %
+  const hasPartialSet = cls.books.some((b, i) => !!s.books?.[i] && isSetBook(b) && !!(s.bookParts||{})[i]);
+  if (avg >= 100 && !hasPartialSet) return 'complete';
+  if (avg > 0 || hasPartialSet) return 'partial';
+  return 'pending';
+}
+
+// ─── MODAL ────────────────────────────────────────────────────────────
+function openAddModal(classKey) {
+  editingId = null;
+  currentClass = classKey;
+  document.getElementById('modal-title').textContent = `Add Student — ${CLASSES[classKey].label}`;
+  renderModalBody(classKey, null);
+  document.getElementById('entry-modal').classList.add('open');
+}
+
+function openEditModal(id) {
+  const s = students.find(x => x.id === id);
+  if (!s) return;
+  editingId = id;
+  currentClass = s.classKey;
+  document.getElementById('modal-title').textContent = `Edit — ${s.name}`;
+  renderModalBody(s.classKey, s);
+  document.getElementById('entry-modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('entry-modal').classList.remove('open');
+  editingId = null;
+}
+
+function renderModalBody(classKey, student) {
+  const cls = CLASSES[classKey];
+  const books = student?.books || {};
+  const stat = student?.stationery || {};
+  const bookParts = student?.bookParts || {};
+
+  let html = `
+    <div class="form-row">
+      <div class="form-group">
+        <label>Roll Number</label>
+        <input type="text" id="m-roll" value="${student?.roll || ''}" placeholder="e.g. 01">
+      </div>
+      <div class="form-group" style="flex:2;">
+        <label>Student Name *</label>
+        <input type="text" id="m-name" value="${student?.name || ''}" placeholder="Full name">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Date Checked</label>
+        <input type="date" id="m-date" value="${student?.date || new Date().toISOString().slice(0,10)}">
+      </div>
+      <div class="form-group">
+        <label>Notes</label>
+        <input type="text" id="m-notes" value="${student?.notes || ''}" placeholder="Any remarks...">
+      </div>
+    </div>
+
+    <div class="section-header-row">
+      <span class="section-tag">Books</span>
+      <div class="section-divider"></div>
+      <span style="font-size:11px;color:var(--text3);">${cls.books.length} items</span>
+      <button class="btn btn-secondary btn-sm" onclick="toggleAll('book', true)">Check all</button>
+      <button class="btn btn-secondary btn-sm" onclick="toggleAll('book', false)">Clear</button>
+    </div>
+    <div class="checklist-grid">
+      ${cls.books.map((b, i) => checkItem('book', i, b, !!books[i], bookParts[i])).join('')}
+    </div>
+
+    <div class="section-header-row" style="margin-top:20px;">
+      <span class="section-tag stat-tag">Stationery</span>
+      <div class="section-divider"></div>
+      <span style="font-size:11px;color:var(--text3);">${cls.stationery.length} items</span>
+      <button class="btn btn-secondary btn-sm" onclick="toggleAll('stat', true)">Check all</button>
+      <button class="btn btn-secondary btn-sm" onclick="toggleAll('stat', false)">Clear</button>
+    </div>
+    <div class="checklist-grid">
+      ${cls.stationery.map((s, i) => checkItem('stat', i, s, !!stat[i])).join('')}
+    </div>
+  `;
+
+  document.getElementById('modal-body').innerHTML = html;
+}
+
+// Detect books that come in sets/parts — look for numeric ranges, &, Pack of, Workbook/s
+function isSetBook(label) {
+  return /(\d[A-Z]\s*[&–]\s*\d[A-Z]|A\d[–—]A\d|B\d[–—]B\d|C\d[–—]C\d|Pack of \d|\+ Workbook|\d[A-Z] &|\bStage \d Pack|\bTextbook \+ Workbook|Workbooks \d|1A|1B|2A|2B|3A|3B|4A|4B|5A|5B)/i.test(label);
+}
+
+function checkItem(type, idx, label, checked, partsNote) {
+  const id = `chk-${type}-${idx}`;
+  const hasparts = (type === 'book') && isSetBook(label);
+  const partsId = `parts-${type}-${idx}`;
+  const safeNote = (partsNote || '').replace(/"/g, '&quot;');
+  return `<div class="check-item ${checked ? 'checked' : ''} ${hasparts ? 'has-parts' : ''}" id="${id}" onclick="toggleCheck('${type}', ${idx}, '${id}')">
+    <div class="check-icon">${checked ? '✓' : ''}</div>
+    <div class="check-text">${label}</div>
+    ${hasparts ? `<div class="parts-field-wrap" onclick="event.stopPropagation()">
+      <div class="parts-hint">Parts received (e.g. "1A only" or "Books 1,2,3"):</div>
+      <input class="parts-input" id="${partsId}" type="text" value="${safeNote}" placeholder="Which parts were received?" autocomplete="off">
+    </div>` : ''}
+  </div>`;
+}
+
+function toggleCheck(type, idx, domId) {
+  const el = document.getElementById(domId);
+  const isChecked = el.classList.contains('checked');
+  el.classList.toggle('checked', !isChecked);
+  el.querySelector('.check-icon').textContent = !isChecked ? '✓' : '';
+}
+
+function toggleAll(type, state) {
+  const prefix = `chk-${type}-`;
+  document.querySelectorAll(`[id^="${prefix}"]`).forEach(el => {
+    el.classList.toggle('checked', state);
+    el.querySelector('.check-icon').textContent = state ? '✓' : '';
+  });
+}
+
+function saveStudent() {
+  const name = document.getElementById('m-name').value.trim();
+  if (!name) { showToast('Please enter a student name.'); return; }
+
+  const cls = CLASSES[currentClass];
+  const books = {};
+  const bookParts = {};
+  cls.books.forEach((b, i) => {
+    books[i] = document.getElementById(`chk-book-${i}`)?.classList.contains('checked') || false;
+    if (isSetBook(b)) {
+      const pVal = (document.getElementById(`parts-book-${i}`)?.value || '').trim();
+      if (pVal) bookParts[i] = pVal;
+    }
+  });
+  const stationery = {};
+  cls.stationery.forEach((s, i) => {
+    stationery[i] = document.getElementById(`chk-stat-${i}`)?.classList.contains('checked') || false;
+  });
+
+  const rec = {
+    id: editingId || uid(),
+    classKey: currentClass,
+    roll: document.getElementById('m-roll').value.trim(),
+    name,
+    date: document.getElementById('m-date').value,
+    notes: document.getElementById('m-notes').value.trim(),
+    books,
+    bookParts,
+    stationery,
+  };
+
+  if (editingId) {
+    const idx = students.findIndex(s => s.id === editingId);
+    if (idx !== -1) students[idx] = rec;
+  } else {
+    students.push(rec);
+  }
+
+  save();
+  closeModal();
+  renderClassPanel(currentClass);
+  showToast(editingId ? 'Record updated.' : 'Student added.');
+}
+
+function deleteStudent(id) {
+  if (!confirm('Delete this student record?')) return;
+  students = students.filter(s => s.id !== id);
+  save();
+  if (currentClass) renderClassPanel(currentClass);
+  renderAllStudents();
+  showToast('Record deleted.');
+}
+
+// ─── BADGES ───────────────────────────────────────────────────────────
+function updateBadges() {
+  Object.keys(CLASSES).forEach(key => {
+    const cnt = students.filter(s => s.classKey === key).length;
+    const el = document.getElementById('cnt-' + key);
+    if (el) el.textContent = cnt;
+  });
+}
+
+// ─── DASHBOARD ───────────────────────────────────────────────────────
+function updateDashboard() {
+  const total = students.length;
+  let complete = 0, partial = 0, missing = 0;
+  students.forEach(s => {
+    const st = getStatus(s, s.classKey);
+    if (st === 'complete') complete++;
+    else if (st === 'partial') partial++;
+    else missing++;
+  });
+  document.getElementById('dash-total').textContent = total;
+  document.getElementById('dash-complete').textContent = complete;
+  document.getElementById('dash-partial').textContent = partial;
+  document.getElementById('dash-missing').textContent = missing;
+
+  const grid = document.getElementById('dash-class-grid');
+  grid.innerHTML = Object.keys(CLASSES).map(key => {
+    const cls = CLASSES[key];
+    const rows = students.filter(s => s.classKey === key);
+    const n = rows.length;
+    const bookAvg = n ? Math.round(rows.reduce((a, s) => a + calcPct(s.books || {}, cls.books.length), 0) / n) : 0;
+    const statAvg = n ? Math.round(rows.reduce((a, s) => a + calcPct(s.stationery || {}, cls.stationery.length), 0) / n) : 0;
+    const pillCls = cls.section === 'Montessori' ? 'pill-mont' : 'pill-jun';
+    return `<div class="class-summary">
+      <div class="cs-name">
+        <span class="class-pill ${pillCls}">${cls.section}</span>
+        <strong>${cls.label}</strong>
+        <span style="margin-left:auto;font-size:12px;color:var(--text3);">${n} students</span>
+      </div>
+      <div class="cs-bar-wrap">
+        <div class="cs-label"><span>Books</span><span>${bookAvg}%</span></div>
+        <div class="progress-bar" style="height:8px;"><div class="progress-fill ${bookAvg<50?'low':bookAvg<90?'mid':''}" style="width:${bookAvg}%"></div></div>
+      </div>
+      <div class="cs-bar-wrap" style="margin-top:8px;">
+        <div class="cs-label"><span>Stationery</span><span>${statAvg}%</span></div>
+        <div class="progress-bar" style="height:8px;"><div class="progress-fill ${statAvg<50?'low':statAvg<90?'mid':''}" style="width:${statAvg}%"></div></div>
+      </div>
+      ${n === 0 ? `<div style="margin-top:10px;font-size:11px;color:var(--text3);">No students recorded yet.</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+// ─── MISSING REPORT ───────────────────────────────────────────────────
+function renderMissing() {
+  const search = (document.getElementById('miss-search')?.value || '').toLowerCase();
+  const classFilter = document.getElementById('miss-class')?.value || '';
+  const typeFilter = document.getElementById('miss-type')?.value || '';
+
+  let rows = students.filter(s => {
+    const cls = CLASSES[s.classKey];
+    if (!cls) return false;
+    const bookPct = calcPct(s.books || {}, cls.books.length);
+    const statPct = calcPct(s.stationery || {}, cls.stationery.length);
+    if (typeFilter === 'book') return bookPct < 100;
+    if (typeFilter === 'stationery') return statPct < 100;
+    return bookPct < 100 || statPct < 100;
+  });
+
+  if (classFilter) rows = rows.filter(s => CLASSES[s.classKey]?.label === classFilter);
+  if (search) rows = rows.filter(s => s.name.toLowerCase().includes(search));
+
+  const wrap = document.getElementById('missing-list-wrap');
+  if (rows.length === 0) {
+    wrap.innerHTML = `<div class="empty-state"><div class="icon">✅</div><div class="msg">No missing items found${search || classFilter ? ' for this filter' : ''}!</div></div>`;
+    return;
+  }
+
+  wrap.innerHTML = rows.map(s => {
+    const cls = CLASSES[s.classKey];
+    const bookParts = s.bookParts || {};
+    const showBooks = !typeFilter || typeFilter === 'book';
+    const showStat = !typeFilter || typeFilter === 'stationery';
+
+    // Books: fully missing OR checked but has parts note (partial set)
+    const mb = showBooks ? cls.books.map((b, i) => {
+      const checked = !!s.books?.[i];
+      const parts = bookParts[i] || '';
+      const isSet = isSetBook(b);
+      if (!checked) return { label: b, parts: '', isSet, status: 'missing' };
+      if (checked && isSet && parts) return { label: b, parts, isSet, status: 'partial' };
+      return null;
+    }).filter(Boolean) : [];
+
+    const ms = showStat ? cls.stationery.filter((st, i) => !s.stationery?.[i]) : [];
+
+    if (!mb.length && !ms.length) return '';
+    return `<div class="missing-card">
+      <div class="missing-card-head">
+        <div>
+          <span class="class-pill ${cls.section==='Montessori'?'pill-mont':'pill-jun'}">${cls.label}</span>
+          <span class="name" style="margin-left:8px;">${s.name}</span>
+          ${s.roll ? `<span style="font-size:11px;color:var(--text3);margin-left:6px;">Roll ${s.roll}</span>` : ''}
+        </div>
+        <button class="link-btn" onclick="openEditModal('${s.id}')">Update →</button>
+      </div>
+      <div class="missing-list">
+        ${mb.map(b => b.status === 'partial'
+          ? `<div class="missing-row"><span class="partial-icon">◑</span>
+              <span class="check-text"><strong style="color:var(--warn);">[Partial]</strong> ${b.label}
+                <span style="display:block;font-size:10px;color:var(--text2);margin-top:2px;">
+                  ✓ Received: ${b.parts} &nbsp;·&nbsp; <span style="color:var(--danger);">✕ Remaining parts missing</span>
+                </span>
+              </span>
+              <span class="section-tag" style="flex-shrink:0;font-size:9px;background:var(--warn-light);color:var(--warn);">Partial</span></div>`
+          : `<div class="missing-row"><span class="missing-icon">✕</span><span class="check-text">${b.label}</span><span class="section-tag" style="flex-shrink:0;font-size:9px;">Book</span></div>`
+        ).join('')}
+        ${ms.map(st => `<div class="missing-row"><span class="partial-icon">○</span><span class="check-text">${st}</span><span class="section-tag stat-tag" style="flex-shrink:0;font-size:9px;">Stationery</span></div>`).join('')}
+      </div>
+    </div>`;
+  }).filter(Boolean).join('');
+}
+
+// ─── ALL STUDENTS ─────────────────────────────────────────────────────
+function renderAllStudents() {
+  const search = (document.getElementById('all-search')?.value || '').toLowerCase();
+  const classFilter = document.getElementById('all-class')?.value || '';
+  const statusFilter = document.getElementById('all-status')?.value || '';
+
+  let rows = [...students];
+  if (classFilter) rows = rows.filter(s => CLASSES[s.classKey]?.label === classFilter);
+  if (statusFilter) rows = rows.filter(s => getStatus(s, s.classKey) === statusFilter);
+  if (search) rows = rows.filter(s => s.name.toLowerCase().includes(search) || (s.roll||'').includes(search));
+
+  const tbody = document.getElementById('all-students-tbody');
+  const empty = document.getElementById('all-empty');
+  if (rows.length === 0) {
+    tbody.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+  tbody.innerHTML = rows.map(s => {
+    const cls = CLASSES[s.classKey];
+    const bp = calcPct(s.books || {}, cls.books.length);
+    const sp = calcPct(s.stationery || {}, cls.stationery.length);
+    const overall = Math.round((bp + sp) / 2);
+    const pillCls = cls.section === 'Montessori' ? 'pill-mont' : 'pill-jun';
+    return `<tr>
+      <td><span style="font-family:'DM Mono',monospace;font-size:12px;">${s.roll||'—'}</span></td>
+      <td><strong>${s.name}</strong>${s.notes?`<span style="display:block;font-size:11px;color:var(--text3);">${s.notes}</span>`:''}  </td>
+      <td><span class="class-pill ${pillCls}">${cls.label}</span></td>
+      <td>${progressCell(bp)}</td>
+      <td>${progressCell(sp)}</td>
+      <td>${progressCell(overall)}</td>
+      <td><button class="link-btn" onclick="openEditModal('${s.id}')">Edit</button></td>
+    </tr>`;
+  }).join('');
+}
+
+// ─── EXPORT CSV ───────────────────────────────────────────────────────
+function exportCSV() {
+  const rows = [['Roll', 'Name', 'Class', 'Section', 'Date', 'Books %', 'Stationery %', 'Overall %', 'Notes']];
+  students.forEach(s => {
+    const cls = CLASSES[s.classKey];
+    if (!cls) return;
+    const bp = calcPct(s.books || {}, cls.books.length);
+    const sp = calcPct(s.stationery || {}, cls.stationery.length);
+    rows.push([s.roll||'', s.name, cls.label, cls.section, s.date||'', bp+'%', sp+'%', Math.round((bp+sp)/2)+'%', s.notes||'']);
+  });
+  const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'}));
+  a.download = 'HMS_BookRecord_2026-27.csv';
+  a.click();
+  showToast('CSV exported!');
+}
+
+// ─── TOAST ────────────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+// ─── PRINT ───────────────────────────────────────────────────────────
+function showPrintMenu() {
+  // Pre-select current class if on a class panel
+  const sel = document.getElementById('print-class-select');
+  if (currentClass) sel.value = currentClass;
+  document.getElementById('print-modal').classList.add('open');
+}
+
+function buildPrintHTML(classKeys) {
+  let html = '';
+  classKeys.forEach(key => {
+    const cls = CLASSES[key];
+    const rows = students.filter(s => s.classKey === key);
+
+    // ── Page 1: Summary Table ──
+    const summaryRows = rows.length ? rows.map(s => {
+      const bp = calcPct(s.books || {}, cls.books.length);
+      const sp = calcPct(s.stationery || {}, cls.stationery.length);
+      const overall = Math.round((bp + sp) / 2);
+      const status = overall >= 100 ? '✓ Complete' : overall > 0 ? '⚠ Partial' : '✕ Pending';
+      const statusColor = overall >= 100 ? '#2B6A4F' : overall > 0 ? '#D4850A' : '#C0392B';
+      return `<tr>
+        <td>${s.roll || '—'}</td>
+        <td><strong>${s.name}</strong></td>
+        <td style="text-align:center;">${bp}%</td>
+        <td style="text-align:center;">${sp}%</td>
+        <td style="text-align:center;font-weight:700;">${overall}%</td>
+        <td style="color:${statusColor};font-weight:600;">${status}</td>
+        <td style="font-size:10px;color:#888;">${s.notes || ''}</td>
+      </tr>`;
+    }).join('') : `<tr><td colspan="7" style="text-align:center;color:#999;padding:20px;">No students recorded for this class.</td></tr>`;
+
+    // Stats
+    const total = rows.length;
+    const complete = rows.filter(s => getStatus(s, key) === 'complete').length;
+    const partial = rows.filter(s => getStatus(s, key) === 'partial').length;
+    const pending = rows.filter(s => getStatus(s, key) === 'pending').length;
+
+    html += `
+    <div class="print-page">
+      <div class="print-header" style="display:flex;">
+        <div>
+          <div class="ph-title">Heritage Montessori and School</div>
+          <div class="ph-sub">Book &amp; Stationery Record — Session 2026–27 &nbsp;|&nbsp; ${cls.label} &nbsp;|&nbsp; Printed: ${new Date().toLocaleDateString('en-PK',{day:'2-digit',month:'short',year:'numeric'})}</div>
+        </div>
+        <div class="ph-logo">HMS<br><span style="font-size:10px;font-weight:400;">Garden Town, Multan</span></div>
+      </div>
+
+      <div style="margin-bottom:10px;display:flex;gap:20px;font-size:11px;">
+        <span>Total: <strong>${total}</strong></span>
+        <span style="color:#2B6A4F;">Complete: <strong>${complete}</strong></span>
+        <span style="color:#D4850A;">Partial: <strong>${partial}</strong></span>
+        <span style="color:#C0392B;">Pending: <strong>${pending}</strong></span>
+      </div>
+
+      <table class="section-summary-table">
+        <thead>
+          <tr>
+            <th style="width:50px;">Roll #</th>
+            <th>Student Name</th>
+            <th style="width:65px;text-align:center;">Books</th>
+            <th style="width:75px;text-align:center;">Stationery</th>
+            <th style="width:65px;text-align:center;">Overall</th>
+            <th style="width:80px;">Status</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>${summaryRows}</tbody>
+      </table>
+
+      <div style="font-size:9px;color:#aaa;margin-top:8px;border-top:1px solid #eee;padding-top:6px;">
+        Heritage Montessori and School &nbsp;·&nbsp; 11-D Garden Town, Multan &nbsp;·&nbsp; 061-6515260
+      </div>
+    </div>`;
+
+    // ── Page 2: Missing Items Detail ──
+    const withMissing = rows.filter(s => {
+      const bp = calcPct(s.books || {}, cls.books.length);
+      const sp = calcPct(s.stationery || {}, cls.stationery.length);
+      return bp < 100 || sp < 100;
+    });
+
+    if (withMissing.length > 0) {
+      let missingHTML = withMissing.map(s => {
+        const bookParts = s.bookParts || {};
+        const bookItems = cls.books.map((b, i) => {
+          const checked = !!s.books?.[i];
+          const parts = bookParts[i] || '';
+          if (!checked) return { label: b, parts: '', status: 'missing' };
+          if (checked && isSetBook(b) && parts) return { label: b, parts, status: 'partial' };
+          return null;
+        }).filter(Boolean);
+        const missingStat = cls.stationery.filter((st, i) => !s.stationery?.[i]);
+        if (!bookItems.length && !missingStat.length) return '';
+        const bp = calcPct(s.books || {}, cls.books.length);
+        const sp = calcPct(s.stationery || {}, cls.stationery.length);
+        return `<div class="missing-card" style="margin-bottom:10px;break-inside:avoid;">
+          <div class="missing-card-head" style="padding:8px 12px;background:#f5f5f5;border-bottom:1px solid #ddd;display:flex;justify-content:space-between;align-items:center;">
+            <span><strong>${s.name}</strong>${s.roll ? ` &nbsp;<span style="font-size:10px;color:#888;">Roll ${s.roll}</span>` : ''}</span>
+            <span style="font-size:10px;color:#666;">Books: ${bp}% &nbsp; Stationery: ${sp}%</span>
+          </div>
+          <div style="padding:8px 12px;display:flex;gap:24px;flex-wrap:wrap;">
+            ${bookItems.length ? `<div style="flex:1;min-width:200px;">
+              <div style="font-size:10px;font-weight:700;color:#C0392B;margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em;">Books — Missing / Partial (${bookItems.length})</div>
+              ${bookItems.map(b => b.status === 'partial'
+                ? `<div style="font-size:10px;padding:3px 0;border-bottom:1px solid #f0f0f0;">
+                    <span style="color:#D4850A;font-weight:700;">◑ PARTIAL</span> — ${b.label}<br>
+                    <span style="color:#555;padding-left:10px;">✓ Received: ${b.parts} &nbsp;·&nbsp; Remaining parts still missing</span>
+                   </div>`
+                : `<div style="font-size:10px;padding:2px 0;border-bottom:1px solid #f0f0f0;">✕ ${b.label}</div>`
+              ).join('')}
+            </div>` : ''}
+            ${missingStat.length ? `<div style="flex:1;min-width:200px;">
+              <div style="font-size:10px;font-weight:700;color:#D4850A;margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em;">Missing Stationery (${missingStat.length})</div>
+              ${missingStat.map(st => `<div style="font-size:10px;padding:2px 0;border-bottom:1px solid #f0f0f0;">○ ${st}</div>`).join('')}
+            </div>` : ''}
+          </div>
+        </div>`;
+      }).filter(Boolean).join('');
+
+      html += `
+      <div class="print-page">
+        <div class="print-header" style="display:flex;">
+          <div>
+            <div class="ph-title">Heritage Montessori and School</div>
+            <div class="ph-sub">Missing Items Detail — ${cls.label} &nbsp;|&nbsp; Session 2026–27 &nbsp;|&nbsp; ${withMissing.length} student(s) with pending items</div>
+          </div>
+          <div class="ph-logo">HMS<br><span style="font-size:10px;font-weight:400;">Garden Town, Multan</span></div>
+        </div>
+        ${missingHTML}
+        <div style="font-size:9px;color:#aaa;margin-top:8px;border-top:1px solid #eee;padding-top:6px;">
+          Heritage Montessori and School &nbsp;·&nbsp; 11-D Garden Town, Multan &nbsp;·&nbsp; 061-6515260
+        </div>
+      </div>`;
+    }
+  });
+  return html;
+}
+
+function doPrint() {
+  const val = document.getElementById('print-class-select').value;
+  if (!val) { showToast('Please select a class first.'); return; }
+  const keys = val === 'all' ? Object.keys(CLASSES) : [val];
+  document.getElementById('print-modal').classList.remove('open');
+
+  const root = document.getElementById('print-root');
+  root.innerHTML = buildPrintHTML(keys);
+  root.style.display = 'block';
+
+  // Hide main layout, show print root
+  document.querySelector('.layout').style.display = 'none';
+  document.querySelector('.app-header').style.display = 'none';
+
+  setTimeout(() => {
+    window.print();
+    // Restore after print
+    setTimeout(() => {
+      root.style.display = 'none';
+      root.innerHTML = '';
+      document.querySelector('.layout').style.display = 'flex';
+      document.querySelector('.app-header').style.display = 'flex';
+    }, 500);
+  }, 100);
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────
+buildClassPanels();
+updateBadges();
+updateDashboard();
+
+// Close modal on overlay click
+document.getElementById('entry-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+</script>
+</body>
+</html>
