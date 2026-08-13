@@ -1170,7 +1170,8 @@ function qtyRow(type,idx,item,brought){
   const broughtQty=brought?.qty!==undefined?brought.qty:item.qty;
   const bal=checked?Math.max(0,item.qty-Number(broughtQty)):item.qty;
   const balColor=bal===0?'var(--accent)':bal>0?'var(--danger)':'var(--accent)';
-  const balText=bal===0?'✓ Complete':`Balance: <strong style="color:${balColor};">${bal}</strong>`;
+  const broughtNote=checked?(broughtQty||''):'';
+const balText=checked&&broughtNote?`<span style="color:var(--accent);font-size:10px;">✓ ${broughtNote}</span><br><span style="color:var(--danger);font-size:10px;">Missing rest</span>`:checked?'✓ Complete':'—';
   const rowBg=checked?(bal===0?'var(--accent-light)':'var(--warn-light)'):'var(--bg)';
   const rowBorder=checked?(bal===0?'var(--accent)':'var(--warn)'):'var(--border2)';
   return `<div id="qrow-${type}-${idx}" style="display:grid;grid-template-columns:32px 1fr 90px 110px;gap:0;align-items:center;background:${rowBg};border:1px solid ${rowBorder};border-radius:6px;overflow:hidden;transition:all .12s;">
@@ -1183,7 +1184,7 @@ function qtyRow(type,idx,item,brought){
     </div>
     <div style="padding:6px 8px;border-left:1px solid var(--border2);">
       <div style="font-size:9px;color:#9C9590;margin-bottom:2px;text-transform:uppercase;letter-spacing:.05em;">Brought</div>
-      <input type="number" id="qval-${type}-${idx}" value="${checked?broughtQty:''}" min="0" max="${item.qty*2}"
+      <input type="text" id="qval-${type}-${idx}" value="${checked?broughtQty:''}" min="0" max="${item.qty*2}"
         style="width:100%;border:none;background:transparent;font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:var(--text-dark);outline:none;padding:0;"
         placeholder="0" ${!checked?'disabled':''}
         oninput="updateBalance('${type}',${idx},${item.qty})">
@@ -1229,7 +1230,9 @@ function updateBalance(type,idx,required){
   const brought=Number(inp.value)||0;
   const bal=isChecked?Math.max(0,required-brought):required;
   const balColor=bal===0?'var(--accent)':'var(--danger)';
-  const balText=bal===0?'✓ Complete':`Balance: <strong style="color:${balColor};">${bal}</strong>`;
+  const inp2=document.getElementById(`qval-${type}-${idx}`);
+const note=inp2?.value?.trim()||'';
+const balText=isChecked&&note?`<span style="color:var(--accent);font-size:10px;">✓ ${note}</span><br><span style="color:var(--danger);font-size:10px;">Missing rest</span>`:isChecked?'✓ Complete':'—';
   balEl.innerHTML=`<div style="font-size:9px;color:#9C9590;margin-bottom:2px;text-transform:uppercase;letter-spacing:.05em;">Balance</div>${balText}`;
   if(isChecked){
     row.style.background=bal===0?'var(--accent-light)':'var(--warn-light)';
@@ -1266,12 +1269,12 @@ function saveStudent(){
   cls.books.forEach((it,i)=>{
     const chk=document.getElementById(`qchk-book-${i}`);
     const inp=document.getElementById(`qval-book-${i}`);
-    books[i]={checked:chk?.textContent==='✓',qty:Number(inp?.value)||0};
+    books[i]={checked:chk?.textContent==='✓',qty:inp?.value||0};
   });
   cls.stationery.forEach((it,i)=>{
     const chk=document.getElementById(`qchk-stat-${i}`);
     const inp=document.getElementById(`qval-stat-${i}`);
-    stationery[i]={checked:chk?.textContent==='✓',qty:Number(inp?.value)||0};
+    stationery[i]={checked:chk?.textContent==='✓',qty:inp?.value||0};
   });
   const rec={id:editingId||uid(),classKey:currentClass,
     roll:document.getElementById('m-roll').value.trim(),name,
