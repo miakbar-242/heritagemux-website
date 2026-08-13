@@ -693,7 +693,7 @@ document.body.classList.remove('locked');
 // LOGOUT: if inside a class record → go back to portal tab home (not password screen)
 // If at portal home → go to password screen
 function doLogout(){
-if(typeof currentRole!=='undefined'&&currentRole){
+if(currentRole){
 // Inside stationery record — lock it and stay in portal
 lockRecord();
 return;
@@ -724,7 +724,7 @@ window.addEventListener('popstate',function(e){
 // If we have a portal state, stay inside portal
 if(sessionStorage.getItem('hms_auth')==='1'){
 // If inside a class record, go back to class PIN screen
-if(typeof currentRole!=='undefined'&&currentRole){
+if(currentRole){
 lockRecord();
 } else {
 // Go back to first tab (Classroom Guide)
@@ -1170,12 +1170,12 @@ const checked=brought?.checked||false;
 const broughtQty=brought?.qty!==undefined?brought.qty:item.qty;
 const bal=checked?Math.max(0,item.qty-Number(broughtQty)):item.qty;
 const balColor=bal===0?'var(--accent)':bal>0?'var(--danger)':'var(--accent)';
-const broughtNote=checked?(broughtQty||''):'';
-const isNum=!isNaN(Number(broughtNote))&&broughtNote!=='';const balText=!checked?'—':isNum&&bal===0?'✓ Complete':isNum&&bal>0?`<span style="color:var(--danger);font-size:10px;">Balance: <strong>${bal}</strong> missing</span>`:broughtNote?`<span style="color:var(--accent);font-size:10px;">✓ ${broughtNote}</span><br><span style="color:var(--danger);font-size:10px;">Missing rest</span>`:'✓ Complete';
+  const balText=bal===0?'✓ Complete':`Balance: <strong style="color:${balColor};">${bal}</strong>`;
+  const broughtNote=checked?(broughtQty||''):'';
+const balText=checked&&broughtNote?`<span style="color:var(--accent);font-size:10px;">✓ ${broughtNote}</span><br><span style="color:var(--danger);font-size:10px;">Missing rest</span>`:checked?'✓ Complete':'—';
 const rowBg=checked?(bal===0?'var(--accent-light)':'var(--warn-light)'):'var(--bg)';
 const rowBorder=checked?(bal===0?'var(--accent)':'var(--warn)'):'var(--border2)';
-  return `<div id="qrow-${type}-${idx}" style="display:grid;grid-template-columns:32px 1fr 90px 110px;gap:0;align-items:center;background:${rowBg};border:1px solid ${rowBorder};border-radius:6px;overflow:hidden;transition:all .12s;">
-  return `<div id="qrow-${type}-${idx}" style=display:grid;grid-template-columns:32px 1fr 140px 110px;gap:0;align-items:center;background:${rowBg};border:1px solid ${rowBorder};border-radius:6px;overflow:hidden;transition:all .12s;">
+return `<div id="qrow-${type}-${idx}" style="display:grid;grid-template-columns:32px 1fr 90px 110px;gap:0;align-items:center;background:${rowBg};border:1px solid ${rowBorder};border-radius:6px;overflow:hidden;transition:all .12s;">
    <div style="display:flex;align-items:center;justify-content:center;padding:8px 0;cursor:pointer;" onclick="toggleQRow('${type}',${idx})">
      <div id="qchk-${type}-${idx}" style="width:18px;height:18px;border:2px solid ${checked?'var(--accent)':'var(--border2)'};border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;background:${checked?'var(--accent)':'white'};color:white;transition:all .12s;">${checked?'✓':''}</div>
    </div>
@@ -1185,7 +1185,8 @@ const rowBorder=checked?(bal===0?'var(--accent)':'var(--warn)'):'var(--border2)'
    </div>
    <div style="padding:6px 8px;border-left:1px solid var(--border2);">
      <div style="font-size:9px;color:#9C9590;margin-bottom:2px;text-transform:uppercase;letter-spacing:.05em;">Brought</div>
-     <input type="text" id="qval-${type}-${idx}" value="${checked?broughtQty:''}" min="0" max="${item.qty*2}"
+      <input type="number" id="qval-${type}-${idx}" value="${checked?broughtQty:''}" min="0" max="${item.qty*2}"
+      <input type="text" id="qval-${type}-${idx}" value="${checked?broughtQty:''}" min="0" max="${item.qty*2}"
        style="width:100%;border:none;background:transparent;font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:var(--text-dark);outline:none;padding:0;"
        placeholder="0" ${!checked?'disabled':''}
        oninput="updateBalance('${type}',${idx},${item.qty})">
@@ -1231,9 +1232,10 @@ const isChecked=chk.textContent==='✓';
 const brought=Number(inp.value)||0;
 const bal=isChecked?Math.max(0,required-brought):required;
 const balColor=bal===0?'var(--accent)':'var(--danger)';
-const inp2=document.getElementById(`qval-${type}-${idx}`);
+  const balText=bal===0?'✓ Complete':`Balance: <strong style="color:${balColor};">${bal}</strong>`;
+  const inp2=document.getElementById(`qval-${type}-${idx}`);
 const note=inp2?.value?.trim()||'';
-const isNum2=!isNaN(Number(note))&&note!=='';const balText=!isChecked?'—':isNum2&&bal===0?'✓ Complete':isNum2&&bal>0?`<span style="color:var(--danger);font-size:10px;">Balance: <strong>${bal}</strong> missing</span>`:note?`<span style="color:var(--accent);font-size:10px;">✓ ${note}</span><br><span style="color:var(--danger);font-size:10px;">Missing rest</span>`:'✓ Complete';
+const balText=isChecked&&note?`<span style="color:var(--accent);font-size:10px;">✓ ${note}</span><br><span style="color:var(--danger);font-size:10px;">Missing rest</span>`:isChecked?'✓ Complete':'—';
 balEl.innerHTML=`<div style="font-size:9px;color:#9C9590;margin-bottom:2px;text-transform:uppercase;letter-spacing:.05em;">Balance</div>${balText}`;
 if(isChecked){
 row.style.background=bal===0?'var(--accent-light)':'var(--warn-light)';
@@ -1270,12 +1272,14 @@ const books={},stationery={};
 cls.books.forEach((it,i)=>{
 const chk=document.getElementById(`qchk-book-${i}`);
 const inp=document.getElementById(`qval-book-${i}`);
-books[i]={checked:chk?.textContent==='✓',qty:inp?.value||0};
+    books[i]={checked:chk?.textContent==='✓',qty:Number(inp?.value)||0};
+    books[i]={checked:chk?.textContent==='✓',qty:inp?.value||0};
 });
 cls.stationery.forEach((it,i)=>{
 const chk=document.getElementById(`qchk-stat-${i}`);
 const inp=document.getElementById(`qval-stat-${i}`);
-stationery[i]={checked:chk?.textContent==='✓',qty:inp?.value||0};
+    stationery[i]={checked:chk?.textContent==='✓',qty:Number(inp?.value)||0};
+    stationery[i]={checked:chk?.textContent==='✓',qty:inp?.value||0};
 });
 const rec={id:editingId||uid(),classKey:currentClass,
 roll:document.getElementById('m-roll').value.trim(),name,
