@@ -693,7 +693,7 @@ document.body.classList.remove('locked');
 // LOGOUT: if inside a class record → go back to portal tab home (not password screen)
 // If at portal home → go to password screen
 function doLogout(){
-if(currentRole){
+if(typeof currentRole!=='undefined'&&currentRole){
 // Inside stationery record — lock it and stay in portal
 lockRecord();
 return;
@@ -724,7 +724,7 @@ window.addEventListener('popstate',function(e){
 // If we have a portal state, stay inside portal
 if(sessionStorage.getItem('hms_auth')==='1'){
 // If inside a class record, go back to class PIN screen
-if(currentRole){
+if(typeof currentRole!=='undefined'&&currentRole){
 lockRecord();
 } else {
 // Go back to first tab (Classroom Guide)
