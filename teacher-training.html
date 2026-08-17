@@ -553,54 +553,135 @@ header{padding:0 14px;min-height:60px;}
 
 <!-- ══════════ TAB 2: BOOK & STATIONERY RECORD ══════════ -->
 <div class="tab-panel" id="tab-record">
-<div class="class-pin-screen" id="class-pin-screen">
-<div class="pin-wrap">
-<div class="pin-header">
-<div style="width:60px;height:60px;background:var(--accent-light);border-radius:18px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:1.6rem;">📚</div>
-<h2>Book &amp; Stationery Record</h2>
-<p>Select your class, then enter your PIN. You can only access your own class records.</p>
-</div>
-<div class="class-grid">
-<div class="class-btn mont-btn" onclick="selectClass('mont1',this)"><div class="cb-section">Montessori</div><div class="cb-label">Mont 1</div></div>
-<div class="class-btn mont-btn" onclick="selectClass('mont2',this)"><div class="cb-section">Montessori</div><div class="cb-label">Mont 2</div></div>
-<div class="class-btn mont-btn" onclick="selectClass('mont3',this)"><div class="cb-section">Montessori</div><div class="cb-label">Mont 3</div></div>
-<div class="class-btn jun-btn" onclick="selectClass('class1',this)"><div class="cb-section">Juniors</div><div class="cb-label">Class 1</div></div>
-<div class="class-btn jun-btn" onclick="selectClass('class2',this)"><div class="cb-section">Juniors</div><div class="cb-label">Class 2</div></div>
-<div class="class-btn jun-btn" onclick="selectClass('class3',this)"><div class="cb-section">Juniors</div><div class="cb-label">Class 3</div></div>
-<div class="class-btn jun-btn" onclick="selectClass('class4',this)"><div class="cb-section">Juniors</div><div class="cb-label">Class 4</div></div>
-<div class="class-btn jun-btn" onclick="selectClass('class5',this)"><div class="cb-section">Juniors</div><div class="cb-label">Class 5</div></div>
-</div>
-<div class="pin-form-card" id="pin-form-card">
-<div class="pin-form-title"><i class="fas fa-lock" style="color:var(--accent);"></i> <span id="pin-form-label">Enter PIN</span></div>
-<div class="pin-input-wrap">
-<input type="password" class="pin-input" id="class-pin-input" placeholder="· · · ·" maxlength="6" onkeydown="if(event.key==='Enter')checkClassPin()">
-<button class="pin-go" onclick="checkClassPin()"><i class="fas fa-arrow-right"></i> Enter</button>
-</div>
-<div class="pin-error" id="pin-error"><i class="fas fa-times-circle"></i> Incorrect PIN. Please try again.</div>
-</div>
-<div class="admin-link">Admin? <button onclick="selectClass('admin',null)"><i class="fas fa-shield-halved"></i> Admin Access (all classes)</button></div>
-</div>
+
+  <!-- PIN SCREEN -->
+  <div id="rec-pin-screen" style="min-height:calc(100vh - 124px);display:flex;align-items:center;justify-content:center;padding:32px 16px;background:#faf7f2;">
+    <div style="width:100%;max-width:440px;">
+      <div style="text-align:center;margin-bottom:28px;">
+        <div style="width:64px;height:64px;background:#e8f4ee;border-radius:18px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:1.8rem;">📚</div>
+        <h2 style="font-family:'DM Serif Display',serif;font-size:1.5rem;font-weight:400;color:#1e3320;margin-bottom:6px;">Book & Stationery Record</h2>
+        <p style="font-size:0.88rem;color:#6e6456;font-weight:300;">Select your class then enter your PIN</p>
+      </div>
+
+      <!-- CLASS GRID -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;" id="rec-class-grid">
+        <button class="rec-cls-btn" onclick="recSelectClass('mont1',this)" data-label="Mont 1" data-section="Montessori">
+          <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#3355aa;margin-bottom:3px;">Montessori</div>
+          <div style="font-size:1rem;font-weight:700;color:#1a1714;">Mont 1</div>
+        </button>
+        <button class="rec-cls-btn" onclick="recSelectClass('mont2',this)" data-label="Mont 2" data-section="Montessori">
+          <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#3355aa;margin-bottom:3px;">Montessori</div>
+          <div style="font-size:1rem;font-weight:700;color:#1a1714;">Mont 2</div>
+        </button>
+        <button class="rec-cls-btn" onclick="recSelectClass('mont3',this)" data-label="Mont 3" data-section="Montessori">
+          <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#3355aa;margin-bottom:3px;">Montessori</div>
+          <div style="font-size:1rem;font-weight:700;color:#1a1714;">Mont 3</div>
+        </button>
+        <button class="rec-cls-btn" onclick="recSelectClass('class1',this)" data-label="Class 1" data-section="Juniors">
+          <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#5a4a2a;margin-bottom:3px;">Juniors</div>
+          <div style="font-size:1rem;font-weight:700;color:#1a1714;">Class 1</div>
+        </button>
+        <button class="rec-cls-btn" onclick="recSelectClass('class2',this)" data-label="Class 2" data-section="Juniors">
+          <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#5a4a2a;margin-bottom:3px;">Juniors</div>
+          <div style="font-size:1rem;font-weight:700;color:#1a1714;">Class 2</div>
+        </button>
+        <button class="rec-cls-btn" onclick="recSelectClass('class3',this)" data-label="Class 3" data-section="Juniors">
+          <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#5a4a2a;margin-bottom:3px;">Juniors</div>
+          <div style="font-size:1rem;font-weight:700;color:#1a1714;">Class 3</div>
+        </button>
+        <button class="rec-cls-btn" onclick="recSelectClass('class4',this)" data-label="Class 4" data-section="Juniors">
+          <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#5a4a2a;margin-bottom:3px;">Juniors</div>
+          <div style="font-size:1rem;font-weight:700;color:#1a1714;">Class 4</div>
+        </button>
+        <button class="rec-cls-btn" onclick="recSelectClass('class5',this)" data-label="Class 5" data-section="Juniors">
+          <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#5a4a2a;margin-bottom:3px;">Juniors</div>
+          <div style="font-size:1rem;font-weight:700;color:#1a1714;">Class 5</div>
+        </button>
+        <button class="rec-cls-btn" onclick="recSelectClass('admin',this)" style="border-color:#2d4a2d;background:#e8f4ee;" data-label="All Classes" data-section="Admin">
+          <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#2d4a2d;margin-bottom:3px;">Admin</div>
+          <div style="font-size:1rem;font-weight:700;color:#2d4a2d;">All Classes</div>
+        </button>
+      </div>
+
+      <!-- PIN ENTRY -->
+      <div id="rec-pin-card" style="display:none;background:white;border:1.5px solid #d9cebc;border-radius:12px;padding:20px;">
+        <div style="font-size:0.88rem;font-weight:600;color:#2d4a2d;margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+          <i class="fas fa-lock" style="color:#b8962e;"></i>
+          <span id="rec-pin-label">Enter PIN for Mont 1</span>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <input type="password" id="rec-pin-input" placeholder="· · · · · ·" maxlength="6"
+            style="flex:1;border:1.5px solid #d9cebc;border-radius:8px;padding:11px 14px;font-size:1.1rem;font-family:'DM Mono',monospace;letter-spacing:6px;color:#1a1714;background:#faf7f2;outline:none;"
+            onkeydown="if(event.key==='Enter')recCheckPin()">
+          <button onclick="recCheckPin()"
+            style="background:#2d4a2d;color:white;border:none;border-radius:8px;padding:11px 18px;font-size:0.9rem;font-weight:600;font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:6px;">
+            <i class="fas fa-arrow-right"></i> Enter
+          </button>
+        </div>
+        <div id="rec-pin-error" style="display:none;margin-top:10px;background:#fdeee9;color:#b84830;border:1px solid rgba(201,122,100,.3);padding:9px 14px;border-radius:8px;font-size:0.84rem;font-weight:600;">
+          <i class="fas fa-times-circle"></i> Incorrect PIN. Please try again.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RECORD APP (shown after PIN) -->
+  <div id="rec-app" style="display:none;background:#faf7f2;min-height:calc(100vh - 124px);">
+
+    <!-- APP HEADER -->
+    <div style="background:#2d4a2d;color:white;padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:52px;flex-shrink:0;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="font-size:1rem;">📚</span>
+        <span style="font-size:14px;font-weight:600;">Book & Stationery Record</span>
+        <span id="rec-class-badge" style="background:rgba(255,255,255,.2);border-radius:20px;padding:3px 12px;font-size:12px;font-weight:700;">—</span>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button onclick="recAddStudent()" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:white;border-radius:6px;padding:5px 12px;font-size:12px;font-family:inherit;cursor:pointer;font-weight:500;display:flex;align-items:center;gap:5px;">
+          <i class="fas fa-plus"></i> Add Student
+        </button>
+        <button onclick="recLock()" style="background:rgba(255,80,80,.2);border:1px solid rgba(255,80,80,.3);color:white;border-radius:6px;padding:5px 12px;font-size:12px;font-family:inherit;cursor:pointer;font-weight:500;display:flex;align-items:center;gap:5px;">
+          <i class="fas fa-lock"></i> Lock
+        </button>
+      </div>
+    </div>
+
+    <!-- CLASS TABS (admin only) -->
+    <div id="rec-class-tabs" style="display:none;background:#f2ece0;border-bottom:2px solid #d9cebc;overflow-x:auto;white-space:nowrap;padding:0 12px;">
+    </div>
+
+    <!-- SEARCH -->
+    <div style="padding:12px 16px;background:white;border-bottom:1px solid #e8dfc8;display:flex;gap:10px;align-items:center;">
+      <input type="text" id="rec-search" placeholder="Search by student name…"
+        style="flex:1;border:1px solid #d9cebc;border-radius:6px;padding:7px 12px;font-family:inherit;font-size:13px;background:#faf7f2;outline:none;"
+        oninput="recRender()">
+      <span id="rec-count" style="font-size:12px;color:#6e6456;white-space:nowrap;"></span>
+    </div>
+
+    <!-- STUDENT LIST -->
+    <div id="rec-list" style="padding:12px 16px;"></div>
+
+  </div>
+
 </div>
 
-<div id="record-app">
-<div class="record-header">
-<div class="rh-left">
-<span style="font-size:1rem;">📚</span>
-<div class="rh-title">Book &amp; Stationery Record</div>
-<div class="rh-class" id="rh-class-label">—</div>
+<!-- RECORD MODAL -->
+<div id="rec-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;overflow-y:auto;padding:16px;">
+  <div style="background:white;border-radius:12px;max-width:860px;margin:0 auto;box-shadow:0 8px 40px rgba(0,0,0,.25);">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid #e8dfc8;position:sticky;top:0;background:white;z-index:1;border-radius:12px 12px 0 0;">
+      <h2 id="rec-modal-title" style="font-size:15px;font-weight:700;color:#2d4a2d;"></h2>
+      <button onclick="recCloseModal()" style="background:#f2ece0;border:none;border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:16px;color:#6e6456;">✕</button>
+    </div>
+    <div id="rec-modal-body" style="padding:18px;"></div>
+    <div style="padding:12px 18px;border-top:1px solid #e8dfc8;display:flex;gap:8px;justify-content:flex-end;position:sticky;bottom:0;background:white;border-radius:0 0 12px 12px;">
+      <button onclick="recCloseModal()" style="background:#f2ece0;border:1px solid #d9cebc;border-radius:6px;padding:8px 18px;font-size:13px;font-family:inherit;font-weight:600;cursor:pointer;">Cancel</button>
+      <button id="rec-save-btn" onclick="recSaveStudent()" style="background:#2d4a2d;color:white;border:none;border-radius:6px;padding:8px 18px;font-size:13px;font-family:inherit;font-weight:600;cursor:pointer;">Save Record</button>
+    </div>
+  </div>
 </div>
-<div style="display:flex;gap:7px;align-items:center;">
-<button class="rh-btn" onclick="showPrintMenu()"><i class="fas fa-print"></i> Print</button>
-<button class="rh-btn" onclick="exportCSV()"><i class="fas fa-download"></i> CSV</button>
-<button class="rh-btn red" onclick="lockRecord()"><i class="fas fa-lock"></i> Lock</button>
-</div>
-</div>
-<div class="record-layout">
-<aside class="rec-sidebar" id="rec-sidebar"></aside>
-<div class="rec-main"><div id="r-panels"></div></div>
-</div>
-</div>
-</div>
+
+<div id="rec-toast" style="position:fixed;bottom:24px;right:24px;background:#2d4a2d;color:white;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,.2);z-index:600;opacity:0;transform:translateY(8px);transition:opacity .2s,transform .2s;pointer-events:none;"></div>
+
+
 
 <!-- ══════════ TAB 3: MORE TOOLS ══════════ -->
 <div class="tab-panel" id="tab-tools">
@@ -670,6 +751,24 @@ header{padding:0 14px;min-height:60px;}
 </div>
 <div id="print-root"></div>
 <div class="r-toast" id="r-toast"></div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAtB9d9zEr-ES-" + "lRI_Pf9fWJmaJ8o8ghvQ",
+  authDomain: "my-hms42.firebaseapp.com",
+  databaseURL: "https://my-hms42-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "my-hms42",
+  storageBucket: "my-hms42.firebasestorage.app",
+  messagingSenderId: "468345935508",
+  appId: "1:468345935508:web:db42663bb9484619518681"
+};
+
+const app = initializeApp(firebaseConfig);
+window.db = getDatabase(app);
+</script>
+
 <script>
 // ══ PORTAL PASSWORD ══
 const PORTAL_PWD='Heritagegcportal42@';
@@ -742,746 +841,451 @@ window.addEventListener('popstate',function(e){
   }
 });
 
-// ══ CLASS PINS ══
-const CLASS_PINS={mont1:'111',mont2:'22',mont3:'333',class1:'121',class2:'221',class3:'321',class4:'421',class5:'521',admin:'2442'};
-let selectedClassForPin=null;
-function selectClass(key,btnEl){
-selectedClassForPin=key;
-document.querySelectorAll('.class-btn').forEach(b=>b.classList.remove('selected'));
-if(btnEl)btnEl.classList.add('selected');
-const card=document.getElementById('pin-form-card');card.classList.add('visible');
-document.getElementById('pin-form-label').textContent=key==='admin'?'Enter Admin PIN (all classes)':`Enter PIN for ${CLASSES[key]?.label||key}`;
-document.getElementById('class-pin-input').value='';
-document.getElementById('pin-error').style.display='none';
-setTimeout(()=>document.getElementById('class-pin-input').focus(),100);
-}
-function checkClassPin(){
-const entered=document.getElementById('class-pin-input').value.trim();
-if(entered===CLASS_PINS[selectedClassForPin]){
-const role=selectedClassForPin==='admin'?'admin':selectedClassForPin;
-sessionStorage.setItem('hms_class_auth',role);
-launchRecordApp(role);
-} else {
-document.getElementById('pin-error').style.display='block';
-document.getElementById('class-pin-input').value='';
-document.getElementById('class-pin-input').focus();
-}
-}
-// FIX: lockRecord only locks the RECORD TAB — does NOT log out of portal
-function lockRecord(){
-currentRole=null;currentClass=null;
-sessionStorage.removeItem('hms_class_auth');
-document.getElementById('record-app').style.display='none';
-document.getElementById('class-pin-screen').style.display='flex';
-document.querySelectorAll('.class-btn').forEach(b=>b.classList.remove('selected'));
-document.getElementById('pin-form-card').classList.remove('visible');
-document.getElementById('class-pin-input').value='';
-document.getElementById('user-label').textContent='Staff';
-// Portal stays open — no page reload, no portal logout
-}
-function launchRecordApp(role){
-currentRole=role;
-const isAdmin=role==='admin';
-document.getElementById('class-pin-screen').style.display='none';
-const app=document.getElementById('record-app');
-app.style.display='flex';app.style.flexDirection='column';
-document.getElementById('rh-class-label').textContent=isAdmin?'🛡 Admin — All Classes':CLASSES[role]?.label;
-document.getElementById('user-label').textContent=isAdmin?'Admin':(CLASSES[role]?.label+' Teacher');
-buildSidebar(role);buildPanels(role);updateBadges();
-if(isAdmin){updateDashboard();showRPanel('dashboard');}
-else{currentClass=role;showRPanel(role);renderClassPanel(role);}
-}
-window.addEventListener('load',()=>{
-const saved=sessionStorage.getItem('hms_class_auth');
-if(saved&&sessionStorage.getItem('hms_auth')==='1')setTimeout(()=>launchRecordApp(saved),150);
-  // Seed history so the back button is always caught within the portal
-  if(sessionStorage.getItem('hms_auth')==='1'){
-    history.replaceState({portalTab:'tab-classroom'},'',location.pathname);
-    history.pushState({portalTab:'tab-classroom'},'',location.pathname);
-  }
-});
 
-// ══ CLASS DATA WITH QUANTITIES ══
-// Each item: {name, qty} — qty is the required quantity
-const CLASSES={
-mont1:{label:'Mont 1',section:'Montessori',
-books:[
-{name:'Pre-Primary Mathematics A1–A4 (OUP)',qty:4},
-{name:'Colour and Craft Book A (Sunrise)',qty:1},
-{name:'All About Islam Year 1 (Bookmark)',qty:1}],
-stationery:[
-{name:'Black ring folder',qty:1},{name:'Apron',qty:1},{name:'Plain White file cover Hard',qty:2},
-{name:'Lead pencils',qty:2},{name:'Pencil eraser',qty:4},{name:'Pencil sharpener',qty:4},
-{name:'Poster colours Pack of 6',qty:1},{name:'Colour pencils 12-long',qty:4},
-{name:'Crayons 12',qty:1},{name:'Oil Pastels',qty:1},{name:'Paper ream',qty:1},
-{name:'Card paper (sheets)',qty:10},{name:'Fomic Sheets A4',qty:5},
-{name:'A4 Colour Papers (sheets)',qty:10},{name:'Ice Cream Sticks (pack)',qty:1},
-{name:'Scotch Tape',qty:1},{name:'Paint brush size 12',qty:1},
-{name:'Glazed paper (sheets)',qty:10},{name:'Clear bag',qty:2},
-{name:'Scissors round edged (pair)',qty:1},{name:'UHU Glue Stick Medium',qty:3},{name:'Play Dough',qty:2}]},
-mont2:{label:'Mont 2',section:'Montessori',
-books:[
-{name:'Jolly Readers Red Level Nonfiction',qty:1},
-{name:'Handwriting Skills Builder Pre Nursery (OUP)',qty:1},
-{name:'Pre-Primary Mathematics B1–B4 (OUP)',qty:4},
-{name:'All About Islam Year 2 (Bookmark)',qty:1},
-{name:'Bachon ki Saathi Nursery (Bookmark)',qty:1},
-{name:'Urdu Readers – Tohfa (OUP)',qty:1},
-{name:'Colour and Craft Book B (Sunrise)',qty:1},
-{name:'English 4-line Notebook',qty:1},{name:'Urdu Notebook',qty:1},{name:'Maths medium square Notebook',qty:1}],
-stationery:[
-{name:'Black ring folder',qty:1},{name:'Apron',qty:1},{name:'Plain White file cover Hard',qty:2},
-{name:'Lead pencils',qty:2},{name:'Pencil eraser',qty:4},{name:'Pencil sharpener',qty:4},
-{name:'Poster colours Pack of 6',qty:1},{name:'Colour pencils 12-long',qty:4},
-{name:'Crayons 12',qty:1},{name:'Oil Pastels',qty:1},{name:'Paper ream',qty:1},
-{name:'Card paper (sheets)',qty:10},{name:'Fomic Sheets A4',qty:5},
-{name:'A4 Colour Papers (sheets)',qty:10},{name:'Ice Cream Sticks (pack)',qty:1},
-{name:'Scotch Tape',qty:1},{name:'Paint brush size 12',qty:1},
-{name:'Glazed paper (sheets)',qty:10},{name:'Clear bag',qty:1},
-{name:'Scissors round edged (pair)',qty:1},{name:'UHU Glue Stick Medium',qty:3},{name:'Play Dough',qty:2}]},
-mont3:{label:'Mont 3',section:'Montessori',
-books:[
-{name:'Jolly Readers Red Level General Fiction',qty:1},{name:'Jolly Readers Yellow Nonfiction',qty:1},
-{name:'Handwriting Skills Builder Nursery (OUP)',qty:1},
-{name:'LITERACY Interactive English Introductory Book (Sunrise)',qty:1},
-{name:'Pre-Primary Mathematics C1–C4 (OUP)',qty:4},
-{name:'All About Islam Year 3 (Bookmark)',qty:1},{name:'Bachon ki Saathi KG2 (Bookmark)',qty:1},
-{name:'Urdu Khushkhati Silsila Book 2 (OUP)',qty:1},{name:'Urdu Readers – Ghubaray (OUP)',qty:1},
-{name:'Colour and Craft Book C (Sunrise)',qty:1},
-{name:'English 4-line Notebook',qty:2},{name:'Urdu Notebook',qty:2},{name:'Maths small square Notebook',qty:2}],
-stationery:[
-{name:'Black ring folder',qty:1},{name:'Apron',qty:1},{name:'Plain White file cover Hard',qty:2},
-{name:'Lead pencils',qty:2},{name:'Pencil eraser',qty:4},{name:'Pencil sharpener',qty:4},
-{name:'Poster colours Pack of 6',qty:1},{name:'Colour pencils 12-long',qty:4},
-{name:'Crayons 12',qty:1},{name:'Oil Pastels',qty:1},{name:'Paper ream',qty:1},
-{name:'Card paper (sheets)',qty:10},{name:'Fomic Sheets A4',qty:5},
-{name:'A4 Colour Papers (sheets)',qty:10},{name:'Ice Cream Sticks (pack)',qty:1},
-{name:'Scotch Tape',qty:1},{name:'Paint brush size 12',qty:1},
-{name:'Glazed paper (sheets)',qty:10},{name:'Clear bag',qty:1},
-{name:'Scissors round edged (pair)',qty:1},{name:'UHU Glue Stick Medium',qty:1},
-{name:'Pencil Pouch',qty:1},{name:'Play Dough',qty:2}]},
-class1:{label:'Class 1',section:'Juniors',
-books:[
-{name:'Oxford International Primary English 1 Student + Workbook (OUP)',qty:2},
-{name:'Oxford Reading Tree Stage 5 Pack of 6 Readers (OUP)',qty:6},
-{name:'Oxford Essential Dictionary (OUP)',qty:1},
-{name:'Handwriting Skills Builder Kindergarten (OUP)',qty:1},
-{name:'Primary Mathematics 1 Textbook + Workbooks 1A & 1B (OUP)',qty:3},
-{name:'UKG Motia Textbook – Urdu (OUP)',qty:1},{name:'Nardban e Urdu Workbook 1 (OUP)',qty:1},
-{name:'UKG Phool Reader – Urdu (OUP)',qty:1},{name:'Urdu Khushkhati Silsila Book 3 (OUP)',qty:1},
-{name:'Colour and Craft Book 1 (Sunrise)',qty:1},{name:'Islamic Studies Grade 1 (Bookmark)',qty:1},
-{name:'The Science Factor 1 Textbook + Workbook (OUP)',qty:2},
-{name:'English 4-line Notebook',qty:3},{name:'Urdu Notebook',qty:2},
-{name:'Maths small square Notebook',qty:1},{name:'Science interleaf Notebook',qty:1}],
-stationery:[
-{name:'Black ring folder',qty:1},{name:'Lead pencils (pack)',qty:2},{name:'Pencil eraser',qty:2},
-{name:'Pencil sharpener',qty:2},{name:'Plastic scale 6 inch',qty:1},
-{name:'Poster colours (5 colours)',qty:5},{name:'Colour pencils 12-long (pack)',qty:2},
-{name:'Crayons 12',qty:1},{name:'Card paper (sheets)',qty:10},
-{name:'Paint brush size 12',qty:2},{name:'Glazed paper (sheets)',qty:10},
-{name:'Scissors round edged (pair)',qty:1},{name:'Glue stick UHU Large',qty:2},
-{name:'Paper ream',qty:1},{name:'A4 Colour Papers (sheets)',qty:10},
-{name:'Pencil Pouch',qty:1},{name:'Apron',qty:1},{name:'Clear Bag',qty:1}]},
-class2:{label:'Class 2',section:'Juniors',
-books:[
-{name:'Oxford International Primary English 2 Student + Workbook (OUP)',qty:2},
-{name:'Oxford Reading Tree Stage 6 Pack of 6 Readers (OUP)',qty:6},
-{name:'Oxford Essential Dictionary (OUP)',qty:1},
-{name:'Handwriting Skills Builder Grade 1 (OUP)',qty:1},
-{name:'Primary Mathematics 2 Textbook + Workbooks 2A & 2B (OUP)',qty:3},
-{name:'UKG Gainda Textbook – Urdu (OUP)',qty:1},{name:'Nardban e Urdu Workbook 2 (OUP)',qty:1},
-{name:'UKG Kiran Reader – Urdu (OUP)',qty:1},{name:'Urdu Khushkhati Silsila Book 4 (OUP)',qty:1},
-{name:'Colour and Craft Book 2 (Sunrise)',qty:1},{name:'Islamic Studies Grade 2 (Bookmark)',qty:1},
-{name:'The Science Factor 2 Textbook + Workbook (OUP)',qty:2},
-{name:'English 4-line Notebook',qty:3},{name:'Urdu Notebook',qty:2},
-{name:'Maths small square Notebook',qty:1},{name:'Science interleaf Notebook',qty:1}],
-stationery:[
-{name:'Black ring folder',qty:1},{name:'Lead pencils (pack)',qty:2},{name:'Pencil eraser',qty:2},
-{name:'Pencil sharpener',qty:2},{name:'Plastic scale 6 inch',qty:1},
-{name:'Colour pencils 12-long (pack)',qty:2},{name:'Crayons 12',qty:1},
-{name:'Card paper (sheets)',qty:10},{name:'Paint brush size 12',qty:2},
-{name:'Glazed paper (sheets)',qty:10},{name:'Scissors round edged (pair)',qty:1},
-{name:'Glue stick UHU Large',qty:2},{name:'Paper ream',qty:1},
-{name:'A4 Colour Papers (sheets)',qty:10},{name:'Pencil Pouch',qty:1},
-{name:'Apron',qty:1},{name:'Clear Bag',qty:2}]},
-class3:{label:'Class 3',section:'Juniors',
-books:[
-{name:'Oxford International Primary English 3 Student + Workbook (OUP)',qty:2},
-{name:'Oxford Essential Dictionary (OUP)',qty:1},
-{name:'Oxford Reading Tree Stage 7 Pack of 6 Readers (OUP)',qty:6},
-{name:'Handwriting Skills Builder Grade 2 (OUP)',qty:1},
-{name:'Primary Mathematics 3 Textbook + Workbooks 3A & 3B (OUP)',qty:3},
-{name:'UKG Sadabahar Textbook – Urdu (OUP)',qty:1},{name:'Nardban e Urdu Workbook 3 (OUP)',qty:1},
-{name:'Chand Reader – Urdu (OUP)',qty:1},{name:'Urdu Khushkhati Silsila Book 5 (OUP)',qty:1},
-{name:'Islamic Studies Grade 3 (Bookmark)',qty:1},{name:'Colour and Craft Book 3 (Sunrise)',qty:1},
-{name:'The Science Factor 3 Textbook + Workbook (OUP)',qty:2},
-{name:'English 4-line Notebook',qty:3},{name:'Urdu Notebook',qty:2},
-{name:'Maths small square Notebook',qty:1},{name:'Science interleaf Notebook',qty:1}],
-stationery:[
-{name:'Black ring folder',qty:1},{name:'Lead pencils (pack)',qty:2},{name:'Pencil eraser',qty:2},
-{name:'Pencil sharpener',qty:2},{name:'Plastic scale 6 inch',qty:1},
-{name:'Poster colours (5 colours)',qty:5},{name:'Colour pencils 12-long (pack)',qty:2},
-{name:'Crayons 12',qty:1},{name:'Card paper (sheets)',qty:10},
-{name:'Paint brush size 12',qty:2},{name:'Glazed paper (sheets)',qty:10},
-{name:'Scissors round edged (pair)',qty:1},{name:'Glue stick UHU Large',qty:2},
-{name:'Paper ream',qty:1},{name:'A4 Colour Papers (sheets)',qty:10},
-{name:'Pencil Pouch',qty:1},{name:'Apron',qty:1},{name:'Clear Bag',qty:1}]},
-class4:{label:'Class 4',section:'Juniors',
-books:[
-{name:'Oxford International Primary English 4 Student + Workbook (OUP)',qty:2},
-{name:'Oxford Reading Tree Stage 8 Pack of 6 Readers (OUP)',qty:6},
-{name:'Oxford Essential Dictionary (OUP)',qty:1},
-{name:'Primary Mathematics 4 Textbook + Workbooks 4A & 4B (OUP)',qty:3},
-{name:'The Science Factor 4 Textbook + Workbook (OUP)',qty:2},
-{name:'Nargis Textbook – Urdu (OUP)',qty:1},{name:'Nardban e Urdu Workbook 4 (OUP)',qty:1},
-{name:'Barish Reader – Urdu (OUP)',qty:1},{name:'Urdu Khushkhati Silsila Book 6 (OUP)',qty:1},
-{name:'Islamic Studies Grade 4 (Bookmark)',qty:1},{name:'Colour and Craft Book 4 (Sunrise)',qty:1},
-{name:'New Oxford Social Studies for Pakistan Book 4 (OUP)',qty:1},
-{name:'English 4-line Notebook',qty:3},{name:'Urdu Notebook',qty:2},
-{name:'Maths small square Notebook',qty:1},{name:'Science interleaf Notebook',qty:2}],
-stationery:[
-{name:'Black ring folder',qty:1},{name:'Lead pencils (pack)',qty:2},{name:'Pencil eraser',qty:2},
-{name:'Pencil sharpener',qty:2},{name:'Plastic scale 6 inch',qty:1},
-{name:'Poster colours (5 colours)',qty:5},{name:'Colour pencils 12-long (pack)',qty:2},
-{name:'Crayons 12',qty:1},{name:'Card paper (sheets)',qty:10},
-{name:'Paint brush size 12',qty:2},{name:'Glazed paper (sheets)',qty:10},
-{name:'Scissors round edged (pair)',qty:1},{name:'Glue stick UHU Large',qty:2},
-{name:'Paper ream',qty:1},{name:'A4 Colour Papers (sheets)',qty:10},
-{name:'Pencil Pouch',qty:1},{name:'Apron',qty:1},{name:'Clear Bag',qty:1}]},
-class5:{label:'Class 5',section:'Juniors',
-books:[
-{name:'Oxford International Primary English 5 Student + Workbook (OUP)',qty:2},
-{name:'Oxford Reading Tree Stage 9 Pack of 6 Readers (OUP)',qty:6},
-{name:'Oxford Essential Dictionary (OUP)',qty:1},
-{name:'Primary Mathematics 5 Textbook + Workbooks 5A & 5B (OUP)',qty:3},
-{name:'The Science Factor 5 Textbook + Workbook (OUP)',qty:2},
-{name:'Gul-e-Lala Textbook – Urdu (OUP)',qty:1},{name:'Dhanak Reader – Urdu (OUP)',qty:1},
-{name:'Nardban e Urdu Workbook 5 (OUP)',qty:1},{name:'Urdu Khushkhati Silsila Book 7 (OUP)',qty:1},
-{name:'Islamic Studies Grade 5 (Bookmark)',qty:1},{name:'Colour and Craft Book 5 (Sunrise)',qty:1},
-{name:'New Oxford Social Studies for Pakistan Book 5 (OUP)',qty:1},
-{name:'English 4-line Notebook',qty:3},{name:'Urdu Notebook',qty:2},
-{name:'Maths small square Notebook',qty:1},{name:'Science interleaf Notebook',qty:2}],
-stationery:[
-{name:'Black ring folder',qty:1},{name:'Lead pencils (pack)',qty:2},{name:'Pencil eraser',qty:2},
-{name:'Pencil sharpener',qty:2},{name:'Plastic scale 6 inch',qty:1},
-{name:'Poster colours (5 colours)',qty:5},{name:'Colour pencils 12-long (pack)',qty:2},
-{name:'Crayons 12',qty:1},{name:'Card paper (sheets)',qty:10},
-{name:'Paint brush size 12',qty:2},{name:'Glazed paper (sheets)',qty:10},
-{name:'Scissors round edged (pair)',qty:1},{name:'Glue stick UHU Large',qty:2},
-{name:'Paper ream',qty:1},{name:'A4 Colour Papers (sheets)',qty:10},
-{name:'Pencil Pouch',qty:1},{name:'Apron',qty:1},{name:'Clear Bag',qty:1}]}
+// ══════════════════════════════════════════
+// BOOK & STATIONERY RECORD SYSTEM (Firebase)
+// ══════════════════════════════════════════
+
+// Firebase config already initialized above - using same db instance
+// Import Firebase functions - using CDN modules at top of page
+
+// ── PINS ──
+const REC_PINS = {
+  mont1:'2001', mont2:'2002', mont3:'2003',
+  class1:'2004', class2:'2005', class3:'2006',
+  class4:'2007', class5:'2008', admin:'4242'
 };
 
-// ══ STATE ══
-let students=JSON.parse(localStorage.getItem('hms_v3')||'[]');
-let editingId=null,currentClass=null,currentRole=null;
-function saveData(){localStorage.setItem('hms_v3',JSON.stringify(students));updateBadges();if(currentRole==='admin')updateDashboard();}
-function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2);}
+const REC_LABELS = {
+  mont1:'Mont 1', mont2:'Mont 2', mont3:'Mont 3',
+  class1:'Class 1', class2:'Class 2', class3:'Class 3',
+  class4:'Class 4', class5:'Class 5', admin:'All Classes'
+};
 
-// ══ HELPERS ══
-// brought[i] = {checked:bool, qty:number}
-function getItemBalance(item, brought){
-if(!brought||!brought.checked) return item.qty; // nothing brought
-const b=Number(brought.qty)||0;
-return Math.max(0, item.qty - b);
-}
-function itemComplete(item, brought){return brought&&brought.checked&&getItemBalance(item,brought)===0;}
-function itemPartial(item, brought){return brought&&brought.checked&&getItemBalance(item,brought)>0;}
-function itemMissing(item, brought){return !brought||!brought.checked;}
+// ── BOOK & STATIONERY DATA PER CLASS ──
+const REC_CLASSES = {
+  mont1:{label:'Mont 1',
+    books:['Pre-Primary Mathematics A1','Pre-Primary Mathematics A2','Pre-Primary Mathematics A3','Pre-Primary Mathematics A4','Colour and Craft Book A','All About Islam Year 1'],
+    stationery:['Black ring folder','Apron','Plain White file cover Hard x2','Lead pencils x2','Pencil eraser x4','Pencil sharpener x4','Poster colours Pack of 6','Colour pencils 12-long x4','Crayons 12','Oil Pastels','Paper ream','Card paper (10 sheets)','Fomic Sheets A4 x5','A4 Colour Papers (10 sheets)','Ice Cream Sticks (pack)','Scotch Tape','Paint brush size 12','Glazed paper (10 sheets)','Clear bag x2','Scissors round edged','UHU Glue Stick Medium x3','Play Dough x2']},
+  mont2:{label:'Mont 2',
+    books:['Jolly Readers Red Level Nonfiction','Handwriting Skills Builder Pre Nursery','Pre-Primary Mathematics B1','Pre-Primary Mathematics B2','Pre-Primary Mathematics B3','Pre-Primary Mathematics B4','All About Islam Year 2','Bachon ki Saathi Nursery','Urdu Readers - Tohfa','Colour and Craft Book B','English 4-line Notebook','Urdu Notebook','Maths medium square Notebook'],
+    stationery:['Black ring folder','Apron','Plain White file cover Hard x2','Lead pencils x2','Pencil eraser x4','Pencil sharpener x4','Poster colours Pack of 6','Colour pencils 12-long x4','Crayons 12','Oil Pastels','Paper ream','Card paper (10 sheets)','Fomic Sheets A4 x5','A4 Colour Papers (10 sheets)','Ice Cream Sticks (pack)','Scotch Tape','Paint brush size 12','Glazed paper (10 sheets)','Clear bag','Scissors round edged','UHU Glue Stick Medium x3','Play Dough x2']},
+  mont3:{label:'Mont 3',
+    books:['Jolly Readers Red Level General Fiction','Jolly Readers Yellow Nonfiction','Handwriting Skills Builder Nursery','LITERACY Interactive English Introductory Book','Pre-Primary Mathematics C1','Pre-Primary Mathematics C2','Pre-Primary Mathematics C3','Pre-Primary Mathematics C4','All About Islam Year 3','Bachon ki Saathi KG2','Urdu Khushkhati Silsila Book 2','Urdu Readers - Ghubaray','Colour and Craft Book C','English 4-line Notebook x2','Urdu Notebook x2','Maths small square Notebook x2'],
+    stationery:['Black ring folder','Apron','Plain White file cover Hard x2','Lead pencils x2','Pencil eraser x4','Pencil sharpener x4','Poster colours Pack of 6','Colour pencils 12-long x4','Crayons 12','Oil Pastels','Paper ream','Card paper (10 sheets)','Fomic Sheets A4 x5','A4 Colour Papers (10 sheets)','Ice Cream Sticks (pack)','Scotch Tape','Paint brush size 12','Glazed paper (10 sheets)','Clear bag','Scissors round edged','UHU Glue Stick Medium','Pencil Pouch','Play Dough x2']},
+  class1:{label:'Class 1',
+    books:['Oxford Intl Primary English 1 Student Book','Oxford Intl Primary English 1 Workbook','Oxford Reading Tree Stage 5 (x6 Readers)','Oxford Essential Dictionary','Handwriting Skills Builder Kindergarten','Primary Mathematics 1 Textbook','Primary Mathematics Workbook 1A','Primary Mathematics Workbook 1B','UKG Motia Textbook Urdu','Nardban e Urdu Workbook 1','UKG Phool Reader Urdu','Urdu Khushkhati Silsila Book 3','Colour and Craft Book 1','Islamic Studies Grade 1','Science Factor 1 Textbook','Science Factor 1 Workbook','English 4-line Notebook x3','Urdu Notebook x2','Maths small square Notebook','Science interleaf Notebook'],
+    stationery:['Black ring folder','Lead pencils (pack) x2','Pencil eraser x2','Pencil sharpener x2','Plastic scale 6 inch','Poster colours 5 colours','Colour pencils 12-long (pack) x2','Crayons 12','Card paper (10 sheets)','Paint brush size 12 x2','Glazed paper (10 sheets)','Scissors round edged','Glue stick UHU Large x2','Paper ream','A4 Colour Papers (10 sheets)','Pencil Pouch','Apron','Clear Bag']},
+  class2:{label:'Class 2',
+    books:['Oxford Intl Primary English 2 Student Book','Oxford Intl Primary English 2 Workbook','Oxford Reading Tree Stage 6 (x6 Readers)','Oxford Essential Dictionary','Handwriting Skills Builder Grade 1','Primary Mathematics 2 Textbook','Primary Mathematics Workbook 2A','Primary Mathematics Workbook 2B','UKG Gainda Textbook Urdu','Nardban e Urdu Workbook 2','UKG Kiran Reader Urdu','Urdu Khushkhati Silsila Book 4','Colour and Craft Book 2','Islamic Studies Grade 2','Science Factor 2 Textbook','Science Factor 2 Workbook','English 4-line Notebook x3','Urdu Notebook x2','Maths small square Notebook','Science interleaf Notebook'],
+    stationery:['Black ring folder','Lead pencils (pack) x2','Pencil eraser x2','Pencil sharpener x2','Plastic scale 6 inch','Colour pencils 12-long (pack) x2','Crayons 12','Card paper (10 sheets)','Paint brush size 12 x2','Glazed paper (10 sheets)','Scissors round edged','Glue stick UHU Large x2','Paper ream','A4 Colour Papers (10 sheets)','Pencil Pouch','Apron','Clear Bag x2']},
+  class3:{label:'Class 3',
+    books:['Oxford Intl Primary English 3 Student Book','Oxford Intl Primary English 3 Workbook','Oxford Essential Dictionary','Oxford Reading Tree Stage 7 (x6 Readers)','Handwriting Skills Builder Grade 2','Primary Mathematics 3 Textbook','Primary Mathematics Workbook 3A','Primary Mathematics Workbook 3B','UKG Sadabahar Textbook Urdu','Nardban e Urdu Workbook 3','Chand Reader Urdu','Urdu Khushkhati Silsila Book 5','Islamic Studies Grade 3','Colour and Craft Book 3','Science Factor 3 Textbook','Science Factor 3 Workbook','English 4-line Notebook x3','Urdu Notebook x2','Maths small square Notebook','Science interleaf Notebook'],
+    stationery:['Black ring folder','Lead pencils (pack) x2','Pencil eraser x2','Pencil sharpener x2','Plastic scale 6 inch','Poster colours 5 colours','Colour pencils 12-long (pack) x2','Crayons 12','Card paper (10 sheets)','Paint brush size 12 x2','Glazed paper (10 sheets)','Scissors round edged','Glue stick UHU Large x2','Paper ream','A4 Colour Papers (10 sheets)','Pencil Pouch','Apron','Clear Bag']},
+  class4:{label:'Class 4',
+    books:['Oxford Intl Primary English 4 Student Book','Oxford Intl Primary English 4 Workbook','Oxford Reading Tree Stage 8 (x6 Readers)','Oxford Essential Dictionary','Primary Mathematics 4 Textbook','Primary Mathematics Workbook 4A','Primary Mathematics Workbook 4B','Science Factor 4 Textbook','Science Factor 4 Workbook','Nargis Textbook Urdu','Nardban e Urdu Workbook 4','Barish Reader Urdu','Urdu Khushkhati Silsila Book 6','Islamic Studies Grade 4','Colour and Craft Book 4','Oxford Social Studies Pakistan Book 4','English 4-line Notebook x3','Urdu Notebook x2','Maths small square Notebook','Science interleaf Notebook x2'],
+    stationery:['Black ring folder','Lead pencils (pack) x2','Pencil eraser x2','Pencil sharpener x2','Plastic scale 6 inch','Poster colours 5 colours','Colour pencils 12-long (pack) x2','Crayons 12','Card paper (10 sheets)','Paint brush size 12 x2','Glazed paper (10 sheets)','Scissors round edged','Glue stick UHU Large x2','Paper ream','A4 Colour Papers (10 sheets)','Pencil Pouch','Apron','Clear Bag']},
+  class5:{label:'Class 5',
+    books:['Oxford Intl Primary English 5 Student Book','Oxford Intl Primary English 5 Workbook','Oxford Reading Tree Stage 9 (x6 Readers)','Oxford Essential Dictionary','Primary Mathematics 5 Textbook','Primary Mathematics Workbook 5A','Primary Mathematics Workbook 5B','Science Factor 5 Textbook','Science Factor 5 Workbook','Gul-e-Lala Textbook Urdu','Dhanak Reader Urdu','Nardban e Urdu Workbook 5','Urdu Khushkhati Silsila Book 7','Islamic Studies Grade 5','Colour and Craft Book 5','Oxford Social Studies Pakistan Book 5','English 4-line Notebook x3','Urdu Notebook x2','Maths small square Notebook','Science interleaf Notebook x2'],
+    stationery:['Black ring folder','Lead pencils (pack) x2','Pencil eraser x2','Pencil sharpener x2','Plastic scale 6 inch','Poster colours 5 colours','Colour pencils 12-long (pack) x2','Crayons 12','Card paper (10 sheets)','Paint brush size 12 x2','Glazed paper (10 sheets)','Scissors round edged','Glue stick UHU Large x2','Paper ream','A4 Colour Papers (10 sheets)','Pencil Pouch','Apron','Clear Bag']}
+};
 
-function calcPctNew(items, broughtMap){
-if(!items.length)return 100;
-// complete = balance 0 and checked
-const done=items.filter((it,i)=>itemComplete(it,broughtMap[i])).length;
-return Math.round((done/items.length)*100);
-}
-function getStatusNew(s,key){
-const cls=CLASSES[key];
-const bp=calcPctNew(cls.books,s.books||{});
-const sp=calcPctNew(cls.stationery,s.stationery||{});
-const avg=(bp+sp)/2;
-return avg>=100?'complete':avg>0?'partial':'pending';
-}
+// ── STATE ──
+let recRole = null;
+let recActiveClass = null;
+let recEditingId = null;
+let recStudents = {};
 
-// ══ SIDEBAR ══
-function buildSidebar(role){
-const isAdmin=role==='admin',sb=document.getElementById('rec-sidebar');
-let h='';
-if(isAdmin){
-h+=`<div class="rs-section"><div class="rs-label">Overview</div><div class="rs-item" id="rs-dashboard" onclick="showRPanel('dashboard',this)">📊 Dashboard</div></div>`;
-h+=`<div class="rs-section"><div class="rs-label">Montessori</div>`;
-['mont1','mont2','mont3'].forEach(k=>h+=`<div class="rs-item" id="rs-${k}" onclick="showRPanel('${k}',this)">${CLASSES[k].label} <span class="rs-badge" id="cnt-${k}">0</span></div>`);
-h+=`</div><div class="rs-section"><div class="rs-label">Juniors</div>`;
-['class1','class2','class3','class4','class5'].forEach(k=>h+=`<div class="rs-item" id="rs-${k}" onclick="showRPanel('${k}',this)">${CLASSES[k].label} <span class="rs-badge" id="cnt-${k}">0</span></div>`);
-h+=`</div><div class="rs-section"><div class="rs-label">Reports</div><div class="rs-item" id="rs-missing" onclick="showRPanel('missing',this)">⚠ Missing / Short</div><div class="rs-item" id="rs-allstudents" onclick="showRPanel('allstudents',this)">👥 All Students</div></div>`;
-} else {
-h+=`<div class="rs-section"><div class="rs-label">${CLASSES[role].section}</div><div class="rs-item" id="rs-${role}" onclick="showRPanel('${role}',this)">${CLASSES[role].label} <span class="rs-badge" id="cnt-${role}">0</span></div></div>`;
-h+=`<div class="rs-section"><div class="rs-label">Reports</div><div class="rs-item" id="rs-missing" onclick="showRPanel('missing',this)">⚠ Missing / Short</div></div>`;
-}
-sb.innerHTML=h;
+// ── TOAST ──
+function recShowToast(msg) {
+  const t = document.getElementById('rec-toast');
+  t.textContent = msg; t.style.opacity = '1'; t.style.transform = 'translateY(0)';
+  setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateY(8px)'; }, 3000);
 }
 
-// ══ PANELS ══
-function buildPanels(role){
-const isAdmin=role==='admin',keys=isAdmin?Object.keys(CLASSES):[role];
-let h='';
-if(isAdmin) h+=`<div class="r-panel" id="rp-dashboard"><div class="r-page-title">📊 Dashboard</div><div class="r-page-sub">Session 2026–27 — All Classes</div><div class="r-stats" id="dash-stats"></div><div class="dash-grid" id="dash-grid"></div></div>`;
-keys.forEach(key=>{
-const cls=CLASSES[key];
-h+=`<div class="r-panel" id="rp-${key}">
-     <div class="r-page-title">${cls.label}</div><div class="r-page-sub">${cls.section} — Session 2026–27</div>
-     <div class="r-stats" id="stats-${key}"></div>
-     <div style="margin-bottom:12px;"><button class="btn btn-primary" onclick="openAddModal('${key}')">+ Add Student</button></div>
-     <div class="r-table-wrap">
-       <div class="r-toolbar">
-         <input class="r-search" placeholder="Search student..." id="search-${key}" oninput="renderClassPanel('${key}')">
-         <select class="r-filter" id="filter-${key}" onchange="renderClassPanel('${key}')">
-           <option value="">All statuses</option><option value="complete">✓ Complete</option>
-           <option value="partial">⚠ Partial</option><option value="pending">✕ Pending</option>
-         </select>
-       </div>
-       <table class="r-table"><thead><tr><th>Roll #</th><th>Student Name</th><th>Books</th><th>Stationery</th><th>Overall</th><th>Actions</th></tr></thead>
-       <tbody id="tbody-${key}"></tbody></table>
-       <div id="empty-${key}" class="no-res" style="display:none;">No students yet. Click "+ Add Student".</div>
-     </div></div>`;
-});
-// Missing/Short panel
-h+=`<div class="r-panel" id="rp-missing">
-   <div class="r-page-title">⚠ Missing &amp; Short Items</div>
-   <div class="r-page-sub">Students with items not brought or quantity short${!isAdmin?' — '+CLASSES[role]?.label:''}</div>
-   <div class="r-toolbar" style="background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);margin-bottom:12px;">
-     <input class="r-search" placeholder="Search student..." id="miss-search" oninput="renderMissing()">
-     ${isAdmin?`<select class="r-filter" id="miss-class" onchange="renderMissing()"><option value="">All classes</option>${Object.values(CLASSES).map(c=>`<option>${c.label}</option>`).join('')}</select>`:''}
-     <select class="r-filter" id="miss-type" onchange="renderMissing()">
-       <option value="">Books &amp; Stationery</option>
-       <option value="book">Books only</option><option value="stationery">Stationery only</option>
-     </select>
-     <select class="r-filter" id="miss-severity" onchange="renderMissing()">
-       <option value="">Missing &amp; Short</option>
-       <option value="missing">Not brought at all</option>
-       <option value="short">Brought but short</option>
-     </select>
-   </div>
-   <div id="missing-wrap"></div></div>`;
-if(isAdmin) h+=`<div class="r-panel" id="rp-allstudents">
-   <div class="r-page-title">👥 All Students</div><div class="r-page-sub">Complete roster across all classes</div>
-   <div class="r-table-wrap">
-     <div class="r-toolbar">
-       <input class="r-search" placeholder="Search by name or roll..." id="all-search" oninput="renderAllStudents()">
-       <select class="r-filter" id="all-class" onchange="renderAllStudents()"><option value="">All classes</option>${Object.values(CLASSES).map(c=>`<option>${c.label}</option>`).join('')}</select>
-       <select class="r-filter" id="all-status" onchange="renderAllStudents()"><option value="">All statuses</option><option value="complete">Complete</option><option value="partial">Partial</option><option value="pending">Pending</option></select>
-     </div>
-     <table class="r-table"><thead><tr><th>Roll #</th><th>Name</th><th>Class</th><th>Books</th><th>Stationery</th><th>Overall</th><th>Actions</th></tr></thead>
-     <tbody id="all-tbody"></tbody></table>
-     <div id="all-empty" class="no-res" style="display:none;">No students match.</div>
-   </div></div>`;
-document.getElementById('r-panels').innerHTML=h;
+// ── CSS for class buttons ──
+(function() {
+  const style = document.createElement('style');
+  style.textContent = `
+    .rec-cls-btn {
+      background:white;border:1.5px solid #d9cebc;border-radius:10px;
+      padding:14px 8px;text-align:center;cursor:pointer;
+      transition:all .18s;font-family:inherit;width:100%;
+    }
+    .rec-cls-btn:hover { border-color:#2d4a2d;background:#e8f4ee;transform:translateY(-2px); }
+    .rec-cls-btn.selected { border-color:#2d4a2d;background:#e8f4ee; }
+    .rec-cls-tab {
+      display:inline-block;padding:10px 16px;font-size:12px;font-weight:600;
+      color:#6e6456;cursor:pointer;border-bottom:2.5px solid transparent;
+      margin-bottom:-2px;background:none;border-top:none;border-left:none;border-right:none;
+      font-family:inherit;white-space:nowrap;transition:all .2s;
+    }
+    .rec-cls-tab:hover { color:#2d4a2d; }
+    .rec-cls-tab.active { color:#2d4a2d;border-bottom-color:#b8962e;font-weight:700; }
+    .rec-student-card {
+      background:white;border:1.5px solid #e8dfc8;border-radius:10px;
+      margin-bottom:10px;overflow:hidden;transition:border-color .2s;
+    }
+    .rec-student-card:hover { border-color:#b8962e; }
+    .rec-student-head {
+      display:flex;align-items:center;justify-content:space-between;
+      padding:12px 14px;cursor:pointer;
+    }
+    .rec-student-body { display:none;padding:0 14px 14px;border-top:1px solid #f2ece0; }
+    .rec-student-body.open { display:block; }
+    .rec-section-label {
+      font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+      color:#2d4a2d;padding:10px 0 6px;border-bottom:1.5px solid #b8962e;margin-bottom:8px;
+    }
+    .rec-item-row {
+      display:grid;grid-template-columns:1fr 100px 100px;gap:8px;
+      align-items:center;padding:6px 0;border-bottom:1px dashed #e8dfc8;font-size:12px;
+    }
+    .rec-item-row:last-child { border-bottom:none; }
+    .rec-item-name { color:#1a1714; }
+    .rec-item-brought { font-weight:600; }
+    .rec-item-brought.yes { color:#2d7a47; }
+    .rec-item-brought.no { color:#c0392b; }
+    .rec-item-balance { color:#6e6456;font-size:11px; }
+    .rec-badge-complete { background:#e8f4ee;color:#2d7a47;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px; }
+    .rec-badge-partial { background:#fff8ec;color:#b8962e;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px; }
+    .rec-badge-missing { background:#fdeee9;color:#c0392b;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px; }
+  `;
+  document.head.appendChild(style);
+})();
+
+// ── PIN CHECK ──
+let recSelectedClass = null;
+
+window.recSelectClass = function(key, btn) {
+  recSelectedClass = key;
+  document.querySelectorAll('.rec-cls-btn').forEach(b => b.classList.remove('selected'));
+  if(btn) btn.classList.add('selected');
+  document.getElementById('rec-pin-card').style.display = 'block';
+  document.getElementById('rec-pin-label').textContent = 'Enter PIN for ' + (REC_LABELS[key] || key);
+  document.getElementById('rec-pin-input').value = '';
+  document.getElementById('rec-pin-error').style.display = 'none';
+  setTimeout(() => document.getElementById('rec-pin-input').focus(), 100);
+};
+
+window.recCheckPin = function() {
+  const entered = document.getElementById('rec-pin-input').value.trim();
+  if(entered === REC_PINS[recSelectedClass]) {
+    recRole = recSelectedClass;
+    sessionStorage.setItem('rec_auth', recRole);
+    recLaunch(recRole);
+  } else {
+    document.getElementById('rec-pin-error').style.display = 'block';
+    document.getElementById('rec-pin-input').value = '';
+  }
+};
+
+window.recLock = function() {
+  recRole = null; recActiveClass = null;
+  sessionStorage.removeItem('rec_auth');
+  document.getElementById('rec-app').style.display = 'none';
+  document.getElementById('rec-pin-screen').style.display = 'flex';
+  document.querySelectorAll('.rec-cls-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('rec-pin-card').style.display = 'none';
+  document.getElementById('rec-pin-input').value = '';
+};
+
+// ── LAUNCH ──
+async function recLaunch(role) {
+  document.getElementById('rec-pin-screen').style.display = 'none';
+  document.getElementById('rec-app').style.display = 'block';
+
+  const isAdmin = role === 'admin';
+  document.getElementById('rec-class-badge').textContent = isAdmin ? 'Admin — All Classes' : REC_LABELS[role];
+
+  // Build class tabs for admin
+  const tabsEl = document.getElementById('rec-class-tabs');
+  if(isAdmin) {
+    tabsEl.style.display = 'block';
+    const classes = ['mont1','mont2','mont3','class1','class2','class3','class4','class5'];
+    tabsEl.innerHTML = classes.map((c,i) =>
+      `<button class="rec-cls-tab${i===0?' active':''}" onclick="recSwitchClass('${c}',this)">${REC_LABELS[c]}</button>`
+    ).join('');
+    recActiveClass = 'mont1';
+  } else {
+    tabsEl.style.display = 'none';
+    recActiveClass = role;
+  }
+
+  await recLoadStudents(recActiveClass);
+  recRender();
 }
 
-function showRPanel(id,el){
-document.querySelectorAll('.r-panel').forEach(p=>p.classList.remove('active'));
-document.querySelectorAll('.rs-item').forEach(s=>s.classList.remove('active'));
-const p=document.getElementById('rp-'+id);if(p)p.classList.add('active');
-const rs=document.getElementById('rs-'+id);if(rs)rs.classList.add('active');else if(el)el.classList.add('active');
-if(id==='dashboard')updateDashboard();
-else if(id==='missing')renderMissing();
-else if(id==='allstudents')renderAllStudents();
-else if(CLASSES[id]){currentClass=id;renderClassPanel(id);}
+// ── SWITCH CLASS (admin) ──
+window.recSwitchClass = async function(cls, btn) {
+  recActiveClass = cls;
+  document.querySelectorAll('.rec-cls-tab').forEach(b => b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  await recLoadStudents(cls);
+  recRender();
+};
+
+// ── FIREBASE LOAD ──
+async function recLoadStudents(cls) {
+  try {
+    const { ref, get } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js");
+    const snap = await get(ref(window.db, `stationeryRecord/${cls}`));
+    recStudents[cls] = snap.exists() ? snap.val() : {};
+  } catch(e) {
+    console.error('Load error:', e);
+    recStudents[cls] = {};
+  }
 }
 
-// ══ RENDER CLASS TABLE ══
-function renderClassPanel(key){
-const cls=CLASSES[key];
-const allRows=students.filter(s=>s.classKey===key);
-const search=(document.getElementById('search-'+key)?.value||'').toLowerCase();
-const filter=document.getElementById('filter-'+key)?.value||'';
-const total=allRows.length;
-const complete=allRows.filter(s=>getStatusNew(s,key)==='complete').length;
-const partial=allRows.filter(s=>getStatusNew(s,key)==='partial').length;
-const pending=allRows.filter(s=>getStatusNew(s,key)==='pending').length;
-const se=document.getElementById('stats-'+key);
-if(se)se.innerHTML=`<div class="r-stat"><div class="v">${total}</div><div class="l">Students</div></div><div class="r-stat"><div class="v">${complete}</div><div class="l">Complete</div></div><div class="r-stat warn"><div class="v">${partial}</div><div class="l">Partial/Short</div></div><div class="r-stat danger"><div class="v">${pending}</div><div class="l">Pending</div></div>`;
-let rows=[...allRows];
-if(filter)rows=rows.filter(s=>getStatusNew(s,key)===filter);
-if(search)rows=rows.filter(s=>s.name.toLowerCase().includes(search)||(s.roll||'').includes(search));
-const tbody=document.getElementById('tbody-'+key),empty=document.getElementById('empty-'+key);
-if(!tbody)return;
-if(rows.length===0){tbody.innerHTML='';if(empty)empty.style.display='block';return;}
-if(empty)empty.style.display='none';
-tbody.innerHTML=rows.map(s=>{
-const bp=calcPctNew(cls.books,s.books||{});
-const sp=calcPctNew(cls.stationery,s.stationery||{});
-const ov=Math.round((bp+sp)/2);
-// Count short items
-const shortBooks=cls.books.filter((it,i)=>itemPartial(it,(s.books||{})[i])).length;
-const shortStat=cls.stationery.filter((it,i)=>itemPartial(it,(s.stationery||{})[i])).length;
-const shortTag=(shortBooks+shortStat)>0?`<span style="font-size:10px;background:var(--warn-light);color:var(--warn);border-radius:4px;padding:1px 6px;margin-left:4px;">⚡ ${shortBooks+shortStat} short</span>`:'';
-return `<tr>
-     <td><span style="font-family:'DM Mono',monospace;font-size:11px;">${s.roll||'—'}</span></td>
-     <td><strong>${s.name}</strong>${shortTag}</td>
-     <td>${progCell(bp)}</td><td>${progCell(sp)}</td><td>${progCell(ov)}</td>
-     <td style="white-space:nowrap;">
-       <button class="lbtn" onclick="openEditModal('${s.id}')">Edit</button>
-       &nbsp;<button class="lbtn danger" onclick="deleteStudent('${s.id}')">Delete</button>
-     </td></tr>`;
-}).join('');
+async function recSaveToFirebase(cls) {
+  try {
+    const { ref, set } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js");
+    await set(ref(window.db, `stationeryRecord/${cls}`), recStudents[cls] || {});
+  } catch(e) {
+    console.error('Save error:', e);
+    recShowToast('Error saving. Check connection.');
+  }
 }
 
-function progCell(pct){
-const c=pct>=100?'':pct>=50?'mid':'low',col=pct>=100?'var(--accent)':pct>=50?'var(--warn)':'var(--danger)';
-return `<div class="prog-wrap"><div class="prog-bar"><div class="prog-fill ${c}" style="width:${Math.min(pct,100)}%"></div></div><span class="prog-pct" style="color:${col}">${pct}%</span></div>`;
+// ── RENDER STUDENT LIST ──
+window.recRender = function() {
+  const cls = recActiveClass;
+  const students = recStudents[cls] || {};
+  const search = (document.getElementById('rec-search')?.value || '').toLowerCase();
+  const list = document.getElementById('rec-list');
+  const clsData = REC_CLASSES[cls];
+
+  let entries = Object.entries(students)
+    .filter(([id,s]) => !search || s.name.toLowerCase().includes(search))
+    .sort((a,b) => (a[1].rollNo||0) - (b[1].rollNo||0));
+
+  document.getElementById('rec-count').textContent = `${entries.length} student${entries.length!==1?'s':''}`;
+
+  if(!entries.length) {
+    list.innerHTML = `<div style="text-align:center;padding:40px;color:#9C9590;">
+      <div style="font-size:2rem;margin-bottom:10px;">📋</div>
+      <div style="font-size:14px;">No students found. Click <strong>Add Student</strong> to begin.</div>
+    </div>`;
+    return;
+  }
+
+  list.innerHTML = entries.map(([id, s]) => {
+    const books = s.books || {};
+    const stat = s.stationery || {};
+    const totalBooks = clsData.books.length;
+    const broughtBooks = clsData.books.filter((_,i) => books[i]?.brought).length;
+    const totalStat = clsData.stationery.length;
+    const broughtStat = clsData.stationery.filter((_,i) => stat[i]?.brought).length;
+    const bookPct = totalBooks ? Math.round(broughtBooks/totalBooks*100) : 0;
+    const statPct = totalStat ? Math.round(broughtStat/totalStat*100) : 0;
+
+    const badgeClass = (pct) => pct === 100 ? 'rec-badge-complete' : pct > 0 ? 'rec-badge-partial' : 'rec-badge-missing';
+    const badgeLabel = (pct) => pct === 100 ? '✓ Complete' : pct > 0 ? `${pct}% Brought` : '✗ Missing';
+
+    return `<div class="rec-student-card">
+      <div class="rec-student-head" onclick="recToggleCard('${id}')">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:32px;height:32px;background:#e8f4ee;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#2d4a2d;flex-shrink:0;">${s.rollNo||'—'}</div>
+          <div>
+            <div style="font-size:14px;font-weight:700;color:#1a1714;">${s.name}</div>
+            <div style="font-size:11px;color:#6e6456;">${s.remarks||''}</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;">
+          <span class="${badgeClass(bookPct)}" title="Books">📚 ${badgeLabel(bookPct)}</span>
+          <span class="${badgeClass(statPct)}" title="Stationery">✏️ ${badgeLabel(statPct)}</span>
+          <button onclick="event.stopPropagation();recEditStudent('${id}')" style="background:#f2ece0;border:1px solid #d9cebc;border-radius:5px;padding:4px 10px;font-size:11px;color:#2d4a2d;cursor:pointer;font-family:inherit;font-weight:600;">✏ Edit</button>
+          <button onclick="event.stopPropagation();recDeleteStudent('${id}')" style="background:#fdeee9;border:1px solid rgba(201,122,100,.3);border-radius:5px;padding:4px 10px;font-size:11px;color:#c0392b;cursor:pointer;font-family:inherit;font-weight:600;">🗑</button>
+          <i class="fas fa-chevron-down" style="color:#d9cebc;font-size:11px;" id="chev-${id}"></i>
+        </div>
+      </div>
+      <div class="rec-student-body" id="body-${id}">
+        <div class="rec-section-label">📚 BOOKS</div>
+        <div style="display:grid;grid-template-columns:1fr 80px 1fr;gap:6px;margin-bottom:4px;font-size:10px;font-weight:700;color:#9C9590;letter-spacing:1px;text-transform:uppercase;padding:0 2px;">
+          <span>Book</span><span style="text-align:center;">Brought</span><span>Balance / Remarks</span>
+        </div>
+        ${clsData.books.map((book,i) => {
+          const b = books[i] || {};
+          return `<div class="rec-item-row">
+            <span class="rec-item-name">${book}</span>
+            <span class="rec-item-brought ${b.brought?'yes':'no'}" style="text-align:center;">${b.brought?'✓ Yes':'✗ No'}</span>
+            <span class="rec-item-balance">${b.remarks||'—'}</span>
+          </div>`;
+        }).join('')}
+        <div class="rec-section-label" style="margin-top:12px;">✏️ STATIONERY</div>
+        <div style="display:grid;grid-template-columns:1fr 80px 80px;gap:6px;margin-bottom:4px;font-size:10px;font-weight:700;color:#9C9590;letter-spacing:1px;text-transform:uppercase;padding:0 2px;">
+          <span>Item</span><span style="text-align:center;">Brought</span><span style="text-align:center;">Balance</span>
+        </div>
+        ${clsData.stationery.map((item,i) => {
+          const st = stat[i] || {};
+          return `<div class="rec-item-row">
+            <span class="rec-item-name">${item}</span>
+            <span class="rec-item-brought ${st.brought?'yes':'no'}" style="text-align:center;">${st.brought||'—'}</span>
+            <span class="rec-item-balance" style="text-align:center;">${st.balance||'—'}</span>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  }).join('');
+};
+
+window.recToggleCard = function(id) {
+  const body = document.getElementById('body-'+id);
+  const chev = document.getElementById('chev-'+id);
+  body.classList.toggle('open');
+  if(chev) chev.style.transform = body.classList.contains('open') ? 'rotate(180deg)' : '';
+};
+
+// ── ADD / EDIT STUDENT MODAL ──
+window.recAddStudent = function() {
+  recEditingId = null;
+  document.getElementById('rec-modal-title').textContent = 'Add New Student — ' + (REC_LABELS[recActiveClass]||'');
+  recBuildModalBody(null);
+  document.getElementById('rec-modal').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+};
+
+window.recEditStudent = function(id) {
+  recEditingId = id;
+  const s = (recStudents[recActiveClass]||{})[id];
+  document.getElementById('rec-modal-title').textContent = 'Edit Record — ' + (s?.name||'');
+  recBuildModalBody(s);
+  document.getElementById('rec-modal').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+};
+
+function recBuildModalBody(s) {
+  const cls = recActiveClass;
+  const clsData = REC_CLASSES[cls];
+  const books = s?.books || {};
+  const stat = s?.stationery || {};
+
+  document.getElementById('rec-modal-body').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+      <div>
+        <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px;">Roll No.</label>
+        <input id="rm-roll" type="number" value="${s?.rollNo||''}" placeholder="e.g. 1"
+          style="border:1px solid #d9cebc;border-radius:6px;padding:7px 10px;font-family:inherit;font-size:13px;background:#faf7f2;outline:none;width:100%;">
+      </div>
+      <div>
+        <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px;">Student Name *</label>
+        <input id="rm-name" type="text" value="${s?.name||''}" placeholder="Full name"
+          style="border:1px solid #d9cebc;border-radius:6px;padding:7px 10px;font-family:inherit;font-size:13px;background:#faf7f2;outline:none;width:100%;">
+      </div>
+    </div>
+    <div style="margin-bottom:16px;">
+      <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px;">General Remarks</label>
+      <input id="rm-remarks" type="text" value="${s?.remarks||''}" placeholder="Any general note about this student"
+        style="border:1px solid #d9cebc;border-radius:6px;padding:7px 10px;font-family:inherit;font-size:13px;background:#faf7f2;outline:none;width:100%;">
+    </div>
+
+    <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#2d4a2d;padding:8px 0 6px;border-bottom:2px solid #b8962e;margin-bottom:10px;">📚 Books</div>
+    <div style="display:grid;grid-template-columns:1fr 80px 1fr;gap:6px;margin-bottom:6px;font-size:10px;font-weight:700;color:#9C9590;letter-spacing:1px;text-transform:uppercase;">
+      <span>Book Name</span><span style="text-align:center;">Brought</span><span>Balance / Remarks</span>
+    </div>
+    ${clsData.books.map((book,i) => {
+      const b = books[i] || {};
+      return `<div style="display:grid;grid-template-columns:1fr 80px 1fr;gap:6px;align-items:center;padding:5px 0;border-bottom:1px dashed #e8dfc8;">
+        <span style="font-size:12px;color:#1a1714;">${book}</span>
+        <div style="text-align:center;">
+          <select id="rm-book-brought-${i}" style="border:1px solid #d9cebc;border-radius:4px;padding:4px 6px;font-size:12px;background:#faf7f2;font-family:inherit;cursor:pointer;width:100%;">
+            <option value="">—</option>
+            <option value="yes" ${b.brought==='yes'?'selected':''}>✓ Yes</option>
+            <option value="no" ${b.brought==='no'?'selected':''}>✗ No</option>
+          </select>
+        </div>
+        <input id="rm-book-remarks-${i}" type="text" value="${b.remarks||''}" placeholder="Missing items / notes"
+          style="border:1px solid #d9cebc;border-radius:4px;padding:4px 8px;font-size:12px;font-family:inherit;background:#faf7f2;outline:none;width:100%;">
+      </div>`;
+    }).join('')}
+
+    <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#2d4a2d;padding:12px 0 6px;border-bottom:2px solid #b8962e;margin-bottom:10px;margin-top:8px;">✏️ Stationery</div>
+    <div style="display:grid;grid-template-columns:1fr 80px 80px;gap:6px;margin-bottom:6px;font-size:10px;font-weight:700;color:#9C9590;letter-spacing:1px;text-transform:uppercase;">
+      <span>Item</span><span style="text-align:center;">Brought</span><span style="text-align:center;">Balance</span>
+    </div>
+    ${clsData.stationery.map((item,i) => {
+      const st = stat[i] || {};
+      return `<div style="display:grid;grid-template-columns:1fr 80px 80px;gap:6px;align-items:center;padding:5px 0;border-bottom:1px dashed #e8dfc8;">
+        <span style="font-size:12px;color:#1a1714;">${item}</span>
+        <input id="rm-stat-brought-${i}" type="text" value="${st.brought||''}" placeholder="Qty / ✓"
+          style="border:1px solid #d9cebc;border-radius:4px;padding:4px 6px;font-size:12px;font-family:inherit;background:#faf7f2;outline:none;width:100%;text-align:center;">
+        <input id="rm-stat-balance-${i}" type="text" value="${st.balance||''}" placeholder="Balance"
+          style="border:1px solid #d9cebc;border-radius:4px;padding:4px 6px;font-size:12px;font-family:inherit;background:#faf7f2;outline:none;width:100%;text-align:center;">
+      </div>`;
+    }).join('')}
+  `;
 }
 
-// ══ MODAL WITH QUANTITY FIELDS ══
-function openAddModal(k){editingId=null;currentClass=k;document.getElementById('modal-title').textContent=`Add Student — ${CLASSES[k].label}`;renderModalBody(k,null);document.getElementById('entry-modal').classList.add('open');}
-function openEditModal(id){const s=students.find(x=>x.id===id);if(!s)return;editingId=id;currentClass=s.classKey;document.getElementById('modal-title').textContent=`Edit — ${s.name}`;renderModalBody(s.classKey,s);document.getElementById('entry-modal').classList.add('open');}
-function closeModal(){document.getElementById('entry-modal').classList.remove('open');editingId=null;}
+window.recSaveStudent = async function() {
+  const name = document.getElementById('rm-name').value.trim();
+  if(!name) { recShowToast('Please enter the student name.'); return; }
 
-function renderModalBody(classKey, student){
-const cls=CLASSES[classKey];
-const books=student?.books||{}, stat=student?.stationery||{};
-// Inline style for qty modal items
-const qStyle=`style="display:grid;grid-template-columns:1fr auto auto auto;gap:0;align-items:center;background:var(--bg);border:1px solid var(--border2);border-radius:6px;overflow:hidden;transition:all .12s;"`;
-document.getElementById('modal-body').innerHTML=`
-   <div class="frow">
-     <div class="fg"><label>Roll #</label><input type="text" id="m-roll" value="${student?.roll||''}" placeholder="e.g. 01"></div>
-     <div class="fg" style="flex:2;"><label>Student Name *</label><input type="text" id="m-name" value="${student?.name||''}" placeholder="Full name"></div>
-   </div>
-   <div class="frow">
-     <div class="fg"><label>Date Checked</label><input type="date" id="m-date" value="${student?.date||new Date().toISOString().slice(0,10)}"></div>
-     <div class="fg"><label>Notes</label><input type="text" id="m-notes" value="${student?.notes||''}" placeholder="Any remarks..."></div>
-   </div>
-   <div class="sec-row">
-     <span class="sec-tag-sm">📚 Books</span><div class="sec-div"></div>
-     <span style="font-size:11px;color:#9C9590;">${cls.books.length} items</span>
-     <button class="btn btn-secondary btn-sm" onclick="checkAllItems('book',true)">All ✓</button>
-     <button class="btn btn-secondary btn-sm" onclick="checkAllItems('book',false)">Clear</button>
-   </div>
-   <div style="display:flex;flex-direction:column;gap:6px;">
-     ${cls.books.map((it,i)=>qtyRow('book',i,it,books[i])).join('')}
-   </div>
-   <div class="sec-row" style="margin-top:16px;">
-     <span class="sec-tag-sm green">✏️ Stationery</span><div class="sec-div"></div>
-     <span style="font-size:11px;color:#9C9590;">${cls.stationery.length} items</span>
-     <button class="btn btn-secondary btn-sm" onclick="checkAllItems('stat',true)">All ✓</button>
-     <button class="btn btn-secondary btn-sm" onclick="checkAllItems('stat',false)">Clear</button>
-   </div>
-   <div style="display:flex;flex-direction:column;gap:6px;">
-     ${cls.stationery.map((it,i)=>qtyRow('stat',i,it,stat[i])).join('')}
-   </div>`;
-}
+  const cls = recActiveClass;
+  const clsData = REC_CLASSES[cls];
 
-function qtyRow(type,idx,item,brought){
-const checked=brought?.checked||false;
-const broughtQty=brought?.qty!==undefined?brought.qty:item.qty;
-const bal=checked?Math.max(0,item.qty-Number(broughtQty)):item.qty;
-const balColor=bal===0?'var(--accent)':bal>0?'var(--danger)':'var(--accent)';
-const balText=bal===0?'✓ Complete':`Balance: <strong style="color:${balColor};">${bal}</strong>`;
-const rowBg=checked?(bal===0?'var(--accent-light)':'var(--warn-light)'):'var(--bg)';
-const rowBorder=checked?(bal===0?'var(--accent)':'var(--warn)'):'var(--border2)';
-return `<div id="qrow-${type}-${idx}" style="display:grid;grid-template-columns:32px 1fr 90px 110px;gap:0;align-items:center;background:${rowBg};border:1px solid ${rowBorder};border-radius:6px;overflow:hidden;transition:all .12s;">
-   <div style="display:flex;align-items:center;justify-content:center;padding:8px 0;cursor:pointer;" onclick="toggleQRow('${type}',${idx})">
-     <div id="qchk-${type}-${idx}" style="width:18px;height:18px;border:2px solid ${checked?'var(--accent)':'var(--border2)'};border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;background:${checked?'var(--accent)':'white'};color:white;transition:all .12s;">${checked?'✓':''}</div>
-   </div>
-   <div style="padding:7px 8px;font-size:12px;line-height:1.3;cursor:pointer;" onclick="toggleQRow('${type}',${idx})">
-     <div style="font-weight:500;">${item.name}</div>
-     <div style="font-size:10px;color:#9C9590;">Required: <strong>${item.qty}</strong></div>
-   </div>
-   <div style="padding:6px 8px;border-left:1px solid var(--border2);">
-     <div style="font-size:9px;color:#9C9590;margin-bottom:2px;text-transform:uppercase;letter-spacing:.05em;">Brought</div>
-     <input type="number" id="qval-${type}-${idx}" value="${checked?broughtQty:''}" min="0" max="${item.qty*2}"
-       style="width:100%;border:none;background:transparent;font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:var(--text-dark);outline:none;padding:0;"
-       placeholder="0" ${!checked?'disabled':''}
-       oninput="updateBalance('${type}',${idx},${item.qty})">
-   </div>
-   <div style="padding:6px 10px;border-left:1px solid var(--border2);font-size:11px;" id="qbal-${type}-${idx}">
-     <div style="font-size:9px;color:#9C9590;margin-bottom:2px;text-transform:uppercase;letter-spacing:.05em;">Balance</div>
-     ${balText}
-   </div>
- </div>`;
-}
+  const books = {};
+  clsData.books.forEach((_, i) => {
+    books[i] = {
+      brought: document.getElementById('rm-book-brought-'+i)?.value || '',
+      remarks: document.getElementById('rm-book-remarks-'+i)?.value || ''
+    };
+  });
 
-function toggleQRow(type,idx){
-const chk=document.getElementById(`qchk-${type}-${idx}`);
-const row=document.getElementById(`qrow-${type}-${idx}`);
-const inp=document.getElementById(`qval-${type}-${idx}`);
-const isChecked=chk.textContent==='✓';
-const newChecked=!isChecked;
-chk.textContent=newChecked?'✓':'';
-chk.style.background=newChecked?'var(--accent)':'white';
-chk.style.borderColor=newChecked?'var(--accent)':'var(--border2)';
-inp.disabled=!newChecked;
-if(newChecked&&!inp.value){
-// default to required qty when checking
-const cls=CLASSES[currentClass];
-const items=type==='book'?cls.books:cls.stationery;
-inp.value=items[idx].qty;
-}
-if(!newChecked)inp.value='';
-updateBalance(type,idx,getRequiredQty(type,idx));
-}
+  const stationery = {};
+  clsData.stationery.forEach((_, i) => {
+    stationery[i] = {
+      brought: document.getElementById('rm-stat-brought-'+i)?.value || '',
+      balance: document.getElementById('rm-stat-balance-'+i)?.value || ''
+    };
+  });
 
-function getRequiredQty(type,idx){
-const cls=CLASSES[currentClass];
-return (type==='book'?cls.books:cls.stationery)[idx].qty;
-}
+  const record = {
+    name,
+    rollNo: parseInt(document.getElementById('rm-roll').value) || 0,
+    remarks: document.getElementById('rm-remarks').value.trim(),
+    books,
+    stationery,
+    updatedAt: new Date().toISOString()
+  };
 
-function updateBalance(type,idx,required){
-const chk=document.getElementById(`qchk-${type}-${idx}`);
-const inp=document.getElementById(`qval-${type}-${idx}`);
-const balEl=document.getElementById(`qbal-${type}-${idx}`);
-const row=document.getElementById(`qrow-${type}-${idx}`);
-const isChecked=chk.textContent==='✓';
-const brought=Number(inp.value)||0;
-const bal=isChecked?Math.max(0,required-brought):required;
-const balColor=bal===0?'var(--accent)':'var(--danger)';
-const balText=bal===0?'✓ Complete':`Balance: <strong style="color:${balColor};">${bal}</strong>`;
-balEl.innerHTML=`<div style="font-size:9px;color:#9C9590;margin-bottom:2px;text-transform:uppercase;letter-spacing:.05em;">Balance</div>${balText}`;
-if(isChecked){
-row.style.background=bal===0?'var(--accent-light)':'var(--warn-light)';
-row.style.borderColor=bal===0?'var(--accent)':'var(--warn)';
-} else {
-row.style.background='var(--bg)';
-row.style.borderColor='var(--border2)';
-}
-}
+  if(!recStudents[cls]) recStudents[cls] = {};
 
-function checkAllItems(type,state){
-const cls=CLASSES[currentClass];
-const items=type==='book'?cls.books:cls.stationery;
-items.forEach((it,i)=>{
-const chk=document.getElementById(`qchk-${type}-${i}`);
-const inp=document.getElementById(`qval-${type}-${i}`);
-if(!chk||!inp)return;
-if(state){
-chk.textContent='✓';chk.style.background='var(--accent)';chk.style.borderColor='var(--accent)';
-inp.disabled=false;inp.value=it.qty;
-} else {
-chk.textContent='';chk.style.background='white';chk.style.borderColor='var(--border2)';
-inp.disabled=true;inp.value='';
-}
-updateBalance(type,i,it.qty);
-});
-}
+  const id = recEditingId || ('s' + Date.now());
+  recStudents[cls][id] = record;
 
-function saveStudent(){
-const name=document.getElementById('m-name').value.trim();
-if(!name){showToastR('Please enter a student name.');return;}
-const cls=CLASSES[currentClass];
-const books={},stationery={};
-cls.books.forEach((it,i)=>{
-const chk=document.getElementById(`qchk-book-${i}`);
-const inp=document.getElementById(`qval-book-${i}`);
-books[i]={checked:chk?.textContent==='✓',qty:Number(inp?.value)||0};
-});
-cls.stationery.forEach((it,i)=>{
-const chk=document.getElementById(`qchk-stat-${i}`);
-const inp=document.getElementById(`qval-stat-${i}`);
-stationery[i]={checked:chk?.textContent==='✓',qty:Number(inp?.value)||0};
-});
-const rec={id:editingId||uid(),classKey:currentClass,
-roll:document.getElementById('m-roll').value.trim(),name,
-date:document.getElementById('m-date').value,
-notes:document.getElementById('m-notes').value.trim(),books,stationery};
-if(editingId){const idx=students.findIndex(s=>s.id===editingId);if(idx!==-1)students[idx]=rec;}
-else students.push(rec);
-saveData();closeModal();renderClassPanel(currentClass);showToastR(editingId?'Record updated.':'Student added.');
-}
+  document.getElementById('rec-save-btn').textContent = 'Saving…';
+  await recSaveToFirebase(cls);
+  document.getElementById('rec-save-btn').textContent = 'Save Record';
 
-function deleteStudent(id){
-if(!confirm('Delete this student record?'))return;
-students=students.filter(s=>s.id!==id);
-saveData();if(currentClass)renderClassPanel(currentClass);showToastR('Deleted.');
-}
+  recCloseModal();
+  recRender();
+  recShowToast('✓ Record saved.');
+};
 
-// ══ BADGES ══
-function updateBadges(){Object.keys(CLASSES).forEach(key=>{const el=document.getElementById('cnt-'+key);if(el)el.textContent=students.filter(s=>s.classKey===key).length;});}
+window.recDeleteStudent = async function(id) {
+  if(!confirm('Delete this student record? This cannot be undone.')) return;
+  const cls = recActiveClass;
+  delete recStudents[cls][id];
+  await recSaveToFirebase(cls);
+  recRender();
+  recShowToast('✓ Record deleted.');
+};
 
-// ══ DASHBOARD ══
-function updateDashboard(){
-const total=students.length;let complete=0,partial=0,missing=0;
-students.forEach(s=>{const st=getStatusNew(s,s.classKey);if(st==='complete')complete++;else if(st==='partial')partial++;else missing++;});
-const dse=document.getElementById('dash-stats');
-if(dse)dse.innerHTML=`<div class="r-stat"><div class="v">${total}</div><div class="l">Total Students</div></div><div class="r-stat"><div class="v">${complete}</div><div class="l">Complete</div></div><div class="r-stat warn"><div class="v">${partial}</div><div class="l">Partial/Short</div></div><div class="r-stat danger"><div class="v">${missing}</div><div class="l">Pending</div></div>`;
-const grid=document.getElementById('dash-grid');if(!grid)return;
-grid.innerHTML=Object.keys(CLASSES).map(key=>{
-const cls=CLASSES[key],rows=students.filter(s=>s.classKey===key),n=rows.length;
-const bp=n?Math.round(rows.reduce((a,s)=>a+calcPctNew(cls.books,s.books||{}),0)/n):0;
-const sp=n?Math.round(rows.reduce((a,s)=>a+calcPctNew(cls.stationery,s.stationery||{}),0)/n):0;
-return `<div class="cls-sum"><div class="cs-name"><span class="class-pill ${cls.section==='Montessori'?'pill-mont':'pill-jun'}">${cls.section}</span><strong>${cls.label}</strong><span style="margin-left:auto;font-size:11px;color:#9C9590;">${n} students</span></div>
-     <div class="cs-bar-wrap"><div class="cs-lbl"><span>Books</span><span>${bp}%</span></div><div class="prog-bar" style="height:7px;"><div class="prog-fill ${bp<50?'low':bp<100?'mid':''}" style="width:${bp}%"></div></div></div>
-     <div class="cs-bar-wrap" style="margin-top:5px;"><div class="cs-lbl"><span>Stationery</span><span>${sp}%</span></div><div class="prog-bar" style="height:7px;"><div class="prog-fill ${sp<50?'low':sp<100?'mid':''}" style="width:${sp}%"></div></div></div>
-     ${n===0?'<div style="margin-top:7px;font-size:11px;color:#9C9590;">No students recorded yet.</div>':''}</div>`;
-}).join('');
-}
+window.recCloseModal = function() {
+  document.getElementById('rec-modal').style.display = 'none';
+  document.body.style.overflow = '';
+  recEditingId = null;
+};
 
-// ══ MISSING / SHORT REPORT ══
-function renderMissing(){
-const isAdmin=currentRole==='admin';
-const search=(document.getElementById('miss-search')?.value||'').toLowerCase();
-const classFilter=isAdmin?(document.getElementById('miss-class')?.value||''):'';
-const typeFilter=document.getElementById('miss-type')?.value||'';
-const severity=document.getElementById('miss-severity')?.value||'';
-const allowed=isAdmin?Object.keys(CLASSES):[currentRole];
-let rows=students.filter(s=>{
-if(!allowed.includes(s.classKey))return false;
-const cls=CLASSES[s.classKey];
-const hasBookIssue=cls.books.some((it,i)=>!itemComplete(it,(s.books||{})[i]));
-const hasStatIssue=cls.stationery.some((it,i)=>!itemComplete(it,(s.stationery||{})[i]));
-if(typeFilter==='book')return hasBookIssue;
-if(typeFilter==='stationery')return hasStatIssue;
-return hasBookIssue||hasStatIssue;
-});
-if(classFilter)rows=rows.filter(s=>CLASSES[s.classKey]?.label===classFilter);
-if(search)rows=rows.filter(s=>s.name.toLowerCase().includes(search));
-const wrap=document.getElementById('missing-wrap');if(!wrap)return;
-if(rows.length===0){wrap.innerHTML='<div style="text-align:center;padding:48px;color:#9C9590;font-size:13px;">✅ No missing or short items!</div>';return;}
-wrap.innerHTML=rows.map(s=>{
-const cls=CLASSES[s.classKey];
-const showB=!typeFilter||typeFilter==='book';
-const showS=!typeFilter||typeFilter==='stationery';
-// Build issue lines for books
-const bookIssues=showB?cls.books.map((it,i)=>{
-const b=(s.books||{})[i];
-if(itemComplete(it,b))return'';
-if(severity==='missing'&&!itemMissing(it,b))return'';
-if(severity==='short'&&!itemPartial(it,b))return'';
-const bal=getItemBalance(it,b);
-const isMissing=itemMissing(it,b);
-const tag=isMissing?`<span style="font-size:9px;background:var(--danger-light);color:var(--danger);border-radius:4px;padding:1px 5px;margin-left:4px;">Not brought</span>`
-:`<span style="font-size:9px;background:var(--warn-light);color:var(--warn);border-radius:4px;padding:1px 5px;margin-left:4px;">Short by ${bal}</span>`;
-const brought=b?.checked?`Brought: ${b.qty||0}`:'-';
-return `<div class="miss-row"><span style="color:${isMissing?'var(--danger)':'var(--warn)'};font-size:13px;">${isMissing?'✕':'⚡'}</span>
-       <span style="flex:1;font-size:12px;">${it.name}</span>
-       <span style="font-size:11px;font-family:'DM Mono',monospace;color:#9C9590;margin-right:6px;">Req:${it.qty} / ${brought}</span>
-       ${tag}<span class="sec-tag-sm" style="font-size:9px;margin-left:4px;">Book</span></div>`;
-}).filter(Boolean):[];
-const statIssues=showS?cls.stationery.map((it,i)=>{
-const b=(s.stationery||{})[i];
-if(itemComplete(it,b))return'';
-if(severity==='missing'&&!itemMissing(it,b))return'';
-if(severity==='short'&&!itemPartial(it,b))return'';
-const bal=getItemBalance(it,b);
-const isMissing=itemMissing(it,b);
-const tag=isMissing?`<span style="font-size:9px;background:var(--danger-light);color:var(--danger);border-radius:4px;padding:1px 5px;margin-left:4px;">Not brought</span>`
-:`<span style="font-size:9px;background:var(--warn-light);color:var(--warn);border-radius:4px;padding:1px 5px;margin-left:4px;">Short by ${bal}</span>`;
-const brought=b?.checked?`Brought: ${b.qty||0}`:'-';
-return `<div class="miss-row"><span style="color:${isMissing?'var(--danger)':'var(--warn)'};font-size:13px;">${isMissing?'✕':'⚡'}</span>
-       <span style="flex:1;font-size:12px;">${it.name}</span>
-       <span style="font-size:11px;font-family:'DM Mono',monospace;color:#9C9590;margin-right:6px;">Req:${it.qty} / ${brought}</span>
-       ${tag}<span class="sec-tag-sm green" style="font-size:9px;margin-left:4px;">Stat.</span></div>`;
-}).filter(Boolean):[];
-if(!bookIssues.length&&!statIssues.length)return'';
-const totalIssues=bookIssues.length+statIssues.length;
-return `<div class="miss-card"><div class="miss-head">
-     <div><span class="class-pill ${cls.section==='Montessori'?'pill-mont':'pill-jun'}">${cls.label}</span>
-     <strong style="margin-left:8px;">${s.name}</strong>${s.roll?`<span style="font-size:11px;color:#9C9590;margin-left:6px;">Roll ${s.roll}</span>`:''}
-     <span style="font-size:11px;color:var(--warn);margin-left:8px;">${totalIssues} item${totalIssues>1?'s':''} pending</span></div>
-     <button class="lbtn" onclick="openEditModal('${s.id}')">Update →</button>
-   </div>
-   <div class="miss-list">${bookIssues.join('')}${statIssues.join('')}</div></div>`;
-}).filter(Boolean).join('');
-if(!wrap.innerHTML.trim())wrap.innerHTML='<div style="text-align:center;padding:48px;color:#9C9590;font-size:13px;">✅ No items match this filter.</div>';
-}
+// Restore session
+(function() {
+  const saved = sessionStorage.getItem('rec_auth');
+  if(saved) {
+    recRole = saved;
+    setTimeout(() => recLaunch(saved), 300);
+  }
+})();
 
-// ══ ALL STUDENTS ══
-function renderAllStudents(){
-const search=(document.getElementById('all-search')?.value||'').toLowerCase();
-const classFilter=document.getElementById('all-class')?.value||'';
-const statusFilter=document.getElementById('all-status')?.value||'';
-let rows=[...students];
-if(classFilter)rows=rows.filter(s=>CLASSES[s.classKey]?.label===classFilter);
-if(statusFilter)rows=rows.filter(s=>getStatusNew(s,s.classKey)===statusFilter);
-if(search)rows=rows.filter(s=>s.name.toLowerCase().includes(search)||(s.roll||'').includes(search));
-const tbody=document.getElementById('all-tbody'),empty=document.getElementById('all-empty');if(!tbody)return;
-if(rows.length===0){tbody.innerHTML='';empty.style.display='block';return;}
-empty.style.display='none';
-tbody.innerHTML=rows.map(s=>{
-const cls=CLASSES[s.classKey];
-const bp=calcPctNew(cls.books,s.books||{}),sp=calcPctNew(cls.stationery,s.stationery||{}),ov=Math.round((bp+sp)/2);
-return `<tr><td><span style="font-family:'DM Mono',monospace;font-size:11px;">${s.roll||'—'}</span></td>
-     <td><strong>${s.name}</strong>${s.notes?`<span style="display:block;font-size:11px;color:#9C9590;">${s.notes}</span>`:''}</td>
-     <td><span class="class-pill ${cls.section==='Montessori'?'pill-mont':'pill-jun'}">${cls.label}</span></td>
-     <td>${progCell(bp)}</td><td>${progCell(sp)}</td><td>${progCell(ov)}</td>
-     <td><button class="lbtn" onclick="openEditModal('${s.id}')">Edit</button></td></tr>`;
-}).join('');
-}
-
-// ══ EXPORT CSV ══
-function exportCSV(){
-const isAdmin=currentRole==='admin';
-const allowed=isAdmin?Object.keys(CLASSES):[currentRole];
-const rows=[['Roll','Name','Class','Section','Date','Books %','Stationery %','Overall %','Short Items','Notes']];
-students.filter(s=>allowed.includes(s.classKey)).forEach(s=>{
-const cls=CLASSES[s.classKey];
-const bp=calcPctNew(cls.books,s.books||{}),sp=calcPctNew(cls.stationery,s.stationery||{});
-const shortCount=cls.books.filter((it,i)=>itemPartial(it,(s.books||{})[i])).length+
-cls.stationery.filter((it,i)=>itemPartial(it,(s.stationery||{})[i])).length;
-rows.push([s.roll||'',s.name,cls.label,cls.section,s.date||'',bp+'%',sp+'%',Math.round((bp+sp)/2)+'%',shortCount,s.notes||'']);
-});
-const csv=rows.map(r=>r.map(c=>`"${c}"`).join(',')).join('\n');
-const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
-a.download=`HMS_Record_${isAdmin?'All':CLASSES[currentRole]?.label}_2026-27.csv`;a.click();showToastR('CSV exported!');
-}
-
-// ══ PRINT ══
-function showPrintMenu(){
-const sel=document.getElementById('print-class-select');const isAdmin=currentRole==='admin';
-sel.innerHTML='';
-if(isAdmin)sel.innerHTML+=`<option value="">— choose a class —</option><option value="all">All Classes</option>`;
-const keys=isAdmin?Object.keys(CLASSES):[currentRole];
-keys.forEach(k=>sel.innerHTML+=`<option value="${k}">${CLASSES[k].label}</option>`);
-if(!isAdmin)sel.value=currentRole;
-document.getElementById('print-modal').classList.add('open');
-}
-function closePrintModal(){document.getElementById('print-modal').classList.remove('open');}
-function doPrint(){
-const val=document.getElementById('print-class-select').value;
-if(!val){showToastR('Select a class.');return;}
-const keys=val==='all'?Object.keys(CLASSES):[val];
-closePrintModal();
-const today=new Date().toLocaleDateString('en-PK',{day:'2-digit',month:'short',year:'numeric'});
-let html='';
-keys.forEach(key=>{
-const cls=CLASSES[key],rows=students.filter(s=>s.classKey===key);
-const total=rows.length,complete=rows.filter(s=>getStatusNew(s,key)==='complete').length;
-const partial=rows.filter(s=>getStatusNew(s,key)==='partial').length,pending=rows.filter(s=>getStatusNew(s,key)==='pending').length;
-const hdr=`<div class="ph-row" style="display:flex;"><div><div style="font-size:16px;font-weight:700;">Heritage Montessori and School</div><div style="font-size:11px;color:#555;">Book & Stationery Record — Session 2026–27 | ${cls.label} | ${today}</div></div><div style="font-size:13px;font-weight:600;text-align:right;margin-left:auto;">HMS<br><span style="font-size:10px;font-weight:400;">Garden Town, Multan</span></div></div>`;
-const ftr=`<div style="font-size:9px;color:#aaa;margin-top:8px;border-top:1px solid #eee;padding-top:5px;">Heritage Montessori and School · 11-D Garden Town, Multan · 061-6515260</div>`;
-const bodyRows=rows.length?rows.map(s=>{
-const bp=calcPctNew(cls.books,s.books||{}),sp=calcPctNew(cls.stationery,s.stationery||{}),ov=Math.round((bp+sp)/2);
-const shortCount=cls.books.filter((it,i)=>itemPartial(it,(s.books||{})[i])).length+
-cls.stationery.filter((it,i)=>itemPartial(it,(s.stationery||{})[i])).length;
-const sc=ov>=100?'#2B6A4F':ov>0?'#D4850A':'#C0392B';
-return `<tr><td>${s.roll||'—'}</td><td><strong>${s.name}</strong></td><td style="text-align:center;">${bp}%</td><td style="text-align:center;">${sp}%</td><td style="text-align:center;font-weight:700;">${ov}%</td><td style="color:${sc};font-weight:600;">${ov>=100?'✓ Complete':ov>0?'⚠ Partial':'✕ Pending'}</td><td style="text-align:center;color:${shortCount>0?'#D4850A':'#2B6A4F'}">${shortCount>0?shortCount:'—'}</td></tr>`;
-}).join(''):`<tr><td colspan="7" style="text-align:center;color:#999;padding:16px;">No students recorded.</td></tr>`;
-html+=`<div class="print-page">${hdr}<div style="margin-bottom:8px;display:flex;gap:18px;font-size:11px;"><span>Total: <strong>${total}</strong></span><span style="color:#2B6A4F;">Complete: <strong>${complete}</strong></span><span style="color:#D4850A;">Partial: <strong>${partial}</strong></span><span style="color:#C0392B;">Pending: <strong>${pending}</strong></span></div>
-   <table class="sec-sum-table"><thead><tr><th>Roll #</th><th>Student Name</th><th style="text-align:center;">Books</th><th style="text-align:center;">Stationery</th><th style="text-align:center;">Overall</th><th>Status</th><th style="text-align:center;">Short Items</th></tr></thead><tbody>${bodyRows}</tbody></table>${ftr}</div>`;
-// Missing/short detail page
-const withIssues=rows.filter(s=>getStatusNew(s,key)!=='complete');
-if(withIssues.length>0){
-const mHTML=withIssues.map(s=>{
-const bIssues=cls.books.map((it,i)=>{const b=(s.books||{})[i];if(itemComplete(it,b))return'';const bal=getItemBalance(it,b);const miss=itemMissing(it,b);return `<div style="font-size:10px;padding:2px 0;border-bottom:1px solid #f0f0f0;display:flex;gap:8px;"><span>${miss?'✕':'⚡'}</span><span style="flex:1;">${it.name}</span><span style="color:#888;">Req:${it.qty} | Brought:${miss?0:b.qty||0} | Bal:<strong style="color:${miss?'#C0392B':'#D4850A'}">${bal}</strong></span></div>`;}).filter(Boolean);
-const sIssues=cls.stationery.map((it,i)=>{const b=(s.stationery||{})[i];if(itemComplete(it,b))return'';const bal=getItemBalance(it,b);const miss=itemMissing(it,b);return `<div style="font-size:10px;padding:2px 0;border-bottom:1px solid #f0f0f0;display:flex;gap:8px;"><span>${miss?'✕':'⚡'}</span><span style="flex:1;">${it.name}</span><span style="color:#888;">Req:${it.qty} | Brought:${miss?0:b.qty||0} | Bal:<strong style="color:${miss?'#C0392B':'#D4850A'}">${bal}</strong></span></div>`;}).filter(Boolean);
-if(!bIssues.length&&!sIssues.length)return'';
-return `<div style="border:1px solid #ccc;margin-bottom:8px;break-inside:avoid;border-radius:6px;overflow:hidden;"><div style="padding:7px 12px;background:#f5f5f5;border-bottom:1px solid #ddd;display:flex;justify-content:space-between;"><span><strong>${s.name}</strong>${s.roll?` Roll ${s.roll}`:''}</span><span style="font-size:10px;color:#666;">${bIssues.length} book issues · ${sIssues.length} stationery issues</span></div>
-         <div style="padding:7px 12px;display:flex;gap:20px;flex-wrap:wrap;">${bIssues.length?`<div style="flex:1;min-width:200px;"><div style="font-size:10px;font-weight:700;color:#C0392B;margin-bottom:3px;text-transform:uppercase;">Books</div>${bIssues.join('')}</div>`:''}${sIssues.length?`<div style="flex:1;min-width:200px;"><div style="font-size:10px;font-weight:700;color:#D4850A;margin-bottom:3px;text-transform:uppercase;">Stationery</div>${sIssues.join('')}</div>`:''}</div></div>`;
-}).filter(Boolean).join('');
-if(mHTML)html+=`<div class="print-page">${hdr}<div style="font-size:12px;font-weight:700;margin-bottom:10px;color:#C0392B;">Missing &amp; Short Items Detail — ${cls.label} (${withIssues.length} students)</div>${mHTML}${ftr}</div>`;
-}
-});
-const root=document.getElementById('print-root');root.innerHTML=html;root.style.display='block';
-document.getElementById('main-content').style.display='none';
-setTimeout(()=>{window.print();setTimeout(()=>{root.style.display='none';root.innerHTML='';document.getElementById('main-content').style.display='block';},500);},120);
-}
-
-// ══ TOAST ══
-function showToastR(msg){const t=document.getElementById('r-toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400);}
-
-// ══ GC GUIDE ══
-function togglePhase(head){const phase=head.closest('.phase'),isOpen=phase.classList.contains('open');head.closest('.phases').querySelectorAll('.phase').forEach(p=>p.classList.remove('open'));if(!isOpen)phase.classList.add('open');}
-document.querySelectorAll('.pnav a').forEach(link=>{link.addEventListener('click',function(e){e.preventDefault();const t=document.querySelector(this.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'});});});
-['entry-modal','print-modal'].forEach(id=>{document.getElementById(id).addEventListener('click',function(e){if(e.target===this){if(id==='entry-modal')closeModal();else closePrintModal();}});});
 </script>
 </body>
 </html>
