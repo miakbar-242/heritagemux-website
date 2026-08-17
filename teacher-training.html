@@ -360,7 +360,7 @@ header{padding:0 14px;min-height:60px;}
 </div>
 <div class="header-right">
 <div class="user-pill" id="user-pill"><i class="fas fa-circle-user"></i> <span id="user-label">Staff</span></div>
-<button class="logout-btn" onclick="doLogout()"><i class="fas fa-right-from-bracket"></i> Logout</button>
+
 </div>
 </header>
 
@@ -639,6 +639,12 @@ header{padding:0 14px;min-height:60px;}
         <button onclick="recAddStudent()" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:white;border-radius:6px;padding:5px 12px;font-size:12px;font-family:inherit;cursor:pointer;font-weight:500;display:flex;align-items:center;gap:5px;">
           <i class="fas fa-plus"></i> Add Student
         </button>
+        <button onclick="recShowPrintMenu()" style="background:rgba(184,150,46,.25);border:1px solid rgba(184,150,46,.4);color:white;border-radius:6px;padding:5px 12px;font-size:12px;font-family:inherit;cursor:pointer;font-weight:500;display:flex;align-items:center;gap:5px;">
+          <i class="fas fa-print"></i> Print
+        </button>
+        <button onclick="recShowLog()" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:white;border-radius:6px;padding:5px 12px;font-size:12px;font-family:inherit;cursor:pointer;font-weight:500;display:flex;align-items:center;gap:5px;">
+          <i class="fas fa-clock-rotate-left"></i> Log
+        </button>
         <button onclick="recLock()" style="background:rgba(255,80,80,.2);border:1px solid rgba(255,80,80,.3);color:white;border-radius:6px;padding:5px 12px;font-size:12px;font-family:inherit;cursor:pointer;font-weight:500;display:flex;align-items:center;gap:5px;">
           <i class="fas fa-lock"></i> Lock
         </button>
@@ -678,6 +684,44 @@ header{padding:0 14px;min-height:60px;}
     </div>
   </div>
 </div>
+
+<!-- PRINT MODAL -->
+<div id="rec-print-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:600;display:none;align-items:center;justify-content:center;padding:16px;">
+  <div style="background:white;border-radius:12px;max-width:400px;width:100%;padding:24px;box-shadow:0 8px 40px rgba(0,0,0,.25);">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <h2 style="font-size:15px;font-weight:700;color:#2d4a2d;">🖨 Print Record</h2>
+      <button onclick="document.getElementById('rec-print-modal').style.display='none'" style="background:#f2ece0;border:none;border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:16px;color:#6e6456;">✕</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <button onclick="recPrint('student')" style="background:#2d4a2d;color:white;border:none;border-radius:8px;padding:12px 16px;font-size:13px;font-family:inherit;font-weight:600;cursor:pointer;text-align:left;display:flex;align-items:center;gap:10px;">
+        <i class="fas fa-user"></i>
+        <div><div>Print Individual Student</div><div style="font-size:11px;opacity:.7;">Select from current view</div></div>
+      </button>
+      <button onclick="recPrint('class')" style="background:#1e5631;color:white;border:none;border-radius:8px;padding:12px 16px;font-size:13px;font-family:inherit;font-weight:600;cursor:pointer;text-align:left;display:flex;align-items:center;gap:10px;">
+        <i class="fas fa-users"></i>
+        <div><div>Print Class Record</div><div style="font-size:11px;opacity:.7;">All students in current class</div></div>
+      </button>
+      <button id="rec-print-school-btn" onclick="recPrint('school')" style="background:#b8962e;color:white;border:none;border-radius:8px;padding:12px 16px;font-size:13px;font-family:inherit;font-weight:600;cursor:pointer;text-align:left;display:flex;align-items:center;gap:10px;">
+        <i class="fas fa-school"></i>
+        <div><div>Print Whole School Record</div><div style="font-size:11px;opacity:.7;">All classes — Admin only</div></div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ACTIVITY LOG MODAL -->
+<div id="rec-log-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:600;align-items:flex-start;justify-content:flex-end;padding:16px;">
+  <div style="background:white;border-radius:12px;width:100%;max-width:480px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 8px 40px rgba(0,0,0,.25);">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid #e8dfc8;">
+      <h2 style="font-size:15px;font-weight:700;color:#2d4a2d;"><i class="fas fa-clock-rotate-left" style="color:#b8962e;margin-right:8px;"></i>Activity Log</h2>
+      <button onclick="document.getElementById('rec-log-modal').style.display='none'" style="background:#f2ece0;border:none;border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:16px;color:#6e6456;">✕</button>
+    </div>
+    <div id="rec-log-list" style="overflow-y:auto;padding:12px 16px;flex:1;font-size:12px;"></div>
+  </div>
+</div>
+
+<!-- PRINT CONTAINER (hidden) -->
+<div id="rec-print-root" style="display:none;"></div>
 
 <div id="rec-toast" style="position:fixed;bottom:24px;right:24px;background:#2d4a2d;color:white;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,.2);z-index:600;opacity:0;transform:translateY(8px);transition:opacity .2s,transform .2s;pointer-events:none;"></div>
 
@@ -1161,17 +1205,10 @@ function recBuildModalBody(s) {
   const stat = s?.stationery || {};
 
   document.getElementById('rec-modal-body').innerHTML = `
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
-      <div>
-        <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px;">Roll No.</label>
-        <input id="rm-roll" type="number" value="${s?.rollNo||''}" placeholder="e.g. 1"
-          style="border:1px solid #d9cebc;border-radius:6px;padding:7px 10px;font-family:inherit;font-size:13px;background:#faf7f2;outline:none;width:100%;">
-      </div>
-      <div>
-        <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px;">Student Name *</label>
-        <input id="rm-name" type="text" value="${s?.name||''}" placeholder="Full name"
-          style="border:1px solid #d9cebc;border-radius:6px;padding:7px 10px;font-family:inherit;font-size:13px;background:#faf7f2;outline:none;width:100%;">
-      </div>
+    <div style="margin-bottom:16px;">
+      <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px;">Student Full Name *</label>
+      <input id="rm-name" type="text" value="${s?.name||''}" placeholder="Full name"
+        style="border:1px solid #d9cebc;border-radius:6px;padding:7px 10px;font-family:inherit;font-size:13px;background:#faf7f2;outline:none;width:100%;">
     </div>
     <div style="margin-bottom:16px;">
       <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px;">General Remarks</label>
@@ -1241,8 +1278,7 @@ window.recSaveStudent = async function() {
 
   const record = {
     name,
-    rollNo: parseInt(document.getElementById('rm-roll').value) || 0,
-    remarks: document.getElementById('rm-remarks').value.trim(),
+        remarks: document.getElementById('rm-remarks').value.trim(),
     books,
     stationery,
     updatedAt: new Date().toISOString()
@@ -1277,7 +1313,278 @@ window.recCloseModal = function() {
   recEditingId = null;
 };
 
-// Restore session
+// ── DATE PER ITEM ──
+// Date is auto-recorded when item is marked as brought
+// Stored in each item as: { brought: 'yes', date: '17/08/2026', balance: '...' }
+
+function todayDate() {
+  return new Date().toLocaleDateString('en-GB', {day:'2-digit',month:'2-digit',year:'numeric'});
+}
+
+// ── ACTIVITY LOG ──
+let recActivityLog = [];
+
+async function recLogActivity(action) {
+  const cls = recActiveClass;
+  const who = recRole === 'admin' ? 'Admin' : (REC_LABELS[recRole] + ' Teacher');
+  const entry = {
+    who,
+    action,
+    class: cls ? REC_LABELS[cls] : '—',
+    timestamp: new Date().toISOString(),
+    dateStr: new Date().toLocaleString('en-GB', {day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})
+  };
+  recActivityLog.unshift(entry);
+  // Save to Firebase
+  try {
+    const { ref, push } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js");
+    await push(ref(window.db, 'stationeryLog'), entry);
+  } catch(e) { console.error('Log error:', e); }
+}
+
+window.recShowLog = async function() {
+  const modal = document.getElementById('rec-log-modal');
+  modal.style.display = 'flex';
+  const list = document.getElementById('rec-log-list');
+  list.innerHTML = '<div style="text-align:center;padding:20px;color:#9C9590;">Loading…</div>';
+
+  try {
+    const { ref, get, query, limitToLast, orderByChild } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js");
+    const isAdmin = recRole === 'admin';
+    const snap = await get(ref(window.db, 'stationeryLog'));
+    if(!snap.exists()) { list.innerHTML = '<div style="text-align:center;padding:20px;color:#9C9590;">No activity yet.</div>'; return; }
+
+    let entries = Object.values(snap.val())
+      .filter(e => isAdmin || e.class === REC_LABELS[recRole])
+      .sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp))
+      .slice(0, 100);
+
+    if(!entries.length) { list.innerHTML = '<div style="text-align:center;padding:20px;color:#9C9590;">No activity for your class yet.</div>'; return; }
+
+    list.innerHTML = entries.map(e =>
+      `<div style="padding:10px 0;border-bottom:1px solid #f2ece0;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
+          <span style="font-weight:600;color:#2d4a2d;font-size:11px;">${e.who}</span>
+          <span style="color:#9C9590;font-size:10px;">${e.dateStr}</span>
+        </div>
+        <div style="color:#49525c;">${e.action}</div>
+        <div style="font-size:10px;color:#b8962e;margin-top:2px;">${e.class}</div>
+      </div>`
+    ).join('');
+  } catch(err) {
+    list.innerHTML = '<div style="text-align:center;padding:20px;color:#c0392b;">Error loading log.</div>';
+    console.error(err);
+  }
+};
+
+// ── UPDATE recSaveStudent to log + add dates ──
+const _origRecSave = window.recSaveStudent;
+window.recSaveStudent = async function() {
+  const name = document.getElementById('rm-name')?.value?.trim();
+  if(!name) { recShowToast('Please enter the student name.'); return; }
+
+  const cls = recActiveClass;
+  const clsData = REC_CLASSES[cls];
+  const today = todayDate();
+  const existing = recEditingId ? ((recStudents[cls]||{})[recEditingId] || {}) : {};
+
+  const books = {};
+  clsData.books.forEach((_, i) => {
+    const brought = document.getElementById('rm-book-brought-'+i)?.value || '';
+    const prevBrought = existing.books?.[i]?.brought || '';
+    const prevDate = existing.books?.[i]?.date || '';
+    books[i] = {
+      brought,
+      remarks: document.getElementById('rm-book-remarks-'+i)?.value || '',
+      date: brought === 'yes' ? (prevBrought === 'yes' ? prevDate : today) : ''
+    };
+  });
+
+  const stationery = {};
+  clsData.stationery.forEach((_, i) => {
+    const brought = document.getElementById('rm-stat-brought-'+i)?.value || '';
+    const prevBrought = existing.stationery?.[i]?.brought || '';
+    const prevDate = existing.stationery?.[i]?.date || '';
+    stationery[i] = {
+      brought,
+      balance: document.getElementById('rm-stat-balance-'+i)?.value || '',
+      date: brought ? (prevBrought ? prevDate : today) : ''
+    };
+  });
+
+  const record = {
+    name,
+    remarks: document.getElementById('rm-remarks')?.value?.trim() || '',
+    books,
+    stationery,
+    updatedAt: new Date().toISOString()
+  };
+
+  if(!recStudents[cls]) recStudents[cls] = {};
+  const id = recEditingId || ('s' + Date.now());
+  const isNew = !recEditingId;
+  recStudents[cls][id] = record;
+
+  document.getElementById('rec-save-btn').textContent = 'Saving…';
+  await recSaveToFirebase(cls);
+  await recLogActivity(isNew ? `Added new student: ${name}` : `Updated record for: ${name}`);
+  document.getElementById('rec-save-btn').textContent = 'Save Record';
+
+  recCloseModal();
+  recRender();
+  recShowToast('✓ Record saved.');
+};
+
+// ── UPDATE recDeleteStudent to log ──
+window.recDeleteStudent = async function(id) {
+  if(!confirm('Delete this student record? This cannot be undone.')) return;
+  const cls = recActiveClass;
+  const name = recStudents[cls]?.[id]?.name || 'Unknown';
+  delete recStudents[cls][id];
+  await recSaveToFirebase(cls);
+  await recLogActivity('Deleted student record: ' + name);
+  recRender();
+  recShowToast('✓ Record deleted.');
+};
+
+// ── UPDATE recRender to show dates ──
+// Override to show date in item rows
+const _buildItemRow = (name, brought, date, extra, cols3) => {
+  const dateStr = date ? `<span style="font-size:9px;color:#b8962e;display:block;">${date}</span>` : '';
+  if(cols3) {
+    return `<div class="rec-item-row" style="grid-template-columns:1fr 90px 80px;">
+      <span class="rec-item-name">${name}</span>
+      <span class="rec-item-brought ${brought?'yes':'no'}" style="text-align:center;">${brought||'—'}${dateStr}</span>
+      <span class="rec-item-balance">${extra||'—'}</span>
+    </div>`;
+  }
+  return `<div class="rec-item-row">
+    <span class="rec-item-name">${name}</span>
+    <span class="rec-item-brought ${brought==='yes'?'yes':brought==='no'?'no':''}" style="text-align:center;">${brought==='yes'?'✓ Yes':brought==='no'?'✗ No':'—'}${dateStr}</span>
+    <span class="rec-item-balance">${extra||'—'}</span>
+  </div>`;
+};
+window._buildItemRow = _buildItemRow;
+
+// ── PRINT FUNCTIONS ──
+window.recShowPrintMenu = function() {
+  const modal = document.getElementById('rec-print-modal');
+  modal.style.display = 'flex';
+  // Show/hide school print based on role
+  const schoolBtn = document.getElementById('rec-print-school-btn');
+  if(schoolBtn) schoolBtn.style.display = recRole === 'admin' ? 'flex' : 'none';
+};
+
+function recPrintHeader(title, subtitle) {
+  return `<div style="text-align:center;border-bottom:2px solid #2d4a2d;padding-bottom:12px;margin-bottom:16px;">
+    <div style="font-size:18pt;font-weight:700;color:#2d4a2d;">${title}</div>
+    <div style="font-size:9pt;color:#6e6456;margin-top:4px;">${subtitle}</div>
+    <div style="font-size:9pt;color:#6e6456;">Printed: ${new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</div>
+  </div>`;
+}
+
+function recPrintStudentHTML(s, clsData) {
+  const books = s.books || {};
+  const stat = s.stationery || {};
+  return `
+    <div style="margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid #e8dfc8;">
+      <div style="font-size:13pt;font-weight:700;color:#2d4a2d;margin-bottom:10px;">${s.name}</div>
+      <div style="font-size:9pt;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#2d4a2d;border-bottom:1.5px solid #b8962e;margin-bottom:6px;padding-bottom:3px;">Books</div>
+      <table style="width:100%;border-collapse:collapse;font-size:10pt;margin-bottom:12px;">
+        <thead><tr style="background:#f2ece0;">
+          <th style="text-align:left;padding:5px 8px;border:1px solid #d9cebc;font-size:8pt;">Book</th>
+          <th style="padding:5px 8px;border:1px solid #d9cebc;font-size:8pt;width:70px;">Brought</th>
+          <th style="padding:5px 8px;border:1px solid #d9cebc;font-size:8pt;width:70px;">Date</th>
+          <th style="padding:5px 8px;border:1px solid #d9cebc;font-size:8pt;">Balance / Remarks</th>
+        </tr></thead>
+        <tbody>${clsData.books.map((book,i) => {
+          const b = books[i]||{};
+          return `<tr><td style="padding:5px 8px;border:1px solid #e8dfc8;">${book}</td>
+            <td style="padding:5px 8px;border:1px solid #e8dfc8;text-align:center;color:${b.brought==='yes'?'#2d7a47':'#c0392b'};">${b.brought==='yes'?'✓ Yes':b.brought==='no'?'✗ No':'—'}</td>
+            <td style="padding:5px 8px;border:1px solid #e8dfc8;text-align:center;font-size:9pt;color:#b8962e;">${b.date||'—'}</td>
+            <td style="padding:5px 8px;border:1px solid #e8dfc8;font-size:9pt;">${b.remarks||'—'}</td>
+          </tr>`;
+        }).join('')}</tbody>
+      </table>
+      <div style="font-size:9pt;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#2d4a2d;border-bottom:1.5px solid #b8962e;margin-bottom:6px;padding-bottom:3px;">Stationery</div>
+      <table style="width:100%;border-collapse:collapse;font-size:10pt;">
+        <thead><tr style="background:#f2ece0;">
+          <th style="text-align:left;padding:5px 8px;border:1px solid #d9cebc;font-size:8pt;">Item</th>
+          <th style="padding:5px 8px;border:1px solid #d9cebc;font-size:8pt;width:80px;">Brought</th>
+          <th style="padding:5px 8px;border:1px solid #d9cebc;font-size:8pt;width:70px;">Date</th>
+          <th style="padding:5px 8px;border:1px solid #d9cebc;font-size:8pt;width:80px;">Balance</th>
+        </tr></thead>
+        <tbody>${clsData.stationery.map((item,i) => {
+          const st = stat[i]||{};
+          return `<tr><td style="padding:5px 8px;border:1px solid #e8dfc8;">${item}</td>
+            <td style="padding:5px 8px;border:1px solid #e8dfc8;text-align:center;">${st.brought||'—'}</td>
+            <td style="padding:5px 8px;border:1px solid #e8dfc8;text-align:center;font-size:9pt;color:#b8962e;">${st.date||'—'}</td>
+            <td style="padding:5px 8px;border:1px solid #e8dfc8;text-align:center;">${st.balance||'—'}</td>
+          </tr>`;
+        }).join('')}</tbody>
+      </table>
+    </div>`;
+}
+
+window.recPrint = async function(type) {
+  document.getElementById('rec-print-modal').style.display = 'none';
+  const root = document.getElementById('rec-print-root');
+  const cls = recActiveClass;
+  const clsData = REC_CLASSES[cls];
+  const students = recStudents[cls] || {};
+  let html = '';
+
+  if(type === 'student') {
+    // Pick first visible student or prompt
+    const entries = Object.entries(students).sort((a,b) => (a[1].name||'').localeCompare(b[1].name||''));
+    if(!entries.length) { recShowToast('No students to print.'); return; }
+    const name = prompt('Enter student name to print (or leave blank for first student):');
+    const found = name ? entries.find(([,s]) => s.name.toLowerCase().includes(name.toLowerCase())) : entries[0];
+    if(!found) { recShowToast('Student not found.'); return; }
+    html = recPrintHeader('Heritage Montessori and School', `Student Record — ${found[1].name} | ${REC_LABELS[cls]}`) +
+      recPrintStudentHTML(found[1], clsData);
+
+  } else if(type === 'class') {
+    const entries = Object.entries(students).sort((a,b) => (a[1].name||'').localeCompare(b[1].name||''));
+    if(!entries.length) { recShowToast('No students in this class.'); return; }
+    html = recPrintHeader('Heritage Montessori and School', `Class Record — ${REC_LABELS[cls]} | ${entries.length} Students`) +
+      entries.map(([,s]) => recPrintStudentHTML(s, clsData)).join('');
+
+  } else if(type === 'school') {
+    if(recRole !== 'admin') { recShowToast('Admin access required.'); return; }
+    // Load all classes
+    const allClasses = ['mont1','mont2','mont3','class1','class2','class3','class4','class5'];
+    html = recPrintHeader('Heritage Montessori and School', `Full School Stationery Record — All Classes`);
+    for(const c of allClasses) {
+      if(!recStudents[c]) await recLoadStudents(c);
+      const entries = Object.entries(recStudents[c]||{}).sort((a,b)=>(a[1].name||'').localeCompare(b[1].name||''));
+      if(!entries.length) continue;
+      html += `<div style="font-size:14pt;font-weight:700;color:#2d4a2d;margin:20px 0 10px;padding:8px 12px;background:#e8f4ee;border-left:4px solid #2d4a2d;">${REC_LABELS[c]} — ${entries.length} Students</div>`;
+      html += entries.map(([,s]) => recPrintStudentHTML(s, REC_CLASSES[c])).join('');
+    }
+  }
+
+  root.innerHTML = html;
+  root.style.display = 'block';
+  window.print();
+  root.style.display = 'none';
+  root.innerHTML = '';
+};
+
+// ── PRINT CSS for stationery record ──
+(function(){
+  const style = document.createElement('style');
+  style.textContent = `
+    @media print {
+      #rec-print-root { display:block!important; }
+      body > *:not(#rec-print-root) { display:none!important; }
+      @page { size:A4; margin:12mm; }
+    }
+  `;
+  document.head.appendChild(style);
+})();
+
+// ── RESTORE SESSION ──
 (function() {
   const saved = sessionStorage.getItem('rec_auth');
   if(saved) {
