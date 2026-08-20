@@ -369,14 +369,11 @@ header{padding:0 14px;min-height:60px;}
 <button class="ptab active" onclick="switchTab('tab-classroom',this)">
 <div class="ptab-icon"><i class="fa-brands fa-google"></i></div>Google Classroom Guide
 </button>
-<button class="ptab" onclick="switchTab('tab-record',this)">
-<div class="ptab-icon"><i class="fas fa-book-open-reader"></i></div>Book &amp; Stationery Record
+<button class="ptab" onclick="switchTab('tab-tools',this)">
+<div class="ptab-icon"><i class="fas fa-toolbox"></i></div>Teacher Tools
 <span class="ptab-lock"><i class="fas fa-lock"></i> PIN</span>
 </button>
-<button class="ptab" onclick="switchTab('tab-tools',this)">
-<div class="ptab-icon"><i class="fas fa-grip"></i></div>More Tools
-<span class="ptab-new">NEW</span>
-</button>
+
 </div>
 
 <!-- ══════════ TAB 1: GOOGLE CLASSROOM GUIDE ══════════ -->
@@ -551,10 +548,23 @@ header{padding:0 14px;min-height:60px;}
 <footer><div class="footer-logo">Heritage Montessori &amp; School</div><p>For help contact the Admin &nbsp;·&nbsp; <a href="https://wa.me/923361515260">WhatsApp: 0336 1515260</a></p></footer>
 </div><!-- end tab-classroom -->
 
-<!-- ══════════ TAB 2: BOOK & STATIONERY RECORD ══════════ -->
-<div class="tab-panel" id="tab-record">
+<!-- ══════════ TAB: TEACHER TOOLS ══════════ -->
+<div class="tab-panel" id="tab-tools">
 
-  <!-- PIN SCREEN -->
+  <!-- TOOLS SUB NAV -->
+  <div style="background:#f2ece0;border-bottom:2px solid #d9cebc;display:flex;overflow-x:auto;flex-shrink:0;">
+    <button class="tools-sub-btn active" id="subStatBtn" onclick="switchToolsSub('stationery',this)" style="padding:12px 20px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#6e6456;border:none;border-bottom:2.5px solid transparent;margin-bottom:-2px;background:none;cursor:pointer;white-space:nowrap;font-family:inherit;display:flex;align-items:center;gap:6px;">
+      📚 Book & Stationery Record
+    </button>
+    <button class="tools-sub-btn" id="subIssueBtn" onclick="switchToolsSub('issuance',this)" style="padding:12px 20px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#6e6456;border:none;border-bottom:2.5px solid transparent;margin-bottom:-2px;background:none;cursor:pointer;white-space:nowrap;font-family:inherit;display:flex;align-items:center;gap:6px;">
+      🗂 Teacher Issuance Record
+    </button>
+  </div>
+
+  <!-- SUB SECTION: STATIONERY RECORD -->
+  <div id="sub-stationery" style="display:block;">
+
+<!-- PIN SCREEN (Stationery) -->
   <div id="rec-pin-screen" style="min-height:calc(100vh - 124px);display:flex;align-items:center;justify-content:center;padding:32px 16px;background:#faf7f2;">
     <div style="width:100%;max-width:440px;">
       <div style="text-align:center;margin-bottom:28px;">
@@ -666,9 +676,83 @@ header{padding:0 14px;min-height:60px;}
     <!-- STUDENT LIST -->
     <div id="rec-list" style="padding:12px 16px;"></div>
 
-  </div>
+  
 
-</div>
+
+  </div><!-- /sub-stationery -->
+
+  <!-- SUB SECTION: ISSUANCE RECORD -->
+  <div id="sub-issuance" style="display:none;background:#faf7f2;min-height:calc(100vh - 170px);">
+
+    <!-- ISSUANCE PIN SCREEN -->
+    <div id="iss-pin-screen" style="min-height:calc(100vh - 170px);display:flex;align-items:center;justify-content:center;padding:32px 16px;background:#faf7f2;">
+      <div style="width:100%;max-width:440px;">
+        <div style="text-align:center;margin-bottom:28px;">
+          <div style="width:64px;height:64px;background:#fff8ec;border-radius:18px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:1.8rem;">🗂</div>
+          <h2 style="font-family:'DM Serif Display',serif;font-size:1.5rem;font-weight:400;color:#1e3320;margin-bottom:6px;">Teacher Issuance Record</h2>
+          <p style="font-size:0.88rem;color:#6e6456;font-weight:300;">Enter your PIN to access</p>
+        </div>
+        <div style="background:white;border:1.5px solid #d9cebc;border-radius:12px;padding:20px;">
+          <div style="font-size:0.88rem;font-weight:600;color:#2d4a2d;margin-bottom:12px;"><i class="fas fa-lock" style="color:#b8962e;margin-right:6px;"></i>Admin / Directress PIN only</div>
+          <div style="display:flex;gap:8px;">
+            <input type="password" id="iss-pin-input" placeholder="· · · · · ·" maxlength="6"
+              style="flex:1;border:1.5px solid #d9cebc;border-radius:8px;padding:11px 14px;font-size:1.1rem;font-family:'DM Mono',monospace;letter-spacing:6px;color:#1a1714;background:#faf7f2;outline:none;"
+              onkeydown="if(event.key==='Enter')issCheckPin()">
+            <button onclick="issCheckPin()"
+              style="background:#2d4a2d;color:white;border:none;border-radius:8px;padding:11px 18px;font-size:0.9rem;font-weight:600;font-family:inherit;cursor:pointer;">
+              <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+          <div id="iss-pin-error" style="display:none;margin-top:10px;background:#fdeee9;color:#b84830;border:1px solid rgba(201,122,100,.3);padding:9px 14px;border-radius:8px;font-size:0.84rem;font-weight:600;">
+            <i class="fas fa-times-circle"></i> Incorrect PIN.
+          </div>
+          <div style="margin-top:10px;font-size:11px;color:#9C9590;">Teachers can view their own record via their class PIN from the staff panel.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ISSUANCE APP -->
+    <div id="iss-app" style="display:none;">
+
+      <!-- APP HEADER -->
+      <div style="background:#1e3320;color:white;padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:52px;flex-shrink:0;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-size:1rem;">🗂</span>
+          <span style="font-size:14px;font-weight:600;">Teacher Issuance Record</span>
+          <span id="iss-role-badge" style="background:rgba(255,255,255,.2);border-radius:20px;padding:3px 12px;font-size:12px;font-weight:700;">—</span>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button onclick="issAddTeacher()" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:white;border-radius:6px;padding:5px 12px;font-size:12px;font-family:inherit;cursor:pointer;font-weight:500;">
+            <i class="fas fa-user-plus"></i> Add Teacher
+          </button>
+          <button onclick="issIssueItems()" style="background:rgba(184,150,46,.3);border:1px solid rgba(184,150,46,.4);color:white;border-radius:6px;padding:5px 12px;font-size:12px;font-family:inherit;cursor:pointer;font-weight:500;">
+            <i class="fas fa-plus"></i> Issue Items
+          </button>
+          <button onclick="issPrint()" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:white;border-radius:6px;padding:5px 12px;font-size:12px;font-family:inherit;cursor:pointer;font-weight:500;">
+            <i class="fas fa-print"></i> Print
+          </button>
+          <button onclick="issLock()" style="background:rgba(255,80,80,.2);border:1px solid rgba(255,80,80,.3);color:white;border-radius:6px;padding:5px 12px;font-size:12px;font-family:inherit;cursor:pointer;font-weight:500;">
+            <i class="fas fa-lock"></i> Lock
+          </button>
+        </div>
+      </div>
+
+      <!-- FILTER TABS -->
+      <div style="background:#f2ece0;border-bottom:1px solid #d9cebc;display:flex;padding:0 16px;overflow-x:auto;">
+        <button class="iss-filter active" id="issf-all" onclick="issFilter('all',this)" style="padding:10px 16px;font-size:11px;font-weight:700;color:#6e6456;border:none;border-bottom:2.5px solid transparent;margin-bottom:-1px;background:none;cursor:pointer;font-family:inherit;white-space:nowrap;">All Teachers</button>
+        <button class="iss-filter" id="issf-mont" onclick="issFilter('mont',this)" style="padding:10px 16px;font-size:11px;font-weight:700;color:#6e6456;border:none;border-bottom:2.5px solid transparent;margin-bottom:-1px;background:none;cursor:pointer;font-family:inherit;white-space:nowrap;">Montessori</button>
+        <button class="iss-filter" id="issf-junior" onclick="issFilter('junior',this)" style="padding:10px 16px;font-size:11px;font-weight:700;color:#6e6456;border:none;border-bottom:2.5px solid transparent;margin-bottom:-1px;background:none;cursor:pointer;font-family:inherit;white-space:nowrap;">Juniors</button>
+        <button class="iss-filter" id="issf-admin" onclick="issFilter('admin',this)" style="padding:10px 16px;font-size:11px;font-weight:700;color:#6e6456;border:none;border-bottom:2.5px solid transparent;margin-bottom:-1px;background:none;cursor:pointer;font-family:inherit;white-space:nowrap;">Admin/Other</button>
+      </div>
+
+      <!-- TEACHER LIST -->
+      <div id="iss-teacher-list" style="padding:12px 16px;"></div>
+
+    </div><!-- /iss-app -->
+
+  </div><!-- /sub-issuance -->
+
+</div><!-- /tab-tools -->
 
 <!-- RECORD MODAL -->
 <div id="rec-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;overflow-y:auto;padding:16px;">
@@ -727,74 +811,6 @@ header{padding:0 14px;min-height:60px;}
 
 
 
-<!-- ══════════ TAB 3: MORE TOOLS ══════════ -->
-<div class="tab-panel" id="tab-tools">
-<div class="tools-hub">
-<div class="tools-hub-title">Teacher Tools</div>
-<div class="tools-hub-sub">All your classroom tools in one place. More tools will be added here as they become available — each tool below is a card you can tap to open.</div>
-<div class="tools-cards">
-<div class="tool-card green clickable" onclick="switchTab('tab-classroom',document.querySelectorAll('.ptab')[0])">
-<span class="tc-badge active-badge">Active</span>
-<div class="tc-icon green"><i class="fa-brands fa-google"></i></div>
-<h3>Google Classroom Guide</h3>
-<p>Step-by-step instructions for recording, posting lessons and reviewing student submissions every day.</p>
-<button class="tc-btn green"><i class="fas fa-arrow-right"></i> Open Guide</button>
-</div>
-<div class="tool-card rust clickable" onclick="switchTab('tab-record',document.querySelectorAll('.ptab')[1])">
-<span class="tc-badge active-badge">Active</span>
-<div class="tc-icon rust"><i class="fas fa-book-open-reader"></i></div>
-<h3>Book &amp; Stationery Record</h3>
-<p>Track which students have brought their books and stationery. PIN-protected — each teacher sees only their own class.</p>
-<button class="tc-btn rust"><i class="fas fa-lock"></i> Enter with PIN</button>
-</div>
-<div class="tool-card teal">
-<span class="tc-badge soon">Coming Soon</span>
-<div class="tc-icon teal"><i class="fas fa-calendar-days"></i></div>
-<h3>Attendance Register</h3>
-<p>Mark daily attendance for each student and generate monthly reports for the admin. To be added next term.</p>
-<div class="tc-soon"><i class="fas fa-hourglass-half"></i> Being developed</div>
-</div>
-<div class="tool-card gold">
-<span class="tc-badge soon">Coming Soon</span>
-<div class="tc-icon gold"><i class="fas fa-chart-bar"></i></div>
-<h3>Progress Reports</h3>
-<p>Generate termly student progress reports and share directly with parents from within the portal.</p>
-<div class="tc-soon"><i class="fas fa-hourglass-half"></i> Being developed</div>
-</div>
-<div class="tool-card teal">
-<span class="tc-badge soon">Coming Soon</span>
-<div class="tc-icon" style="background:#eaecee;color:var(--teal);width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:14px;"><i class="fas fa-clipboard-list"></i></div>
-<h3>In-Portal Lesson Log</h3>
-<p>A built-in daily lesson log — record what was taught, student notes, and submissions directly in the portal.</p>
-<div class="tc-soon"><i class="fas fa-hourglass-half"></i> Being developed</div>
-</div>
-<!-- ADD NEW TOOL CARDS HERE — copy a card block above -->
-</div>
-</div>
-</div>
-
-</div><!-- end main-content -->
-
-<!-- MODALS -->
-<div class="r-modal-overlay" id="entry-modal">
-<div class="r-modal">
-<div class="r-modal-head"><h2 id="modal-title">Add Student</h2><button class="r-modal-close" onclick="closeModal()">✕</button></div>
-<div class="r-modal-body" id="modal-body"></div>
-<div class="r-modal-foot"><button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveStudent()">Save Record</button></div>
-</div>
-</div>
-<div class="r-modal-overlay" id="print-modal">
-<div class="r-modal" style="max-width:400px;">
-<div class="r-modal-head"><h2>🖨 Print Report</h2><button class="r-modal-close" onclick="closePrintModal()">✕</button></div>
-<div class="r-modal-body">
-<div class="fg" style="margin-bottom:14px;"><label>Select Class</label><select id="print-class-select" class="r-filter" style="width:100%;padding:9px 12px;font-size:13px;"></select></div>
-<div style="background:var(--surface2);border-radius:8px;padding:12px;font-size:12px;color:#6B6560;line-height:1.7;"><strong>Printout includes:</strong><br>① Summary table (roll, name, books %, stationery %)<br>② Detailed missing items per student<br>③ HMS header &amp; footer on every page</div>
-</div>
-<div class="r-modal-foot"><button class="btn btn-secondary" onclick="closePrintModal()">Cancel</button><button class="btn btn-primary" onclick="doPrint()">Print Now</button></div>
-</div>
-</div>
-<div id="print-root"></div>
-<div class="r-toast" id="r-toast"></div>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getDatabase } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
@@ -1591,7 +1607,517 @@ window.recPrint = async function(type) {
     recRole = saved;
     setTimeout(() => recLaunch(saved), 300);
   }
+  const issaved = sessionStorage.getItem('iss_auth');
+  if(issaved) {
+    setTimeout(() => issLaunch(issaved), 300);
+  }
 })();
+
+// ══════════════════════════════════════════
+// TOOLS SUB-NAV
+// ══════════════════════════════════════════
+window.switchToolsSub = function(sub, btn) {
+  document.querySelectorAll('.tools-sub-btn').forEach(b => {
+    b.style.color = '#6e6456';
+    b.style.borderBottomColor = 'transparent';
+  });
+  btn.style.color = '#2d4a2d';
+  btn.style.borderBottomColor = '#b8962e';
+  document.getElementById('sub-stationery').style.display = sub === 'stationery' ? 'block' : 'none';
+  document.getElementById('sub-issuance').style.display = sub === 'issuance' ? 'block' : 'none';
+};
+
+// ══════════════════════════════════════════
+// TEACHER ISSUANCE RECORD SYSTEM
+// ══════════════════════════════════════════
+
+// ── ITEMS LIST ──
+const ISS_EXPENDABLES = [
+  'Board Marker Ink','Scotch Tape','Glue Sticks','Poster Colours',
+  'Crayons','Colour Pencils','Paint Brush','Pencils','Erasers',
+  'Sharpeners','Permanent Marker'
+];
+
+const ISS_NON_EXPENDABLES = [
+  'Scissors','Stapler','Board Marker','Class File','Stationery File',
+  'Resource File','Pre-Primary Mathematics A1','Pre-Primary Mathematics A2',
+  'Pre-Primary Mathematics A3','Pre-Primary Mathematics A4',
+  'Colour and Craft','All About Islam',
+  'HMS Learning Journal A','HMS Learning Journal B',
+  'HMS Learning Journal C','HMS Learning Journal D'
+];
+
+const ISS_PINS = { admin: '4242', directress: '3001' };
+const ISS_SECTIONS = { mont:'Montessori', junior:'Juniors', admin:'Admin/Other' };
+
+// ── STATE ──
+let issRole = null;
+let issTeachers = {};
+let issFilter_active = 'all';
+let issEditingTeacherId = null;
+
+// ── PIN CHECK ──
+window.issCheckPin = function() {
+  const entered = document.getElementById('iss-pin-input').value.trim();
+  if(entered === ISS_PINS.admin || entered === ISS_PINS.directress) {
+    const role = entered === ISS_PINS.admin ? 'admin' : 'directress';
+    issRole = role;
+    sessionStorage.setItem('iss_auth', role);
+    issLaunch(role);
+  } else {
+    document.getElementById('iss-pin-error').style.display = 'block';
+    document.getElementById('iss-pin-input').value = '';
+  }
+};
+
+window.issLock = function() {
+  issRole = null;
+  sessionStorage.removeItem('iss_auth');
+  document.getElementById('iss-app').style.display = 'none';
+  document.getElementById('iss-pin-screen').style.display = 'flex';
+  document.getElementById('iss-pin-input').value = '';
+};
+
+async function issLaunch(role) {
+  document.getElementById('iss-pin-screen').style.display = 'none';
+  document.getElementById('iss-app').style.display = 'block';
+  document.getElementById('iss-role-badge').textContent = role === 'admin' ? 'Admin' : 'Academic Directress';
+  await issLoadTeachers();
+  issRender();
+}
+
+// ── FIREBASE ──
+async function issLoadTeachers() {
+  try {
+    const { ref, get } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js");
+    const snap = await get(ref(window.db, 'teacherIssuance/teachers'));
+    issTeachers = snap.exists() ? snap.val() : {};
+  } catch(e) { console.error('Load error:', e); issTeachers = {}; }
+}
+
+async function issSaveTeachers() {
+  try {
+    const { ref, set } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js");
+    await set(ref(window.db, 'teacherIssuance/teachers'), issTeachers);
+  } catch(e) { console.error('Save error:', e); issShowToast('Error saving. Check connection.'); }
+}
+
+async function issLogActivity(action, teacherName) {
+  try {
+    const { ref, push } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js");
+    await push(ref(window.db, 'teacherIssuance/log'), {
+      action, teacherName,
+      by: issRole === 'admin' ? 'Admin' : 'Academic Directress',
+      timestamp: new Date().toISOString(),
+      dateStr: new Date().toLocaleString('en-GB', {day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})
+    });
+  } catch(e) { console.error('Log error:', e); }
+}
+
+// ── TOAST ──
+function issShowToast(msg) {
+  const t = document.getElementById('rec-toast');
+  if(!t) return;
+  t.textContent = msg; t.style.opacity = '1'; t.style.transform = 'translateY(0)';
+  setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateY(8px)'; }, 3000);
+}
+
+// ── FILTER ──
+window.issFilter = function(filter, btn) {
+  issFilter_active = filter;
+  document.querySelectorAll('.iss-filter').forEach(b => {
+    b.style.color = '#6e6456';
+    b.style.borderBottomColor = 'transparent';
+  });
+  btn.style.color = '#2d4a2d';
+  btn.style.borderBottomColor = '#b8962e';
+  issRender();
+};
+
+// ── RENDER TEACHER LIST ──
+window.issRender = function() {
+  const list = document.getElementById('iss-teacher-list');
+  let entries = Object.entries(issTeachers);
+
+  if(issFilter_active !== 'all') {
+    entries = entries.filter(([,t]) => t.section === ISS_SECTIONS[issFilter_active]);
+  }
+
+  if(!entries.length) {
+    list.innerHTML = `<div style="text-align:center;padding:40px;color:#9C9590;">
+      <div style="font-size:2rem;margin-bottom:10px;">🗂</div>
+      <div style="font-size:14px;">No teachers found. Click <strong>Add Teacher</strong> to begin.</div>
+    </div>`;
+    return;
+  }
+
+  entries.sort((a,b) => (a[1].name||'').localeCompare(b[1].name||''));
+
+  list.innerHTML = entries.map(([id, t]) => {
+    const issues = t.issuances || {};
+    const expCount = Object.values(issues).filter(i => i.type === 'expendable').reduce((sum, i) => sum + (i.events||[]).length, 0);
+    const nonExpCount = Object.values(issues).filter(i => i.type === 'non-expendable').length;
+    const pendingReturn = Object.values(issues).filter(i => i.type === 'non-expendable' && !i.returned).length;
+
+    return `<div style="background:white;border:1.5px solid #e8dfc8;border-radius:10px;margin-bottom:10px;overflow:hidden;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;cursor:pointer;" onclick="issToggle('${id}')">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:36px;height:36px;background:#e8f4ee;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;">👩‍🏫</div>
+          <div>
+            <div style="font-size:14px;font-weight:700;color:#1a1714;">${t.name}</div>
+            <div style="font-size:11px;color:#6e6456;">${t.class||''} · ${t.section||''}</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;">
+          ${pendingReturn > 0 ? `<span style="background:#fdeee9;color:#c0392b;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;">⚠ ${pendingReturn} not returned</span>` : ''}
+          <span style="background:#f2ece0;color:#6e6456;font-size:10px;padding:2px 8px;border-radius:10px;">📦 ${expCount} issues</span>
+          <button onclick="event.stopPropagation();issIssueToTeacher('${id}')" style="background:#2d4a2d;color:white;border:none;border-radius:5px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:inherit;font-weight:600;">+ Issue</button>
+          <button onclick="event.stopPropagation();issEditTeacher('${id}')" style="background:#f2ece0;border:1px solid #d9cebc;border-radius:5px;padding:4px 10px;font-size:11px;color:#2d4a2d;cursor:pointer;font-family:inherit;font-weight:600;">✏ Edit</button>
+          <button onclick="event.stopPropagation();issDeleteTeacher('${id}')" style="background:#fdeee9;border:1px solid rgba(201,122,100,.3);border-radius:5px;padding:4px 10px;font-size:11px;color:#c0392b;cursor:pointer;font-family:inherit;font-weight:600;">🗑</button>
+          <i class="fas fa-chevron-down" style="color:#d9cebc;font-size:11px;" id="isschev-${id}"></i>
+        </div>
+      </div>
+      <div style="display:none;" id="issbody-${id}">
+        <div style="padding:0 14px 14px;border-top:1px solid #f2ece0;">
+          ${issRenderTeacherRecord(t)}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+};
+
+window.issToggle = function(id) {
+  const body = document.getElementById('issbody-'+id);
+  const chev = document.getElementById('isschev-'+id);
+  const isOpen = body.style.display !== 'none';
+  body.style.display = isOpen ? 'none' : 'block';
+  if(chev) chev.style.transform = isOpen ? '' : 'rotate(180deg)';
+};
+
+function issRenderTeacherRecord(t) {
+  const issues = t.issuances || {};
+  const expendables = Object.entries(issues).filter(([,i]) => i.type === 'expendable');
+  const nonExpendables = Object.entries(issues).filter(([,i]) => i.type === 'non-expendable');
+
+  let html = '';
+
+  if(expendables.length) {
+    html += `<div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#2d4a2d;padding:10px 0 6px;border-bottom:1.5px solid #b8962e;margin-bottom:6px;">📦 Expendables</div>`;
+    html += `<div style="display:grid;grid-template-columns:1fr 100px 100px;gap:6px;margin-bottom:4px;font-size:9px;font-weight:700;color:#9C9590;letter-spacing:1px;text-transform:uppercase;"><span>Item</span><span style="text-align:center;">Total Issued</span><span>Last Issued</span></div>`;
+    html += expendables.map(([key, i]) => {
+      const events = i.events || [];
+      const total = events.reduce((sum, e) => sum + (parseInt(e.qty)||0), 0);
+      const last = events.length ? events[events.length-1] : null;
+      return `<div style="display:grid;grid-template-columns:1fr 100px 100px;gap:6px;align-items:center;padding:5px 0;border-bottom:1px dashed #e8dfc8;font-size:12px;">
+        <span style="color:#1a1714;">${i.item}</span>
+        <span style="text-align:center;font-weight:700;color:#2d4a2d;">${total} ${i.unit||''}</span>
+        <span style="color:#b8962e;font-size:10px;">${last ? last.date + ' — ' + last.qty + ' ' + (i.unit||'') : '—'}</span>
+      </div>`;
+    }).join('');
+  }
+
+  if(nonExpendables.length) {
+    html += `<div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#2d4a2d;padding:10px 0 6px;border-bottom:1.5px solid #b8962e;margin-bottom:6px;margin-top:10px;">🔄 Non-Expendables</div>`;
+    html += `<div style="display:grid;grid-template-columns:1fr 80px 80px 1fr;gap:6px;margin-bottom:4px;font-size:9px;font-weight:700;color:#9C9590;letter-spacing:1px;text-transform:uppercase;"><span>Item</span><span>Issued</span><span>Returned</span><span>Condition / Remarks</span></div>`;
+    html += nonExpendables.map(([key, i]) => `<div style="display:grid;grid-template-columns:1fr 80px 80px 1fr;gap:6px;align-items:center;padding:5px 0;border-bottom:1px dashed #e8dfc8;font-size:12px;">
+      <span style="color:#1a1714;">${i.item}</span>
+      <span style="color:#6e6456;font-size:10px;">${i.dateIssued||'—'}</span>
+      <span style="font-weight:600;color:${i.returned?'#2d7a47':'#c0392b'};">${i.returned?'✓ Yes':'✗ No'}</span>
+      <span style="color:#6e6456;font-size:11px;">${i.remarks||'—'}</span>
+    </div>`).join('');
+  }
+
+  if(!expendables.length && !nonExpendables.length) {
+    html = '<div style="text-align:center;padding:16px;color:#9C9590;font-size:12px;">No items issued yet. Click <strong>+ Issue</strong> to record.</div>';
+  }
+
+  return html;
+}
+
+// ── ADD / EDIT TEACHER ──
+window.issAddTeacher = function() {
+  issEditingTeacherId = null;
+  issShowModal('Add New Teacher', `
+    <div style="margin-bottom:14px;">
+      <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;display:block;margin-bottom:4px;">Teacher Full Name *</label>
+      <input id="iss-t-name" type="text" placeholder="e.g. Miss Mahnoor Seemab"
+        style="border:1px solid #d9cebc;border-radius:6px;padding:8px 12px;font-family:inherit;font-size:13px;background:#faf7f2;outline:none;width:100%;">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div>
+        <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;display:block;margin-bottom:4px;">Class</label>
+        <select id="iss-t-class" style="border:1px solid #d9cebc;border-radius:6px;padding:8px 10px;font-family:inherit;font-size:13px;background:#faf7f2;outline:none;width:100%;cursor:pointer;">
+          <option value="">Select class</option>
+          <option>Mont 1</option><option>Mont 2</option><option>Mont 3</option>
+          <option>Class 1</option><option>Class 2</option><option>Class 3</option>
+          <option>Class 4</option><option>Class 5</option>
+          <option>Admin</option><option>Other</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;display:block;margin-bottom:4px;">Section</label>
+        <select id="iss-t-section" style="border:1px solid #d9cebc;border-radius:6px;padding:8px 10px;font-family:inherit;font-size:13px;background:#faf7f2;outline:none;width:100%;cursor:pointer;">
+          <option value="">Select section</option>
+          <option>Montessori</option><option>Juniors</option><option>Admin/Other</option>
+        </select>
+      </div>
+    </div>
+  `, async () => {
+    const name = document.getElementById('iss-t-name')?.value?.trim();
+    if(!name) { issShowToast('Please enter teacher name.'); return; }
+    const id = issEditingTeacherId || ('t' + Date.now());
+    if(!issTeachers[id]) issTeachers[id] = { issuances: {} };
+    issTeachers[id].name = name;
+    issTeachers[id].class = document.getElementById('iss-t-class')?.value || '';
+    issTeachers[id].section = document.getElementById('iss-t-section')?.value || '';
+    await issSaveTeachers();
+    await issLogActivity('Added teacher: ' + name, name);
+    issCloseModal();
+    issRender();
+    issShowToast('✓ Teacher added.');
+  });
+};
+
+window.issEditTeacher = function(id) {
+  issEditingTeacherId = id;
+  const t = issTeachers[id];
+  issShowModal('Edit Teacher', `
+    <div style="margin-bottom:14px;">
+      <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;display:block;margin-bottom:4px;">Teacher Full Name *</label>
+      <input id="iss-t-name" type="text" value="${t.name||''}"
+        style="border:1px solid #d9cebc;border-radius:6px;padding:8px 12px;font-family:inherit;font-size:13px;background:#faf7f2;outline:none;width:100%;">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div>
+        <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;display:block;margin-bottom:4px;">Class</label>
+        <select id="iss-t-class" style="border:1px solid #d9cebc;border-radius:6px;padding:8px 10px;font-family:inherit;font-size:13px;background:#faf7f2;outline:none;width:100%;cursor:pointer;">
+          <option value="">Select class</option>
+          ${['Mont 1','Mont 2','Mont 3','Class 1','Class 2','Class 3','Class 4','Class 5','Admin','Other'].map(c => `<option ${t.class===c?'selected':''}>${c}</option>`).join('')}
+        </select>
+      </div>
+      <div>
+        <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;display:block;margin-bottom:4px;">Section</label>
+        <select id="iss-t-section" style="border:1px solid #d9cebc;border-radius:6px;padding:8px 10px;font-family:inherit;font-size:13px;background:#faf7f2;outline:none;width:100%;cursor:pointer;">
+          ${['Montessori','Juniors','Admin/Other'].map(s => `<option ${t.section===s?'selected':''}>${s}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+  `, async () => {
+    const name = document.getElementById('iss-t-name')?.value?.trim();
+    if(!name) { issShowToast('Please enter teacher name.'); return; }
+    issTeachers[id].name = name;
+    issTeachers[id].class = document.getElementById('iss-t-class')?.value || '';
+    issTeachers[id].section = document.getElementById('iss-t-section')?.value || '';
+    await issSaveTeachers();
+    issCloseModal();
+    issRender();
+    issShowToast('✓ Teacher updated.');
+  });
+  issEditingTeacherId = id;
+};
+
+window.issDeleteTeacher = async function(id) {
+  const name = issTeachers[id]?.name || 'Unknown';
+  if(!confirm(`Delete ${name} and all their records? This cannot be undone.`)) return;
+  delete issTeachers[id];
+  await issSaveTeachers();
+  await issLogActivity('Deleted teacher: ' + name, name);
+  issRender();
+  issShowToast('✓ Teacher deleted.');
+};
+
+// ── ISSUE ITEMS ──
+window.issIssueItems = function() {
+  const teacherOptions = Object.entries(issTeachers)
+    .sort((a,b) => (a[1].name||'').localeCompare(b[1].name||''))
+    .map(([id,t]) => `<option value="${id}">${t.name} (${t.class||'—'})</option>`).join('');
+
+  issShowModal('Issue Items to Teacher', `
+    <div style="margin-bottom:14px;">
+      <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;display:block;margin-bottom:4px;">Teacher *</label>
+      <select id="iss-sel-teacher" style="border:1px solid #d9cebc;border-radius:6px;padding:8px 10px;font-family:inherit;font-size:13px;background:#faf7f2;outline:none;width:100%;cursor:pointer;">
+        <option value="">Select teacher</option>${teacherOptions}
+      </select>
+    </div>
+    <div style="margin-bottom:14px;">
+      <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;display:block;margin-bottom:4px;">Item Type *</label>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <button type="button" id="iss-type-exp" onclick="issSetType('expendable')"
+          style="padding:10px;border:1.5px solid #d9cebc;border-radius:6px;background:white;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;color:#6e6456;transition:all .2s;">
+          📦 Expendable
+        </button>
+        <button type="button" id="iss-type-nonexp" onclick="issSetType('non-expendable')"
+          style="padding:10px;border:1.5px solid #d9cebc;border-radius:6px;background:white;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;color:#6e6456;transition:all .2s;">
+          🔄 Non-Expendable
+        </button>
+      </div>
+    </div>
+    <div id="iss-item-fields" style="display:none;"></div>
+  `, async () => {
+    const tid = document.getElementById('iss-sel-teacher')?.value;
+    if(!tid) { issShowToast('Please select a teacher.'); return; }
+    const type = document.getElementById('iss-type-exp')?.dataset.selected === 'true' ? 'expendable' : 'non-expendable';
+    const item = document.getElementById('iss-item-select')?.value;
+    if(!item) { issShowToast('Please select an item.'); return; }
+    const today = new Date().toLocaleDateString('en-GB', {day:'2-digit',month:'2-digit',year:'numeric'});
+
+    if(!issTeachers[tid].issuances) issTeachers[tid].issuances = {};
+    const key = item.replace(/[^a-zA-Z0-9]/g,'_');
+
+    if(type === 'expendable') {
+      const qty = document.getElementById('iss-qty')?.value || '1';
+      const unit = document.getElementById('iss-unit')?.value || '';
+      if(!issTeachers[tid].issuances[key]) {
+        issTeachers[tid].issuances[key] = { type:'expendable', item, unit, events:[] };
+      }
+      issTeachers[tid].issuances[key].events.push({ qty, date: today });
+    } else {
+      const condition = document.getElementById('iss-condition')?.value || '';
+      issTeachers[tid].issuances[key] = {
+        type:'non-expendable', item, dateIssued: today,
+        returned: false, remarks: condition
+      };
+    }
+
+    await issSaveTeachers();
+    await issLogActivity(`Issued ${item} to ${issTeachers[tid].name}`, issTeachers[tid].name);
+    issCloseModal();
+    issRender();
+    issShowToast('✓ Item issued.');
+  });
+};
+
+window.issSetType = function(type) {
+  const isExp = type === 'expendable';
+  document.getElementById('iss-type-exp').style.background = isExp ? '#e8f4ee' : 'white';
+  document.getElementById('iss-type-exp').style.borderColor = isExp ? '#2d4a2d' : '#d9cebc';
+  document.getElementById('iss-type-exp').style.color = isExp ? '#2d4a2d' : '#6e6456';
+  document.getElementById('iss-type-exp').dataset.selected = isExp ? 'true' : 'false';
+  document.getElementById('iss-type-nonexp').style.background = !isExp ? '#fff8ec' : 'white';
+  document.getElementById('iss-type-nonexp').style.borderColor = !isExp ? '#b8962e' : '#d9cebc';
+  document.getElementById('iss-type-nonexp').style.color = !isExp ? '#b8962e' : '#6e6456';
+
+  const fields = document.getElementById('iss-item-fields');
+  const items = isExp ? ISS_EXPENDABLES : ISS_NON_EXPENDABLES;
+  fields.style.display = 'block';
+  fields.innerHTML = `
+    <div style="margin-bottom:12px;">
+      <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;display:block;margin-bottom:4px;">Item *</label>
+      <select id="iss-item-select" style="border:1px solid #d9cebc;border-radius:6px;padding:8px 10px;font-family:inherit;font-size:13px;background:#faf7f2;outline:none;width:100%;cursor:pointer;">
+        <option value="">Select item</option>
+        ${items.map(i => `<option>${i}</option>`).join('')}
+      </select>
+    </div>
+    ${isExp ? `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div>
+        <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;display:block;margin-bottom:4px;">Quantity *</label>
+        <input id="iss-qty" type="number" min="1" value="1"
+          style="border:1px solid #d9cebc;border-radius:6px;padding:8px 10px;font-family:inherit;font-size:13px;background:#faf7f2;outline:none;width:100%;">
+      </div>
+      <div>
+        <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;display:block;margin-bottom:4px;">Unit</label>
+        <input id="iss-unit" type="text" placeholder="e.g. bottles, pcs, sets"
+          style="border:1px solid #d9cebc;border-radius:6px;padding:8px 10px;font-family:inherit;font-size:13px;background:#faf7f2;outline:none;width:100%;">
+      </div>
+    </div>` : `
+    <div>
+      <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;display:block;margin-bottom:4px;">Condition / Remarks</label>
+      <input id="iss-condition" type="text" placeholder="e.g. Good condition, 1 piece"
+        style="border:1px solid #d9cebc;border-radius:6px;padding:8px 10px;font-family:inherit;font-size:13px;background:#faf7f2;outline:none;width:100%;">
+    </div>`}
+  `;
+};
+
+window.issIssueToTeacher = function(id) {
+  const t = issTeachers[id];
+  // Pre-select teacher then show issue modal
+  issIssueItems();
+  setTimeout(() => {
+    const sel = document.getElementById('iss-sel-teacher');
+    if(sel) sel.value = id;
+  }, 100);
+};
+
+// ── GENERIC MODAL ──
+let issModalCallback = null;
+
+function issShowModal(title, body, onSave) {
+  issModalCallback = onSave;
+  document.getElementById('rec-modal-title').textContent = title;
+  document.getElementById('rec-modal-body').innerHTML = body;
+  document.getElementById('rec-save-btn').onclick = async function() {
+    if(issModalCallback) await issModalCallback();
+  };
+  document.getElementById('rec-modal').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+
+function issCloseModal() {
+  document.getElementById('rec-modal').style.display = 'none';
+  document.body.style.overflow = '';
+  issModalCallback = null;
+  issEditingTeacherId = null;
+}
+window.issCloseModal = issCloseModal;
+
+// Override close modal button
+const _origClose = window.recCloseModal;
+window.recCloseModal = function() {
+  if(issModalCallback) { issCloseModal(); }
+  else if(_origClose) _origClose();
+  else {
+    document.getElementById('rec-modal').style.display = 'none';
+    document.body.style.overflow = '';
+  }
+};
+
+// ── PRINT ──
+window.issPrint = function() {
+  const root = document.getElementById('rec-print-root');
+  const today = new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+  let html = `<div style="text-align:center;border-bottom:2px solid #2d4a2d;padding-bottom:12px;margin-bottom:16px;">
+    <div style="font-size:18pt;font-weight:700;color:#2d4a2d;">Heritage Montessori and School</div>
+    <div style="font-size:11pt;color:#6e6456;">Teacher Issuance Record — ${today}</div>
+  </div>`;
+
+  Object.values(issTeachers)
+    .sort((a,b) => (a.name||'').localeCompare(b.name||''))
+    .forEach(t => {
+      const issues = t.issuances || {};
+      const expendables = Object.values(issues).filter(i => i.type === 'expendable');
+      const nonExp = Object.values(issues).filter(i => i.type === 'non-expendable');
+      html += `<div style="margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid #e8dfc8;">
+        <div style="font-size:12pt;font-weight:700;color:#2d4a2d;">${t.name} <span style="font-size:10pt;color:#6e6456;font-weight:400;">(${t.class||''} · ${t.section||''})</span></div>`;
+      if(expendables.length) {
+        html += `<div style="font-size:9pt;font-weight:700;text-transform:uppercase;color:#2d4a2d;margin:8px 0 4px;">Expendables</div>
+        <table style="width:100%;border-collapse:collapse;font-size:10pt;">
+          <tr style="background:#f2ece0;"><th style="text-align:left;padding:4px 8px;border:1px solid #d9cebc;">Item</th><th style="padding:4px 8px;border:1px solid #d9cebc;width:80px;">Total</th><th style="padding:4px 8px;border:1px solid #d9cebc;">Last Issued</th></tr>
+          ${expendables.map(i => {
+            const events = i.events||[];
+            const total = events.reduce((s,e)=>s+(parseInt(e.qty)||0),0);
+            const last = events.length ? events[events.length-1] : null;
+            return `<tr><td style="padding:4px 8px;border:1px solid #e8dfc8;">${i.item}</td><td style="padding:4px 8px;border:1px solid #e8dfc8;text-align:center;">${total} ${i.unit||''}</td><td style="padding:4px 8px;border:1px solid #e8dfc8;">${last?last.date+' — '+last.qty+' '+(i.unit||''):'—'}</td></tr>`;
+          }).join('')}
+        </table>`;
+      }
+      if(nonExp.length) {
+        html += `<div style="font-size:9pt;font-weight:700;text-transform:uppercase;color:#2d4a2d;margin:8px 0 4px;">Non-Expendables</div>
+        <table style="width:100%;border-collapse:collapse;font-size:10pt;">
+          <tr style="background:#f2ece0;"><th style="text-align:left;padding:4px 8px;border:1px solid #d9cebc;">Item</th><th style="padding:4px 8px;border:1px solid #d9cebc;width:80px;">Issued</th><th style="padding:4px 8px;border:1px solid #d9cebc;width:70px;">Returned</th><th style="padding:4px 8px;border:1px solid #d9cebc;">Remarks</th></tr>
+          ${nonExp.map(i => `<tr><td style="padding:4px 8px;border:1px solid #e8dfc8;">${i.item}</td><td style="padding:4px 8px;border:1px solid #e8dfc8;text-align:center;">${i.dateIssued||'—'}</td><td style="padding:4px 8px;border:1px solid #e8dfc8;text-align:center;color:${i.returned?'#2d7a47':'#c0392b'};">${i.returned?'✓':'✗'}</td><td style="padding:4px 8px;border:1px solid #e8dfc8;">${i.remarks||'—'}</td></tr>`).join('')}
+        </table>`;
+      }
+      html += '</div>';
+    });
+
+  root.innerHTML = html;
+  root.style.display = 'block';
+  window.print();
+  root.style.display = 'none';
+  root.innerHTML = '';
+};
+
 
 </script>
 </body>
