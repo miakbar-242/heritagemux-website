@@ -692,7 +692,7 @@ header{padding:0 14px;min-height:60px;}
           <p style="font-size:0.88rem;color:#6e6456;font-weight:300;">Enter your PIN to access</p>
         </div>
         <div style="background:white;border:1.5px solid #d9cebc;border-radius:12px;padding:20px;">
-          <div style="font-size:0.88rem;font-weight:600;color:#2d4a2d;margin-bottom:12px;"><i class="fas fa-lock" style="color:#b8962e;margin-right:6px;"></i>Admin / Directress PIN only</div>
+          <div style="font-size:0.88rem;font-weight:600;color:#2d4a2d;margin-bottom:12px;"><i class="fas fa-shield-halved" style="color:#b8962e;margin-right:6px;"></i>Admin / Directress Access</div>
           <div style="display:flex;gap:8px;">
             <input type="password" id="iss-pin-input" placeholder="· · · · · ·" maxlength="6"
               style="flex:1;border:1.5px solid #d9cebc;border-radius:8px;padding:11px 14px;font-size:1.1rem;font-family:'DM Mono',monospace;letter-spacing:6px;color:#1a1714;background:#faf7f2;outline:none;"
@@ -705,7 +705,18 @@ header{padding:0 14px;min-height:60px;}
           <div id="iss-pin-error" style="display:none;margin-top:10px;background:#fdeee9;color:#b84830;border:1px solid rgba(201,122,100,.3);padding:9px 14px;border-radius:8px;font-size:0.84rem;font-weight:600;">
             <i class="fas fa-times-circle"></i> Incorrect PIN.
           </div>
-          <div style="margin-top:10px;font-size:11px;color:#9C9590;">Teachers can view their own record via their class PIN from the staff panel.</div>
+          <div style="height:1px;background:#e8dfc8;margin:18px 0;"></div>
+          <div style="font-size:0.88rem;font-weight:600;color:#2d4a2d;margin-bottom:10px;"><i class="fas fa-user-lock" style="color:#b8962e;margin-right:6px;"></i>Teacher Individual Login</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:8px;">
+            <input type="text" id="iss-teacher-login" placeholder="Login name"
+              style="border:1.5px solid #d9cebc;border-radius:8px;padding:10px 12px;font-size:0.86rem;font-family:inherit;color:#1a1714;background:#faf7f2;outline:none;">
+            <input type="password" id="iss-teacher-password" placeholder="Password"
+              style="border:1.5px solid #d9cebc;border-radius:8px;padding:10px 12px;font-size:0.86rem;font-family:inherit;color:#1a1714;background:#faf7f2;outline:none;"
+              onkeydown="if(event.key==='Enter')issTeacherLogin()">
+            <button onclick="issTeacherLogin()" style="background:#2d4a2d;color:white;border:none;border-radius:8px;padding:10px 14px;font-size:0.84rem;font-weight:600;font-family:inherit;cursor:pointer;">Login</button>
+          </div>
+          <div id="iss-teacher-login-error" style="display:none;margin-top:9px;background:#fdeee9;color:#b84830;border:1px solid rgba(201,122,100,.3);padding:8px 12px;border-radius:8px;font-size:0.8rem;font-weight:600;">Incorrect login name or password.</div>
+          <button onclick="issRegisterTeacher()" style="margin-top:12px;width:100%;background:#fff8ec;border:1.5px solid #d9cebc;color:#6e5520;border-radius:8px;padding:9px 12px;font-size:0.82rem;font-weight:700;font-family:inherit;cursor:pointer;"><i class="fas fa-user-plus" style="margin-right:6px;"></i>Create My Individual Record</button>
         </div>
       </div>
     </div>
@@ -721,7 +732,7 @@ header{padding:0 14px;min-height:60px;}
           <span id="iss-role-badge" style="background:rgba(255,255,255,.2);border-radius:20px;padding:3px 12px;font-size:12px;font-weight:700;">—</span>
         </div>
         <div style="display:flex;gap:8px;">
-          <button onclick="issAddTeacher()" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:white;border-radius:6px;padding:5px 12px;font-size:12px;font-family:inherit;cursor:pointer;font-weight:500;">
+          <button id="iss-add-teacher-btn" onclick="issAddTeacher()" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:white;border-radius:6px;padding:5px 12px;font-size:12px;font-family:inherit;cursor:pointer;font-weight:500;">
             <i class="fas fa-user-plus"></i> Add Teacher
           </button>
           <button onclick="issIssueItems()" style="background:rgba(184,150,46,.3);border:1px solid rgba(184,150,46,.4);color:white;border-radius:6px;padding:5px 12px;font-size:12px;font-family:inherit;cursor:pointer;font-weight:500;">
@@ -730,6 +741,9 @@ header{padding:0 14px;min-height:60px;}
           <button onclick="issPrint()" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:white;border-radius:6px;padding:5px 12px;font-size:12px;font-family:inherit;cursor:pointer;font-weight:500;">
             <i class="fas fa-print"></i> Print
           </button>
+          <button id="iss-log-btn" onclick="issShowActivityLog()" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:white;border-radius:6px;padding:5px 12px;font-size:12px;font-family:inherit;cursor:pointer;font-weight:500;">
+            <i class="fas fa-clock-rotate-left"></i> Activity
+          </button>
           <button onclick="issLock()" style="background:rgba(255,80,80,.2);border:1px solid rgba(255,80,80,.3);color:white;border-radius:6px;padding:5px 12px;font-size:12px;font-family:inherit;cursor:pointer;font-weight:500;">
             <i class="fas fa-lock"></i> Lock
           </button>
@@ -737,7 +751,7 @@ header{padding:0 14px;min-height:60px;}
       </div>
 
       <!-- FILTER TABS -->
-      <div style="background:#f2ece0;border-bottom:1px solid #d9cebc;display:flex;padding:0 16px;overflow-x:auto;">
+      <div id="iss-admin-filters" style="background:#f2ece0;border-bottom:1px solid #d9cebc;display:flex;padding:0 16px;overflow-x:auto;">
         <button class="iss-filter active" id="issf-all" onclick="issFilter('all',this)" style="padding:10px 16px;font-size:11px;font-weight:700;color:#6e6456;border:none;border-bottom:2.5px solid transparent;margin-bottom:-1px;background:none;cursor:pointer;font-family:inherit;white-space:nowrap;">All Teachers</button>
         <button class="iss-filter" id="issf-mont" onclick="issFilter('mont',this)" style="padding:10px 16px;font-size:11px;font-weight:700;color:#6e6456;border:none;border-bottom:2.5px solid transparent;margin-bottom:-1px;background:none;cursor:pointer;font-family:inherit;white-space:nowrap;">Montessori</button>
         <button class="iss-filter" id="issf-junior" onclick="issFilter('junior',this)" style="padding:10px 16px;font-size:11px;font-weight:700;color:#6e6456;border:none;border-bottom:2.5px solid transparent;margin-bottom:-1px;background:none;cursor:pointer;font-family:inherit;white-space:nowrap;">Juniors</button>
@@ -1612,7 +1626,15 @@ window.recPrint = async function(type) {
   }
   const issaved = sessionStorage.getItem('iss_auth');
   if(issaved) {
-    setTimeout(() => issLaunch(issaved), 300);
+    setTimeout(() => {
+      try {
+        const auth = JSON.parse(issaved);
+        issLaunch(auth.role, auth.teacherId || null);
+      } catch(e) {
+        // Compatibility with earlier admin/directress sessions
+        issLaunch(issaved, null);
+      }
+    }, 300);
   }
 })();
 
@@ -1658,6 +1680,18 @@ let issRole = null;
 let issTeachers = {};
 let issFilter_active = 'all';
 let issEditingTeacherId = null;
+let issCurrentTeacherId = null;
+let issStopLiveSync = null;
+
+function issNormaliseLogin(value) {
+  return (value || '').trim().toLowerCase().replace(/\s+/g, '.');
+}
+
+async function issHashPassword(value) {
+  const data = new TextEncoder().encode(value);
+  const hash = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
 
 // ── PIN CHECK ──
 window.issCheckPin = function() {
@@ -1665,7 +1699,8 @@ window.issCheckPin = function() {
   if(entered === ISS_PINS.admin || entered === ISS_PINS.directress) {
     const role = entered === ISS_PINS.admin ? 'admin' : 'directress';
     issRole = role;
-    sessionStorage.setItem('iss_auth', role);
+    issCurrentTeacherId = null;
+    sessionStorage.setItem('iss_auth', JSON.stringify({role}));
     issLaunch(role);
   } else {
     document.getElementById('iss-pin-error').style.display = 'block';
@@ -1673,20 +1708,51 @@ window.issCheckPin = function() {
   }
 };
 
+window.issTeacherLogin = async function() {
+  const login = issNormaliseLogin(document.getElementById('iss-teacher-login')?.value);
+  const password = document.getElementById('iss-teacher-password')?.value || '';
+  const error = document.getElementById('iss-teacher-login-error');
+  if(!login || !password) { error.style.display = 'block'; return; }
+  await issLoadTeachers();
+  const passwordHash = await issHashPassword(password);
+  const match = Object.entries(issTeachers).find(([,t]) => issNormaliseLogin(t.loginName) === login && t.passwordHash === passwordHash);
+  if(!match) {
+    error.style.display = 'block';
+    document.getElementById('iss-teacher-password').value = '';
+    return;
+  }
+  error.style.display = 'none';
+  issRole = 'teacher';
+  issCurrentTeacherId = match[0];
+  sessionStorage.setItem('iss_auth', JSON.stringify({role:'teacher', teacherId:match[0]}));
+  await issLaunch('teacher', match[0]);
+  await issLogActivity('Logged in to individual record', match[1].name);
+};
+
 window.issLock = function() {
+  if(issStopLiveSync) { issStopLiveSync(); issStopLiveSync = null; }
   issRole = null;
+  issCurrentTeacherId = null;
   sessionStorage.removeItem('iss_auth');
   document.getElementById('iss-app').style.display = 'none';
   document.getElementById('iss-pin-screen').style.display = 'flex';
   document.getElementById('iss-pin-input').value = '';
 };
 
-async function issLaunch(role) {
+async function issLaunch(role, teacherId) {
+  issRole = role;
+  issCurrentTeacherId = role === 'teacher' ? teacherId : null;
   document.getElementById('iss-pin-screen').style.display = 'none';
   document.getElementById('iss-app').style.display = 'block';
-  document.getElementById('iss-role-badge').textContent = role === 'admin' ? 'Admin' : 'Academic Directress';
+  document.getElementById('iss-role-badge').textContent = role === 'admin' ? 'Admin' : role === 'directress' ? 'Academic Directress' : 'Teacher';
+  const isAdminView = role !== 'teacher';
+  document.getElementById('iss-add-teacher-btn').style.display = isAdminView ? '' : 'none';
+  document.getElementById('iss-log-btn').style.display = isAdminView ? '' : 'none';
+  document.getElementById('iss-admin-filters').style.display = isAdminView ? 'flex' : 'none';
   await issLoadTeachers();
+  if(role === 'teacher' && !issTeachers[teacherId]) { issLock(); issShowToast('Teacher record not found.'); return; }
   issRender();
+  issStartLiveSync();
 }
 
 // ── FIREBASE ──
@@ -1703,11 +1769,28 @@ async function issSaveTeachers() {
   } catch(e) { console.error('Save error:', e); issShowToast('Error saving. Check connection.'); }
 }
 
+async function issSaveTeacher(teacherId) {
+  try {
+    await window.fbSet(window.fbRef(window.db, `teacherIssuance/teachers/${teacherId}`), issTeachers[teacherId] || null);
+  } catch(e) { console.error('Save error:', e); issShowToast('Error saving. Check connection.'); throw e; }
+}
+
+function issStartLiveSync() {
+  if(issStopLiveSync) issStopLiveSync();
+  issStopLiveSync = window.fbOnValue(window.fbRef(window.db, 'teacherIssuance/teachers'), snap => {
+    issTeachers = snap.exists() ? snap.val() : {};
+    if(issRole === 'teacher' && !issTeachers[issCurrentTeacherId]) {
+      issLock(); issShowToast('Your record is no longer available.'); return;
+    }
+    issRender();
+  }, error => console.error('Live sync error:', error));
+}
+
 async function issLogActivity(action, teacherName) {
   try {
     await window.fbPush(window.fbRef(window.db, 'teacherIssuance/log'), {
       action, teacherName,
-      by: issRole === 'admin' ? 'Admin' : 'Academic Directress',
+      by: issRole === 'admin' ? 'Admin' : issRole === 'directress' ? 'Academic Directress' : (issTeachers[issCurrentTeacherId]?.name || 'Teacher'),
       timestamp: new Date().toISOString(),
       dateStr: new Date().toLocaleString('en-GB', {day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})
     });
@@ -1738,6 +1821,10 @@ window.issFilter = function(filter, btn) {
 window.issRender = function() {
   const list = document.getElementById('iss-teacher-list');
   let entries = Object.entries(issTeachers);
+
+  if(issRole === 'teacher') {
+    entries = entries.filter(([id]) => id === issCurrentTeacherId);
+  }
 
   if(issFilter_active !== 'all') {
     entries = entries.filter(([,t]) => t.section === ISS_SECTIONS[issFilter_active]);
@@ -1772,8 +1859,8 @@ window.issRender = function() {
           ${pendingReturn > 0 ? `<span style="background:#fdeee9;color:#c0392b;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;">⚠ ${pendingReturn} not returned</span>` : ''}
           <span style="background:#f2ece0;color:#6e6456;font-size:10px;padding:2px 8px;border-radius:10px;">📦 ${expCount} issues</span>
           <button onclick="event.stopPropagation();issIssueToTeacher('${id}')" style="background:#2d4a2d;color:white;border:none;border-radius:5px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:inherit;font-weight:600;">+ Issue</button>
-          <button onclick="event.stopPropagation();issEditTeacher('${id}')" style="background:#f2ece0;border:1px solid #d9cebc;border-radius:5px;padding:4px 10px;font-size:11px;color:#2d4a2d;cursor:pointer;font-family:inherit;font-weight:600;">✏ Edit</button>
-          <button onclick="event.stopPropagation();issDeleteTeacher('${id}')" style="background:#fdeee9;border:1px solid rgba(201,122,100,.3);border-radius:5px;padding:4px 10px;font-size:11px;color:#c0392b;cursor:pointer;font-family:inherit;font-weight:600;">🗑</button>
+          ${issRole !== 'teacher' ? `<button onclick="event.stopPropagation();issEditTeacher('${id}')" style="background:#f2ece0;border:1px solid #d9cebc;border-radius:5px;padding:4px 10px;font-size:11px;color:#2d4a2d;cursor:pointer;font-family:inherit;font-weight:600;">✏ Edit</button>
+          <button onclick="event.stopPropagation();issDeleteTeacher('${id}')" style="background:#fdeee9;border:1px solid rgba(201,122,100,.3);border-radius:5px;padding:4px 10px;font-size:11px;color:#c0392b;cursor:pointer;font-family:inherit;font-weight:600;">🗑</button>` : ''}
           <i class="fas fa-chevron-down" style="color:#d9cebc;font-size:11px;" id="isschev-${id}"></i>
         </div>
       </div>
@@ -1838,7 +1925,58 @@ function issRenderTeacherRecord(t, teacherId) {
 }
 
 // ── ADD / EDIT TEACHER ──
+window.issRegisterTeacher = function() {
+  issShowModal('Create My Individual Record', `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div style="grid-column:1/-1;">
+        <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;display:block;margin-bottom:4px;">Teacher Full Name *</label>
+        <input id="iss-reg-name" type="text" placeholder="e.g. Miss Mahnoor Seemab" style="border:1px solid #d9cebc;border-radius:6px;padding:8px 12px;font-family:inherit;font-size:13px;background:#faf7f2;outline:none;width:100%;">
+      </div>
+      <div>
+        <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;display:block;margin-bottom:4px;">Class *</label>
+        <select id="iss-reg-class" style="border:1px solid #d9cebc;border-radius:6px;padding:8px 10px;font-family:inherit;font-size:13px;background:#faf7f2;outline:none;width:100%;">
+          <option value="">Select class</option><option>Mont 1</option><option>Mont 2</option><option>Mont 3</option><option>Class 1</option><option>Class 2</option><option>Class 3</option><option>Class 4</option><option>Class 5</option><option>Admin</option><option>Other</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;display:block;margin-bottom:4px;">Section *</label>
+        <select id="iss-reg-section" style="border:1px solid #d9cebc;border-radius:6px;padding:8px 10px;font-family:inherit;font-size:13px;background:#faf7f2;outline:none;width:100%;">
+          <option value="">Select section</option><option>Montessori</option><option>Juniors</option><option>Admin/Other</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;display:block;margin-bottom:4px;">Login Name *</label>
+        <input id="iss-reg-login" type="text" placeholder="e.g. mahnoor" style="border:1px solid #d9cebc;border-radius:6px;padding:8px 12px;font-family:inherit;font-size:13px;background:#faf7f2;outline:none;width:100%;">
+      </div>
+      <div>
+        <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;display:block;margin-bottom:4px;">Password (minimum 6 characters) *</label>
+        <input id="iss-reg-password" type="password" minlength="6" style="border:1px solid #d9cebc;border-radius:6px;padding:8px 12px;font-family:inherit;font-size:13px;background:#faf7f2;outline:none;width:100%;">
+      </div>
+    </div>
+    <div style="margin-top:12px;background:#fff8ec;border:1px solid #e8d49a;border-radius:7px;padding:9px 11px;font-size:11px;color:#6e5520;">Remember your login name and password. The password is stored as a protected one-way hash.</div>
+  `, async () => {
+    const name = document.getElementById('iss-reg-name')?.value?.trim();
+    const cls = document.getElementById('iss-reg-class')?.value;
+    const section = document.getElementById('iss-reg-section')?.value;
+    const loginName = issNormaliseLogin(document.getElementById('iss-reg-login')?.value);
+    const password = document.getElementById('iss-reg-password')?.value || '';
+    if(!name || !cls || !section || !loginName || password.length < 6) { issShowToast('Complete all fields; password must be at least 6 characters.'); return; }
+    await issLoadTeachers();
+    if(Object.values(issTeachers).some(t => issNormaliseLogin(t.loginName) === loginName)) { issShowToast('This login name is already in use.'); return; }
+    const id = 't' + Date.now();
+    issTeachers[id] = {name, class:cls, section, loginName, passwordHash:await issHashPassword(password), issuances:{}, createdBy:'Teacher', createdAt:new Date().toISOString()};
+    await issSaveTeacher(id);
+    issRole = 'teacher'; issCurrentTeacherId = id;
+    sessionStorage.setItem('iss_auth', JSON.stringify({role:'teacher',teacherId:id}));
+    await issLogActivity('Created individual teacher record', name);
+    issCloseModal();
+    await issLaunch('teacher', id);
+    issShowToast('✓ Individual record created.');
+  });
+};
+
 window.issAddTeacher = function() {
+  if(issRole === 'teacher') return;
   issEditingTeacherId = null;
   issShowModal('Add New Teacher', `
     <div style="margin-bottom:14px;">
@@ -1873,7 +2011,7 @@ window.issAddTeacher = function() {
     issTeachers[id].name = name;
     issTeachers[id].class = document.getElementById('iss-t-class')?.value || '';
     issTeachers[id].section = document.getElementById('iss-t-section')?.value || '';
-    await issSaveTeachers();
+    await issSaveTeacher(id);
     await issLogActivity('Added teacher: ' + name, name);
     issCloseModal();
     issRender();
@@ -1882,6 +2020,7 @@ window.issAddTeacher = function() {
 };
 
 window.issEditTeacher = function(id) {
+  if(issRole === 'teacher') return;
   issEditingTeacherId = id;
   const t = issTeachers[id];
   issShowModal('Edit Teacher', `
@@ -1905,13 +2044,32 @@ window.issEditTeacher = function(id) {
         </select>
       </div>
     </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;padding-top:12px;border-top:1px solid #e8dfc8;">
+      <div>
+        <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;display:block;margin-bottom:4px;">Teacher Login Name</label>
+        <input id="iss-t-login" type="text" value="${t.loginName||''}" placeholder="Set a private login name" style="border:1px solid #d9cebc;border-radius:6px;padding:8px 12px;font-family:inherit;font-size:13px;background:#faf7f2;outline:none;width:100%;">
+      </div>
+      <div>
+        <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;display:block;margin-bottom:4px;">Reset Password</label>
+        <input id="iss-t-password" type="password" placeholder="Leave blank to keep current" style="border:1px solid #d9cebc;border-radius:6px;padding:8px 12px;font-family:inherit;font-size:13px;background:#faf7f2;outline:none;width:100%;">
+      </div>
+    </div>
   `, async () => {
     const name = document.getElementById('iss-t-name')?.value?.trim();
     if(!name) { issShowToast('Please enter teacher name.'); return; }
     issTeachers[id].name = name;
     issTeachers[id].class = document.getElementById('iss-t-class')?.value || '';
     issTeachers[id].section = document.getElementById('iss-t-section')?.value || '';
-    await issSaveTeachers();
+    const loginName = issNormaliseLogin(document.getElementById('iss-t-login')?.value);
+    const newPassword = document.getElementById('iss-t-password')?.value || '';
+    if(loginName && Object.entries(issTeachers).some(([otherId,teacher]) => otherId !== id && issNormaliseLogin(teacher.loginName) === loginName)) { issShowToast('This login name is already in use.'); return; }
+    issTeachers[id].loginName = loginName;
+    if(newPassword) {
+      if(newPassword.length < 6) { issShowToast('New password must be at least 6 characters.'); return; }
+      issTeachers[id].passwordHash = await issHashPassword(newPassword);
+    }
+    await issSaveTeacher(id);
+    await issLogActivity('Updated teacher profile/access', name);
     issCloseModal();
     issRender();
     issShowToast('✓ Teacher updated.');
@@ -1920,10 +2078,11 @@ window.issEditTeacher = function(id) {
 };
 
 window.issDeleteTeacher = async function(id) {
+  if(issRole === 'teacher') return;
   const name = issTeachers[id]?.name || 'Unknown';
   if(!confirm(`Delete ${name} and all their records? This cannot be undone.`)) return;
   delete issTeachers[id];
-  await issSaveTeachers();
+  await issSaveTeacher(id);
   await issLogActivity('Deleted teacher: ' + name, name);
   issRender();
   issShowToast('✓ Teacher deleted.');
@@ -1931,7 +2090,10 @@ window.issDeleteTeacher = async function(id) {
 
 // ── ISSUE ITEMS ──
 window.issIssueItems = function() {
-  const teacherOptions = Object.entries(issTeachers)
+  const availableTeachers = issRole === 'teacher'
+    ? Object.entries(issTeachers).filter(([id]) => id === issCurrentTeacherId)
+    : Object.entries(issTeachers);
+  const teacherOptions = availableTeachers
     .sort((a,b) => (a[1].name||'').localeCompare(b[1].name||''))
     .map(([id,t]) => `<option value="${id}">${t.name} (${t.class||'—'})</option>`).join('');
 
@@ -1959,6 +2121,7 @@ window.issIssueItems = function() {
   `, async () => {
     const tid = document.getElementById('iss-sel-teacher')?.value;
     if(!tid) { issShowToast('Please select a teacher.'); return; }
+    if(issRole === 'teacher' && tid !== issCurrentTeacherId) { issShowToast('You can update only your own record.'); return; }
     const type = document.getElementById('iss-type-exp')?.dataset.selected === 'true' ? 'expendable' : 'non-expendable';
     const item = document.getElementById('iss-item-select')?.value;
     if(!item) { issShowToast('Please select an item.'); return; }
@@ -1983,12 +2146,16 @@ window.issIssueItems = function() {
       };
     }
 
-    await issSaveTeachers();
+    await issSaveTeacher(tid);
     await issLogActivity(`Issued ${item} to ${issTeachers[tid].name}`, issTeachers[tid].name);
     issCloseModal();
     issRender();
     issShowToast('✓ Item issued.');
   });
+  if(issRole === 'teacher') {
+    const select = document.getElementById('iss-sel-teacher');
+    if(select) { select.value = issCurrentTeacherId; select.disabled = true; }
+  }
 };
 
 window.issSetType = function(type) {
@@ -2041,6 +2208,7 @@ window.issSetType = function(type) {
 };
 
 window.issMarkReturned = async function(teacherId, itemKey) {
+  if(issRole === 'teacher' && teacherId !== issCurrentTeacherId) return;
   const teacher = issTeachers[teacherId];
   const issue = teacher?.issuances?.[itemKey];
   if(!issue || issue.returned) return;
@@ -2052,10 +2220,29 @@ window.issMarkReturned = async function(teacherId, itemKey) {
   issue.returned = true;
   issue.dateReturned = new Date().toLocaleDateString('en-GB', {day:'2-digit',month:'2-digit',year:'numeric'});
   issue.remarks = returnCondition.trim();
-  await issSaveTeachers();
+  await issSaveTeacher(teacherId);
   await issLogActivity(`Returned ${issue.item} from ${teacher.name}`, teacher.name);
   issRender();
   issShowToast('✓ Item marked as returned.');
+};
+
+window.issShowActivityLog = async function() {
+  if(issRole === 'teacher') return;
+  const modal = document.getElementById('rec-log-modal');
+  const list = document.getElementById('rec-log-list');
+  modal.style.display = 'flex';
+  list.innerHTML = '<div style="padding:18px;text-align:center;color:#9C9590;">Loading activity…</div>';
+  try {
+    const snap = await window.fbGet(window.fbRef(window.db, 'teacherIssuance/log'));
+    const rows = snap.exists() ? Object.values(snap.val()) : [];
+    rows.sort((a,b) => (b.timestamp||'').localeCompare(a.timestamp||''));
+    list.innerHTML = rows.length ? rows.map(row => `<div style="padding:9px 0;border-bottom:1px solid #e8dfc8;">
+      <div style="font-weight:700;color:#2d4a2d;">${row.action||'Activity'}</div>
+      <div style="font-size:10px;color:#9C9590;margin-top:3px;">${row.dateStr||''} · By ${row.by||'—'}${row.teacherName?' · '+row.teacherName:''}</div>
+    </div>`).join('') : '<div style="padding:18px;text-align:center;color:#9C9590;">No issuance activity recorded yet.</div>';
+  } catch(e) {
+    list.innerHTML = '<div style="padding:18px;text-align:center;color:#c0392b;">Could not load the activity log.</div>';
+  }
 };
 
 window.issIssueToTeacher = function(id) {
@@ -2103,14 +2290,17 @@ window.recCloseModal = function() {
 
 // ── PRINT ──
 window.issPrint = function() {
-  const root = document.getElementById('rec-print-root');
   const today = new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
   let html = `<div style="text-align:center;border-bottom:2px solid #2d4a2d;padding-bottom:12px;margin-bottom:16px;">
     <div style="font-size:18pt;font-weight:700;color:#2d4a2d;">Heritage Montessori and School</div>
     <div style="font-size:11pt;color:#6e6456;">Teacher Issuance Record — ${today}</div>
   </div>`;
 
-  Object.values(issTeachers)
+  const printableTeachers = issRole === 'teacher'
+    ? Object.entries(issTeachers).filter(([id]) => id === issCurrentTeacherId).map(([,t]) => t)
+    : Object.values(issTeachers).filter(t => issFilter_active === 'all' || t.section === ISS_SECTIONS[issFilter_active]);
+
+  printableTeachers
     .sort((a,b) => (a.name||'').localeCompare(b.name||''))
     .forEach(t => {
       const issues = t.issuances || {};
@@ -2140,11 +2330,16 @@ window.issPrint = function() {
       html += '</div>';
     });
 
-  root.innerHTML = html;
-  root.style.display = 'block';
-  window.print();
-  root.style.display = 'none';
-  root.innerHTML = '';
+  if(!printableTeachers.length) { issShowToast('No teacher records available to print.'); return; }
+  const printWindow = window.open('', '_blank', 'width=1000,height=760');
+  if(!printWindow) { issShowToast('Please allow pop-ups to open print preview.'); return; }
+  printWindow.document.open();
+  printWindow.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Teacher Issuance Record</title><style>
+    @page{size:A4;margin:12mm;}body{font-family:Arial,sans-serif;color:#1a1714;margin:0;font-size:10pt;}
+    table{width:100%;border-collapse:collapse;page-break-inside:avoid;}th,td{border:1px solid #bdb7ad;padding:5px 7px;}th{background:#f2ece0;}
+    @media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}
+  </style></head><body>${html}<script>window.onload=()=>{setTimeout(()=>window.print(),250)};<\/script></body></html>`);
+  printWindow.document.close();
 };
 
 
