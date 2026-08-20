@@ -827,6 +827,15 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 window.db = getDatabase(app);
+
+// Expose Firebase functions for use in plain scripts
+import { ref, get, set, push, onValue, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+window.fbRef = ref;
+window.fbGet = get;
+window.fbSet = set;
+window.fbPush = push;
+window.fbOnValue = onValue;
+window.fbUpdate = update;
 </script>
 
 <script>
@@ -1088,8 +1097,7 @@ window.recSwitchClass = async function(cls, btn) {
 // ── FIREBASE LOAD ──
 async function recLoadStudents(cls) {
   try {
-    const { ref, get } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js");
-    const snap = await get(ref(window.db, `stationeryRecord/${cls}`));
+    const snap = await window.fbGet(window.fbRef(window.db, `stationeryRecord/${cls}`));
     recStudents[cls] = snap.exists() ? snap.val() : {};
   } catch(e) {
     console.error('Load error:', e);
@@ -1099,8 +1107,7 @@ async function recLoadStudents(cls) {
 
 async function recSaveToFirebase(cls) {
   try {
-    const { ref, set } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js");
-    await set(ref(window.db, `stationeryRecord/${cls}`), recStudents[cls] || {});
+    await window.fbSet(window.fbRef(window.db, `stationeryRecord/${cls}`), recStudents[cls] || {});
   } catch(e) {
     console.error('Save error:', e);
     recShowToast('Error saving. Check connection.');
@@ -1353,8 +1360,7 @@ async function recLogActivity(action) {
   recActivityLog.unshift(entry);
   // Save to Firebase
   try {
-    const { ref, push } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js");
-    await push(ref(window.db, 'stationeryLog'), entry);
+    await window.fbPush(window.fbRef(window.db, 'stationeryLog'), entry);
   } catch(e) { console.error('Log error:', e); }
 }
 
@@ -1365,9 +1371,8 @@ window.recShowLog = async function() {
   list.innerHTML = '<div style="text-align:center;padding:20px;color:#9C9590;">Loading…</div>';
 
   try {
-    const { ref, get, query, limitToLast, orderByChild } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js");
     const isAdmin = recRole === 'admin';
-    const snap = await get(ref(window.db, 'stationeryLog'));
+    const snap = await window.fbGet(window.fbRef(window.db, 'stationeryLog'));
     if(!snap.exists()) { list.innerHTML = '<div style="text-align:center;padding:20px;color:#9C9590;">No activity yet.</div>'; return; }
 
     let entries = Object.values(snap.val())
@@ -1689,23 +1694,20 @@ async function issLaunch(role) {
 // ── FIREBASE ──
 async function issLoadTeachers() {
   try {
-    const { ref, get } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js");
-    const snap = await get(ref(window.db, 'teacherIssuance/teachers'));
+    const snap = await window.fbGet(window.fbRef(window.db, 'teacherIssuance/teachers'));
     issTeachers = snap.exists() ? snap.val() : {};
   } catch(e) { console.error('Load error:', e); issTeachers = {}; }
 }
 
 async function issSaveTeachers() {
   try {
-    const { ref, set } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js");
-    await set(ref(window.db, 'teacherIssuance/teachers'), issTeachers);
+    await window.fbSet(window.fbRef(window.db, 'teacherIssuance/teachers'), issTeachers);
   } catch(e) { console.error('Save error:', e); issShowToast('Error saving. Check connection.'); }
 }
 
 async function issLogActivity(action, teacherName) {
   try {
-    const { ref, push } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js");
-    await push(ref(window.db, 'teacherIssuance/log'), {
+    await window.fbPush(window.fbRef(window.db, 'teacherIssuance/log'), {
       action, teacherName,
       by: issRole === 'admin' ? 'Admin' : 'Academic Directress',
       timestamp: new Date().toISOString(),
