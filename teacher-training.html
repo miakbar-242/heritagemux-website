@@ -1637,14 +1637,14 @@ window.switchToolsSub = function(sub, btn) {
 
 // ── ITEMS LIST ──
 const ISS_EXPENDABLES = [
-  'Board Marker Ink','Scotch Tape','Glue Sticks','Poster Colours',
-  'Crayons','Colour Pencils','Paint Brush','Pencils','Erasers',
-  'Sharpeners','Permanent Marker'
+  'Board Markers','Board Marker Ink','Permanent Markers','Scotch Tape',
+  'Glue Sticks','Pencils','Erasers','Sharpeners','Crayons',
+  'Colour Pencils','Paint Brushes','Poster Colours'
 ];
 
 const ISS_NON_EXPENDABLES = [
-  'Scissors','Stapler','Board Marker','Class File','Stationery File',
-  'Resource File','Pre-Primary Mathematics A1','Pre-Primary Mathematics A2',
+  'Scissors','Stapler','Class File','Stationery File','Resource File',
+  'Pre-Primary Mathematics A1','Pre-Primary Mathematics A2',
   'Pre-Primary Mathematics A3','Pre-Primary Mathematics A4',
   'Colour and Craft','All About Islam',
   'HMS Learning Journal A','HMS Learning Journal B',
@@ -1780,7 +1780,7 @@ window.issRender = function() {
       </div>
       <div style="display:none;" id="issbody-${id}">
         <div style="padding:0 14px 14px;border-top:1px solid #f2ece0;">
-          ${issRenderTeacherRecord(t)}
+          ${issRenderTeacherRecord(t, id)}
         </div>
       </div>
     </div>`;
@@ -1795,7 +1795,7 @@ window.issToggle = function(id) {
   if(chev) chev.style.transform = isOpen ? '' : 'rotate(180deg)';
 };
 
-function issRenderTeacherRecord(t) {
+function issRenderTeacherRecord(t, teacherId) {
   const issues = t.issuances || {};
   const expendables = Object.entries(issues).filter(([,i]) => i.type === 'expendable');
   const nonExpendables = Object.entries(issues).filter(([,i]) => i.type === 'non-expendable');
@@ -1819,11 +1819,14 @@ function issRenderTeacherRecord(t) {
 
   if(nonExpendables.length) {
     html += `<div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#2d4a2d;padding:10px 0 6px;border-bottom:1.5px solid #b8962e;margin-bottom:6px;margin-top:10px;">🔄 Non-Expendables</div>`;
-    html += `<div style="display:grid;grid-template-columns:1fr 80px 80px 1fr;gap:6px;margin-bottom:4px;font-size:9px;font-weight:700;color:#9C9590;letter-spacing:1px;text-transform:uppercase;"><span>Item</span><span>Issued</span><span>Returned</span><span>Condition / Remarks</span></div>`;
-    html += nonExpendables.map(([key, i]) => `<div style="display:grid;grid-template-columns:1fr 80px 80px 1fr;gap:6px;align-items:center;padding:5px 0;border-bottom:1px dashed #e8dfc8;font-size:12px;">
+    html += `<div style="display:grid;grid-template-columns:1fr 55px 80px 105px 1fr;gap:6px;margin-bottom:4px;font-size:9px;font-weight:700;color:#9C9590;letter-spacing:1px;text-transform:uppercase;"><span>Item</span><span>Qty</span><span>Issued</span><span>Return Status</span><span>Condition / Remarks</span></div>`;
+    html += nonExpendables.map(([key, i]) => `<div style="display:grid;grid-template-columns:1fr 55px 80px 105px 1fr;gap:6px;align-items:center;padding:5px 0;border-bottom:1px dashed #e8dfc8;font-size:12px;">
       <span style="color:#1a1714;">${i.item}</span>
+      <span style="font-weight:700;color:#2d4a2d;">${i.qty||1}</span>
       <span style="color:#6e6456;font-size:10px;">${i.dateIssued||'—'}</span>
-      <span style="font-weight:600;color:${i.returned?'#2d7a47':'#c0392b'};">${i.returned?'✓ Yes':'✗ No'}</span>
+      <span>${i.returned
+        ? `<span style="font-weight:600;color:#2d7a47;">✓ ${i.dateReturned||'Returned'}</span>`
+        : `<button onclick="issMarkReturned('${teacherId}','${key}')" style="background:#fdeee9;border:1px solid rgba(201,122,100,.35);border-radius:5px;padding:4px 7px;font-size:10px;color:#c0392b;cursor:pointer;font-family:inherit;font-weight:700;">Mark Returned</button>`}</span>
       <span style="color:#6e6456;font-size:11px;">${i.remarks||'—'}</span>
     </div>`).join('');
   }
@@ -1974,9 +1977,10 @@ window.issIssueItems = function() {
       issTeachers[tid].issuances[key].events.push({ qty, date: today });
     } else {
       const condition = document.getElementById('iss-condition')?.value || '';
+      const qty = document.getElementById('iss-qty')?.value || '1';
       issTeachers[tid].issuances[key] = {
-        type:'non-expendable', item, dateIssued: today,
-        returned: false, remarks: condition
+        type:'non-expendable', item, qty, dateIssued: today,
+        returned: false, dateReturned: '', remarks: condition
       };
     }
 
@@ -2022,12 +2026,37 @@ window.issSetType = function(type) {
           style="border:1px solid #d9cebc;border-radius:6px;padding:8px 10px;font-family:inherit;font-size:13px;background:#faf7f2;outline:none;width:100%;">
       </div>
     </div>` : `
-    <div>
-      <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;display:block;margin-bottom:4px;">Condition / Remarks</label>
-      <input id="iss-condition" type="text" placeholder="e.g. Good condition, 1 piece"
-        style="border:1px solid #d9cebc;border-radius:6px;padding:8px 10px;font-family:inherit;font-size:13px;background:#faf7f2;outline:none;width:100%;">
+    <div style="display:grid;grid-template-columns:110px 1fr;gap:12px;">
+      <div>
+        <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;display:block;margin-bottom:4px;">Quantity *</label>
+        <input id="iss-qty" type="number" min="1" value="1"
+          style="border:1px solid #d9cebc;border-radius:6px;padding:8px 10px;font-family:inherit;font-size:13px;background:#faf7f2;outline:none;width:100%;">
+      </div>
+      <div>
+        <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;display:block;margin-bottom:4px;">Condition / Remarks</label>
+        <input id="iss-condition" type="text" placeholder="e.g. Good condition"
+          style="border:1px solid #d9cebc;border-radius:6px;padding:8px 10px;font-family:inherit;font-size:13px;background:#faf7f2;outline:none;width:100%;">
+      </div>
     </div>`}
   `;
+};
+
+window.issMarkReturned = async function(teacherId, itemKey) {
+  const teacher = issTeachers[teacherId];
+  const issue = teacher?.issuances?.[itemKey];
+  if(!issue || issue.returned) return;
+  if(!confirm(`Mark ${issue.item} as returned by ${teacher.name}?`)) return;
+
+  const returnCondition = prompt('Return condition / remarks:', issue.remarks || 'Good condition');
+  if(returnCondition === null) return;
+
+  issue.returned = true;
+  issue.dateReturned = new Date().toLocaleDateString('en-GB', {day:'2-digit',month:'2-digit',year:'numeric'});
+  issue.remarks = returnCondition.trim();
+  await issSaveTeachers();
+  await issLogActivity(`Returned ${issue.item} from ${teacher.name}`, teacher.name);
+  issRender();
+  issShowToast('✓ Item marked as returned.');
 };
 
 window.issIssueToTeacher = function(id) {
@@ -2105,8 +2134,8 @@ window.issPrint = function() {
       if(nonExp.length) {
         html += `<div style="font-size:9pt;font-weight:700;text-transform:uppercase;color:#2d4a2d;margin:8px 0 4px;">Non-Expendables</div>
         <table style="width:100%;border-collapse:collapse;font-size:10pt;">
-          <tr style="background:#f2ece0;"><th style="text-align:left;padding:4px 8px;border:1px solid #d9cebc;">Item</th><th style="padding:4px 8px;border:1px solid #d9cebc;width:80px;">Issued</th><th style="padding:4px 8px;border:1px solid #d9cebc;width:70px;">Returned</th><th style="padding:4px 8px;border:1px solid #d9cebc;">Remarks</th></tr>
-          ${nonExp.map(i => `<tr><td style="padding:4px 8px;border:1px solid #e8dfc8;">${i.item}</td><td style="padding:4px 8px;border:1px solid #e8dfc8;text-align:center;">${i.dateIssued||'—'}</td><td style="padding:4px 8px;border:1px solid #e8dfc8;text-align:center;color:${i.returned?'#2d7a47':'#c0392b'};">${i.returned?'✓':'✗'}</td><td style="padding:4px 8px;border:1px solid #e8dfc8;">${i.remarks||'—'}</td></tr>`).join('')}
+          <tr style="background:#f2ece0;"><th style="text-align:left;padding:4px 8px;border:1px solid #d9cebc;">Item</th><th style="padding:4px 8px;border:1px solid #d9cebc;width:45px;">Qty</th><th style="padding:4px 8px;border:1px solid #d9cebc;width:80px;">Issued</th><th style="padding:4px 8px;border:1px solid #d9cebc;width:90px;">Returned</th><th style="padding:4px 8px;border:1px solid #d9cebc;">Remarks</th></tr>
+          ${nonExp.map(i => `<tr><td style="padding:4px 8px;border:1px solid #e8dfc8;">${i.item}</td><td style="padding:4px 8px;border:1px solid #e8dfc8;text-align:center;">${i.qty||1}</td><td style="padding:4px 8px;border:1px solid #e8dfc8;text-align:center;">${i.dateIssued||'—'}</td><td style="padding:4px 8px;border:1px solid #e8dfc8;text-align:center;color:${i.returned?'#2d7a47':'#c0392b'};">${i.returned?(i.dateReturned||'✓'):'✗'}</td><td style="padding:4px 8px;border:1px solid #e8dfc8;">${i.remarks||'—'}</td></tr>`).join('')}
         </table>`;
       }
       html += '</div>';
