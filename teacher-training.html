@@ -721,7 +721,7 @@ header{padding:0 14px;min-height:60px;}
             <div style="font-size:0.88rem;font-weight:700;color:#2d4a2d;margin-bottom:10px;">Create Account Once</div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;">
               <input id="iss-reg-name" type="text" placeholder="Teacher full name" style="grid-column:1/-1;border:1.5px solid #d9cebc;border-radius:8px;padding:10px 12px;font-size:0.84rem;font-family:inherit;background:#faf7f2;outline:none;">
-              <select id="iss-reg-class" style="border:1.5px solid #d9cebc;border-radius:8px;padding:10px;font-size:0.84rem;font-family:inherit;background:#faf7f2;outline:none;"><option value="">Select class</option><option>Mont 1</option><option>Mont 2</option><option>Mont 3</option><option>Class 1</option><option>Class 2</option><option>Class 3</option><option>Class 4</option><option>Class 5</option><option>Admin</option><option>Other</option></select>
+              <select id="iss-reg-class" style="border:1.5px solid #d9cebc;border-radius:8px;padding:10px;font-size:0.84rem;font-family:inherit;background:#faf7f2;outline:none;"><option value="">Select class/status</option><option>Not Assigned</option><option>Assistant Teacher</option><option>Mont 1</option><option>Mont 2</option><option>Mont 3</option><option>Class 1</option><option>Class 2</option><option>Class 3</option><option>Class 4</option><option>Class 5</option><option>Admin</option><option>Other</option></select>
               <select id="iss-reg-section" style="border:1.5px solid #d9cebc;border-radius:8px;padding:10px;font-size:0.84rem;font-family:inherit;background:#faf7f2;outline:none;"><option value="">Select section</option><option>Montessori</option><option>Juniors</option><option>Admin/Other</option></select>
               <input id="iss-reg-login" type="text" placeholder="Choose login name" style="border:1.5px solid #d9cebc;border-radius:8px;padding:10px 12px;font-size:0.84rem;font-family:inherit;background:#faf7f2;outline:none;">
               <input id="iss-reg-password" type="password" placeholder="Password (minimum 6)" style="border:1.5px solid #d9cebc;border-radius:8px;padding:10px 12px;font-size:0.84rem;font-family:inherit;background:#faf7f2;outline:none;">
@@ -1689,6 +1689,41 @@ const ISS_NON_EXPENDABLES = [
 
 const ISS_PINS = { admin: '4242', directress: '3001' };
 const ISS_SECTIONS = { mont:'Montessori', junior:'Juniors', admin:'Admin/Other' };
+const ISS_CLASS_KEYS = {
+  'Mont 1':'mont1','Mont 2':'mont2','Mont 3':'mont3',
+  'Class 1':'class1','Class 2':'class2','Class 3':'class3',
+  'Class 4':'class4','Class 5':'class5'
+};
+const ISS_RETURNABLE_STATIONERY = /folder|file|scissors|stapler|apron|pouch|clear bag/i;
+
+function issUniqueItems(items) {
+  return [...new Set((items || []).filter(Boolean))];
+}
+
+function issGetClassItemGroups(teacherId, type) {
+  const teacher = issTeachers[teacherId];
+  const classKey = ISS_CLASS_KEYS[teacher?.class];
+  const classData = classKey ? REC_CLASSES[classKey] : null;
+  const stationery = classData?.stationery || [];
+  if(type === 'expendable') {
+    return {
+      classLabel: classData?.label || teacher?.class || 'General',
+      hasClassList: !!classData,
+      primaryLabel: classData ? `${classData.label} Stationery List` : 'Class Stationery List',
+      primary: issUniqueItems(stationery.filter(item => !ISS_RETURNABLE_STATIONERY.test(item))),
+      generalLabel: 'General Teacher Stationery',
+      general: issUniqueItems(ISS_EXPENDABLES)
+    };
+  }
+  return {
+    classLabel: classData?.label || teacher?.class || 'General',
+    hasClassList: !!classData,
+    primaryLabel: classData ? `${classData.label} Books & Returnable Items` : 'Books & Returnable Items',
+    primary: issUniqueItems([...(classData?.books || []), ...stationery.filter(item => ISS_RETURNABLE_STATIONERY.test(item))]),
+    generalLabel: 'General Non-Expendable Items',
+    general: issUniqueItems(ISS_NON_EXPENDABLES)
+  };
+}
 
 // ── STATE ──
 let issRole = null;
@@ -1936,7 +1971,9 @@ function issRenderTeacherRecord(t, teacherId) {
       <span style="color:#6e6456;font-size:10px;">${i.dateIssued||'—'}</span>
       <span>${i.returned
         ? `<span style="font-weight:600;color:#2d7a47;">✓ ${i.dateReturned||'Returned'}</span>`
-        : `<button onclick="issMarkReturned('${teacherId}','${key}')" style="background:#fdeee9;border:1px solid rgba(201,122,100,.35);border-radius:5px;padding:4px 7px;font-size:10px;color:#c0392b;cursor:pointer;font-family:inherit;font-weight:700;">Mark Returned</button>`}</span>
+        : issRole === 'admin'
+          ? `<button onclick="issMarkReturned('${teacherId}','${key}')" style="background:#fdeee9;border:1px solid rgba(201,122,100,.35);border-radius:5px;padding:4px 7px;font-size:10px;color:#c0392b;cursor:pointer;font-family:inherit;font-weight:700;">Mark Returned</button>`
+          : `<span style="display:inline-block;background:#fff8ec;border:1px solid #e8d49a;border-radius:5px;padding:4px 7px;font-size:10px;color:#8a6a20;font-weight:700;">Awaiting Admin</span>`}</span>
       <span style="color:#6e6456;font-size:11px;">${i.remarks||'—'}</span>
     </div>`).join('');
   }
@@ -1994,7 +2031,8 @@ window.issAddTeacher = function() {
       <div>
         <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;display:block;margin-bottom:4px;">Class</label>
         <select id="iss-t-class" style="border:1px solid #d9cebc;border-radius:6px;padding:8px 10px;font-family:inherit;font-size:13px;background:#faf7f2;outline:none;width:100%;cursor:pointer;">
-          <option value="">Select class</option>
+          <option value="">Select class/status</option>
+          <option>Not Assigned</option><option>Assistant Teacher</option>
           <option>Mont 1</option><option>Mont 2</option><option>Mont 3</option>
           <option>Class 1</option><option>Class 2</option><option>Class 3</option>
           <option>Class 4</option><option>Class 5</option>
@@ -2039,8 +2077,8 @@ window.issEditTeacher = function(id) {
       <div>
         <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;display:block;margin-bottom:4px;">Class</label>
         <select id="iss-t-class" style="border:1px solid #d9cebc;border-radius:6px;padding:8px 10px;font-family:inherit;font-size:13px;background:#faf7f2;outline:none;width:100%;cursor:pointer;">
-          <option value="">Select class</option>
-          ${['Mont 1','Mont 2','Mont 3','Class 1','Class 2','Class 3','Class 4','Class 5','Admin','Other'].map(c => `<option ${t.class===c?'selected':''}>${c}</option>`).join('')}
+          <option value="">Select class/status</option>
+          ${['Not Assigned','Assistant Teacher','Mont 1','Mont 2','Mont 3','Class 1','Class 2','Class 3','Class 4','Class 5','Admin','Other'].map(c => `<option ${t.class===c?'selected':''}>${c}</option>`).join('')}
         </select>
       </div>
       <div>
@@ -2108,20 +2146,21 @@ window.issIssueItems = function() {
   issShowModal('Issue Items to Teacher', `
     <div style="margin-bottom:14px;">
       <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;display:block;margin-bottom:4px;">Teacher *</label>
-      <select id="iss-sel-teacher" style="border:1px solid #d9cebc;border-radius:6px;padding:8px 10px;font-family:inherit;font-size:13px;background:#faf7f2;outline:none;width:100%;cursor:pointer;">
+      <select id="iss-sel-teacher" onchange="issTeacherSelectionChanged()" style="border:1px solid #d9cebc;border-radius:6px;padding:8px 10px;font-family:inherit;font-size:13px;background:#faf7f2;outline:none;width:100%;cursor:pointer;">
         <option value="">Select teacher</option>${teacherOptions}
       </select>
+      <div id="iss-class-list-note" style="margin-top:6px;font-size:10px;color:#9C9590;">Select a teacher to load that class's Books and Stationery lists.</div>
     </div>
     <div style="margin-bottom:14px;">
       <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;display:block;margin-bottom:4px;">Item Type *</label>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
         <button type="button" id="iss-type-exp" onclick="issSetType('expendable')"
           style="padding:10px;border:1.5px solid #d9cebc;border-radius:6px;background:white;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;color:#6e6456;transition:all .2s;">
-          📦 Expendable
+          📦 Class Stationery / Expendable
         </button>
         <button type="button" id="iss-type-nonexp" onclick="issSetType('non-expendable')"
           style="padding:10px;border:1.5px solid #d9cebc;border-radius:6px;background:white;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;color:#6e6456;transition:all .2s;">
-          🔄 Non-Expendable
+          🔄 Books / Non-Expendable
         </button>
       </div>
     </div>
@@ -2164,11 +2203,28 @@ window.issIssueItems = function() {
   });
   if(issRole === 'teacher') {
     const select = document.getElementById('iss-sel-teacher');
-    if(select) { select.value = issCurrentTeacherId; select.disabled = true; }
+    if(select) { select.value = issCurrentTeacherId; select.disabled = true; issTeacherSelectionChanged(); }
   }
 };
 
+window.issTeacherSelectionChanged = function() {
+  const tid = document.getElementById('iss-sel-teacher')?.value;
+  const note = document.getElementById('iss-class-list-note');
+  const fields = document.getElementById('iss-item-fields');
+  const teacher = issTeachers[tid];
+  if(note) note.innerHTML = teacher
+    ? `<strong style="color:#2d4a2d;">${teacher.class || 'No class assigned'}</strong> Books and Stationery lists will be used for ${teacher.name}.`
+    : `Select a teacher to load that class's Books and Stationery lists.`;
+  if(fields) { fields.style.display = 'none'; fields.innerHTML = ''; }
+  ['iss-type-exp','iss-type-nonexp'].forEach(id => {
+    const button = document.getElementById(id);
+    if(button) { button.dataset.selected = 'false'; button.style.background = 'white'; button.style.borderColor = '#d9cebc'; button.style.color = '#6e6456'; }
+  });
+};
+
 window.issSetType = function(type) {
+  const teacherId = document.getElementById('iss-sel-teacher')?.value;
+  if(!teacherId || !issTeachers[teacherId]) { issShowToast('Please select a teacher first.'); return; }
   const isExp = type === 'expendable';
   document.getElementById('iss-type-exp').style.background = isExp ? '#e8f4ee' : 'white';
   document.getElementById('iss-type-exp').style.borderColor = isExp ? '#2d4a2d' : '#d9cebc';
@@ -2177,16 +2233,23 @@ window.issSetType = function(type) {
   document.getElementById('iss-type-nonexp').style.background = !isExp ? '#fff8ec' : 'white';
   document.getElementById('iss-type-nonexp').style.borderColor = !isExp ? '#b8962e' : '#d9cebc';
   document.getElementById('iss-type-nonexp').style.color = !isExp ? '#b8962e' : '#6e6456';
+  document.getElementById('iss-type-nonexp').dataset.selected = !isExp ? 'true' : 'false';
 
   const fields = document.getElementById('iss-item-fields');
-  const items = isExp ? ISS_EXPENDABLES : ISS_NON_EXPENDABLES;
+  const groups = issGetClassItemGroups(teacherId, type);
   fields.style.display = 'block';
   fields.innerHTML = `
+    <div style="background:#e8f4ee;border:1px solid #c6dfcd;border-radius:7px;padding:8px 10px;margin-bottom:10px;font-size:11px;color:#2d4a2d;">
+      ${groups.hasClassList
+        ? `Showing the <strong>${groups.classLabel}</strong> class-specific list plus general teacher items.`
+        : `<strong>${groups.classLabel}</strong>: no class-specific list is assigned yet, so general teacher items are shown.`}
+    </div>
     <div style="margin-bottom:12px;">
       <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;display:block;margin-bottom:4px;">Item *</label>
       <select id="iss-item-select" style="border:1px solid #d9cebc;border-radius:6px;padding:8px 10px;font-family:inherit;font-size:13px;background:#faf7f2;outline:none;width:100%;cursor:pointer;">
         <option value="">Select item</option>
-        ${items.map(i => `<option>${i}</option>`).join('')}
+        ${groups.primary.length ? `<optgroup label="${groups.primaryLabel}">${groups.primary.map(i => `<option>${i}</option>`).join('')}</optgroup>` : ''}
+        ${groups.general.length ? `<optgroup label="${groups.generalLabel}">${groups.general.map(i => `<option>${i}</option>`).join('')}</optgroup>` : ''}
       </select>
     </div>
     ${isExp ? `
@@ -2218,7 +2281,7 @@ window.issSetType = function(type) {
 };
 
 window.issMarkReturned = async function(teacherId, itemKey) {
-  if(issRole === 'teacher' && teacherId !== issCurrentTeacherId) return;
+  if(issRole !== 'admin') { issShowToast('Only the Admin can mark non-expendable items as returned.'); return; }
   const teacher = issTeachers[teacherId];
   const issue = teacher?.issuances?.[itemKey];
   if(!issue || issue.returned) return;
