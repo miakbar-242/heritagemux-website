@@ -267,7 +267,7 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
   .card-actions, .response-composer, .panel-footer,
   .toast, .notify-parent-block, .hints-box, .chevron, .panel-tabs,
   .action-modal-nav, .records-filters, .submissions-title,
-  #tabFeedback, #tabDocuments, #tabRecords { display:none !important; }
+  #tabFeedback, #tabDocuments, #tabRecords, #tabTools { display:none !important; }
 
   /* When action modal is open - show only its content */
   .action-modal { display:block !important; position:static !important; background:white !important; overflow:visible !important; }
@@ -348,6 +348,32 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
 .doc-sign-row { display:grid; grid-template-columns:1fr 1fr; gap:40px; margin-top:40px; }
 .doc-sign-box { border-top:1px solid var(--ink); padding-top:8px; font-size:11px; color:var(--muted); text-align:center; }
 .form-actions { display:flex; gap:10px; margin-top:24px; padding-top:16px; border-top:1px solid var(--line); }
+
+/* ── STAFF TOOLS TAB ─────────────────────────────────────────────── */
+.tools-header{padding:18px 0 14px;border-bottom:1px solid var(--line);margin-bottom:20px}
+.tools-header-title{font-size:1rem;font-weight:700;color:var(--forest);margin-bottom:4px;font-family:serif}
+.tools-header-sub{font-size:.82rem;color:var(--muted);line-height:1.6}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:20px}
+.tool-card{border-radius:4px;border:1.5px solid var(--line);padding:18px;display:flex;flex-direction:column;background:var(--cream);transition:box-shadow .15s,transform .15s}
+.tool-card:hover{box-shadow:0 4px 18px rgba(0,0,0,.10);transform:translateY(-2px)}
+.tool-primary{border-color:var(--forest)}.tool-secondary{border-color:var(--sage)}.tool-warning{border-color:var(--gold)}
+.tool-placeholder{border-color:var(--line);border-style:dashed;background:var(--parchment)}
+.tool-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.tool-icon{font-size:1.6rem;line-height:1}
+.tool-badge{font-size:.62rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase;padding:3px 8px;border-radius:2px}
+.tool-badge-live{background:#e8f0e8;color:var(--forest)}.tool-badge-update{background:#fdf1e0;color:#7a4500}.tool-badge-soon{background:var(--tan);color:var(--muted)}
+.tool-name{font-family:serif;font-size:.95rem;font-weight:600;color:var(--forest);margin-bottom:6px}
+.tool-desc{font-size:.78rem;color:var(--muted);line-height:1.65;flex:1;margin-bottom:10px}
+.tool-meta{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
+.tool-tag{font-size:.65rem;font-weight:600;color:var(--sage);background:var(--parchment);border:1px solid var(--line);border-radius:2px;padding:2px 7px}
+.tool-footer{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding-top:10px;margin-top:auto}
+.tool-url{font-size:.66rem;color:#b0a898;font-family:monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:55%}
+.tool-launch{display:inline-block;padding:6px 16px;background:var(--forest);color:#fff!important;border-radius:2px;font-family:'Jost',sans-serif;font-size:.72rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;text-decoration:none!important;transition:background .15s;white-space:nowrap}
+.tool-launch:hover{background:var(--gold);color:var(--forest)!important}
+.tool-launch-warn{background:var(--gold);color:var(--forest)!important}.tool-launch-warn:hover{background:#9a7009;color:#fff!important}
+.tool-notice{margin-top:10px;padding:7px 10px;background:#fffbf0;border-left:3px solid var(--gold);font-size:.72rem;color:#7a4500;line-height:1.5}
+.tools-footer-note{font-size:.74rem;color:var(--muted);line-height:1.65;padding:12px 14px;background:var(--parchment);border:1px solid var(--line)}
+@media(max-width:500px){.tools-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -418,6 +444,7 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
       <button class="panel-tab active" id="tabFeedbackBtn" onclick="switchTab('feedback',this)">📋 Parent Feedback</button>
       <button class="panel-tab" id="tabDocsBtn" onclick="switchTab('documents',this)">📄 Staff Documents</button>
       <button class="panel-tab" id="tabRecordsBtn" onclick="switchTab('records',this)">📁 Form Records</button>
+      <button class="panel-tab" id="tabToolsBtn" onclick="switchTab('tools',this)">🛠 Staff Tools</button>
     </div>
 
     <!-- ═══════════════ FEEDBACK TAB ═══════════════ -->
@@ -802,6 +829,62 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
         <div class="empty-state"><div class="ei">📁</div><p>Loading records…</p></div>
       </div>
     </div><!-- /tabRecords -->
+
+
+    <!-- ═══════════════ TOOLS TAB ═══════════════ -->
+    <div id="tabTools" class="records-panel" style="display:none;">
+      <div class="tools-header">
+        <div class="tools-header-title">Staff Digital Tools</div>
+        <div class="tools-header-sub">All HMS web applications in one place. Click Launch to open in a new tab. Always open tools from this portal page — never from a saved bookmark — so you always get the current version.</div>
+      </div>
+      <div class="tools-grid">
+
+        <div class="tool-card tool-primary">
+          <div class="tool-card-top"><div class="tool-icon">📊</div><div class="tool-badge tool-badge-live">Live</div></div>
+          <div class="tool-name">Staff Performance Assessment</div>
+          <div class="tool-desc">Conduct and record staff assessments — probation, quarterly, mid-year and annual. Full principal's report with category analysis, discussion points and teacher self-assessment via PIN.</div>
+          <div class="tool-meta"><span class="tool-tag">Principal</span><span class="tool-tag">Assessors</span><span class="tool-tag">PIN Protected</span><span class="tool-tag">Firebase Live</span></div>
+          <div class="tool-footer">
+            <div class="tool-url">hms-spa26.netlify.app</div>
+            <a href="https://hms-spa26.netlify.app" target="_blank" class="tool-launch">Launch →</a>
+          </div>
+        </div>
+
+        <div class="tool-card tool-secondary">
+          <div class="tool-card-top"><div class="tool-icon">👩‍🏫</div><div class="tool-badge tool-badge-live">Live</div></div>
+          <div class="tool-name">Demo Lesson Observation Form</div>
+          <div class="tool-desc">Structured observation checklist for candidate demo lessons during hiring. Covers subject knowledge, classroom presence, student engagement and behaviour management. Fill on screen or print blank.</div>
+          <div class="tool-meta"><span class="tool-tag">Principal</span><span class="tool-tag">Hiring</span><span class="tool-tag">Printable</span></div>
+          <div class="tool-footer">
+            <div class="tool-url">hmsteacher-demo-assessment.netlify.app</div>
+            <a href="https://hmsteacher-demo-assessment.netlify.app" target="_blank" class="tool-launch">Launch →</a>
+          </div>
+        </div>
+
+        <div class="tool-card tool-warning">
+          <div class="tool-card-top"><div class="tool-icon">💰</div><div class="tool-badge tool-badge-update">Monthly Update</div></div>
+          <div class="tool-name">Fee Collection — August 2026</div>
+          <div class="tool-desc">Current month fee collection tracker. Records payments, outstanding balances and receipts. Re-deployed each month — always open from this portal page, never bookmark the app URL directly.</div>
+          <div class="tool-meta"><span class="tool-tag">Admin</span><span class="tool-tag">Finance</span><span class="tool-tag">Updated Monthly</span></div>
+          <div class="tool-footer">
+            <div class="tool-url">hms-fee-aug26.netlify.app</div>
+            <a href="https://hms-fee-aug26.netlify.app" target="_blank" class="tool-launch tool-launch-warn">Launch →</a>
+          </div>
+          <div class="tool-notice">⚠ This URL changes each month. Always open it from this portal page.</div>
+        </div>
+
+        <div class="tool-card tool-placeholder">
+          <div class="tool-card-top"><div class="tool-icon" style="opacity:.3">＋</div><div class="tool-badge tool-badge-soon">Coming Soon</div></div>
+          <div class="tool-name" style="color:var(--muted)">More Tools</div>
+          <div class="tool-desc" style="color:#b0a898">Additional HMS tools will appear here as they are added. Contact the administrator with requests.</div>
+          <div class="tool-footer" style="margin-top:auto"><div class="tool-url" style="opacity:.3">—</div></div>
+        </div>
+
+      </div>
+      <div class="tools-footer-note">
+        All tools open in a new tab. <strong>PIN Protected</strong> tools require a separate PIN from the principal. <strong>Monthly Update</strong> tools change URL each month — always open from this portal, never from a saved bookmark.
+      </div>
+    </div><!-- /tabTools -->
 
     <div class="panel-footer">
       <span><span class="live-dot"></span>Heritage Montessori · Staff Portal · Live via Firebase</span>
@@ -1361,6 +1444,7 @@ window.switchTab = function(tab, btn) {
   document.getElementById('tabFeedback').style.display = 'none';
   document.getElementById('tabDocuments').style.display = 'none';
   document.getElementById('tabRecords').style.display = 'none';
+  document.getElementById('tabTools').style.display = 'none';
   if(tab === 'feedback') {
     document.getElementById('tabFeedback').style.display = 'block';
   } else if(tab === 'documents') {
@@ -1369,6 +1453,8 @@ window.switchTab = function(tab, btn) {
   } else if(tab === 'records') {
     document.getElementById('tabRecords').style.display = 'block';
     loadRecords();
+  } else if(tab === 'tools') {
+    document.getElementById('tabTools').style.display = 'block';
   }
 };
 
