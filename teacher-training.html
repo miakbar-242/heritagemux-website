@@ -1141,6 +1141,30 @@ async function recSaveToFirebase(cls) {
   }
 }
 
+function recBalanceShowsMissing(value) {
+  const text = String(value || '').trim().toLowerCase();
+  if(!text) return false;
+  return !['0','none','nil','complete','completed','full','no balance','✓','yes'].includes(text);
+}
+
+function recGetMissingItems(student, clsData) {
+  const books = student?.books || {};
+  const stationery = student?.stationery || {};
+  const missingBooks = clsData.books.filter((_,i) => books[i]?.brought !== 'yes');
+  const missingStationery = clsData.stationery.reduce((list,item,i) => {
+    const entry = stationery[i] || {};
+    const brought = String(entry.brought || '').trim().toLowerCase();
+    const balance = String(entry.balance || '').trim();
+    const clearlyMissing = !brought || ['no','0','missing','not brought'].includes(brought);
+    const balanceMissing = recBalanceShowsMissing(balance);
+    if(balanceMissing || (!balance && clearlyMissing)) {
+      list.push(entry.balance ? `${item} (balance: ${entry.balance})` : item);
+    }
+    return list;
+  }, []);
+  return {books:missingBooks, stationery:missingStationery, total:missingBooks.length + missingStationery.length};
+}
+
 // ── RENDER STUDENT LIST ──
 window.recRender = function() {
   const cls = recActiveClass;
@@ -1167,9 +1191,10 @@ window.recRender = function() {
     const books = s.books || {};
     const stat = s.stationery || {};
     const totalBooks = clsData.books.length;
-    const broughtBooks = clsData.books.filter((_,i) => books[i]?.brought).length;
+    const broughtBooks = clsData.books.filter((_,i) => books[i]?.brought === 'yes').length;
     const totalStat = clsData.stationery.length;
-    const broughtStat = clsData.stationery.filter((_,i) => stat[i]?.brought).length;
+    const missing = recGetMissingItems(s, clsData);
+    const broughtStat = Math.max(0, totalStat - missing.stationery.length);
     const bookPct = totalBooks ? Math.round(broughtBooks/totalBooks*100) : 0;
     const statPct = totalStat ? Math.round(broughtStat/totalStat*100) : 0;
 
@@ -1188,6 +1213,7 @@ window.recRender = function() {
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;">
           <span class="${badgeClass(bookPct)}" title="Books">📚 ${badgeLabel(bookPct)}</span>
           <span class="${badgeClass(statPct)}" title="Stationery">✏️ ${badgeLabel(statPct)}</span>
+          <button onclick="event.stopPropagation();recWhatsAppMissing('${id}')" style="background:${missing.total?'#e8f4ee':'#f2ece0'};border:1px solid ${missing.total?'#9bc9a8':'#d9cebc'};border-radius:5px;padding:4px 10px;font-size:11px;color:${missing.total?'#1e6b36':'#9C9590'};cursor:pointer;font-family:inherit;font-weight:700;" title="Prepare WhatsApp message">WhatsApp${missing.total?` (${missing.total})`:''}</button>
           <button onclick="event.stopPropagation();recEditStudent('${id}')" style="background:#f2ece0;border:1px solid #d9cebc;border-radius:5px;padding:4px 10px;font-size:11px;color:#2d4a2d;cursor:pointer;font-family:inherit;font-weight:600;">✏ Edit</button>
           <button onclick="event.stopPropagation();recDeleteStudent('${id}')" style="background:#fdeee9;border:1px solid rgba(201,122,100,.3);border-radius:5px;padding:4px 10px;font-size:11px;color:#c0392b;cursor:pointer;font-family:inherit;font-weight:600;">🗑</button>
           <i class="fas fa-chevron-down" style="color:#d9cebc;font-size:11px;" id="chev-${id}"></i>
@@ -1230,6 +1256,52 @@ window.recToggleCard = function(id) {
   if(chev) chev.style.transform = body.classList.contains('open') ? 'rotate(180deg)' : '';
 };
 
+function recNormaliseWhatsAppNumber(value) {
+  let digits = String(value || '').replace(/\D/g,'');
+  if(digits.startsWith('0092')) digits = digits.slice(2);
+  if(digits.startsWith('0')) digits = '92' + digits.slice(1);
+  else if(digits.length === 10 && digits.startsWith('3')) digits = '92' + digits;
+  return /^\d{11,15}$/.test(digits) ? digits : '';
+}
+
+window.recWhatsAppMissing = function(id) {
+  const cls = recActiveClass;
+  const student = recStudents[cls]?.[id];
+  const clsData = REC_CLASSES[cls];
+  if(!student || !clsData) { recShowToast('Student record not found.'); return; }
+  const missing = recGetMissingItems(student, clsData);
+  if(!missing.total) { recShowToast('✓ No missing books or stationery for this student.'); return; }
+
+  let rawNumber = student.parentWhatsApp || '';
+  if(!rawNumber) rawNumber = prompt(`Enter the parent WhatsApp number for ${student.name}:`, '') || '';
+  const number = recNormaliseWhatsAppNumber(rawNumber);
+  if(!number) { recShowToast('Enter a valid WhatsApp number with country code or a Pakistani mobile number.'); return; }
+
+  if(student.parentWhatsApp !== rawNumber.trim()) {
+    student.parentWhatsApp = rawNumber.trim();
+    student.updatedAt = new Date().toISOString();
+    recSaveToFirebase(cls);
+  }
+
+  const lines = [
+    'Assalamu Alaikum,',
+    '',
+    `This is a reminder from Heritage Montessori and School regarding ${student.name} (${REC_LABELS[cls]}).`,
+    'The following required items are still missing:',
+    ''
+  ];
+  if(missing.books.length) {
+    lines.push('*Books:*', ...missing.books.map(item => `• ${item}`), '');
+  }
+  if(missing.stationery.length) {
+    lines.push('*Stationery:*', ...missing.stationery.map(item => `• ${item}`), '');
+  }
+  lines.push('Kindly arrange and send the missing items as soon as possible.', '', 'Thank you.', 'Heritage Montessori and School');
+  const url = `https://wa.me/${number}?text=${encodeURIComponent(lines.join('\n'))}`;
+  window.open(url, '_blank', 'noopener');
+  recLogActivity(`Prepared WhatsApp missing-items reminder for ${student.name} (${missing.total} item${missing.total===1?'':'s'})`);
+};
+
 // ── ADD / EDIT STUDENT MODAL ──
 window.recAddStudent = function() {
   recEditingId = null;
@@ -1259,6 +1331,12 @@ function recBuildModalBody(s) {
       <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px;">Student Full Name *</label>
       <input id="rm-name" type="text" value="${s?.name||''}" placeholder="Full name"
         style="border:1px solid #d9cebc;border-radius:6px;padding:7px 10px;font-family:inherit;font-size:13px;background:#faf7f2;outline:none;width:100%;">
+    </div>
+    <div style="margin-bottom:16px;">
+      <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px;">Parent WhatsApp Number</label>
+      <input id="rm-parent-whatsapp" type="tel" value="${s?.parentWhatsApp||''}" placeholder="e.g. 0336 1234567"
+        style="border:1px solid #d9cebc;border-radius:6px;padding:7px 10px;font-family:inherit;font-size:13px;background:#faf7f2;outline:none;width:100%;">
+      <div style="font-size:10px;color:#9C9590;margin-top:4px;">Used only to open the missing-items reminder in WhatsApp.</div>
     </div>
     <div style="margin-bottom:16px;">
       <label style="font-size:11px;font-weight:600;color:#6e6456;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px;">General Remarks</label>
@@ -1328,6 +1406,7 @@ window.recSaveStudent = async function() {
 
   const record = {
     name,
+    parentWhatsApp: document.getElementById('rm-parent-whatsapp')?.value?.trim() || '',
         remarks: document.getElementById('rm-remarks').value.trim(),
     books,
     stationery,
@@ -1462,6 +1541,7 @@ window.recSaveStudent = async function() {
 
   const record = {
     name,
+    parentWhatsApp: document.getElementById('rm-parent-whatsapp')?.value?.trim() || existing.parentWhatsApp || '',
     remarks: document.getElementById('rm-remarks')?.value?.trim() || '',
     books,
     stationery,
@@ -1576,7 +1656,8 @@ function recPrintStudentHTML(s, clsData) {
 
 window.recPrint = async function(type) {
   document.getElementById('rec-print-modal').style.display = 'none';
-  const root = document.getElementById('rec-print-root');
+  const printWindow = window.open('', '_blank', 'width=1000,height=760');
+  if(!printWindow) { recShowToast('Please allow pop-ups for this website to open print preview.'); return; }
   const cls = recActiveClass;
   const clsData = REC_CLASSES[cls];
   const students = recStudents[cls] || {};
@@ -1585,21 +1666,21 @@ window.recPrint = async function(type) {
   if(type === 'student') {
     // Pick first visible student or prompt
     const entries = Object.entries(students).sort((a,b) => (a[1].name||'').localeCompare(b[1].name||''));
-    if(!entries.length) { recShowToast('No students to print.'); return; }
+    if(!entries.length) { printWindow.close(); recShowToast('No students to print.'); return; }
     const name = prompt('Enter student name to print (or leave blank for first student):');
     const found = name ? entries.find(([,s]) => s.name.toLowerCase().includes(name.toLowerCase())) : entries[0];
-    if(!found) { recShowToast('Student not found.'); return; }
+    if(!found) { printWindow.close(); recShowToast('Student not found.'); return; }
     html = recPrintHeader('Heritage Montessori and School', `Student Record — ${found[1].name} | ${REC_LABELS[cls]}`) +
       recPrintStudentHTML(found[1], clsData);
 
   } else if(type === 'class') {
     const entries = Object.entries(students).sort((a,b) => (a[1].name||'').localeCompare(b[1].name||''));
-    if(!entries.length) { recShowToast('No students in this class.'); return; }
+    if(!entries.length) { printWindow.close(); recShowToast('No students in this class.'); return; }
     html = recPrintHeader('Heritage Montessori and School', `Class Record — ${REC_LABELS[cls]} | ${entries.length} Students`) +
       entries.map(([,s]) => recPrintStudentHTML(s, clsData)).join('');
 
   } else if(type === 'school') {
-    if(recRole !== 'admin') { recShowToast('Admin access required.'); return; }
+    if(recRole !== 'admin') { printWindow.close(); recShowToast('Admin access required.'); return; }
     // Load all classes
     const allClasses = ['mont1','mont2','mont3','class1','class2','class3','class4','class5'];
     html = recPrintHeader('Heritage Montessori and School', `Full School Stationery Record — All Classes`);
@@ -1612,11 +1693,15 @@ window.recPrint = async function(type) {
     }
   }
 
-  root.innerHTML = html;
-  root.style.display = 'block';
-  window.print();
-  root.style.display = 'none';
-  root.innerHTML = '';
+  if(!html) { printWindow.close(); recShowToast('No records available to print.'); return; }
+  printWindow.document.open();
+  printWindow.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Book and Stationery Record</title><style>
+    @page{size:A4;margin:12mm;}body{font-family:Arial,sans-serif;color:#1a1714;margin:0;font-size:10pt;}
+    table{width:100%;border-collapse:collapse;page-break-inside:auto;}tr{page-break-inside:avoid;}th,td{border:1px solid #bdb7ad;padding:5px 7px;}th{background:#f2ece0;}
+    @media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}
+  </style></head><body>${html}<script>window.onload=()=>{setTimeout(()=>window.print(),300)};<\/script></body></html>`);
+  printWindow.document.close();
+  recLogActivity(`Opened ${type === 'school' ? 'whole-school' : type} Book & Stationery print preview`);
 };
 
 // ── PRINT CSS for stationery record ──
