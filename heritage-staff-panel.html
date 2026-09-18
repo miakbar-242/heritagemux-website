@@ -267,13 +267,7 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
   .card-actions, .response-composer, .panel-footer,
   .toast, .notify-parent-block, .hints-box, .chevron, .panel-tabs,
   .action-modal-nav, .records-filters, .submissions-title,
-  #tabFeedback, #tabRecords, #tabTools { display:none !important; }
-
-  /* Hide doc list and nav when printing a form — show only the form body */
-  #docListView, .doc-nav, .doc-back-btn, .doc-print-btn { display:none !important; }
-  #tabDocuments { display:block !important; }
-  .doc-form-section { display:none !important; }
-  .doc-form-section.active { display:block !important; }
+  #tabFeedback, #tabDocuments, #tabRecords, #tabTools { display:none !important; }
 
   /* When action modal is open - show only its content */
   .action-modal { display:block !important; position:static !important; background:white !important; overflow:visible !important; }
@@ -354,6 +348,32 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
 .doc-sign-row { display:grid; grid-template-columns:1fr 1fr; gap:40px; margin-top:40px; }
 .doc-sign-box { border-top:1px solid var(--ink); padding-top:8px; font-size:11px; color:var(--muted); text-align:center; }
 .form-actions { display:flex; gap:10px; margin-top:24px; padding-top:16px; border-top:1px solid var(--line); }
+
+/* ── STAFF TOOLS TAB ─────────────────────────────────────────────── */
+.tools-header{padding:18px 0 14px;border-bottom:1px solid var(--line);margin-bottom:20px}
+.tools-header-title{font-size:1rem;font-weight:700;color:var(--forest);margin-bottom:4px;font-family:serif}
+.tools-header-sub{font-size:.82rem;color:var(--muted);line-height:1.6}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:20px}
+.tool-card{border-radius:4px;border:1.5px solid var(--line);padding:18px;display:flex;flex-direction:column;background:var(--cream);transition:box-shadow .15s,transform .15s}
+.tool-card:hover{box-shadow:0 4px 18px rgba(0,0,0,.10);transform:translateY(-2px)}
+.tool-primary{border-color:var(--forest)}.tool-secondary{border-color:var(--sage)}.tool-warning{border-color:var(--gold)}
+.tool-placeholder{border-color:var(--line);border-style:dashed;background:var(--parchment)}
+.tool-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.tool-icon{font-size:1.6rem;line-height:1}
+.tool-badge{font-size:.62rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase;padding:3px 8px;border-radius:2px}
+.tool-badge-live{background:#e8f0e8;color:var(--forest)}.tool-badge-update{background:#fdf1e0;color:#7a4500}.tool-badge-soon{background:var(--tan);color:var(--muted)}
+.tool-name{font-family:serif;font-size:.95rem;font-weight:600;color:var(--forest);margin-bottom:6px}
+.tool-desc{font-size:.78rem;color:var(--muted);line-height:1.65;flex:1;margin-bottom:10px}
+.tool-meta{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
+.tool-tag{font-size:.65rem;font-weight:600;color:var(--sage);background:var(--parchment);border:1px solid var(--line);border-radius:2px;padding:2px 7px}
+.tool-footer{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding-top:10px;margin-top:auto}
+.tool-url{font-size:.66rem;color:#b0a898;font-family:monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:55%}
+.tool-launch{display:inline-block;padding:6px 16px;background:var(--forest);color:#fff!important;border-radius:2px;font-family:'Jost',sans-serif;font-size:.72rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;text-decoration:none!important;transition:background .15s;white-space:nowrap}
+.tool-launch:hover{background:var(--gold);color:var(--forest)!important}
+.tool-launch-warn{background:var(--gold);color:var(--forest)!important}.tool-launch-warn:hover{background:#9a7009;color:#fff!important}
+.tool-notice{margin-top:10px;padding:7px 10px;background:#fffbf0;border-left:3px solid var(--gold);font-size:.72rem;color:#7a4500;line-height:1.5}
+.tools-footer-note{font-size:.74rem;color:var(--muted);line-height:1.65;padding:12px 14px;background:var(--parchment);border:1px solid var(--line)}
+@media(max-width:500px){.tools-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -424,6 +444,7 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
       <button class="panel-tab active" id="tabFeedbackBtn" onclick="switchTab('feedback',this)">📋 Parent Feedback</button>
       <button class="panel-tab" id="tabDocsBtn" onclick="switchTab('documents',this)">📄 Staff Documents</button>
       <button class="panel-tab" id="tabRecordsBtn" onclick="switchTab('records',this)">📁 Form Records</button>
+      <button class="panel-tab" id="tabToolsBtn" onclick="switchTab('tools',this)">🛠 Staff Tools</button>
     </div>
 
     <!-- ═══════════════ FEEDBACK TAB ═══════════════ -->
@@ -670,49 +691,101 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
           <button class="doc-print-btn" onclick="printDoc()">🖨 Print</button>
         </div>
         <div class="doc-form-body" id="printLeaving">
-          <div class="doc-form-header">
-            <h2>Heritage Montessori and School</h2>
-            <p>Garden Town, Multan · Tel: +92 336 1515260 · info@heritagemux.com</p>
-            <div class="doc-ref">
-              <span>Cert No: <input class="field-input" id="slc-certno" style="width:100px;" placeholder="HMS/L/___"></span>
-              <span>Date: <input class="field-input" id="slc-date" style="width:140px;" placeholder="dd/mm/yyyy"></span>
+
+          <!-- SLC HEADER -->
+          <div style="text-align:center;border-bottom:2.5px solid var(--forest);padding-bottom:14px;margin-bottom:6px;">
+            <div style="font-size:1.4rem;font-weight:800;color:var(--forest);font-family:serif;letter-spacing:.5px;">Heritage Montessori and School</div>
+            <div style="font-size:.8rem;color:var(--muted);margin-top:3px;">11-D Garden Town, Multan &nbsp;·&nbsp; Tel: 061-6515260 &nbsp;·&nbsp; info@heritagemux.com</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0 16px;border-bottom:1px solid var(--line);margin-bottom:18px;font-size:.82rem;">
+            <div>
+              <div style="color:var(--muted);font-size:.7rem;text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px;">Certificate No.</div>
+              <div style="font-weight:700;color:var(--forest);font-family:monospace;font-size:.95rem;" id="slc-certno-display">HMS/SLC/—</div>
+              <input type="hidden" id="slc-certno">
+            </div>
+            <div style="text-align:center;">
+              <div style="font-size:1rem;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--forest);font-family:serif;text-decoration:underline;text-underline-offset:4px;">School Leaving Certificate</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="color:var(--muted);font-size:.7rem;text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px;">Date of Issue</div>
+              <div style="font-weight:600;color:var(--forest);font-size:.88rem;" id="slc-issue-date"></div>
             </div>
           </div>
-          <div style="text-align:center;font-size:15px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--forest);margin:20px 0 24px;text-decoration:underline;">SCHOOL LEAVING CERTIFICATE</div>
-          <div class="doc-section-title">Student Details</div>
-          <div class="field-row">
-            <div class="field-group"><div class="field-label">Student Name</div><input class="field-input" id="slc-name" placeholder="Master / Miss"></div>
-            <div class="field-group"><div class="field-label">Son/Daughter of</div><input class="field-input" id="slc-parent" placeholder="Father's full name"></div>
+
+          <!-- STUDENT DETAILS TABLE -->
+          <table style="width:100%;border-collapse:collapse;margin-bottom:16px;font-size:.85rem;">
+            <tr>
+              <td style="padding:9px 12px;border:1px solid var(--line);font-weight:600;background:var(--parchment);width:32%;color:var(--forest);">Student Name</td>
+              <td style="padding:9px 12px;border:1px solid var(--line);width:68%;"><input class="field-input" id="slc-name" placeholder="Master / Miss — full name" style="border:none;padding:0;width:100%;font-size:.85rem;background:transparent;"></td>
+            </tr>
+            <tr>
+              <td style="padding:9px 12px;border:1px solid var(--line);font-weight:600;background:var(--parchment);color:var(--forest);">Son / Daughter of</td>
+              <td style="padding:9px 12px;border:1px solid var(--line);"><input class="field-input" id="slc-parent" placeholder="Father's full name" style="border:none;padding:0;width:100%;font-size:.85rem;background:transparent;"></td>
+            </tr>
+            <tr>
+              <td style="padding:9px 12px;border:1px solid var(--line);font-weight:600;background:var(--parchment);color:var(--forest);">Admission Number</td>
+              <td style="padding:9px 12px;border:1px solid var(--line);font-family:monospace;font-weight:700;color:var(--forest);" id="slc-admno-display">—</td>
+            </tr>
+            <tr>
+              <td style="padding:9px 12px;border:1px solid var(--line);font-weight:600;background:var(--parchment);color:var(--forest);">Date of Birth</td>
+              <td style="padding:9px 12px;border:1px solid var(--line);"><input class="field-input" id="slc-dob" placeholder="e.g. 12 March 2018" style="border:none;padding:0;width:100%;font-size:.85rem;background:transparent;"></td>
+            </tr>
+            <tr>
+              <td style="padding:9px 12px;border:1px solid var(--line);font-weight:600;background:var(--parchment);color:var(--forest);">Date of Admission</td>
+              <td style="padding:9px 12px;border:1px solid var(--line);"><input class="field-input" id="slc-admdate" placeholder="e.g. 5 January 2022" style="border:none;padding:0;width:100%;font-size:.85rem;background:transparent;"></td>
+            </tr>
+            <tr>
+              <td style="padding:9px 12px;border:1px solid var(--line);font-weight:600;background:var(--parchment);color:var(--forest);">Date of Leaving</td>
+              <td style="padding:9px 12px;border:1px solid var(--line);"><input class="field-input" id="slc-lastdate" placeholder="e.g. 30 September 2026" style="border:none;padding:0;width:100%;font-size:.85rem;background:transparent;"></td>
+            </tr>
+            <tr>
+              <td style="padding:9px 12px;border:1px solid var(--line);font-weight:600;background:var(--parchment);color:var(--forest);">Last Class Attended</td>
+              <td style="padding:9px 12px;border:1px solid var(--line);">
+                <select class="field-select" id="slc-class" style="border:none;padding:0;font-size:.85rem;background:transparent;color:var(--forest);font-family:inherit;">
+                  <option value="">— Select Class —</option>
+                  <option>Mont 1</option><option>Mont 2</option><option>Mont 3</option>
+                  <option>Class 1</option><option>Class 2</option><option>Class 3</option>
+                  <option>Class 4</option><option>Class 5</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:9px 12px;border:1px solid var(--line);font-weight:600;background:var(--parchment);color:var(--forest);">Reason for Leaving</td>
+              <td style="padding:9px 12px;border:1px solid var(--line);"><input class="field-input" id="slc-reason" placeholder="e.g. Migration / Transfer to another school" style="border:none;padding:0;width:100%;font-size:.85rem;background:transparent;"></td>
+            </tr>
+            <tr>
+              <td style="padding:9px 12px;border:1px solid var(--line);font-weight:600;background:var(--parchment);color:var(--forest);">Character &amp; Conduct</td>
+              <td style="padding:9px 12px;border:1px solid var(--line);">
+                <select class="field-select" id="slc-character" style="border:none;padding:0;font-size:.85rem;background:transparent;color:var(--forest);font-family:inherit;">
+                  <option>Excellent</option><option>Good</option><option>Satisfactory</option>
+                </select>
+              </td>
+            </tr>
+          </table>
+
+          <!-- CERTIFICATE BODY TEXT -->
+          <div style="border:1px solid var(--line);padding:16px 18px;background:var(--parchment);margin-bottom:20px;font-size:.88rem;line-height:1.85;color:var(--text);">
+            This is to certify that the above-named student was a bonafide student of Heritage Montessori and School, Garden Town, Multan. He / She attended this institution regularly and has cleared all outstanding dues. No dues of any kind are outstanding against him / her at the time of issuance of this certificate. We wish him / her every success in future endeavours.
           </div>
-          <div class="field-row">
-            <div class="field-group"><div class="field-label">Admission No.</div><input class="field-input" placeholder="HMS-____"></div>
-            <div class="field-group"><div class="field-label">Date of Birth</div><input class="field-input" placeholder="dd/mm/yyyy"></div>
+
+          <!-- SIGNATURE ROW -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:44px;padding-top:16px;border-top:1px solid var(--line);">
+            <div style="text-align:center;">
+              <div style="border-top:1.5px solid var(--forest);padding-top:8px;margin-top:48px;">
+                <div style="font-weight:700;font-size:.82rem;color:var(--forest);">Principal / Administrator</div>
+                <div style="font-size:.75rem;color:var(--muted);margin-top:2px;">Heritage Montessori and School</div>
+                <div style="font-size:.75rem;color:var(--muted);">[School Stamp]</div>
+              </div>
+            </div>
+            <div style="text-align:center;">
+              <div style="border-top:1.5px solid var(--forest);padding-top:8px;margin-top:48px;">
+                <div style="font-weight:700;font-size:.82rem;color:var(--forest);">Date</div>
+                <div style="font-size:.85rem;color:var(--text);margin-top:4px;" id="slc-sign-date"></div>
+              </div>
+            </div>
           </div>
-          <div class="field-row">
-            <div class="field-group"><div class="field-label">Date of Admission</div><input class="field-input" placeholder="dd/mm/yyyy"></div>
-            <div class="field-group"><div class="field-label">Date of Leaving</div><input class="field-input" id="slc-lastdate" placeholder="dd/mm/yyyy"></div>
-          </div>
-          <div class="field-row">
-            <div class="field-group"><div class="field-label">Last Class Attended</div><select class="field-select" id="slc-class"><option>Mont 1</option><option>Mont 2</option><option>Mont 3</option><option>Class 1</option><option>Class 2</option><option>Class 3</option><option>Class 4</option><option>Class 5</option></select></div>
-            <div class="field-group"><div class="field-label">Academic Year</div><input class="field-input" value="2025-2026"></div>
-          </div>
-          <div class="field-row">
-            <div class="field-group"><div class="field-label">Character</div><select class="field-select"><option>Excellent</option><option>Good</option><option>Satisfactory</option></select></div>
-            <div class="field-group"><div class="field-label">Reason for Leaving</div><input class="field-input" placeholder="e.g. Migration / Transfer"></div>
-          </div>
-          <div class="doc-body-text" style="margin-top:24px;">
-            This is to certify that the above-named student was enrolled at Heritage Montessori and School and has cleared all dues. No dues are outstanding against him/her. We wish him/her success in future endeavours.
-          </div>
-          <div style="margin-top:16px;background:#f9f5f0;border:1px solid var(--line);padding:12px 16px;font-size:11px;color:var(--muted);">
-            <strong style="color:var(--forest);">For Office Use:</strong>&nbsp;&nbsp;
-            Fee Clearance: <input class="field-input" style="width:120px;" placeholder="Verified by">&nbsp;&nbsp;
-            Date: <input class="field-input" style="width:100px;" placeholder="dd/mm/yyyy">
-          </div>
-          <div class="doc-sign-row" style="margin-top:40px;">
-            <div class="doc-sign-box">Principal / Administrator<br>Heritage Montessori and School<br><br>[School Stamp]</div>
-            <div class="doc-sign-box">Date: _______________</div>
-          </div>
-        </div>
+
+        </div><!-- /printLeaving -->
       </div>
 
       <!-- EXPERIENCE LETTER FORM -->
@@ -808,6 +881,46 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
         <div class="empty-state"><div class="ei">📁</div><p>Loading records…</p></div>
       </div>
     </div><!-- /tabRecords -->
+
+
+    <!-- ═══════════════ TOOLS TAB ═══════════════ -->
+    <div id="tabTools" class="records-panel" style="display:none;">
+      <div class="tools-header">
+        <div class="tools-header-title">Staff Digital Tools</div>
+        <div class="tools-header-sub">All HMS web applications in one place. Click Launch to open in a new tab. Always open tools from this portal page — never from a saved bookmark — so you always get the current version.</div>
+      </div>
+      <div class="tools-grid">
+        <div class="tool-card tool-primary">
+          <div class="tool-card-top"><div class="tool-icon">📊</div><div class="tool-badge tool-badge-live">Live</div></div>
+          <div class="tool-name">Staff Performance Assessment</div>
+          <div class="tool-desc">Conduct and record staff assessments — probation, quarterly, mid-year and annual. Full principal's report with category analysis, discussion points and teacher self-assessment via PIN.</div>
+          <div class="tool-meta"><span class="tool-tag">Principal</span><span class="tool-tag">Assessors</span><span class="tool-tag">PIN Protected</span><span class="tool-tag">Firebase Live</span></div>
+          <div class="tool-footer"><div class="tool-url">hms-spa26.netlify.app</div><a href="https://hms-spa26.netlify.app" target="_blank" class="tool-launch">Launch →</a></div>
+        </div>
+        <div class="tool-card tool-secondary">
+          <div class="tool-card-top"><div class="tool-icon">👩‍🏫</div><div class="tool-badge tool-badge-live">Live</div></div>
+          <div class="tool-name">Demo Lesson Observation Form</div>
+          <div class="tool-desc">Structured observation checklist for candidate demo lessons during hiring. Covers subject knowledge, classroom presence, student engagement and behaviour management.</div>
+          <div class="tool-meta"><span class="tool-tag">Principal</span><span class="tool-tag">Hiring</span><span class="tool-tag">Printable</span></div>
+          <div class="tool-footer"><div class="tool-url">hmsteacher-demo-assessment.netlify.app</div><a href="https://hmsteacher-demo-assessment.netlify.app" target="_blank" class="tool-launch">Launch →</a></div>
+        </div>
+        <div class="tool-card tool-warning">
+          <div class="tool-card-top"><div class="tool-icon">💰</div><div class="tool-badge tool-badge-update">Monthly Update</div></div>
+          <div class="tool-name">Fee Collection — August 2026</div>
+          <div class="tool-desc">Current month fee collection tracker. Re-deployed each month — always open from this portal page, never bookmark the app URL directly.</div>
+          <div class="tool-meta"><span class="tool-tag">Admin</span><span class="tool-tag">Finance</span><span class="tool-tag">Updated Monthly</span></div>
+          <div class="tool-footer"><div class="tool-url">hms-fee-aug26.netlify.app</div><a href="https://hms-fee-aug26.netlify.app" target="_blank" class="tool-launch tool-launch-warn">Launch →</a></div>
+          <div class="tool-notice">⚠ This URL changes each month. Always open it from this portal page.</div>
+        </div>
+        <div class="tool-card tool-placeholder">
+          <div class="tool-card-top"><div class="tool-icon" style="opacity:.3">＋</div><div class="tool-badge tool-badge-soon">Coming Soon</div></div>
+          <div class="tool-name" style="color:var(--muted)">More Tools</div>
+          <div class="tool-desc" style="color:#b0a898">Additional HMS tools will appear here as they are added.</div>
+          <div class="tool-footer" style="margin-top:auto"><div class="tool-url" style="opacity:.3">—</div></div>
+        </div>
+      </div>
+      <div class="tools-footer-note">All tools open in a new tab. <strong>PIN Protected</strong> tools require a separate PIN from the principal. <strong>Monthly Update</strong> tools change URL each month — always open from this portal.</div>
+    </div><!-- /tabTools -->
 
     <div class="panel-footer">
       <span><span class="live-dot"></span>Heritage Montessori · Staff Portal · Live via Firebase</span>
@@ -1367,6 +1480,7 @@ window.switchTab = function(tab, btn) {
   document.getElementById('tabFeedback').style.display = 'none';
   document.getElementById('tabDocuments').style.display = 'none';
   document.getElementById('tabRecords').style.display = 'none';
+  document.getElementById('tabTools').style.display = 'none';
   if(tab === 'feedback') {
     document.getElementById('tabFeedback').style.display = 'block';
   } else if(tab === 'documents') {
@@ -1375,11 +1489,51 @@ window.switchTab = function(tab, btn) {
   } else if(tab === 'records') {
     document.getElementById('tabRecords').style.display = 'block';
     loadRecords();
+  } else if(tab === 'tools') {
+    document.getElementById('tabTools').style.display = 'block';
   }
 };
 
 // ── DOCUMENT FUNCTIONS ──
 let currentDocId = null;
+
+
+function toEnglishDate(dateStr) {
+  if (!dateStr) return '';
+  // Handle dd/mm/yyyy
+  var parts = dateStr.split('/');
+  if (parts.length === 3) {
+    var months = ['January','February','March','April','May','June',
+                  'July','August','September','October','November','December'];
+    var d = parseInt(parts[0],10);
+    var m = parseInt(parts[1],10) - 1;
+    var y = parts[2];
+    if (!isNaN(d) && m >= 0 && m < 12) return d + ' ' + months[m] + ' ' + y;
+  }
+  // Handle ISO date yyyy-mm-dd
+  var iso = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (iso) {
+    var months = ['January','February','March','April','May','June',
+                  'July','August','September','October','November','December'];
+    return parseInt(iso[3],10) + ' ' + months[parseInt(iso[2],10)-1] + ' ' + iso[1];
+  }
+  return dateStr;
+}
+
+function todayEnglish() {
+  var d = new Date();
+  var months = ['January','February','March','April','May','June',
+                'July','August','September','October','November','December'];
+  return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+}
+
+function nextSLCNumber() {
+  // Get from localStorage, increment
+  var current = parseInt(localStorage.getItem('hms_slc_seq') || '0', 10);
+  current += 1;
+  localStorage.setItem('hms_slc_seq', current);
+  return 'HMS/SLC/' + String(current).padStart(3, '0');
+}
 
 window.openDoc = function(docName) {
   document.getElementById('docListView').style.display = 'none';
@@ -1387,6 +1541,21 @@ window.openDoc = function(docName) {
   const map = {appointment:'docAppointment', bonafide:'docBonafide', leaving:'docLeaving', experience:'docExperience'};
   const el = document.getElementById(map[docName]);
   if(el) { el.classList.add('active'); currentDocId = map[docName]; }
+  // Auto-init SLC cert number and date when opened manually
+  if(docName === 'leaving') {
+    var certDisplay = document.getElementById('slc-certno-display');
+    if(certDisplay && certDisplay.textContent === 'HMS/SLC/—') {
+      var certNo = nextSLCNumber();
+      certDisplay.textContent = certNo;
+      var certHidden = document.getElementById('slc-certno');
+      if(certHidden) certHidden.value = certNo;
+    }
+    var issueDate = todayEnglish();
+    var issueDateEl = document.getElementById('slc-issue-date');
+    if(issueDateEl && !issueDateEl.textContent) issueDateEl.textContent = issueDate;
+    var signDateEl = document.getElementById('slc-sign-date');
+    if(signDateEl && !signDateEl.textContent) signDateEl.textContent = issueDate;
+  }
 };
 
 // ── PIN GENERATOR ──
@@ -1971,16 +2140,24 @@ window.openRecordAction = function(type, key) {
       const setVal = (id, val) => { const el = document.getElementById(id); if(el && val) el.value = val; };
       setVal('slc-name', r.childName);
       setVal('slc-parent', r.parentName);
-      setVal('slc-certno', r.refNumber);
-      setVal('slc-date', today);
-      setVal('slc-lastdate', r.lastDate);
-      // Pre-fill new fields
-      const slcAdmNo = document.querySelector('#docLeaving input[placeholder="HMS-____"]');
-      if(slcAdmNo && r.admissionNo) slcAdmNo.value = r.admissionNo;
-      const slcDob = document.querySelector('#docLeaving input[placeholder="dd/mm/yyyy"]');
-      if(slcDob && r.dob) slcDob.value = r.dob;
-      const slcYear = document.querySelector('#docLeaving input[value="2025-2026"]');
-      if(slcYear && r.academicYear) slcYear.value = r.academicYear;
+      setVal('slc-lastdate', toEnglishDate(r.lastDate));
+      setVal('slc-dob', toEnglishDate(r.dob));
+      setVal('slc-admdate', toEnglishDate(r.dateOfAdmission));
+      setVal('slc-reason', r.leavingReason||'');
+      // Cert number and issue date
+      var certNo = nextSLCNumber();
+      var certDisplay = document.getElementById('slc-certno-display');
+      if(certDisplay) certDisplay.textContent = certNo;
+      var certHidden = document.getElementById('slc-certno');
+      if(certHidden) certHidden.value = certNo;
+      var issueDate = todayEnglish();
+      var issueDateEl = document.getElementById('slc-issue-date');
+      if(issueDateEl) issueDateEl.textContent = issueDate;
+      var signDateEl = document.getElementById('slc-sign-date');
+      if(signDateEl) signDateEl.textContent = issueDate;
+      // Admission number display
+      var admNoDisplay = document.getElementById('slc-admno-display');
+      if(admNoDisplay) admNoDisplay.textContent = r.admissionNo || '—';
       // Set class dropdown
       const classEl = document.getElementById('slc-class');
       if(classEl && r.className) {
