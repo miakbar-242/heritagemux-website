@@ -1314,6 +1314,33 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
 
 <div class="toast" id="toast"></div>
 
+<script>
+// ── EARLY UI FUNCTIONS ──
+// These run immediately so PIN entry works even if Firebase module is loading
+const STAFF_PIN = "2442";
+
+function checkPin() {
+  const v = document.getElementById('pinInput').value.trim();
+  if(v === STAFF_PIN) {
+    document.getElementById('loginBox').style.display = 'none';
+    document.getElementById('mainPanel').style.display = 'block';
+    // Signal module to start listening
+    window._staffAuthed = true;
+    if(window._startListen) window._startListen();
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+    document.getElementById('pinInput').value = '';
+  }
+}
+
+function logout() {
+  document.getElementById('mainPanel').style.display = 'none';
+  document.getElementById('loginBox').style.display = 'block';
+  document.getElementById('pinInput').value = '';
+  window._staffAuthed = false;
+}
+</script>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getDatabase, ref, onValue, update, get, set }
@@ -1391,17 +1418,11 @@ function buildWAMessage(sub) {
 }
 
 // ── PIN ──
-window.checkPin = function() {
-  const v = document.getElementById('pinInput').value.trim();
-  if(v === STAFF_PIN) {
-    document.getElementById('loginBox').style.display='none';
-    document.getElementById('mainPanel').style.display='block';
-    startListen();
-  } else {
-    document.getElementById('loginError').style.display='block';
-    document.getElementById('pinInput').value='';
-  }
-};
+// checkPin is defined in plain script above
+// Expose startListen so plain script can call it
+window._startListen = function() { startListen(); };
+// If already authed when module loads, start listening
+if(window._staffAuthed) startListen();
 
 window.logout = function() {
   document.getElementById('mainPanel').style.display='none';
