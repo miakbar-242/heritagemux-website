@@ -296,6 +296,7 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
   .card-actions, .response-composer, .panel-footer,
   .toast, .notify-parent-block, .hints-box, .chevron, .panel-tabs,
   .action-modal-nav, .records-filters, .submissions-title,
+  .panel-tabs-bar, .logout-btn,
   #tabFeedback, #tabRecords { display:none !important; }
 
   /* Show Documents tab and active form only */
@@ -342,6 +343,8 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
     box-shadow:none !important;
     -webkit-appearance:none !important;
     outline:none !important;
+    color:#000 !important;
+    font-size:10pt !important;
   }
   .field-label { font-size:7pt !important; }
   .field-row { margin-bottom:4px !important; }
@@ -556,6 +559,27 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
             <div class="doc-title">Appointment Letter</div>
             <div class="doc-desc">For newly appointed teachers. Includes designation, salary, probation period and terms.</div>
             <button class="doc-open-btn" onclick="openDoc('appointment')">📝 Fill &amp; Print</button>
+          </div>
+
+          <div class="doc-card">
+            <div class="doc-icon">🎓</div>
+            <div class="doc-title">Bonafide Certificate</div>
+            <div class="doc-desc">Confirms a student is currently enrolled at Heritage Montessori.</div>
+            <button class="doc-open-btn" onclick="openDoc('bonafide')">📝 Fill &amp; Print</button>
+          </div>
+
+          <div class="doc-card">
+            <div class="doc-icon">🏫</div>
+            <div class="doc-title">School Leaving Certificate</div>
+            <div class="doc-desc">Issued when a student leaves the school.</div>
+            <button class="doc-open-btn" onclick="openDoc('leaving')">📝 Fill &amp; Print</button>
+          </div>
+
+          <div class="doc-card">
+            <div class="doc-icon">👩‍🏫</div>
+            <div class="doc-title">Experience Letter</div>
+            <div class="doc-desc">For teachers leaving the school. Confirms designation, tenure and performance.</div>
+            <button class="doc-open-btn" onclick="openDoc('experience')">📝 Fill &amp; Print</button>
           </div>
 
           <div class="doc-card">
