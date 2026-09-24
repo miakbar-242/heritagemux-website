@@ -302,6 +302,27 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
   input[type=checkbox] { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
 
   @page { size:A4; margin:15mm; }
+
+  /* Form fields — show filled text cleanly, no borders */
+  .field-input, .field-select, input.field-input, select.field-select {
+    border:none !important;
+    border-bottom:none !important;
+    background:transparent !important;
+    box-shadow:none !important;
+    -webkit-appearance:none !important;
+    outline:none !important;
+  }
+  .field-label { font-size:7pt !important; }
+  .field-row { margin-bottom:4px !important; }
+  .doc-form-body { font-size:10pt !important; }
+  .doc-body-text { font-size:10pt !important; line-height:1.8 !important; }
+  .doc-terms-box { border:none !important; padding:0 !important; background:none !important; }
+  .doc-decl-box { border:1px solid #333 !important; }
+  .doc-section-title { font-size:8pt !important; }
+  .doc-form-header { display:none !important; }
+  .doc-sign-row { margin-top:20px !important; }
+  .letter-type-box { border:1px solid #333 !important; }
+  .definitions { border-left:2px solid #2d4a2d !important; }
 }
 .print-header { display:none; text-align:center; margin-bottom:24px; padding-bottom:14px; border-bottom:2px solid #2d4a2d; }
 .print-header h2 { font-family:serif; font-size:20px; color:#2d4a2d; font-weight:600; }
@@ -565,16 +586,191 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
           <span style="font-family:serif;font-size:16px;color:var(--forest);font-weight:600;">Appointment Letter</span>
           <button class="doc-print-btn" onclick="printDoc()">🖨 Print</button>
         </div>
-        <div class="doc-form-body" id="printAppointment">
+        <div class="doc-form-body" id="printAppointment" style="padding:0;">
+<div class="ref-row">
+    <span>Date: _______________________</span>
+    <span>Ref No: HMS/APT/__/26</span>
+  </div>
+  <div class="letter-type">
+    <div class="letter-type-box">APPOINTMENT LETTER</div>
+    <div class="letter-stmt">This letter is issued to a teacher who has been selected for employment at Heritage Montessori and School and is being placed on a probationary period prior to permanent confirmation. It sets out the terms and conditions of employment for the duration of the probation period and beyond.</div>
+  </div>
+  <div class="sec-title">Addressee</div>
+  <div class="field-row">
+    <div class="field"><div class="label">Full Name</div><div class="value">Ms. / Mr. ___________________________</div></div>
+    <div class="field"><div class="label">S/o · D/o · W/o</div><div class="value">___________________________</div></div>
+  </div>
+  <div class="field-row full">
+    <div class="field"><div class="label">Residential Address</div><div class="value">___________________________</div></div>
+  </div>
 
-          <div class="doc-form-header">
-            <h2>Heritage Montessori and School</h2>
-            <p>11-D Garden Town, Multan &nbsp;·&nbsp; Tel: 061-6515260 / 0336-1515260 &nbsp;·&nbsp; info@heritagemux.com</p>
-            <div class="doc-ref">
-              <span>Date: <input class="field-input" style="width:140px;" placeholder="dd/mm/yyyy"></span>
-              <span>Ref No: <input class="field-input" style="width:120px;" placeholder="HMS/APT/__/26"></span>
-            </div>
-          </div></div>
+  <div class="sec-title">Appointment Details</div>
+  <div class="field-row">
+    <div class="field"><div class="label">Designation</div><div class="value">___________________________</div></div>
+    <div class="field"><div class="label">Section</div><div class="value">___________________________</div></div>
+  </div>
+  <div class="field-row">
+    <div class="field"><div class="label">Date of Joining</div><div class="value">___________________________</div></div>
+    <div class="field"><div class="label">Monthly Basic Salary (Rs.)</div><div class="value">___________________________</div></div>
+  </div>
+  <div class="field-row">
+    <div class="field"><div class="label">Probation Period</div><div class="value">Three (3) months</div></div>
+    <div class="field"><div class="label">Academic Year</div><div class="value">___________________________</div></div>
+  </div>
+
+  <div class="body-text">
+    Dear Ms./Mr. ___________________________,<br><br>
+    It is our pleasure to formally welcome you to Heritage Montessori and School as part of the faculty. With reference to your application and subsequent interview, we are pleased to appoint you as <strong>___________________________</strong>, with effect from <strong>___________________________</strong>. Your monthly Basic Salary shall be <strong>Rs. ___________________________</strong>, payable between the 1st and 10th of each month.<br><br>
+    The following terms, conditions, and institutional guidelines govern your employment at Heritage Montessori and School. These have been formulated to help you settle into a comfortable and productive association with the institution. These terms in no way undermine your rights as an employee; however, please keep in mind that duties take precedence in bringing quality to any workplace — and we expect to witness our students shine in the best possible way.
+  </div>
+
+  <div class="terms-box">
+    <div class="terms-title">Terms and Conditions of Employment</div>
+    <div class="terms-body">
+      <div class="definitions">
+        <strong>Definitions</strong><br>
+        For the purpose of this letter the following definitions apply:<br>
+        (a) &nbsp; <strong>Basic Salary</strong> — the monthly salary agreed upon and payable at the time of commencement of the probation period.<br>
+        (b) &nbsp; <strong>Confirmed Salary</strong> — the monthly salary agreed upon and payable upon successful completion of the probation period. This may differ from the Basic Salary if an increment is awarded at the time of confirmation.<br>
+        (c) &nbsp; <strong>Summer Vacation Salary</strong> — shall always be calculated on the Basic Salary, regardless of any subsequent increments or salary revisions.<br>
+        (d) &nbsp; <strong>Annual Increment</strong> — shall always be calculated on the Basic Salary, regardless of any subsequent increments or salary revisions.
+      </div>
+      <div class="clause">
+        <strong>1. Documentation on Record</strong><br>
+        Upon joining as a probationary teacher, you are required to submit the following to the school office:<br>
+        (a) &nbsp; 2 × photocopies of your National Identity Card (NIC) and 2 × passport-size photographs.<br>
+        (b) &nbsp; Complete, correct and up-to-date personal information including working cell phone numbers on which you can be contacted at all times.<br>
+        (c) &nbsp; Bank account details for salary disbursement. The account must be in the teacher's own name. Providing bank account details is mandatory upon joining.<br>
+        (d) &nbsp; In the event a teacher wishes salary to be credited to an account operated by another person, a written application must be submitted on the prescribed format, stating the full name, CNIC, relationship, bank account details of that person, and the reason for the request. The school administration reserves the right to accept or reject such an application. Salary will only be transferred to a third-party account upon written approval from the management.
+      </div>
+      <div class="clause">
+        <strong>2. Academic Year</strong><br>
+        The academic year runs from August/September to May/June.
+      </div>
+      <div class="clause">
+        <strong>3. Security Deposit</strong><br>
+        By signing this letter, you give your written consent for your first month's salary to be retained by the school as a refundable security deposit. This will be refunded upon your departure subject to the following conditions:<br>
+        (a) &nbsp; You have successfully completed your probation period.<br>
+        (b) &nbsp; You have submitted your written resignation in person to the school office with the required one (1) month's notice.<br>
+        (c) &nbsp; The school reserves the right to forfeit the security deposit if you resign or discontinue without the required notice, or if your services are terminated on grounds of misconduct.
+      </div>
+      <div class="clause">
+        <strong>4. Probation Period</strong><br>
+        From the date of joining you will be placed on a probation period as stated in this letter. The following conditions apply:<br>
+        (a) &nbsp; No planned leave, other than genuine emergencies, is admissible during the probation period.<br>
+        (b) &nbsp; Any increment upon completion of probation will be dependent on performance as assessed through the HMS-SPA.<br>
+        (c) &nbsp; Teachers may be assigned a different class or subject other than the one initially appointed for, based on aptitude and institutional need.<br>
+        (d) &nbsp; Should a teacher wish to discontinue during probation, she/he must inform the school in writing. Discontinuation during probation results in forfeiture of the security deposit and no experience certificate will be issued.<br>
+        (e) &nbsp; No experience certificate will be issued if a teacher fails to complete the probation period satisfactorily.<br>
+        (f) &nbsp; All rules applicable to a confirmed employee are equally applicable to a probationary teacher.<br>
+        (g) &nbsp; Upon successful completion of the probation period, you will be considered a confirmed staff member of Heritage Montessori and School.<br>
+        (h) &nbsp; You are required to follow all prescribed school timings from the first day of joining.
+      </div>
+      <div class="clause">
+        <strong>5. Attendance, Timings and Leave</strong><br>
+        (a) &nbsp; Adherence to prescribed school timings is mandatory for all staff. No excuse, other than a genuine emergency, is acceptable.<br>
+        (b) &nbsp; Three (3) late arrivals in one calendar month will result in a deduction of one (1) day's salary for that month. By signing this letter you give your consent to this deduction as a contractual term.<br>
+        (c) &nbsp; Leave applications must be submitted at least two (2) weeks before the intended leave date through the <strong>HMS-Attendance App</strong>, followed by informing the administration in person. Emergency leave must be reported immediately and followed up with a written explanation.<br>
+        (d) &nbsp; Any leave immediately preceding or following a weekend or public holiday will be counted as a continuous block of absence inclusive of that weekend or holiday.<br>
+        (e) &nbsp; No salary review or increment will be considered if the teacher has been absent or on leave during the last three months, other than for approved emergency reasons.
+      </div>
+      <div class="clause">
+        <strong>6. Annual Increment</strong><br>
+        (a) &nbsp; Teachers are entitled to an annual increment of 5% to 10%, subject to performance as assessed through the <strong>HMS-SPA (Staff Performance Assessment)</strong>. The exact percentage will be communicated in writing at the time of award.<br>
+        (b) &nbsp; Annual increment is admissible from the date of successful completion of the probation period.<br>
+        (c) &nbsp; The increment will be calculated on the Basic Salary as defined above.<br>
+        (d) &nbsp; No salary review will be considered unless the following conditions are met:<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;(i) &nbsp; Minimum five (5) consecutive months of service at the institution.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;(ii) &nbsp; No unapproved absence during the last three months.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;(iii) &nbsp; Not more than three late arrivals in the last three months.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;(iv) &nbsp; Satisfactory performance as per the job requirements of the institution.
+      </div>
+      <div class="clause">
+        <strong>7. Summer Vacation Salary</strong><br>
+        (a) &nbsp; Summer vacation salary is admissible to teachers who have completed their probation period and have worked for at least one (1) full academic year at Heritage Montessori and School, excluding summer vacations.<br>
+        (b) &nbsp; Summer vacation salary for the month of June will be paid with the August salary, disbursed in September. Summer vacation salary for the month of July will be paid with the December salary, disbursed in January.<br>
+        (c) &nbsp; Summer vacation salary will be paid at the rate of the Basic Salary as defined above.<br>
+        (d) &nbsp; A teacher who resigns or whose services are terminated before the start of the new academic session will forfeit the right to that earned summer vacation salary.
+      </div>
+      <div class="clause">
+        <strong>8. Notice Period and Resignation</strong><br>
+        (a) &nbsp; Either party may terminate this appointment by giving one (1) month's written notice. If you resign without serving the full notice period, the school reserves the right to withhold the equivalent amount from your final dues or security deposit.<br>
+        (b) &nbsp; Resignation must be submitted in writing, in person, to the school office. Dues will be released upon completion of notice period and satisfactory handover.<br>
+        (c) &nbsp; The school may waive the notice period at its sole discretion in special circumstances.
+      </div>
+      <div class="clause">
+        <strong>9. Termination</strong><br>
+        The school reserves the right to terminate this appointment immediately and without notice in cases of gross misconduct, dishonesty, insubordination, repeated absence, or any act that brings disrepute to the institution. In such cases the security deposit shall be forfeited and no experience certificate or summer vacation salary shall be payable.
+      </div>
+      <div class="clause">
+        <strong>10. Experience Certificate</strong><br>
+        A teacher is eligible to receive an experience certificate only upon completing a minimum of eight (8) consecutive months after the probation period and having fulfilled all conditions of service satisfactorily.
+      </div>
+      <div class="clause">
+        <strong>11. Mobile Phone Policy</strong><br>
+        Personal mobile phones must be switched off or on silent during class hours. Use of mobile phones in the classroom or in the presence of students is strictly prohibited and may result in disciplinary action.
+      </div>
+      <div class="clause">
+        <strong>12. Dress Code and Professional Conduct</strong><br>
+        You are required to dress formally and appropriately on all working days. Behaviour unbecoming of a teacher — inside or outside school premises — may result in disciplinary action. All interactions with students, parents and colleagues must remain respectful and professional at all times.
+      </div>
+      <div class="clause">
+        <strong>13. Duties and Responsibilities</strong><br>
+        In addition to classroom teaching, you may be assigned duties including lesson planning, student assessments, parent-teacher meetings, school events, co-curricular activities, supervision, and any other task assigned by the management. You are required to maintain lesson plans, student records, and assessment registers as directed.
+      </div>
+      <div class="clause">
+        <strong>14. Parent Communication</strong><br>
+        All communication with parents must take place through official school channels only. Teachers must not share personal contact numbers with parents or engage in unofficial communication with parents without prior approval from the management.
+      </div>
+      <div class="clause">
+        <strong>15. Confidentiality</strong><br>
+        All student records, parent information, academic data, salary details, and institutional matters are strictly confidential. You must not share, disclose, or discuss any such information outside the school during or after your employment. This obligation continues after the termination of employment.
+      </div>
+      <div class="clause">
+        <strong>16. Care of School Property</strong><br>
+        All school property, teaching materials, books, stationery and equipment issued to you must be maintained with care and returned in good condition upon departure. Any damage or loss due to negligence may be recovered from your salary or final dues, as agreed by signing this letter.
+      </div>
+      <div class="clause">
+        <strong>17. Social Media</strong><br>
+        You must not post, share or publish any content related to the school, its students, staff or management on any social media platform without prior written approval from the management. Any violation may result in immediate disciplinary action.
+      </div>
+      <div class="clause">
+        <strong>18. Compliance with School Policies</strong><br>
+        You are required to comply with all policies, procedures, and directives issued by the management from time to time including the staff handbook, academic guidelines, examination policies and any circular issued during the course of employment. Ignorance of a policy shall not be accepted as an excuse for non-compliance.
+      </div>
+      <div class="clause">
+        <strong>19. Legal Proceedings</strong><br>
+        Heritage Montessori and School reserves the right to take necessary legal action against any violation of the terms mentioned in this letter. In the event of legal proceedings, the teacher shall bear all expenses incurred, irrespective of the outcome of the case. Any disputes shall be subject to the jurisdiction of courts in Multan.
+      </div>
+    </div>
+  </div>
+
+  <div class="decl-box">
+    <div class="decl-title">Declaration</div>
+    <div class="decl-body">
+      1. &nbsp; I, the undersigned, accept this letter as a binding contract between Heritage Montessori and School and myself for a period of one (1) academic year, excluding summer vacations.<br>
+      2. &nbsp; I declare that I have read and fully understood all the terms and conditions stated above and agree to abide by them during the probation period and after being formally confirmed.<br>
+      3. &nbsp; I give my written consent for my first month's salary to be retained as a refundable security deposit as per Clause 3 above.<br>
+      4. &nbsp; I give my written consent for salary deductions in the event of late arrivals as per Clause 5(b) above.<br>
+      5. &nbsp; In case of legal proceedings, I will bear all expenses incurred, irrespective of the outcome.
+    </div>
+  </div>
+  <div class="sign-row">
+    <div class="sign-box">
+      <strong>Principal / Administrator</strong><br>
+      Heritage Montessori and School<br><br>
+      Date: ___________________________<br><br>
+      [School Stamp]
+    </div>
+    <div class="sign-box">
+      <strong>Accepted by Teacher</strong><br><br>
+      Full Name: ___________________________<br>
+      CNIC No: &nbsp;&nbsp; ___________________________<br>
+      Date: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;___________________________<br><br>
+      Signature: ___________________________
+    </div>
+  </div>
+</div>
 
           <div class="doc-section-title">Addressee</div>
           <div class="field-row">
@@ -737,15 +933,63 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
           <span style="font-family:serif;font-size:16px;color:var(--forest);font-weight:600;">Bonafide Certificate</span>
           <button class="doc-print-btn" onclick="printDoc()">🖨 Print</button>
         </div>
-        <div class="doc-form-body" id="printBonafide">
-          <div class="doc-form-header">
-            <h2>Heritage Montessori and School</h2>
-            <p>Garden Town, Multan · Tel: +92 336 1515260 · info@heritagemux.com</p>
-            <div class="doc-ref">
-              <span>Cert No: <input class="field-input" id="bon-certno" style="width:100px;" placeholder="HMS/B/___"></span>
-              <span>Date: <input class="field-input" id="bon-date" style="width:140px;" placeholder="dd/mm/yyyy"></span>
-            </div>
-          </div></div>
+        <div class="doc-form-body" id="printBonafide" style="padding:0;">
+
+  <div class="doc-ref" style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #d9cebc;margin-bottom:16px;font-size:11px;">
+    <span>Cert No: <input class="field-input" style="width:120px;" placeholder="HMS/B/___"></span>
+    <span>Date: <input class="field-input" style="width:140px;" placeholder="dd/mm/yyyy"></span>
+  </div>
+
+  <div style="text-align:center;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#2d4a2d;border-bottom:2px solid #b8962e;padding-bottom:8px;margin-bottom:16px;">BONAFIDE CERTIFICATE</div>
+
+  <div class="doc-section-title">Student Details</div>
+  <div class="field-row">
+    <div class="field-group"><div class="field-label">Student Name</div><input class="field-input" id="bon-name" placeholder="Master / Miss"></div>
+    <div class="field-group"><div class="field-label">Son / Daughter of</div><input class="field-input" placeholder="Father's full name"></div>
+  </div>
+  <div class="field-row">
+    <div class="field-group"><div class="field-label">Admission No.</div><input class="field-input" placeholder="HMS-____"></div>
+    <div class="field-group"><div class="field-label">Class / Section</div>
+      <select class="field-select" id="bon-class">
+        <option>Mont 1</option><option>Mont 2</option><option>Mont 3</option>
+        <option>Class 1</option><option>Class 2</option><option>Class 3</option>
+        <option>Class 4</option><option>Class 5</option>
+      </select>
+    </div>
+  </div>
+  <div class="field-row">
+    <div class="field-group"><div class="field-label">Academic Year</div><input class="field-input" value="2026-2027"></div>
+    <div class="field-group"><div class="field-label">Date of Birth</div><input class="field-input" placeholder="dd/mm/yyyy"></div>
+  </div>
+  <div class="field-row" style="grid-template-columns:1fr;">
+    <div class="field-group"><div class="field-label">Purpose of Certificate</div><input class="field-input" placeholder="e.g. Bank account / Passport / Visa"></div>
+  </div>
+
+  <div class="doc-body-text" style="margin-top:20px;line-height:2.2;">
+    To Whom It May Concern,<br><br>
+    This is to certify that <strong><input class="field-input" style="width:200px;" placeholder="Student Name"></strong>,
+    Son/Daughter of <strong><input class="field-input" style="width:180px;" placeholder="Parent Name"></strong>,
+    bearing Admission No. <strong><input class="field-input" style="width:100px;" placeholder="HMS-___"></strong>,
+    is a bonafide student of this institution. He/She is currently enrolled in
+    <strong><select class="field-select" style="width:90px;"><option>Mont 1</option><option>Mont 2</option><option>Mont 3</option><option>Class 1</option><option>Class 2</option><option>Class 3</option><option>Class 4</option><option>Class 5</option></select></strong>
+    for the Academic Year <strong><input class="field-input" style="width:100px;" value="2026–2027"></strong>.<br><br>
+    This certificate is issued on the request of the parent/guardian for the purpose of
+    <strong><input class="field-input" style="width:200px;" placeholder="purpose"></strong>.
+    We wish him/her all the best.
+  </div>
+
+  <div class="doc-sign-row" style="margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:40px;">
+    <div class="doc-sign-box" style="border-top:1px solid #1a1714;padding-top:10px;font-size:11px;line-height:2;">
+      <strong>Principal / Administrator</strong><br>
+      Heritage Montessori and School<br><br>
+      [School Stamp]
+    </div>
+    <div class="doc-sign-box" style="border-top:1px solid #1a1714;padding-top:10px;font-size:11px;line-height:2;">
+      Date: ___________________________
+    </div>
+  </div>
+
+</div>
           <div style="text-align:center;font-size:15px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--forest);margin:20px 0 24px;text-decoration:underline;">BONAFIDE CERTIFICATE</div>
           <div class="doc-section-title">Student Details</div>
           <div class="field-row">
@@ -785,15 +1029,77 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
           <span style="font-family:serif;font-size:16px;color:var(--forest);font-weight:600;">School Leaving Certificate</span>
           <button class="doc-print-btn" onclick="printDoc()">🖨 Print</button>
         </div>
-        <div class="doc-form-body" id="printLeaving">
-          <div class="doc-form-header">
-            <h2>Heritage Montessori and School</h2>
-            <p>Garden Town, Multan · Tel: +92 336 1515260 · info@heritagemux.com</p>
-            <div class="doc-ref">
-              <span>Cert No: <input class="field-input" id="slc-certno" style="width:100px;" placeholder="HMS/L/___"></span>
-              <span>Date: <input class="field-input" id="slc-date" style="width:140px;" placeholder="dd/mm/yyyy"></span>
-            </div>
-          </div></div>
+        <div class="doc-form-body" id="printLeaving" style="padding:0;">
+
+  <div class="doc-ref" style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #d9cebc;margin-bottom:16px;font-size:11px;">
+    <span>Cert No: <input class="field-input" style="width:120px;" placeholder="HMS/SLC/___"></span>
+    <span>Date: <input class="field-input" style="width:140px;" placeholder="dd/mm/yyyy"></span>
+  </div>
+
+  <div style="text-align:center;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#2d4a2d;border-bottom:2px solid #b8962e;padding-bottom:8px;margin-bottom:16px;">SCHOOL LEAVING CERTIFICATE</div>
+
+  <div class="doc-section-title">Student Details</div>
+  <div class="field-row">
+    <div class="field-group"><div class="field-label">Student Name</div><input class="field-input" placeholder="Master / Miss"></div>
+    <div class="field-group"><div class="field-label">Son / Daughter of</div><input class="field-input" placeholder="Father's full name"></div>
+  </div>
+  <div class="field-row">
+    <div class="field-group"><div class="field-label">Admission No.</div><input class="field-input" placeholder="HMS-____"></div>
+    <div class="field-group"><div class="field-label">Date of Birth</div><input class="field-input" placeholder="dd/mm/yyyy"></div>
+  </div>
+  <div class="field-row">
+    <div class="field-group"><div class="field-label">Class Last Attended</div>
+      <select class="field-select"><option>Mont 1</option><option>Mont 2</option><option>Mont 3</option><option>Class 1</option><option>Class 2</option><option>Class 3</option><option>Class 4</option><option>Class 5</option></select>
+    </div>
+    <div class="field-group"><div class="field-label">Academic Year</div><input class="field-input" value="2026–2027"></div>
+  </div>
+  <div class="field-row">
+    <div class="field-group"><div class="field-label">Date of Admission</div><input class="field-input" placeholder="dd/mm/yyyy"></div>
+    <div class="field-group"><div class="field-label">Date of Leaving</div><input class="field-input" placeholder="dd/mm/yyyy"></div>
+  </div>
+  <div class="field-row" style="grid-template-columns:1fr;">
+    <div class="field-group"><div class="field-label">Reason for Leaving</div><input class="field-input" placeholder="e.g. Transfer / Parent request / Completion of class"></div>
+  </div>
+
+  <div class="doc-section-title">Character &amp; Conduct</div>
+  <div class="field-row">
+    <div class="field-group"><div class="field-label">Character</div>
+      <select class="field-select"><option>Excellent</option><option>Very Good</option><option>Good</option><option>Satisfactory</option></select>
+    </div>
+    <div class="field-group"><div class="field-label">Conduct</div>
+      <select class="field-select"><option>Excellent</option><option>Very Good</option><option>Good</option><option>Satisfactory</option></select>
+    </div>
+  </div>
+
+  <div class="doc-body-text" style="margin-top:20px;line-height:2.2;">
+    To Whom It May Concern,<br><br>
+    This is to certify that <strong><input class="field-input" style="width:200px;" placeholder="Student Name"></strong>,
+    Son/Daughter of <strong><input class="field-input" style="width:180px;" placeholder="Parent Name"></strong>,
+    bearing Admission No. <strong><input class="field-input" style="width:100px;" placeholder="HMS-___"></strong>,
+    was a student of this institution from
+    <strong><input class="field-input" style="width:110px;" placeholder="dd/mm/yyyy"></strong> to
+    <strong><input class="field-input" style="width:110px;" placeholder="dd/mm/yyyy"></strong>.
+    He/She was last enrolled in
+    <strong><select class="field-select" style="width:90px;"><option>Mont 1</option><option>Mont 2</option><option>Mont 3</option><option>Class 1</option><option>Class 2</option><option>Class 3</option><option>Class 4</option><option>Class 5</option></select></strong>.<br><br>
+    His/Her character and conduct during the period of study were found to be
+    <strong><select class="field-select" style="width:110px;"><option>Excellent</option><option>Very Good</option><option>Good</option><option>Satisfactory</option></select></strong>.
+    He/She is leaving the school due to
+    <strong><input class="field-input" style="width:200px;" placeholder="reason"></strong>.<br><br>
+    We wish him/her all the best in future endeavours.
+  </div>
+
+  <div class="doc-sign-row" style="margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:40px;">
+    <div class="doc-sign-box" style="border-top:1px solid #1a1714;padding-top:10px;font-size:11px;line-height:2;">
+      <strong>Principal / Administrator</strong><br>
+      Heritage Montessori and School<br><br>
+      [School Stamp]
+    </div>
+    <div class="doc-sign-box" style="border-top:1px solid #1a1714;padding-top:10px;font-size:11px;line-height:2;">
+      Date: ___________________________
+    </div>
+  </div>
+
+</div>
           <div style="text-align:center;font-size:15px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--forest);margin:20px 0 24px;text-decoration:underline;">SCHOOL LEAVING CERTIFICATE</div>
           <div class="doc-section-title">Student Details</div>
           <div class="field-row">
@@ -837,15 +1143,61 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
           <span style="font-family:serif;font-size:16px;color:var(--forest);font-weight:600;">Experience Letter</span>
           <button class="doc-print-btn" onclick="printDoc()">🖨 Print</button>
         </div>
-        <div class="doc-form-body" id="printExperience">
-          <div class="doc-form-header">
-            <h2>Heritage Montessori and School</h2>
-            <p>Garden Town, Multan · Tel: +92 336 1515260 · info@heritagemux.com</p>
-            <div class="doc-ref">
-              <span>Date: <input class="field-input" style="width:140px;" placeholder="dd/mm/yyyy"></span>
-              <span>Ref No: <input class="field-input" style="width:100px;" placeholder="HMS/E/___"></span>
-            </div>
-          </div></div>
+        <div class="doc-form-body" id="printExperience" style="padding:0;">
+
+  <div class="doc-ref" style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #d9cebc;margin-bottom:16px;font-size:11px;">
+    <span>Date: <input class="field-input" style="width:140px;" placeholder="dd/mm/yyyy"></span>
+    <span>Ref No: <input class="field-input" style="width:130px;" placeholder="HMS/EXP/___"></span>
+  </div>
+
+  <div style="text-align:center;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#2d4a2d;border-bottom:2px solid #b8962e;padding-bottom:8px;margin-bottom:16px;">EXPERIENCE LETTER</div>
+
+  <div class="doc-section-title">Staff Details</div>
+  <div class="field-row">
+    <div class="field-group"><div class="field-label">Full Name</div><input class="field-input" placeholder="Ms. / Mr."></div>
+    <div class="field-group"><div class="field-label">S/o · D/o · W/o</div><input class="field-input" placeholder="Father / Husband name"></div>
+  </div>
+  <div class="field-row">
+    <div class="field-group"><div class="field-label">CNIC No.</div><input class="field-input" placeholder="xxxxx-xxxxxxx-x"></div>
+    <div class="field-group"><div class="field-label">Designation</div><input class="field-input" placeholder="e.g. Class Teacher — Mont 1"></div>
+  </div>
+  <div class="field-row">
+    <div class="field-group"><div class="field-label">Date of Joining</div><input class="field-input" placeholder="dd/mm/yyyy"></div>
+    <div class="field-group"><div class="field-label">Date of Leaving</div><input class="field-input" placeholder="dd/mm/yyyy"></div>
+  </div>
+  <div class="field-row">
+    <div class="field-group"><div class="field-label">Performance</div>
+      <select class="field-select"><option>Excellent</option><option>Very Good</option><option>Good</option><option>Satisfactory</option></select>
+    </div>
+    <div class="field-group"><div class="field-label">Reason for Leaving</div><input class="field-input" placeholder="e.g. Resignation / End of contract"></div>
+  </div>
+
+  <div class="doc-body-text" style="margin-top:20px;line-height:2.2;">
+    To Whom It May Concern,<br><br>
+    This is to certify that <strong><input class="field-input" style="width:200px;" placeholder="Full Name"></strong>,
+    served at Heritage Montessori and School, Garden Town, Multan as
+    <strong><input class="field-input" style="width:200px;" placeholder="Designation"></strong>
+    from <strong><input class="field-input" style="width:110px;" placeholder="dd/mm/yyyy"></strong> to
+    <strong><input class="field-input" style="width:110px;" placeholder="dd/mm/yyyy"></strong>.<br><br>
+    During his/her tenure, he/she proved to be a dedicated and hardworking member of our staff.
+    His/Her conduct and performance were found to be
+    <strong><select class="field-select" style="width:110px;"><option>Excellent</option><option>Very Good</option><option>Good</option><option>Satisfactory</option></select></strong>
+    throughout the period of service.<br><br>
+    We wish him/her the very best in future career and endeavours.
+  </div>
+
+  <div class="doc-sign-row" style="margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:40px;">
+    <div class="doc-sign-box" style="border-top:1px solid #1a1714;padding-top:10px;font-size:11px;line-height:2;">
+      <strong>Principal / Administrator</strong><br>
+      Heritage Montessori and School<br><br>
+      [School Stamp]
+    </div>
+    <div class="doc-sign-box" style="border-top:1px solid #1a1714;padding-top:10px;font-size:11px;line-height:2;">
+      Date: ___________________________
+    </div>
+  </div>
+
+</div>
           <div style="text-align:center;font-size:15px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--forest);margin:20px 0 24px;text-decoration:underline;">EXPERIENCE LETTER</div>
           <div class="doc-section-title">Staff Details</div>
           <div class="field-row">
