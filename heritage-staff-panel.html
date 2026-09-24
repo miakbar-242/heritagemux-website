@@ -302,6 +302,27 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
   input[type=checkbox] { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
 
   @page { size:A4; margin:15mm; }
+
+  /* Form fields — show filled text cleanly, no borders */
+  .field-input, .field-select, input.field-input, select.field-select {
+    border:none !important;
+    border-bottom:none !important;
+    background:transparent !important;
+    box-shadow:none !important;
+    -webkit-appearance:none !important;
+    outline:none !important;
+  }
+  .field-label { font-size:7pt !important; }
+  .field-row { margin-bottom:4px !important; }
+  .doc-form-body { font-size:10pt !important; }
+  .doc-body-text { font-size:10pt !important; line-height:1.8 !important; }
+  .doc-terms-box { border:none !important; padding:0 !important; background:none !important; }
+  .doc-decl-box { border:1px solid #333 !important; }
+  .doc-section-title { font-size:8pt !important; }
+  .doc-form-header { display:none !important; }
+  .doc-sign-row { margin-top:20px !important; }
+  .letter-type-box { border:1px solid #333 !important; }
+  .definitions { border-left:2px solid #2d4a2d !important; }
 }
 .print-header { display:none; text-align:center; margin-bottom:24px; padding-bottom:14px; border-bottom:2px solid #2d4a2d; }
 .print-header h2 { font-family:serif; font-size:20px; color:#2d4a2d; font-weight:600; }
@@ -404,7 +425,7 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
         <div class="summary-num" id="statKept">—</div>
         <div class="summary-label">📌 Kept</div>
       </div>
-    </div>
+    
 
     <!-- NOTIFICATION AREA -->
     <div class="notif-area" id="notifArea">
@@ -565,16 +586,191 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
           <span style="font-family:serif;font-size:16px;color:var(--forest);font-weight:600;">Appointment Letter</span>
           <button class="doc-print-btn" onclick="printDoc()">🖨 Print</button>
         </div>
-        <div class="doc-form-body" id="printAppointment">
+        <div class="doc-form-body" id="printAppointment" style="padding:0;">
+<div class="ref-row">
+    <span>Date: _______________________</span>
+    <span>Ref No: HMS/APT/__/26</span>
+  </div>
+  <div class="letter-type">
+    <div class="letter-type-box">APPOINTMENT LETTER</div>
+    <div class="letter-stmt">This letter is issued to a teacher who has been selected for employment at Heritage Montessori and School and is being placed on a probationary period prior to permanent confirmation. It sets out the terms and conditions of employment for the duration of the probation period and beyond.</div>
+  </div>
+  <div class="sec-title">Addressee</div>
+  <div class="field-row">
+    <div class="field"><div class="label">Full Name</div><div class="value">Ms. / Mr. ___________________________</div></div>
+    <div class="field"><div class="label">S/o · D/o · W/o</div><div class="value">___________________________</div></div>
+  </div>
+  <div class="field-row full">
+    <div class="field"><div class="label">Residential Address</div><div class="value">___________________________</div></div>
+  </div>
 
-          <div class="doc-form-header">
-            <h2>Heritage Montessori and School</h2>
-            <p>11-D Garden Town, Multan &nbsp;·&nbsp; Tel: 061-6515260 / 0336-1515260 &nbsp;·&nbsp; info@heritagemux.com</p>
-            <div class="doc-ref">
-              <span>Date: <input class="field-input" style="width:140px;" placeholder="dd/mm/yyyy"></span>
-              <span>Ref No: <input class="field-input" style="width:120px;" placeholder="HMS/APT/__/26"></span>
-            </div>
-          </div></div>
+  <div class="sec-title">Appointment Details</div>
+  <div class="field-row">
+    <div class="field"><div class="label">Designation</div><div class="value">___________________________</div></div>
+    <div class="field"><div class="label">Section</div><div class="value">___________________________</div></div>
+  </div>
+  <div class="field-row">
+    <div class="field"><div class="label">Date of Joining</div><div class="value">___________________________</div></div>
+    <div class="field"><div class="label">Monthly Basic Salary (Rs.)</div><div class="value">___________________________</div></div>
+  </div>
+  <div class="field-row">
+    <div class="field"><div class="label">Probation Period</div><div class="value">Three (3) months</div></div>
+    <div class="field"><div class="label">Academic Year</div><div class="value">___________________________</div></div>
+  </div>
+
+  <div class="body-text">
+    Dear Ms./Mr. ___________________________,<br><br>
+    It is our pleasure to formally welcome you to Heritage Montessori and School as part of the faculty. With reference to your application and subsequent interview, we are pleased to appoint you as <strong>___________________________</strong>, with effect from <strong>___________________________</strong>. Your monthly Basic Salary shall be <strong>Rs. ___________________________</strong>, payable between the 1st and 10th of each month.<br><br>
+    The following terms, conditions, and institutional guidelines govern your employment at Heritage Montessori and School. These have been formulated to help you settle into a comfortable and productive association with the institution. These terms in no way undermine your rights as an employee; however, please keep in mind that duties take precedence in bringing quality to any workplace — and we expect to witness our students shine in the best possible way.
+  </div>
+
+  <div class="terms-box">
+    <div class="terms-title">Terms and Conditions of Employment</div>
+    <div class="terms-body">
+      <div class="definitions">
+        <strong>Definitions</strong><br>
+        For the purpose of this letter the following definitions apply:<br>
+        (a) &nbsp; <strong>Basic Salary</strong> — the monthly salary agreed upon and payable at the time of commencement of the probation period.<br>
+        (b) &nbsp; <strong>Confirmed Salary</strong> — the monthly salary agreed upon and payable upon successful completion of the probation period. This may differ from the Basic Salary if an increment is awarded at the time of confirmation.<br>
+        (c) &nbsp; <strong>Summer Vacation Salary</strong> — shall always be calculated on the Basic Salary, regardless of any subsequent increments or salary revisions.<br>
+        (d) &nbsp; <strong>Annual Increment</strong> — shall always be calculated on the Basic Salary, regardless of any subsequent increments or salary revisions.
+      </div>
+      <div class="clause">
+        <strong>1. Documentation on Record</strong><br>
+        Upon joining as a probationary teacher, you are required to submit the following to the school office:<br>
+        (a) &nbsp; 2 × photocopies of your National Identity Card (NIC) and 2 × passport-size photographs.<br>
+        (b) &nbsp; Complete, correct and up-to-date personal information including working cell phone numbers on which you can be contacted at all times.<br>
+        (c) &nbsp; Bank account details for salary disbursement. The account must be in the teacher's own name. Providing bank account details is mandatory upon joining.<br>
+        (d) &nbsp; In the event a teacher wishes salary to be credited to an account operated by another person, a written application must be submitted on the prescribed format, stating the full name, CNIC, relationship, bank account details of that person, and the reason for the request. The school administration reserves the right to accept or reject such an application. Salary will only be transferred to a third-party account upon written approval from the management.
+      </div>
+      <div class="clause">
+        <strong>2. Academic Year</strong><br>
+        The academic year runs from August/September to May/June.
+      </div>
+      <div class="clause">
+        <strong>3. Security Deposit</strong><br>
+        By signing this letter, you give your written consent for your first month's salary to be retained by the school as a refundable security deposit. This will be refunded upon your departure subject to the following conditions:<br>
+        (a) &nbsp; You have successfully completed your probation period.<br>
+        (b) &nbsp; You have submitted your written resignation in person to the school office with the required one (1) month's notice.<br>
+        (c) &nbsp; The school reserves the right to forfeit the security deposit if you resign or discontinue without the required notice, or if your services are terminated on grounds of misconduct.
+      </div>
+      <div class="clause">
+        <strong>4. Probation Period</strong><br>
+        From the date of joining you will be placed on a probation period as stated in this letter. The following conditions apply:<br>
+        (a) &nbsp; No planned leave, other than genuine emergencies, is admissible during the probation period.<br>
+        (b) &nbsp; Any increment upon completion of probation will be dependent on performance as assessed through the HMS-SPA.<br>
+        (c) &nbsp; Teachers may be assigned a different class or subject other than the one initially appointed for, based on aptitude and institutional need.<br>
+        (d) &nbsp; Should a teacher wish to discontinue during probation, she/he must inform the school in writing. Discontinuation during probation results in forfeiture of the security deposit and no experience certificate will be issued.<br>
+        (e) &nbsp; No experience certificate will be issued if a teacher fails to complete the probation period satisfactorily.<br>
+        (f) &nbsp; All rules applicable to a confirmed employee are equally applicable to a probationary teacher.<br>
+        (g) &nbsp; Upon successful completion of the probation period, you will be considered a confirmed staff member of Heritage Montessori and School.<br>
+        (h) &nbsp; You are required to follow all prescribed school timings from the first day of joining.
+      </div>
+      <div class="clause">
+        <strong>5. Attendance, Timings and Leave</strong><br>
+        (a) &nbsp; Adherence to prescribed school timings is mandatory for all staff. No excuse, other than a genuine emergency, is acceptable.<br>
+        (b) &nbsp; Three (3) late arrivals in one calendar month will result in a deduction of one (1) day's salary for that month. By signing this letter you give your consent to this deduction as a contractual term.<br>
+        (c) &nbsp; Leave applications must be submitted at least two (2) weeks before the intended leave date through the <strong>HMS-Attendance App</strong>, followed by informing the administration in person. Emergency leave must be reported immediately and followed up with a written explanation.<br>
+        (d) &nbsp; Any leave immediately preceding or following a weekend or public holiday will be counted as a continuous block of absence inclusive of that weekend or holiday.<br>
+        (e) &nbsp; No salary review or increment will be considered if the teacher has been absent or on leave during the last three months, other than for approved emergency reasons.
+      </div>
+      <div class="clause">
+        <strong>6. Annual Increment</strong><br>
+        (a) &nbsp; Teachers are entitled to an annual increment of 5% to 10%, subject to performance as assessed through the <strong>HMS-SPA (Staff Performance Assessment)</strong>. The exact percentage will be communicated in writing at the time of award.<br>
+        (b) &nbsp; Annual increment is admissible from the date of successful completion of the probation period.<br>
+        (c) &nbsp; The increment will be calculated on the Basic Salary as defined above.<br>
+        (d) &nbsp; No salary review will be considered unless the following conditions are met:<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;(i) &nbsp; Minimum five (5) consecutive months of service at the institution.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;(ii) &nbsp; No unapproved absence during the last three months.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;(iii) &nbsp; Not more than three late arrivals in the last three months.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;(iv) &nbsp; Satisfactory performance as per the job requirements of the institution.
+      </div>
+      <div class="clause">
+        <strong>7. Summer Vacation Salary</strong><br>
+        (a) &nbsp; Summer vacation salary is admissible to teachers who have completed their probation period and have worked for at least one (1) full academic year at Heritage Montessori and School, excluding summer vacations.<br>
+        (b) &nbsp; Summer vacation salary for the month of June will be paid with the August salary, disbursed in September. Summer vacation salary for the month of July will be paid with the December salary, disbursed in January.<br>
+        (c) &nbsp; Summer vacation salary will be paid at the rate of the Basic Salary as defined above.<br>
+        (d) &nbsp; A teacher who resigns or whose services are terminated before the start of the new academic session will forfeit the right to that earned summer vacation salary.
+      </div>
+      <div class="clause">
+        <strong>8. Notice Period and Resignation</strong><br>
+        (a) &nbsp; Either party may terminate this appointment by giving one (1) month's written notice. If you resign without serving the full notice period, the school reserves the right to withhold the equivalent amount from your final dues or security deposit.<br>
+        (b) &nbsp; Resignation must be submitted in writing, in person, to the school office. Dues will be released upon completion of notice period and satisfactory handover.<br>
+        (c) &nbsp; The school may waive the notice period at its sole discretion in special circumstances.
+      </div>
+      <div class="clause">
+        <strong>9. Termination</strong><br>
+        The school reserves the right to terminate this appointment immediately and without notice in cases of gross misconduct, dishonesty, insubordination, repeated absence, or any act that brings disrepute to the institution. In such cases the security deposit shall be forfeited and no experience certificate or summer vacation salary shall be payable.
+      </div>
+      <div class="clause">
+        <strong>10. Experience Certificate</strong><br>
+        A teacher is eligible to receive an experience certificate only upon completing a minimum of eight (8) consecutive months after the probation period and having fulfilled all conditions of service satisfactorily.
+      </div>
+      <div class="clause">
+        <strong>11. Mobile Phone Policy</strong><br>
+        Personal mobile phones must be switched off or on silent during class hours. Use of mobile phones in the classroom or in the presence of students is strictly prohibited and may result in disciplinary action.
+      </div>
+      <div class="clause">
+        <strong>12. Dress Code and Professional Conduct</strong><br>
+        You are required to dress formally and appropriately on all working days. Behaviour unbecoming of a teacher — inside or outside school premises — may result in disciplinary action. All interactions with students, parents and colleagues must remain respectful and professional at all times.
+      </div>
+      <div class="clause">
+        <strong>13. Duties and Responsibilities</strong><br>
+        In addition to classroom teaching, you may be assigned duties including lesson planning, student assessments, parent-teacher meetings, school events, co-curricular activities, supervision, and any other task assigned by the management. You are required to maintain lesson plans, student records, and assessment registers as directed.
+      </div>
+      <div class="clause">
+        <strong>14. Parent Communication</strong><br>
+        All communication with parents must take place through official school channels only. Teachers must not share personal contact numbers with parents or engage in unofficial communication with parents without prior approval from the management.
+      </div>
+      <div class="clause">
+        <strong>15. Confidentiality</strong><br>
+        All student records, parent information, academic data, salary details, and institutional matters are strictly confidential. You must not share, disclose, or discuss any such information outside the school during or after your employment. This obligation continues after the termination of employment.
+      </div>
+      <div class="clause">
+        <strong>16. Care of School Property</strong><br>
+        All school property, teaching materials, books, stationery and equipment issued to you must be maintained with care and returned in good condition upon departure. Any damage or loss due to negligence may be recovered from your salary or final dues, as agreed by signing this letter.
+      </div>
+      <div class="clause">
+        <strong>17. Social Media</strong><br>
+        You must not post, share or publish any content related to the school, its students, staff or management on any social media platform without prior written approval from the management. Any violation may result in immediate disciplinary action.
+      </div>
+      <div class="clause">
+        <strong>18. Compliance with School Policies</strong><br>
+        You are required to comply with all policies, procedures, and directives issued by the management from time to time including the staff handbook, academic guidelines, examination policies and any circular issued during the course of employment. Ignorance of a policy shall not be accepted as an excuse for non-compliance.
+      </div>
+      <div class="clause">
+        <strong>19. Legal Proceedings</strong><br>
+        Heritage Montessori and School reserves the right to take necessary legal action against any violation of the terms mentioned in this letter. In the event of legal proceedings, the teacher shall bear all expenses incurred, irrespective of the outcome of the case. Any disputes shall be subject to the jurisdiction of courts in Multan.
+      </div>
+    </div>
+  </div>
+
+  <div class="decl-box">
+    <div class="decl-title">Declaration</div>
+    <div class="decl-body">
+      1. &nbsp; I, the undersigned, accept this letter as a binding contract between Heritage Montessori and School and myself for a period of one (1) academic year, excluding summer vacations.<br>
+      2. &nbsp; I declare that I have read and fully understood all the terms and conditions stated above and agree to abide by them during the probation period and after being formally confirmed.<br>
+      3. &nbsp; I give my written consent for my first month's salary to be retained as a refundable security deposit as per Clause 3 above.<br>
+      4. &nbsp; I give my written consent for salary deductions in the event of late arrivals as per Clause 5(b) above.<br>
+      5. &nbsp; In case of legal proceedings, I will bear all expenses incurred, irrespective of the outcome.
+    </div>
+  </div>
+  <div class="sign-row">
+    <div class="sign-box">
+      <strong>Principal / Administrator</strong><br>
+      Heritage Montessori and School<br><br>
+      Date: ___________________________<br><br>
+      [School Stamp]
+    </div>
+    <div class="sign-box">
+      <strong>Accepted by Teacher</strong><br><br>
+      Full Name: ___________________________<br>
+      CNIC No: &nbsp;&nbsp; ___________________________<br>
+      Date: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;___________________________<br><br>
+      Signature: ___________________________
+    </div>
+  </div>
+</div>
 
           <div class="doc-section-title">Addressee</div>
           <div class="field-row">
@@ -737,15 +933,63 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
           <span style="font-family:serif;font-size:16px;color:var(--forest);font-weight:600;">Bonafide Certificate</span>
           <button class="doc-print-btn" onclick="printDoc()">🖨 Print</button>
         </div>
-        <div class="doc-form-body" id="printBonafide">
-          <div class="doc-form-header">
-            <h2>Heritage Montessori and School</h2>
-            <p>Garden Town, Multan · Tel: +92 336 1515260 · info@heritagemux.com</p>
-            <div class="doc-ref">
-              <span>Cert No: <input class="field-input" id="bon-certno" style="width:100px;" placeholder="HMS/B/___"></span>
-              <span>Date: <input class="field-input" id="bon-date" style="width:140px;" placeholder="dd/mm/yyyy"></span>
-            </div>
-          </div></div>
+        <div class="doc-form-body" id="printBonafide" style="padding:0;">
+
+  <div class="doc-ref" style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #d9cebc;margin-bottom:16px;font-size:11px;">
+    <span>Cert No: <input class="field-input" style="width:120px;" placeholder="HMS/B/___"></span>
+    <span>Date: <input class="field-input" style="width:140px;" placeholder="dd/mm/yyyy"></span>
+  </div>
+
+  <div style="text-align:center;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#2d4a2d;border-bottom:2px solid #b8962e;padding-bottom:8px;margin-bottom:16px;">BONAFIDE CERTIFICATE</div>
+
+  <div class="doc-section-title">Student Details</div>
+  <div class="field-row">
+    <div class="field-group"><div class="field-label">Student Name</div><input class="field-input" id="bon-name" placeholder="Master / Miss"></div>
+    <div class="field-group"><div class="field-label">Son / Daughter of</div><input class="field-input" placeholder="Father's full name"></div>
+  </div>
+  <div class="field-row">
+    <div class="field-group"><div class="field-label">Admission No.</div><input class="field-input" placeholder="HMS-____"></div>
+    <div class="field-group"><div class="field-label">Class / Section</div>
+      <select class="field-select" id="bon-class">
+        <option>Mont 1</option><option>Mont 2</option><option>Mont 3</option>
+        <option>Class 1</option><option>Class 2</option><option>Class 3</option>
+        <option>Class 4</option><option>Class 5</option>
+      </select>
+    </div>
+  </div>
+  <div class="field-row">
+    <div class="field-group"><div class="field-label">Academic Year</div><input class="field-input" value="2026-2027"></div>
+    <div class="field-group"><div class="field-label">Date of Birth</div><input class="field-input" placeholder="dd/mm/yyyy"></div>
+  </div>
+  <div class="field-row" style="grid-template-columns:1fr;">
+    <div class="field-group"><div class="field-label">Purpose of Certificate</div><input class="field-input" placeholder="e.g. Bank account / Passport / Visa"></div>
+  </div>
+
+  <div class="doc-body-text" style="margin-top:20px;line-height:2.2;">
+    To Whom It May Concern,<br><br>
+    This is to certify that <strong><input class="field-input" style="width:200px;" placeholder="Student Name"></strong>,
+    Son/Daughter of <strong><input class="field-input" style="width:180px;" placeholder="Parent Name"></strong>,
+    bearing Admission No. <strong><input class="field-input" style="width:100px;" placeholder="HMS-___"></strong>,
+    is a bonafide student of this institution. He/She is currently enrolled in
+    <strong><select class="field-select" style="width:90px;"><option>Mont 1</option><option>Mont 2</option><option>Mont 3</option><option>Class 1</option><option>Class 2</option><option>Class 3</option><option>Class 4</option><option>Class 5</option></select></strong>
+    for the Academic Year <strong><input class="field-input" style="width:100px;" value="2026–2027"></strong>.<br><br>
+    This certificate is issued on the request of the parent/guardian for the purpose of
+    <strong><input class="field-input" style="width:200px;" placeholder="purpose"></strong>.
+    We wish him/her all the best.
+  </div>
+
+  <div class="doc-sign-row" style="margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:40px;">
+    <div class="doc-sign-box" style="border-top:1px solid #1a1714;padding-top:10px;font-size:11px;line-height:2;">
+      <strong>Principal / Administrator</strong><br>
+      Heritage Montessori and School<br><br>
+      [School Stamp]
+    </div>
+    <div class="doc-sign-box" style="border-top:1px solid #1a1714;padding-top:10px;font-size:11px;line-height:2;">
+      Date: ___________________________
+    </div>
+  </div>
+
+</div>
           <div style="text-align:center;font-size:15px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--forest);margin:20px 0 24px;text-decoration:underline;">BONAFIDE CERTIFICATE</div>
           <div class="doc-section-title">Student Details</div>
           <div class="field-row">
@@ -785,15 +1029,77 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
           <span style="font-family:serif;font-size:16px;color:var(--forest);font-weight:600;">School Leaving Certificate</span>
           <button class="doc-print-btn" onclick="printDoc()">🖨 Print</button>
         </div>
-        <div class="doc-form-body" id="printLeaving">
-          <div class="doc-form-header">
-            <h2>Heritage Montessori and School</h2>
-            <p>Garden Town, Multan · Tel: +92 336 1515260 · info@heritagemux.com</p>
-            <div class="doc-ref">
-              <span>Cert No: <input class="field-input" id="slc-certno" style="width:100px;" placeholder="HMS/L/___"></span>
-              <span>Date: <input class="field-input" id="slc-date" style="width:140px;" placeholder="dd/mm/yyyy"></span>
-            </div>
-          </div></div>
+        <div class="doc-form-body" id="printLeaving" style="padding:0;">
+
+  <div class="doc-ref" style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #d9cebc;margin-bottom:16px;font-size:11px;">
+    <span>Cert No: <input class="field-input" style="width:120px;" placeholder="HMS/SLC/___"></span>
+    <span>Date: <input class="field-input" style="width:140px;" placeholder="dd/mm/yyyy"></span>
+  </div>
+
+  <div style="text-align:center;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#2d4a2d;border-bottom:2px solid #b8962e;padding-bottom:8px;margin-bottom:16px;">SCHOOL LEAVING CERTIFICATE</div>
+
+  <div class="doc-section-title">Student Details</div>
+  <div class="field-row">
+    <div class="field-group"><div class="field-label">Student Name</div><input class="field-input" placeholder="Master / Miss"></div>
+    <div class="field-group"><div class="field-label">Son / Daughter of</div><input class="field-input" placeholder="Father's full name"></div>
+  </div>
+  <div class="field-row">
+    <div class="field-group"><div class="field-label">Admission No.</div><input class="field-input" placeholder="HMS-____"></div>
+    <div class="field-group"><div class="field-label">Date of Birth</div><input class="field-input" placeholder="dd/mm/yyyy"></div>
+  </div>
+  <div class="field-row">
+    <div class="field-group"><div class="field-label">Class Last Attended</div>
+      <select class="field-select"><option>Mont 1</option><option>Mont 2</option><option>Mont 3</option><option>Class 1</option><option>Class 2</option><option>Class 3</option><option>Class 4</option><option>Class 5</option></select>
+    </div>
+    <div class="field-group"><div class="field-label">Academic Year</div><input class="field-input" value="2026–2027"></div>
+  </div>
+  <div class="field-row">
+    <div class="field-group"><div class="field-label">Date of Admission</div><input class="field-input" placeholder="dd/mm/yyyy"></div>
+    <div class="field-group"><div class="field-label">Date of Leaving</div><input class="field-input" placeholder="dd/mm/yyyy"></div>
+  </div>
+  <div class="field-row" style="grid-template-columns:1fr;">
+    <div class="field-group"><div class="field-label">Reason for Leaving</div><input class="field-input" placeholder="e.g. Transfer / Parent request / Completion of class"></div>
+  </div>
+
+  <div class="doc-section-title">Character &amp; Conduct</div>
+  <div class="field-row">
+    <div class="field-group"><div class="field-label">Character</div>
+      <select class="field-select"><option>Excellent</option><option>Very Good</option><option>Good</option><option>Satisfactory</option></select>
+    </div>
+    <div class="field-group"><div class="field-label">Conduct</div>
+      <select class="field-select"><option>Excellent</option><option>Very Good</option><option>Good</option><option>Satisfactory</option></select>
+    </div>
+  </div>
+
+  <div class="doc-body-text" style="margin-top:20px;line-height:2.2;">
+    To Whom It May Concern,<br><br>
+    This is to certify that <strong><input class="field-input" style="width:200px;" placeholder="Student Name"></strong>,
+    Son/Daughter of <strong><input class="field-input" style="width:180px;" placeholder="Parent Name"></strong>,
+    bearing Admission No. <strong><input class="field-input" style="width:100px;" placeholder="HMS-___"></strong>,
+    was a student of this institution from
+    <strong><input class="field-input" style="width:110px;" placeholder="dd/mm/yyyy"></strong> to
+    <strong><input class="field-input" style="width:110px;" placeholder="dd/mm/yyyy"></strong>.
+    He/She was last enrolled in
+    <strong><select class="field-select" style="width:90px;"><option>Mont 1</option><option>Mont 2</option><option>Mont 3</option><option>Class 1</option><option>Class 2</option><option>Class 3</option><option>Class 4</option><option>Class 5</option></select></strong>.<br><br>
+    His/Her character and conduct during the period of study were found to be
+    <strong><select class="field-select" style="width:110px;"><option>Excellent</option><option>Very Good</option><option>Good</option><option>Satisfactory</option></select></strong>.
+    He/She is leaving the school due to
+    <strong><input class="field-input" style="width:200px;" placeholder="reason"></strong>.<br><br>
+    We wish him/her all the best in future endeavours.
+  </div>
+
+  <div class="doc-sign-row" style="margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:40px;">
+    <div class="doc-sign-box" style="border-top:1px solid #1a1714;padding-top:10px;font-size:11px;line-height:2;">
+      <strong>Principal / Administrator</strong><br>
+      Heritage Montessori and School<br><br>
+      [School Stamp]
+    </div>
+    <div class="doc-sign-box" style="border-top:1px solid #1a1714;padding-top:10px;font-size:11px;line-height:2;">
+      Date: ___________________________
+    </div>
+  </div>
+
+</div>
           <div style="text-align:center;font-size:15px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--forest);margin:20px 0 24px;text-decoration:underline;">SCHOOL LEAVING CERTIFICATE</div>
           <div class="doc-section-title">Student Details</div>
           <div class="field-row">
@@ -837,15 +1143,61 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
           <span style="font-family:serif;font-size:16px;color:var(--forest);font-weight:600;">Experience Letter</span>
           <button class="doc-print-btn" onclick="printDoc()">🖨 Print</button>
         </div>
-        <div class="doc-form-body" id="printExperience">
-          <div class="doc-form-header">
-            <h2>Heritage Montessori and School</h2>
-            <p>Garden Town, Multan · Tel: +92 336 1515260 · info@heritagemux.com</p>
-            <div class="doc-ref">
-              <span>Date: <input class="field-input" style="width:140px;" placeholder="dd/mm/yyyy"></span>
-              <span>Ref No: <input class="field-input" style="width:100px;" placeholder="HMS/E/___"></span>
-            </div>
-          </div></div>
+        <div class="doc-form-body" id="printExperience" style="padding:0;">
+
+  <div class="doc-ref" style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #d9cebc;margin-bottom:16px;font-size:11px;">
+    <span>Date: <input class="field-input" style="width:140px;" placeholder="dd/mm/yyyy"></span>
+    <span>Ref No: <input class="field-input" style="width:130px;" placeholder="HMS/EXP/___"></span>
+  </div>
+
+  <div style="text-align:center;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#2d4a2d;border-bottom:2px solid #b8962e;padding-bottom:8px;margin-bottom:16px;">EXPERIENCE LETTER</div>
+
+  <div class="doc-section-title">Staff Details</div>
+  <div class="field-row">
+    <div class="field-group"><div class="field-label">Full Name</div><input class="field-input" placeholder="Ms. / Mr."></div>
+    <div class="field-group"><div class="field-label">S/o · D/o · W/o</div><input class="field-input" placeholder="Father / Husband name"></div>
+  </div>
+  <div class="field-row">
+    <div class="field-group"><div class="field-label">CNIC No.</div><input class="field-input" placeholder="xxxxx-xxxxxxx-x"></div>
+    <div class="field-group"><div class="field-label">Designation</div><input class="field-input" placeholder="e.g. Class Teacher — Mont 1"></div>
+  </div>
+  <div class="field-row">
+    <div class="field-group"><div class="field-label">Date of Joining</div><input class="field-input" placeholder="dd/mm/yyyy"></div>
+    <div class="field-group"><div class="field-label">Date of Leaving</div><input class="field-input" placeholder="dd/mm/yyyy"></div>
+  </div>
+  <div class="field-row">
+    <div class="field-group"><div class="field-label">Performance</div>
+      <select class="field-select"><option>Excellent</option><option>Very Good</option><option>Good</option><option>Satisfactory</option></select>
+    </div>
+    <div class="field-group"><div class="field-label">Reason for Leaving</div><input class="field-input" placeholder="e.g. Resignation / End of contract"></div>
+  </div>
+
+  <div class="doc-body-text" style="margin-top:20px;line-height:2.2;">
+    To Whom It May Concern,<br><br>
+    This is to certify that <strong><input class="field-input" style="width:200px;" placeholder="Full Name"></strong>,
+    served at Heritage Montessori and School, Garden Town, Multan as
+    <strong><input class="field-input" style="width:200px;" placeholder="Designation"></strong>
+    from <strong><input class="field-input" style="width:110px;" placeholder="dd/mm/yyyy"></strong> to
+    <strong><input class="field-input" style="width:110px;" placeholder="dd/mm/yyyy"></strong>.<br><br>
+    During his/her tenure, he/she proved to be a dedicated and hardworking member of our staff.
+    His/Her conduct and performance were found to be
+    <strong><select class="field-select" style="width:110px;"><option>Excellent</option><option>Very Good</option><option>Good</option><option>Satisfactory</option></select></strong>
+    throughout the period of service.<br><br>
+    We wish him/her the very best in future career and endeavours.
+  </div>
+
+  <div class="doc-sign-row" style="margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:40px;">
+    <div class="doc-sign-box" style="border-top:1px solid #1a1714;padding-top:10px;font-size:11px;line-height:2;">
+      <strong>Principal / Administrator</strong><br>
+      Heritage Montessori and School<br><br>
+      [School Stamp]
+    </div>
+    <div class="doc-sign-box" style="border-top:1px solid #1a1714;padding-top:10px;font-size:11px;line-height:2;">
+      Date: ___________________________
+    </div>
+  </div>
+
+</div>
           <div style="text-align:center;font-size:15px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--forest);margin:20px 0 24px;text-decoration:underline;">EXPERIENCE LETTER</div>
           <div class="doc-section-title">Staff Details</div>
           <div class="field-row">
@@ -883,11 +1235,8 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
       </div>
 
       <!-- EXPERIENCE LETTER FORM -->
-      </div>
+      
 
-    </div><!-- /tabDocuments -->
-
-    <!-- ═══════════════ RECORDS TAB ═══════════════ -->
     <div id="tabRecords" class="records-panel">
       <div class="submissions-title">
         <span>📁 Form Records — Submitted Requests</span>
@@ -925,14 +1274,18 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
       <div id="recordsList">
         <div class="empty-state"><div class="ei">📁</div><p>Loading records…</p></div>
       </div>
-    </div><!-- /tabRecords -->
+    </div>
+    </div>
+
+    </div><!-- /tabDocuments -->
+
+    <!-- ═══════════════ RECORDS TAB ═══════════════ --><!-- /tabRecords -->
 
     <div class="panel-footer">
       <span><span class="live-dot"></span>Heritage Montessori · Staff Portal · Live via Firebase</span>
       <button class="logout-btn" onclick="logout()">Log out</button>
     </div>
 
-  </div><!-- /mainPanel -->
 </div><!-- /portal -->
 
 <!-- DELETE CONFIRM MODAL -->
@@ -1544,4 +1897,663 @@ window.generateParentPin = async function() {
     const waMsg = encodeURIComponent(
       `Assalam o Alaikum${parentName ? ' ' + parentName : ''},
 
-Your one-time PIN for the Herit
+Your one-time PIN for the Heritage Montessori Admission Form is:
+
+*${pin}*
+
+Please visit:
+https://www.heritagemux.com/heritage-parent-portal.html
+
+Click "Complete Admission Form" and enter this PIN.
+
+⚠️ This PIN is valid for ${hours} hours only and expires at ${expiryTime} on ${expiryDate}.
+
+JazakAllah Khairan,
+Heritage Montessori & School`
+    );
+    document.getElementById('waPinBtn').href = `https://wa.me/?text=${waMsg}`;
+    document.getElementById('waPinBtn').style.display = 'inline-flex';
+
+    btn.textContent = 'Generate Another PIN';
+    btn.disabled = false;
+    showToast('✓ PIN generated — valid for ' + hours + ' hours.');
+
+  } catch(err) {
+    btn.textContent = 'Generate PIN';
+    btn.disabled = false;
+    showToast('Error generating PIN. Check connection.');
+    console.error(err);
+  }
+};
+
+window.copyPin = function() {
+  if(!_lastGeneratedPin) return;
+  navigator.clipboard.writeText(_lastGeneratedPin).then(() => showToast('PIN copied to clipboard.'));
+};
+
+window.closeDoc = function() {
+  document.getElementById('docListView').style.display = 'block';
+  document.querySelectorAll('.doc-form-section').forEach(d=>d.classList.remove('active'));
+  currentDocId = null;
+};
+
+window.printDoc = function() {
+  window.print();
+};
+
+// ── PRINT SINGLE CARD ──
+window.printCard = function(id) {
+  const body = document.getElementById('body-'+id);
+  const wasOpen = body.classList.contains('open');
+  body.classList.add('open');
+  document.querySelectorAll('.sub-card').forEach(card => {
+    if(card.id !== 'card-'+id) card.classList.add('print-hide');
+  });
+  const sub = allSubs.find(s=>s.id===id);
+  document.getElementById('printMeta').textContent =
+    'Feedback for: '+(sub?sub.childName:'Unknown')+' · Printed: '+
+    new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+  window.print();
+  document.querySelectorAll('.sub-card').forEach(c=>c.classList.remove('print-hide'));
+  if(!wasOpen) body.classList.remove('open');
+};
+
+// ── PRINT ALL VISIBLE ──
+window.printAll = function() {
+  const cards = document.querySelectorAll('#submissionsList .sub-card');
+  if(!cards.length) { showToast('No submissions to print.'); return; }
+  const openState = {};
+  cards.forEach(card => {
+    const id = card.dataset.id;
+    const body = document.getElementById('body-'+id);
+    openState[id] = body.classList.contains('open');
+    body.classList.add('open');
+  });
+  const activeFilter = document.querySelector('.filter-btn.active');
+  const filterLabel = activeFilter ? activeFilter.textContent.replace(/[0-9]/g,'').trim() : 'All';
+  document.getElementById('printMeta').textContent =
+    'Filter: '+filterLabel+' · '+cards.length+' submission'+(cards.length!==1?'s':'')+
+    ' · Printed: '+new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+  window.print();
+  cards.forEach(card => {
+    const id = card.dataset.id;
+    const body = document.getElementById('body-'+id);
+    if(!openState[id]) body.classList.remove('open');
+  });
+};
+
+// ── RECORDS SYSTEM ──
+let allRecords = [];
+let recordsMap = {};
+let recordsFilter = 'all';
+let showArchived = false;
+
+async function loadRecords() {
+  const types = ['admission', 'feeConc', 'leaving', 'bonafide'];
+  const typeLabels = { admission:'Admission Form', feeConc:'Fee Concession', leaving:'School Leaving Cert', bonafide:'Bonafide/Attendance' };
+  const typeIcons = { admission:'📝', feeConc:'💰', leaving:'🏫', bonafide:'📜' };
+  allRecords = [];
+
+  for(const type of types) {
+    try {
+      const snap = await get(ref(db, `formArchive/${type}`));
+      if(snap.exists()) {
+        Object.entries(snap.val()).forEach(([key, val]) => {
+          const rec = { ...val, _key: key, _type: type,
+            _typeLabel: typeLabels[type], _typeIcon: typeIcons[type] };
+          allRecords.push(rec);
+          recordsMap[key] = rec;
+        });
+      }
+    } catch(e) { console.error(e); }
+  }
+
+  allRecords.sort((a,b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+  renderRecords();
+}
+
+function renderRecords() {
+  const list = document.getElementById('recordsList');
+
+  // Update category badges
+  const cats = ['all','admission','feeConc','leaving','bonafide'];
+  cats.forEach(cat => {
+    const el = document.getElementById('catbadge-' + cat);
+    if(!el) return;
+    const count = cat === 'all'
+      ? allRecords.filter(r => !(!showArchived && r.status==='completed')).length
+      : allRecords.filter(r => r._type === cat && !(!showArchived && r.status==='completed')).length;
+    el.textContent = count;
+    const btn = document.getElementById('cat-' + cat);
+    if(btn) {
+      const hasPending = allRecords.filter(r => (cat==='all'||r._type===cat) && r.status==='pending').length > 0;
+      btn.classList.toggle('has-new', hasPending && !btn.classList.contains('active'));
+    }
+  });
+
+  let filtered = allRecords.filter(r => {
+    if(!showArchived && r.status === 'completed') return false;
+    // Apply category filter
+    if(recordsCatFilter !== 'all' && r._type !== recordsCatFilter) return false;
+    // Apply status filter
+    if(recordsFilter === 'all') return true;
+    if(recordsFilter === 'pending') return r.status === 'pending';
+    if(recordsFilter === 'processing') return r.status === 'processing';
+    if(recordsFilter === 'completed') return r.status === 'completed';
+    return true;
+  });
+
+  document.getElementById('recordsCount').textContent =
+    `${filtered.length} record${filtered.length !== 1 ? 's' : ''}`;
+
+  if(!filtered.length) {
+    list.innerHTML = '<div class="empty-state"><div class="ei">📁</div><p>No records found.</p></div>';
+    return;
+  }
+
+  list.innerHTML = filtered.map(r => {
+    const date = r.submittedAt ? new Date(r.submittedAt).toLocaleDateString('en-GB',
+      {day:'numeric', month:'short', year:'numeric'}) : '—';
+    const statusClass = `status-${r.status||'pending'}`;
+    const statusLabel = (r.status||'pending').charAt(0).toUpperCase() + (r.status||'pending').slice(1);
+    const safeKey = r._key;
+
+    const actionLabel = r._type==='admission' ? '📝 View Full Application' : r._type==='feeConc' ? '📋 Process Decision' : r._type==='leaving' ? '📄 Issue SLC' : '📜 Issue Certificate';
+
+    return `<div class="record-card" id="rec-${safeKey}">
+      <div class="record-header" onclick="toggleRecord('${safeKey}')">
+        <span class="record-ref">${r.refNumber||'—'}</span>
+        <span class="record-type">${r._typeIcon} ${r._typeLabel}</span>
+        <span class="record-name">${r.childName||'—'}</span>
+        <span class="record-class">${r.className||'—'}</span>
+        <span class="status-badge ${statusClass}">${statusLabel}</span>
+        <span class="record-date">${date}</span>
+      </div>
+      <div class="record-body" id="recbody-${safeKey}">
+        <div class="record-detail-grid">
+          <div class="record-detail"><span class="record-detail-label">Reference</span><span class="record-detail-value">${r.refNumber||'—'}</span></div>
+          <div class="record-detail"><span class="record-detail-label">Child Name</span><span class="record-detail-value">${r.childName||'—'}</span></div>
+          <div class="record-detail"><span class="record-detail-label">Class</span><span class="record-detail-value">${r.className||'—'}</span></div>
+          <div class="record-detail"><span class="record-detail-label">Parent</span><span class="record-detail-value">${r.parentName||'—'}</span></div>
+          <div class="record-detail"><span class="record-detail-label">Contact</span><span class="record-detail-value">${r.contactNumber||'—'}</span></div>
+          <div class="record-detail"><span class="record-detail-label">CNIC Last 4</span><span class="record-detail-value">${r.cnicLast4||'—'}</span></div>
+          <div class="record-detail"><span class="record-detail-label">Signed</span><span class="record-detail-value">${r.hasSignature?'✅ Yes':'❌ No'}</span></div>
+          <div class="record-detail"><span class="record-detail-label">Submitted</span><span class="record-detail-value">${date}</span></div>
+          ${r.requestType ? `<div class="record-detail"><span class="record-detail-label">Request Type</span><span class="record-detail-value">${r.requestType==='summer'?'Summer Plan Change':'Regular Concession'}</span></div>` : ''}
+          ${r.summerMonths ? `<div class="record-detail"><span class="record-detail-label">Summer Months</span><span class="record-detail-value">${r.summerMonths}</span></div>` : ''}
+          ${r.concessionAmount ? `<div class="record-detail"><span class="record-detail-label">Concession Requested</span><span class="record-detail-value">${r.concessionAmount}</span></div>` : ''}
+          ${r.leavingReason ? `<div class="record-detail"><span class="record-detail-label">Reason for Leaving</span><span class="record-detail-value">${r.leavingReason}</span></div>` : ''}
+          ${r.lastDate ? `<div class="record-detail"><span class="record-detail-label">Last Date</span><span class="record-detail-value">${r.lastDate}</span></div>` : ''}
+          ${r.dateOfAdmission ? `<div class="record-detail"><span class="record-detail-label">Date of Admission</span><span class="record-detail-value">${r.dateOfAdmission}</span></div>` : ''}
+          ${r.newSchool ? `<div class="record-detail"><span class="record-detail-label">New School</span><span class="record-detail-value">${r.newSchool}</span></div>` : ''}
+          ${r.whatsappNumber ? `<div class="record-detail"><span class="record-detail-label">WhatsApp</span><span class="record-detail-value">${r.whatsappNumber}</span></div>` : ''}
+          ${r.certType ? `<div class="record-detail"><span class="record-detail-label">Certificate Type</span><span class="record-detail-value">${r.certType}</span></div>` : ''}
+          ${r.purpose ? `<div class="record-detail"><span class="record-detail-label">Purpose</span><span class="record-detail-value">${r.purpose}</span></div>` : ''}
+          ${r.requiredBy ? `<div class="record-detail"><span class="record-detail-label">Required By</span><span class="record-detail-value">${r.requiredBy}</span></div>` : ''}
+          ${r.additionalDetails ? `<div class="record-detail" style="grid-column:1/-1"><span class="record-detail-label">Additional Details</span><span class="record-detail-value">${r.additionalDetails}</span></div>` : ''}
+          ${r.summerReason ? `<div class="record-detail" style="grid-column:1/-1"><span class="record-detail-label">Reason</span><span class="record-detail-value">${r.summerReason}</span></div>` : ''}
+          ${r.concessionReason ? `<div class="record-detail" style="grid-column:1/-1"><span class="record-detail-label">Concession Reason</span><span class="record-detail-value">${r.concessionReason}</span></div>` : ''}
+          ${r.leavingDetails ? `<div class="record-detail" style="grid-column:1/-1"><span class="record-detail-label">Additional Details</span><span class="record-detail-value">${r.leavingDetails}</span></div>` : ''}
+          ${r.dob ? `<div class="record-detail"><span class="record-detail-label">Date of Birth</span><span class="record-detail-value">${r.dob}</span></div>` : ''}
+          ${r.gender ? `<div class="record-detail"><span class="record-detail-label">Gender</span><span class="record-detail-value">${r.gender}</span></div>` : ''}
+          ${r.classApplied ? `<div class="record-detail"><span class="record-detail-label">Class Applied</span><span class="record-detail-value">${r.classApplied}</span></div>` : ''}
+          ${r.previousSchool ? `<div class="record-detail" style="grid-column:1/-1"><span class="record-detail-label">Previous School</span><span class="record-detail-value">${r.previousSchool}</span></div>` : ''}
+          ${r.motherName ? `<div class="record-detail"><span class="record-detail-label">Mother's Name</span><span class="record-detail-value">${r.motherName}</span></div>` : ''}
+          ${r.motherContact ? `<div class="record-detail"><span class="record-detail-label">Mother's Contact</span><span class="record-detail-value">${r.motherContact}</span></div>` : ''}
+          ${r.motherCNIC ? `<div class="record-detail"><span class="record-detail-label">Mother's CNIC</span><span class="record-detail-value">${r.motherCNIC}</span></div>` : ''}
+          ${r.motherAddress ? `<div class="record-detail" style="grid-column:1/-1"><span class="record-detail-label">Address</span><span class="record-detail-value">${r.motherAddress}</span></div>` : ''}
+          ${r.motherOccupation ? `<div class="record-detail"><span class="record-detail-label">Mother's Occupation</span><span class="record-detail-value">${r.motherOccupation}</span></div>` : ''}
+          ${r.fatherName ? `<div class="record-detail"><span class="record-detail-label">Father's Name</span><span class="record-detail-value">${r.fatherName}</span></div>` : ''}
+          ${r.fatherContact ? `<div class="record-detail"><span class="record-detail-label">Father's Contact</span><span class="record-detail-value">${r.fatherContact}</span></div>` : ''}
+          ${r.fatherCNIC ? `<div class="record-detail"><span class="record-detail-label">Father's CNIC</span><span class="record-detail-value">${r.fatherCNIC}</span></div>` : ''}
+          ${r.fatherOccupation ? `<div class="record-detail"><span class="record-detail-label">Father's Occupation</span><span class="record-detail-value">${r.fatherOccupation}</span></div>` : ''}
+          ${r.emergency1Name ? `<div class="record-detail"><span class="record-detail-label">Emergency Contact 1</span><span class="record-detail-value">${r.emergency1Name} (${r.emergency1Relation||''}) — ${r.emergency1Contact||''}</span></div>` : ''}
+          ${r.emergency2Name ? `<div class="record-detail"><span class="record-detail-label">Emergency Contact 2</span><span class="record-detail-value">${r.emergency2Name} (${r.emergency2Relation||''}) — ${r.emergency2Contact||''}</span></div>` : ''}
+          ${r.additionalInfo ? `<div class="record-detail" style="grid-column:1/-1"><span class="record-detail-label">Additional Info</span><span class="record-detail-value">${r.additionalInfo}</span></div>` : ''}
+          ${r.hearAboutUs ? `<div class="record-detail"><span class="record-detail-label">Heard About Us</span><span class="record-detail-value">${r.hearAboutUs}</span></div>` : ''}
+        </div>
+        <div class="record-actions">
+          <button class="btn btn-primary btn-sm" onclick="openRecordAction('${r._type}','${safeKey}')">
+            ${actionLabel}
+          </button>
+          <span style="font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-left:8px;">Status:</span>
+          <button class="btn-status btn-status-pending" onclick="updateRecordStatus('${r._type}','${safeKey}','pending')">⏳ Pending</button>
+          <button class="btn-status btn-status-processing" onclick="updateRecordStatus('${r._type}','${safeKey}','processing')">🔄 Processing</button>
+          <button class="btn-status btn-status-completed" onclick="updateRecordStatus('${r._type}','${safeKey}','completed')">✓ Completed</button>
+          <button class="btn-status" onclick="deleteRecord('${r._type}','${safeKey}')" style="border-color:#c0392b;color:#c0392b;margin-left:8px;">🗑 Delete</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.toggleRecord = function(key) {
+  const body = document.getElementById('recbody-'+key);
+  if(body) body.classList.toggle('open');
+};
+
+window.updateRecordStatus = async function(type, key, status) {
+  try {
+    await update(ref(db, `formArchive/${type}/${key}`), { status, updatedAt: new Date().toISOString() });
+    const rec = allRecords.find(r => r._key === key);
+    if(rec) rec.status = status;
+    renderRecords();
+    showToast(`✓ Marked as ${status}`);
+  } catch(e) {
+    showToast('Error updating status.', 4000);
+  }
+};
+
+// ── CATEGORY FILTER STATE ──
+let recordsCatFilter = 'all';
+let feedbackCatFilter = 'all';
+
+window.setCatFilter = function(cat, btn) {
+  recordsCatFilter = cat;
+  document.querySelectorAll('[id^="cat-"]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderRecords();
+};
+
+window.setFeedbackCat = function(cat, btn) {
+  feedbackCatFilter = cat;
+  document.querySelectorAll('[id^="fcat-"]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  // Map feedback cat to existing filter
+  const mapToFilter = { all:'all', new:'new', pending:'pending', responded:'responded', kept:'kept' };
+  currentFilter = mapToFilter[cat] || 'all';
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  const matchingBtn = document.querySelector('.filter-btn[onclick*="' + currentFilter + '"]');
+  if(matchingBtn) matchingBtn.classList.add('active');
+  // Update feedback category badges
+  const seen = getSeenIds();
+  const fcats = {
+    all: allSubs.length,
+    new: allSubs.filter(s => !seen.has(s.id)).length,
+    pending: allSubs.filter(s => !s.schoolResponse).length,
+    responded: allSubs.filter(s => !!s.schoolResponse).length,
+    kept: allSubs.filter(s => !!s.kept).length
+  };
+  Object.entries(fcats).forEach(([cat, count]) => {
+    const el = document.getElementById('fcatbadge-' + cat);
+    if(el) el.textContent = count;
+    const btn = document.getElementById('fcat-' + cat);
+    if(btn) btn.classList.toggle('has-new', cat === 'new' && count > 0 && !btn.classList.contains('active'));
+  });
+
+  renderFiltered();
+};
+
+window.filterRecords = function(filter, btn) {
+  recordsFilter = filter;
+  document.querySelectorAll('.records-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  // Auto show completed when completed filter selected
+  if(filter === 'completed') {
+    showArchived = true;
+    document.getElementById('showArchivedBtn').textContent = 'Hide Completed';
+  }
+  renderRecords();
+};
+
+window.deleteRecord = async function(type, key) {
+  if(!confirm('Permanently delete this record? This cannot be undone.')) return;
+  try {
+    const { ref: dbRef, remove } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js");
+    await remove(ref(db, 'formArchive/' + type + '/' + key));
+    allRecords = allRecords.filter(r => r._key !== key);
+    delete recordsMap[key];
+    renderRecords();
+    showToast('✓ Record deleted.');
+  } catch(e) {
+    showToast('Error deleting record.', 4000);
+    console.error(e);
+  }
+};
+
+window.toggleArchived = function() {
+  showArchived = !showArchived;
+  document.getElementById('showArchivedBtn').textContent = showArchived ? 'Hide Completed' : 'Show Completed';
+  renderRecords();
+};
+
+// ── ACTION MODAL ──
+const WA_SCHOOL = '923361515260';
+let _actionRecord = null;
+let _actionType = null;
+let _actionKey = null;
+let _currentDecision = null;
+
+function buildSLCWA(r) {
+  const msg = 'Assalam o Alaikum ' + (r.parentName||'') + ',\n\nYour School Leaving Certificate request (Ref: ' + (r.refNumber||'') + ') has been processed. Please visit the school office to collect the certificate with a valid CNIC.\n\nJazakAllah Khairan,\nHeritage Montessori & School';
+  const num = r.contactNumber ? '92' + r.contactNumber.replace(/\D/g,'').replace(/^0/,'') : WA_SCHOOL;
+  return 'https://wa.me/' + num + '?text=' + encodeURIComponent(msg);
+}
+
+function buildATTWA(r) {
+  const msg = 'Assalam o Alaikum ' + (r.parentName||'') + ',\n\nYour ' + (r.certType||'Certificate') + ' request (Ref: ' + (r.refNumber||'') + ') is ready. Please visit the school office to collect it with a valid CNIC.\n\nJazakAllah Khairan,\nHeritage Montessori & School';
+  const num = r.contactNumber ? '92' + r.contactNumber.replace(/\D/g,'').replace(/^0/,'') : WA_SCHOOL;
+  return 'https://wa.me/' + num + '?text=' + encodeURIComponent(msg);
+}
+
+window.openRecordAction = function(type, key) {
+  const record = recordsMap[key];
+  if(!record) { showToast('Record not found. Please refresh.', 3000); return; }
+  _actionRecord = record;
+  _actionType = type;
+  _actionKey = key;
+  _currentDecision = null;
+
+  const modal = document.getElementById('actionModal');
+  const body = document.getElementById('actionModalBody');
+  const title = document.getElementById('actionModalTitle');
+  const today = new Date().toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'});
+  const r = record;
+
+  if(type === 'admission') {
+    title.textContent = 'Admission Form — ' + (r.childName||'') + ' (' + (r.classApplied||'') + ')';
+    const today = new Date().toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'});
+    const waNum = r.motherContact ? '92' + r.motherContact.replace(/\D/g,'').replace(/^0/,'') : WA_SCHOOL;
+    const waMsg = encodeURIComponent(
+      'Assalam o Alaikum ' + (r.motherName||'') + ',\n\n' +
+      'Your child admission application (Ref: ' + (r.refNumber||'') + ') for ' + (r.classApplied||'') + ' has been received.\n\n' +
+      'The school will contact you shortly to confirm the next steps.\n\nJazakAllah Khairan,\nHeritage Montessori & School'
+    );
+
+    const field = (label, value) =>
+      '<div style="margin-bottom:10px;">' +
+        '<div style="font-size:8pt;letter-spacing:1.5px;text-transform:uppercase;color:#5a7a5a;margin-bottom:2px;">' + label + '</div>' +
+        '<div style="border-bottom:1.5px solid #999;padding:4px 0;font-size:11pt;min-height:20pt;color:#1e1e1e;">' + (value||'') + '</div>' +
+      '</div>';
+
+    const row2 = (f1label, f1val, f2label, f2val) =>
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:0;">' +
+        field(f1label, f1val) + field(f2label, f2val) +
+      '</div>';
+
+    const sectionTitle = (title) =>
+      '<div style="font-size:9pt;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#2d4a2d;margin:18px 0 10px;padding-bottom:4px;border-bottom:2px solid #b8962e;">' + title + '</div>';
+
+    const checkRow = (label, checked) =>
+      '<div style="display:flex;align-items:center;gap:10px;padding:7px 10px;border-bottom:1px solid #e8dfc8;background:' + (checked?'#f0f7f0':'white') + ';">' +
+        '<div style="width:16px;height:16px;border:1.5px solid #2d4a2d;border-radius:2px;display:flex;align-items:center;justify-content:center;flex-shrink:0;-webkit-print-color-adjust:exact;print-color-adjust:exact;">' +
+          (checked ? '<div style="width:10px;height:10px;background:#2d4a2d;border-radius:1px;"></div>' : '') +
+        '</div>' +
+        '<span style="font-size:11pt;">' + label + '</span>' +
+      '</div>';
+
+    body.innerHTML =
+      '<div style="background:var(--parchment);border-left:3px solid var(--gold);padding:10px 14px;margin-bottom:16px;font-size:12px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;">' +
+        '<span>Print-ready admission form for <strong>' + (r.childName||'—') + '</strong></span>' +
+        '<span style="font-size:10px;">Ref: ' + (r.refNumber||'—') + ' · ' + (r.submittedAt ? new Date(r.submittedAt).toLocaleDateString('en-GB') : today) + '</span>' +
+      '</div>' +
+
+      '<div id="admissionPrintBody" style="background:white;padding:28px 32px;border:1px solid var(--line);">' +
+
+        // LETTERHEAD
+        '<div style="text-align:center;border-bottom:2px solid #2d4a2d;padding-bottom:14px;margin-bottom:20px;">' +
+          '<h2 style="font-family:serif;font-size:20pt;color:#2d4a2d;font-weight:700;">Heritage Montessori and School</h2>' +
+          '<p style="font-size:9pt;color:#6e6456;margin-top:3px;">11-D Garden Town, Multan · Tel: 061-6515260 · info@heritagemux.com</p>' +
+          '<div style="font-size:11pt;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#2d4a2d;margin-top:10px;">Student Admission Form — 2026–27</div>' +
+        '</div>' +
+
+        // REF + PHOTO BOX
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;">' +
+          '<div>' +
+            '<div style="font-size:9pt;color:#6e6456;">Ref No: <strong style="color:#2d4a2d;">' + (r.refNumber||'—') + '</strong></div>' +
+            '<div style="font-size:9pt;color:#6e6456;margin-top:4px;">Date: <strong>' + today + '</strong></div>' +
+          '</div>' +
+          '<div style="border:1.5px dashed #999;width:90px;height:110px;display:flex;align-items:center;justify-content:center;text-align:center;padding:6px;">' +
+            '<div style="font-size:8pt;color:#999;line-height:1.5;">Paste child photo<br>here<br><span style="font-size:7pt;">(Passport size)</span></div>' +
+          '</div>' +
+        '</div>' +
+
+        // STUDENT DETAILS
+        sectionTitle('Student Details') +
+        row2('Child Full Name (Block Letters)', r.childName, 'Date of Birth', r.dob) +
+        row2('Gender', r.gender, 'Class Applied For', r.classApplied) +
+        field('Previous School Attended', r.previousSchool) +
+        field('Child Resides With', r.residesWith) +
+
+        // MOTHER DETAILS
+        sectionTitle('Mother / Guardian Details') +
+        row2('Full Name', r.motherName, 'Contact Number', r.motherContact) +
+        row2('CNIC Number', r.motherCNIC, 'Occupation', r.motherOccupation) +
+        field('Residential Address', r.motherAddress) +
+        field('Email Address', r.motherEmail) +
+
+        // FATHER DETAILS
+        sectionTitle('Father / Second Guardian Details') +
+        row2('Full Name', r.fatherName, 'Contact Number', r.fatherContact) +
+        row2('CNIC Number', r.fatherCNIC, 'Occupation', r.fatherOccupation) +
+        field('Residential Address', r.fatherAddress) +
+        field('Email Address', r.fatherEmail) +
+
+        // EMERGENCY CONTACTS
+        sectionTitle('Emergency Information') +
+        row2('Family Doctor', r.doctorName, 'Doctor Contact', r.doctorContact) +
+        '<div style="font-size:9pt;font-weight:600;color:#5a7a5a;letter-spacing:1px;text-transform:uppercase;margin:10px 0 6px;">Emergency Contact 1</div>' +
+        '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">' +
+          field('Name', r.emergency1Name) + field('Relation', r.emergency1Relation) + field('Contact', r.emergency1Contact) +
+        '</div>' +
+        '<div style="font-size:9pt;font-weight:600;color:#5a7a5a;letter-spacing:1px;text-transform:uppercase;margin:10px 0 6px;">Emergency Contact 2</div>' +
+        '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">' +
+          field('Name', r.emergency2Name) + field('Relation', r.emergency2Relation) + field('Contact', r.emergency2Contact) +
+        '</div>' +
+
+        // ADDITIONAL INFO
+        (r.additionalInfo ?
+          sectionTitle('Additional Information') +
+          '<div style="border:1px solid #d9cebc;padding:10px;min-height:50pt;font-size:11pt;background:#faf7f2;">' + r.additionalInfo + '</div>'
+        : '') +
+
+        // DOCUMENTS CHECKLIST
+        sectionTitle('Documents Submitted') +
+        '<div style="border:1px solid #d9cebc;">' +
+          checkRow('4 × Passport size photographs of the child', r.doc_photo) +
+          checkRow('Birth Certificate or NADRA Form', r.doc_birth) +
+          checkRow('Copy of Mother CNIC', r.doc_cnic_mother) +
+          checkRow('Copy of Father CNIC', r.doc_cnic_father) +
+          checkRow('School Leaving Certificate (previous school)', r.doc_leaving) +
+        '</div>' +
+        '<div style="font-size:9pt;color:#6e6456;font-style:italic;margin-top:6px;padding:6px 10px;background:#fff8ec;border-left:2px solid #b8962e;">Unticked documents must be submitted to the school office before admission can be processed.</div>' +
+
+        // DECLARATIONS
+        sectionTitle('Declarations') +
+        checkRow('I confirm the information provided is correct and agree to abide by all school rules including fee payment and refund policies.', true) +
+        checkRow('I have read and understood the School Rules and Procedures and agree to abide by them in full.', true) +
+        checkRow('I agree to indemnify Heritage Montessori and School against losses arising from any accidental incident.', true) +
+
+        // SIGNATURE
+        '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px;margin-top:40px;padding-top:14px;border-top:1px solid #d9cebc;">' +
+          '<div style="border-top:1px solid #1e1e1e;padding-top:6px;font-size:9pt;color:#6e6456;text-align:center;">Signature of Parent/Guardian</div>' +
+          '<div style="border-top:1px solid #1e1e1e;padding-top:6px;font-size:9pt;color:#6e6456;text-align:center;">Name &amp; Relation with Child</div>' +
+          '<div style="border-top:1px solid #1e1e1e;padding-top:6px;font-size:9pt;color:#6e6456;text-align:center;">Date &amp; Place</div>' +
+        '</div>' +
+
+        // OFFICE USE
+        '<div style="margin-top:24px;background:#f2ece0;border:1px solid #d9cebc;padding:12px 16px;">' +
+          '<div style="font-size:9pt;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#2d4a2d;margin-bottom:10px;">For Office Use Only</div>' +
+          '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">' +
+            field('Admission No.', '') + field('Fee Paid', '') + field('Processed By', '') +
+          '</div>' +
+        '</div>' +
+
+      '</div>' + // end admissionPrintBody
+
+      '<div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;">' +
+        '<button class="btn btn-primary btn-sm" onclick="window.print()">🖨 Print Admission Form</button>' +
+        '<a href="https://wa.me/' + waNum + '?text=' + waMsg + '" target="_blank" class="btn btn-sm" style="background:#25D366;color:white;text-decoration:none;">💬 Notify Parent</a>' +
+      '</div>';
+
+    } else if(type === 'feeConc') {
+    title.textContent = 'Fee Concession — Decision Letter';
+    const reqType = r.requestType === 'summer' ? 'Summer Fee Plan Change (Standard to Monthly)' : 'Regular Fee Concession';
+    const submDate = r.submittedAt ? new Date(r.submittedAt).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}) : today;
+
+    body.innerHTML =
+      '<div style="margin-bottom:16px;">' +
+        '<div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">Decision</div>' +
+        '<div style="display:flex;gap:12px;margin-bottom:14px;">' +
+          '<button class="btn-approve" onclick="setDecision(&quot;approved&quot;)">✓ Approved</button>' +
+          '<button class="btn-reject" onclick="setDecision(&quot;rejected&quot;)">✕ Rejected</button>' +
+        '</div>' +
+        '<div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Note / Reason (optional)</div>' +
+        '<textarea class="decision-note" id="decisionNote" placeholder="Add conditions, remarks or reason for rejection…"></textarea>' +
+      '</div>' +
+      '<div class="letter-preview" id="letterPreview">' +
+        '<h3>Heritage Montessori and School</h3>' +
+        '<div class="letter-sub">11-D Garden Town, Multan · Tel: 061-6515260 · info@heritagemux.com</div>' +
+        '<div style="display:flex;justify-content:space-between;margin-bottom:16px;font-size:11px;color:var(--muted);">' +
+          '<span>Ref: ' + (r.refNumber||'—') + '</span><span>' + today + '</span>' +
+        '</div>' +
+        '<p>To,<br><strong>' + (r.parentName||'Parent/Guardian') + '</strong><br>Parent of ' + (r.childName||'—') + ' (' + (r.className||'—') + ')</p><br>' +
+        '<p><strong>Subject: Decision on Fee Concession Application — ' + reqType + '</strong></p><br>' +
+        '<p>Dear ' + (r.parentName||'Parent/Guardian') + ',</p><br>' +
+        '<p>With reference to your application (Ref: ' + (r.refNumber||'—') + ') dated ' + submDate + ' regarding ' + reqType + ' for your child <strong>' + (r.childName||'—') + '</strong> of <strong>' + (r.className||'—') + '</strong>,</p><br>' +
+        '<p id="decisionPara" style="font-weight:600;color:var(--muted);">Please select Approved or Rejected above to generate the letter.</p><br>' +
+        '<div id="decisionNoteDisplay"></div><br>' +
+        '<p>For any queries please contact the school office at 061-6515260.</p><br>' +
+        '<p>Yours sincerely,</p><br><br>' +
+        '<p>_________________________<br>Principal / Administrator<br>Heritage Montessori and School</p>' +
+      '</div>' +
+      '<div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;">' +
+        '<button class="btn btn-primary btn-sm" onclick="window.print()">🖨 Print Letter</button>' +
+        '<a id="waDecisionBtn" href="#" target="_blank" class="btn btn-sm" style="background:#25D366;color:white;text-decoration:none;display:none;">💬 Notify Parent on WhatsApp</a>' +
+      '</div>';
+
+    document.getElementById('decisionNote').addEventListener('input', updateLetter);
+
+  } else if(type === 'leaving') {
+    // Close modal, switch to Documents tab, open SLC form pre-filled
+    closeActionModal();
+    // Switch to documents tab
+    document.querySelectorAll('.panel-tab').forEach(b => b.classList.remove('active'));
+    document.getElementById('tabFeedbackBtn').classList.remove('active');
+    document.getElementById('tabDocsBtn').classList.add('active');
+    document.getElementById('tabFeedback').style.display = 'none';
+    document.getElementById('tabDocuments').style.display = 'block';
+    document.getElementById('tabRecords').style.display = 'none';
+    // Open SLC form
+    openDoc('leaving');
+    // Pre-fill fields after short delay for DOM to render
+    setTimeout(() => {
+      const today = new Date().toLocaleDateString('en-GB', {day:'2-digit', month:'2-digit', year:'numeric'});
+      const setVal = (id, val) => { const el = document.getElementById(id); if(el && val) el.value = val; };
+      setVal('slc-name', r.childName);
+      setVal('slc-parent', r.parentName);
+      setVal('slc-certno', r.refNumber);
+      setVal('slc-date', today);
+      setVal('slc-lastdate', r.lastDate);
+      // Pre-fill new fields
+      const slcAdmNo = document.querySelector('#docLeaving input[placeholder="HMS-____"]');
+      if(slcAdmNo && r.admissionNo) slcAdmNo.value = r.admissionNo;
+      const slcDob = document.querySelector('#docLeaving input[placeholder="dd/mm/yyyy"]');
+      if(slcDob && r.dob) slcDob.value = r.dob;
+      const slcYear = document.querySelector('#docLeaving input[value="2025-2026"]');
+      if(slcYear && r.academicYear) slcYear.value = r.academicYear;
+      // Set class dropdown
+      const classEl = document.getElementById('slc-class');
+      if(classEl && r.className) {
+        Array.from(classEl.options).forEach(opt => {
+          if(opt.value === r.className) opt.selected = true;
+        });
+      }
+      // Pre-fill date of admission
+      const slcAdmDate = document.querySelectorAll('#docLeaving input[placeholder="dd/mm/yyyy"]')[1];
+      if(slcAdmDate && r.dateOfAdmission) slcAdmDate.value = r.dateOfAdmission;
+      // Set reason dropdown
+      const reasonEl = document.getElementById('slc-reason');
+      if(reasonEl && r.leavingReason) {
+        Array.from(reasonEl.options).forEach(opt => {
+          if(opt.value === r.leavingReason) opt.selected = true;
+        });
+      }
+      showToast('✓ SLC form pre-filled with parent request details.');
+    }, 300);
+    return;
+
+  } else if(type === 'bonafide') {
+    // Close modal, switch to Documents tab, open Bonafide form pre-filled
+    closeActionModal();
+    document.querySelectorAll('.panel-tab').forEach(b => b.classList.remove('active'));
+    document.getElementById('tabDocsBtn').classList.add('active');
+    document.getElementById('tabFeedback').style.display = 'none';
+    document.getElementById('tabDocuments').style.display = 'block';
+    document.getElementById('tabRecords').style.display = 'none';
+    // Open Bonafide form
+    openDoc('bonafide');
+    // Pre-fill fields
+    setTimeout(() => {
+      const today = new Date().toLocaleDateString('en-GB', {day:'2-digit', month:'2-digit', year:'numeric'});
+      const setVal = (id, val) => { const el = document.getElementById(id); if(el && val) el.value = val; };
+      setVal('bon-name', r.childName);
+      setVal('bon-certno', r.refNumber);
+      setVal('bon-date', today);
+      setVal('bon-purpose', r.purpose || '');
+      // Pre-fill new fields
+      const bonParent = document.querySelector('#docBonafide input[placeholder="Fathers full name"]');
+      if(bonParent && r.parentName) bonParent.value = r.parentName;
+      const bonAdmNo = document.querySelector('#docBonafide input[placeholder="HMS-____"]');
+      if(bonAdmNo && r.admissionNo) bonAdmNo.value = r.admissionNo;
+      const bonDob = document.querySelector('#docBonafide input[placeholder="dd/mm/yyyy"]');
+      if(bonDob && r.dob) bonDob.value = r.dob;
+      const bonYear = document.querySelector('#docBonafide input[value="2025-2026"]');
+      if(bonYear && r.academicYear) bonYear.value = r.academicYear;
+      // Set class dropdown
+      const classEl = document.getElementById('bon-class');
+      if(classEl && r.className) {
+        Array.from(classEl.options).forEach(opt => {
+          if(opt.value === r.className) opt.selected = true;
+        });
+      }
+      showToast('✓ Bonafide form pre-filled with parent request details.');
+    }, 300);
+    return;
+  }
+
+  modal.classList.add('show');
+  document.body.style.overflow = 'hidden';
+};
+
+function setDecision(decision) {
+  _currentDecision = decision;
+  updateLetter();
+}
+window.setDecision = setDecision;
+
+function updateLetter() {
+  if(!_currentDecision) return;
+  const note = document.getElementById('decisionNote') ? document.getElementById('decisionNote').value : '';
+  const r = _actionRecord;
+  const waBtn = document.getElementById('waDecisionBtn');
+
+  let decisionText, decisionColor;
+  if(_currentDecision === 'approved') {
+    decisionText = 'We are pleased to inform you that your application for <strong>' + (r.requestType==='summer'?'Summer Fee Plan Change':'Regular Fee Concession') + '</strong> has been <strong style="color:#2d7a4a;">APPROVED</strong>.';
+    decisionColor = '#2d7a4a';
+  } else {
+    decisionText = 'After careful consideration, we regret to inform you that your application for <strong>' + (r.requestType==='summer'?'Summer Fee Plan Change':'Regular Fee Concession') + '</strong> has been <strong style="color:#c0392b;">REJECTED</strong>.';
+    decisionColor = '#c0392b';
+  }
+
+  const dp = document.getElementById('decisionPara');
+  if(dp) { dp.innerHTML = decisionText; dp.style.color = decisionColor; }
+  const nd = document.getElementById('decisionNoteDisplay');
+  if(nd) nd.innerHTML = note ? '<p><strong>Note:</strong> ' + note + '</p>' : '';
+
+  if(waBtn) {
+    const msg = 'Assalam o Alaikum ' + (r.parentName||'') + ',\n\nYour Fee Concession Application (Ref: ' + (r.refNumber||'') + ') has been *' + _currentDecision.toUpperCase() + '*.' + (note ? '\n\nNote: ' + note : '') + '\n\nFor queries contact 061-6515260.\n\nJazakAllah Khairan,\nHeritage Montessori & School';
+    const num = r.contactNumber ? '92' + r.contactNumber.replace(/\D/g,'').replace(/^0/,'') : WA_SCHOOL;
+    waBtn.href = 'https://wa.me/' + num + '?text=' + encodeURIComponent(msg);
+    waBtn.style.display = 'inline-flex';
+  }
+}
+
+window.closeActionModal = function() {
+  document.getElementById('actionModal').classList.remove('show');
+  document.body.style.overflow = '';
+};
+</script>
+</body>
+</html>
