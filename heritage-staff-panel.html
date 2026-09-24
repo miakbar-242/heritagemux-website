@@ -258,6 +258,13 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
 .btn-print:hover { background:var(--tan); color:var(--ink); }
 .btn-print-all { background:var(--parchment); color:var(--forest); border:1.5px solid var(--gold); }
 .btn-print-all:hover { background:var(--gold); color:var(--forest); }
+
+/* ── DOCUMENT FORMS ── */
+.doc-form-section { display:none; }
+.doc-form-section.active { display:block; }
+.doc-print-btn { background:#2d4a2d; color:white; border:none; padding:8px 18px; font-family:inherit; font-size:12px; font-weight:600; cursor:pointer; border-radius:4px; }
+.doc-print-btn:hover { background:#b8962e; }
+
 @media print {
   body { background:white !important; padding:0 !important; }
   .portal { max-width:100% !important; }
@@ -271,6 +278,7 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
 
   /* Show Documents tab */
   #tabDocuments { display:block !important; }
+  #docListView { display:none !important; }
 
   /* Hide all doc sections except the active one */
   .doc-form-section { display:none !important; box-shadow:none !important; border:none !important; }
@@ -345,7 +353,11 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
 /* ── DOCUMENT FORM VIEW ── */
 .doc-form-section { display:none; background:white; }
 .doc-form-section.active { display:block; }
+.doc-form-section { display:none; }
+.doc-form-section.active { display:block; }
 .doc-nav { background:var(--parchment); border-bottom:1px solid var(--line); padding:12px 28px; display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+.doc-print-btn { background:#2d4a2d; color:white; border:none; padding:8px 18px; font-family:inherit; font-size:12px; font-weight:600; cursor:pointer; border-radius:4px; }
+.doc-print-btn:hover { background:#b8962e; }
 .doc-back-btn { background:none; border:1.5px solid var(--line); color:var(--muted); font-family:'Jost',sans-serif; font-size:10px; font-weight:500; letter-spacing:1px; text-transform:uppercase; padding:6px 14px; cursor:pointer; border-radius:2px; display:flex; align-items:center; gap:6px; }
 .doc-back-btn:hover { border-color:var(--forest); color:var(--forest); }
 .doc-print-btn { background:var(--forest); color:white; border:none; font-family:'Jost',sans-serif; font-size:10px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; padding:8px 20px; cursor:pointer; border-radius:2px; display:flex; align-items:center; gap:7px; transition:background 0.2s; }
