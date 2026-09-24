@@ -259,6 +259,10 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
 .btn-print-all { background:var(--parchment); color:var(--forest); border:1.5px solid var(--gold); }
 .btn-print-all:hover { background:var(--gold); color:var(--forest); }
 
+/* ── TAB PANELS DEFAULT HIDDEN ── */
+.docs-panel { display:none; }
+.records-panel { display:none; }
+
 /* ── DOCUMENT FORMS ── */
 .doc-form-section { display:none; }
 .doc-form-section.active { display:block; }
@@ -1005,12 +1009,12 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
           <div style="text-align:center;font-size:15px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--forest);margin:20px 0 24px;text-decoration:underline;">BONAFIDE CERTIFICATE</div>
           <div class="doc-section-title">Student Details</div>
           <div class="field-row">
-            <div class="field-group"><div class="field-label">Student Name</div><input class="field-input" id="bon-name" placeholder="Master / Miss"></div>
+            <div class="field-group"><div class="field-label">Student Name</div><input class="field-input"  placeholder="Master / Miss"></div>
             <div class="field-group"><div class="field-label">Son/Daughter of</div><input class="field-input" placeholder="Fathers full name"></div>
           </div>
           <div class="field-row">
             <div class="field-group"><div class="field-label">Admission No.</div><input class="field-input" placeholder="HMS-____"></div>
-            <div class="field-group"><div class="field-label">Class / Section</div><select class="field-select" id="bon-class"><option>Mont 1</option><option>Mont 2</option><option>Mont 3</option><option>Class 1</option><option>Class 2</option><option>Class 3</option><option>Class 4</option><option>Class 5</option></select></div>
+            <div class="field-group"><div class="field-label">Class / Section</div><select class="field-select" ><option>Mont 1</option><option>Mont 2</option><option>Mont 3</option><option>Class 1</option><option>Class 2</option><option>Class 3</option><option>Class 4</option><option>Class 5</option></select></div>
           </div>
           <div class="field-row">
             <div class="field-group"><div class="field-label">Academic Year</div><input class="field-input" value="2025-2026"></div>
