@@ -273,14 +273,12 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
   #tabDocuments { display:block !important; }
 
   /* Hide all doc sections except the active one */
-  .doc-form-section { display:none !important; }
+  .doc-form-section { display:none !important; box-shadow:none !important; border:none !important; }
   .doc-form-section.active { display:block !important; }
-
-  /* Hide doc nav and action buttons, show only body */
+  .doc-docs-list { display:none !important; }
   .doc-nav, .doc-back-btn, .doc-print-btn { display:none !important; }
   .doc-form-body { padding:0 !important; display:block !important; }
-  .doc-form-section { box-shadow:none !important; border:none !important; }
-  .doc-docs-list { display:none !important; }
+
 
   /* When action modal is open - show only its content */
   .action-modal { display:block !important; position:static !important; background:white !important; overflow:visible !important; }
