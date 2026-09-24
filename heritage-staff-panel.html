@@ -269,6 +269,24 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
 .doc-print-btn { background:#2d4a2d; color:white; border:none; padding:8px 18px; font-family:inherit; font-size:12px; font-weight:600; cursor:pointer; border-radius:4px; }
 .doc-print-btn:hover { background:#b8962e; }
 
+/* ── APPOINTMENT LETTER STYLES ── */
+.ref-row { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #d9cebc; margin-bottom:16px; font-size:11px; }
+.letter-type { text-align:center; margin:12px 0; }
+.letter-type-box { display:inline-block; border:1.5px solid #2d4a2d; padding:6px 24px; font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:#2d4a2d; }
+.letter-stmt { font-size:10px; color:#6e6456; margin-top:6px; line-height:1.7; font-style:italic; }
+.sec-title { font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#2d4a2d; border-bottom:1.5px solid #b8962e; padding-bottom:4px; margin:14px 0 8px; }
+.body-text { font-size:11px; line-height:2; margin:14px 0; color:#1a1714; }
+.terms-box { border:1px solid #d9cebc; padding:14px 18px; margin:12px 0; background:#faf7f2; }
+.terms-title { font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#2d4a2d; border-bottom:1.5px solid #b8962e; padding-bottom:5px; margin-bottom:12px; }
+.terms-body { font-size:10px; line-height:2; color:#1a1714; }
+.clause { margin-bottom:12px; }
+.definitions { background:#e8f4ee; border-left:3px solid #2d4a2d; padding:10px 14px; margin-bottom:14px; font-size:10px; line-height:1.9; }
+.decl-box { border:1.5px solid #2d4a2d; padding:12px 16px; margin:12px 0; background:white; font-size:10px; line-height:1.9; }
+.decl-title { font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#2d4a2d; margin-bottom:8px; }
+.sign-row { display:grid; grid-template-columns:1fr 1fr; gap:32px; margin-top:32px; }
+.sign-box { border-top:1px solid #1a1714; padding-top:8px; font-size:10px; line-height:2; }
+
+/* ── PRINT: show only active form ── */
 @media print {
   body { background:white !important; padding:0 !important; }
   .portal { max-width:100% !important; }
@@ -280,9 +298,10 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
   .action-modal-nav, .records-filters, .submissions-title,
   #tabFeedback, #tabRecords { display:none !important; }
 
-  /* Show Documents tab */
+  /* Show Documents tab and active form only */
   #tabDocuments { display:block !important; }
   #docListView { display:none !important; }
+  .panel-tabs-bar, .panel-tab { display:none !important; }
 
   /* Hide all doc sections except the active one */
   .doc-form-section { display:none !important; box-shadow:none !important; border:none !important; }
