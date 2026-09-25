@@ -302,8 +302,11 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
   /* Show Documents tab and active form only */
   #mainPanel { display:block !important; }
   #tabDocuments { display:block !important; }
+  div#tabDocuments { display:block !important; }
   #docListView { display:none !important; }
-  .panel-tabs-bar, .panel-tab { display:none !important; }
+  .panel-tabs-bar, .panel-tab, .panel-tabs { display:none !important; }
+  .summary-bar { display:none !important; }
+  .notif-area { display:none !important; }
 
   /* Hide all doc sections except the active one */
   .doc-form-section { display:none !important; box-shadow:none !important; border:none !important; }
@@ -1822,11 +1825,15 @@ window.switchTab = function(tab, btn) {
 let currentDocId = null;
 
 window.openDoc = function(docName) {
-  document.getElementById('docListView').style.display = 'none';
-  document.querySelectorAll('.doc-form-section').forEach(d=>d.classList.remove('active'));
+  const listView = document.getElementById('docListView');
+  if(listView) { listView.style.display = 'none'; listView.style.visibility = 'hidden'; }
+  document.querySelectorAll('.doc-form-section').forEach(d => {
+    d.classList.remove('active');
+    d.style.display = 'none';
+  });
   const map = {appointment:'docAppointment', bonafide:'docBonafide', leaving:'docLeaving', experience:'docExperience'};
   const el = document.getElementById(map[docName]);
-  if(el) { el.classList.add('active'); currentDocId = map[docName]; }
+  if(el) { el.classList.add('active'); el.style.display = 'block'; currentDocId = map[docName]; }
 };
 
 // ── PIN GENERATOR ──
@@ -1901,8 +1908,12 @@ window.copyPin = function() {
 };
 
 window.closeDoc = function() {
-  document.getElementById('docListView').style.display = 'block';
-  document.querySelectorAll('.doc-form-section').forEach(d=>d.classList.remove('active'));
+  const listView = document.getElementById('docListView');
+  if(listView) { listView.style.display = 'block'; listView.style.visibility = 'visible'; }
+  document.querySelectorAll('.doc-form-section').forEach(d => {
+    d.classList.remove('active');
+    d.style.display = 'none';
+  });
   currentDocId = null;
 };
 
