@@ -300,6 +300,7 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
   #tabFeedback, #tabRecords { display:none !important; }
 
   /* Show Documents tab and active form only */
+  #mainPanel { display:block !important; }
   #tabDocuments { display:block !important; }
   #docListView { display:none !important; }
   .panel-tabs-bar, .panel-tab { display:none !important; }
@@ -807,7 +808,7 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
       Signature: ___________________________
     </div>
   </div>
-</div>
+
 
           <div class="doc-section-title">Addressee</div>
           <div class="field-row">
@@ -963,6 +964,9 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
 
         </div>
       </div><!-- /docAppointment -->
+      
+
+      <!-- /docAppointment -->
 
       <div id="docBonafide" class="doc-form-section">
         <div class="doc-nav">
@@ -1028,8 +1032,8 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
 
 </div>
         </div>
-      
-<!-- SCHOOL LEAVING CERTIFICATE FORM -->
+
+      <!-- SCHOOL LEAVING CERTIFICATE FORM -->
       <div id="docLeaving" class="doc-form-section">
         <div class="doc-nav">
           <button class="doc-back-btn" onclick="closeDoc()">← Back to Documents</button>
@@ -1108,7 +1112,6 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
 
 </div>
         </div>
-      
 
       <div id="docExperience" class="doc-form-section">
         <div class="doc-nav">
@@ -1172,6 +1175,12 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
 
 </div>
         </div>
+    </div>
+      
+
+      
+
+      
       </div>
 
       <!-- EXPERIENCE LETTER FORM -->
@@ -1224,7 +1233,6 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
     <div class="panel-footer">
       <span><span class="live-dot"></span>Heritage Montessori · Staff Portal · Live via Firebase</span>
       <button class="logout-btn" onclick="logout()">Log out</button>
-    </div>
 
 </div><!-- /portal -->
 
