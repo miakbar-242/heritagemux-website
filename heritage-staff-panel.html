@@ -299,7 +299,32 @@ body { background:#cfc9bc; font-family:'Jost',sans-serif; min-height:100vh; padd
   /* Checkboxes show correctly */
   input[type=checkbox] { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
 
-  @page { size:A4; margin:15mm; }
+  /* Staff document templates: print only the currently open document */
+  body.printing-document .portal { display:block !important; max-width:none !important; margin:0 !important; }
+  body.printing-document #mainPanel { display:block !important; }
+  body.printing-document #tabDocuments { display:block !important; padding:0 !important; min-height:0 !important; background:white !important; }
+  body.printing-document #docListView { display:none !important; }
+  body.printing-document .doc-form-section { display:none !important; }
+  body.printing-document .doc-form-section.print-target { display:block !important; }
+  body.printing-document .doc-form-body { max-width:none !important; width:100% !important; margin:0 !important; padding:0 !important; }
+  body.printing-document .doc-form-header { display:block !important; border-bottom:2px solid #2d4a2d !important; padding-bottom:12px !important; margin-bottom:20px !important; }
+  body.printing-document .doc-form-header h2 { font-size:18pt !important; color:#1e1e1e !important; }
+  body.printing-document .doc-form-header p { font-size:9pt !important; color:#444 !important; }
+  body.printing-document .field-row { gap:12mm !important; margin-bottom:10px !important; }
+  body.printing-document .field-label { font-size:7.5pt !important; color:#444 !important; }
+  body.printing-document .field-input,
+  body.printing-document .field-select {
+    font-family:Arial,sans-serif !important; font-size:10.5pt !important; color:#000 !important;
+    border:none !important; border-bottom:1px solid #777 !important; padding:2px 0 !important;
+    background:white !important; box-shadow:none !important; appearance:none !important; -webkit-appearance:none !important;
+  }
+  body.printing-document .doc-body-text { font-family:Arial,sans-serif !important; font-size:10.5pt !important; line-height:1.65 !important; margin:16px 0 !important; }
+  body.printing-document .doc-section-title { color:#222 !important; font-size:8pt !important; margin:16px 0 9px !important; }
+  body.printing-document .doc-sign-row { margin-top:28mm !important; gap:25mm !important; break-inside:avoid; }
+  body.printing-document .doc-sign-box { color:#222 !important; font-size:9pt !important; }
+  body.printing-document select::-ms-expand { display:none; }
+
+  @page { size:A4; margin:14mm 16mm; }
 }
 .print-header { display:none; text-align:center; margin-bottom:24px; padding-bottom:14px; border-bottom:2px solid #2d4a2d; }
 .print-header h2 { font-family:serif; font-size:20px; color:#2d4a2d; font-weight:600; }
@@ -1579,8 +1604,22 @@ window.closeDoc = function() {
 };
 
 window.printDoc = function() {
-  window.print();
+  if(!currentDocId) { showToast('Open a document before printing.'); return; }
+  const target = document.getElementById(currentDocId);
+  if(!target) { showToast('Document could not be prepared for printing.'); return; }
+
+  document.querySelectorAll('.doc-form-section').forEach(d => d.classList.remove('print-target'));
+  target.classList.add('print-target');
+  document.body.classList.add('printing-document');
+
+  // Give the browser one frame to apply the print-only layout before opening print preview.
+  requestAnimationFrame(() => requestAnimationFrame(() => window.print()));
 };
+
+window.addEventListener('afterprint', () => {
+  document.body.classList.remove('printing-document');
+  document.querySelectorAll('.doc-form-section').forEach(d => d.classList.remove('print-target'));
+});
 
 // ── PRINT SINGLE CARD ──
 window.printCard = function(id) {
