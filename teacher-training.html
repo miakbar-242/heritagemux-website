@@ -1228,7 +1228,7 @@ window.recRender = function() {
           const b = books[i] || {};
           return `<div class="rec-item-row">
             <span class="rec-item-name">${book}</span>
-            <span class="rec-item-brought ${b.brought?'yes':'no'}" style="text-align:center;">${b.brought?'✓ Yes':'✗ No'}</span>
+            <span class="rec-item-brought ${b.brought==='yes'?'yes':'no'}" style="text-align:center;">${b.brought==='yes'?'✓ Yes':'✗ No'}</span>
             <span class="rec-item-balance">${b.remarks||'—'}</span>
           </div>`;
         }).join('')}
