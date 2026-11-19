@@ -1603,6 +1603,70 @@ window.recShowPrintMenu = function() {
   if(schoolBtn) schoolBtn.style.display = recRole === 'admin' ? 'flex' : 'none';
 };
 
+// ── STUDENT PICKER MODAL (for individual student print) ──
+function recShowStudentPickerModal(cls, clsData, students) {
+  const entries = Object.entries(students).sort((a,b) => ((a[1].rollNo||9999) - (b[1].rollNo||9999)) || (a[1].name||'').localeCompare(b[1].name||''));
+  if(!entries.length) { recShowToast('No students to print.'); return; }
+
+  let modal = document.getElementById('rec-student-picker-modal');
+  if(!modal) {
+    modal = document.createElement('div');
+    modal.id = 'rec-student-picker-modal';
+    modal.style.cssText = 'display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:700;align-items:center;justify-content:center;padding:16px;';
+    modal.innerHTML = `
+      <div style="background:white;border-radius:12px;max-width:420px;width:100%;padding:0;box-shadow:0 8px 40px rgba(0,0,0,.25);max-height:85vh;display:flex;flex-direction:column;">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid #e8dfc8;flex-shrink:0;">
+          <h2 style="font-size:15px;font-weight:700;color:#2d4a2d;margin:0;">🖨 Select Student to Print</h2>
+          <button id="rec-picker-close" style="background:#f2ece0;border:none;border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:16px;color:#6e6456;">✕</button>
+        </div>
+        <div id="rec-picker-list" style="overflow-y:auto;padding:12px 14px;flex:1;"></div>
+      </div>`;
+    document.body.appendChild(modal);
+    document.getElementById('rec-picker-close').onclick = () => { modal.style.display = 'none'; };
+  }
+
+  const list = document.getElementById('rec-picker-list');
+  list.innerHTML = entries.map(([id, s]) => {
+    const rollLabel = s.rollNo ? `<span style="display:inline-block;width:28px;height:28px;background:#e8f4ee;border-radius:7px;text-align:center;line-height:28px;font-size:11px;font-weight:700;color:#2d4a2d;margin-right:10px;flex-shrink:0;">${s.rollNo}</span>` : `<span style="display:inline-block;width:28px;height:28px;background:#f2ece0;border-radius:7px;text-align:center;line-height:28px;font-size:11px;color:#9C9590;margin-right:10px;flex-shrink:0;">—</span>`;
+    return `<button onclick="recPickAndPrint('${id}')"
+      style="display:flex;align-items:center;width:100%;background:white;border:1.5px solid #e8dfc8;border-radius:8px;padding:10px 12px;margin-bottom:8px;cursor:pointer;font-family:inherit;text-align:left;transition:border-color .15s;"
+      onmouseover="this.style.borderColor='#2d4a2d'" onmouseout="this.style.borderColor='#e8dfc8'">
+      ${rollLabel}
+      <span style="font-size:13px;font-weight:600;color:#1a1714;">${s.name}</span>
+    </button>`;
+  }).join('');
+
+  modal.style.display = 'flex';
+  // Store context for the actual print
+  modal._cls = cls;
+  modal._clsData = clsData;
+  modal._students = students;
+}
+
+window.recPickAndPrint = function(studentId) {
+  const modal = document.getElementById('rec-student-picker-modal');
+  if(!modal) return;
+  modal.style.display = 'none';
+  const cls = modal._cls;
+  const clsData = modal._clsData;
+  const students = modal._students;
+  const student = students[studentId];
+  if(!student) { recShowToast('Student not found.'); return; }
+
+  const printWindow = window.open('', '_blank', 'width=1000,height=760');
+  if(!printWindow) { recShowToast('Please allow pop-ups for this website to open print preview.'); return; }
+  const html = recPrintHeader('Heritage Montessori and School', `Student Record — ${student.name} | ${REC_LABELS[cls]}`) +
+    recPrintStudentHTML(student, clsData);
+  printWindow.document.open();
+  printWindow.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Book and Stationery Record</title><style>
+    @page{size:A4;margin:12mm;}body{font-family:Arial,sans-serif;color:#1a1714;margin:0;font-size:10pt;}
+    table{width:100%;border-collapse:collapse;page-break-inside:auto;}tr{page-break-inside:avoid;}th,td{border:1px solid #bdb7ad;padding:5px 7px;}th{background:#f2ece0;}
+    @media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}
+  </style></head><body>${html}<script>window.onload=()=>{setTimeout(()=>window.print(),300)};<\/script></body></html>`);
+  printWindow.document.close();
+  recLogActivity(`Opened individual student Book & Stationery print preview for ${student.name}`);
+};
+
 function recPrintHeader(title, subtitle) {
   return `<div style="text-align:center;border-bottom:2px solid #2d4a2d;padding-bottom:12px;margin-bottom:16px;">
     <div style="font-size:18pt;font-weight:700;color:#2d4a2d;">${title}</div>
@@ -1664,17 +1728,14 @@ window.recPrint = async function(type) {
   let html = '';
 
   if(type === 'student') {
-    // Pick first visible student or prompt
-    const entries = Object.entries(students).sort((a,b) => (a[1].name||'').localeCompare(b[1].name||''));
-    if(!entries.length) { printWindow.close(); recShowToast('No students to print.'); return; }
-    const name = prompt('Enter student name to print (or leave blank for first student):');
-    const found = name ? entries.find(([,s]) => s.name.toLowerCase().includes(name.toLowerCase())) : entries[0];
-    if(!found) { printWindow.close(); recShowToast('Student not found.'); return; }
-    html = recPrintHeader('Heritage Montessori and School', `Student Record — ${found[1].name} | ${REC_LABELS[cls]}`) +
-      recPrintStudentHTML(found[1], clsData);
+    // Show student picker modal instead of prompt
+    printWindow.close();
+    document.getElementById('rec-print-modal').style.display = 'none';
+    recShowStudentPickerModal(cls, clsData, students);
+    return;
 
   } else if(type === 'class') {
-    const entries = Object.entries(students).sort((a,b) => (a[1].name||'').localeCompare(b[1].name||''));
+    const entries = Object.entries(students).sort((a,b) => ((a[1].rollNo||9999) - (b[1].rollNo||9999)) || (a[1].name||'').localeCompare(b[1].name||''));
     if(!entries.length) { printWindow.close(); recShowToast('No students in this class.'); return; }
     html = recPrintHeader('Heritage Montessori and School', `Class Record — ${REC_LABELS[cls]} | ${entries.length} Students`) +
       entries.map(([,s]) => recPrintStudentHTML(s, clsData)).join('');
@@ -1686,7 +1747,7 @@ window.recPrint = async function(type) {
     html = recPrintHeader('Heritage Montessori and School', `Full School Stationery Record — All Classes`);
     for(const c of allClasses) {
       if(!recStudents[c]) await recLoadStudents(c);
-      const entries = Object.entries(recStudents[c]||{}).sort((a,b)=>(a[1].name||'').localeCompare(b[1].name||''));
+      const entries = Object.entries(recStudents[c]||{}).sort((a,b) => ((a[1].rollNo||9999) - (b[1].rollNo||9999)) || (a[1].name||'').localeCompare(b[1].name||''));
       if(!entries.length) continue;
       html += `<div style="font-size:14pt;font-weight:700;color:#2d4a2d;margin:20px 0 10px;padding:8px 12px;background:#e8f4ee;border-left:4px solid #2d4a2d;">${REC_LABELS[c]} — ${entries.length} Students</div>`;
       html += entries.map(([,s]) => recPrintStudentHTML(s, REC_CLASSES[c])).join('');
